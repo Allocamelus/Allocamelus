@@ -13,3 +13,6 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# used for local dev see Allocamelus/Camel/config.example.json for config example
+config.json
