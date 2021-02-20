@@ -1,0 +1,65 @@
+{
+    "argon2cost": {
+        "time": 3,
+        "memory": 81920,
+        "threads": 2,
+        "keyLen": 32
+    },
+    "cookie": {
+        "prefix": "backplate-s_"
+    },
+    "db": {
+        "Net": "unix",
+        "server": "/var/run/mysqld/mysqld.sock",
+        "name": "databaseName",
+        "username": "user",
+        "password": "password (Don\"t use this one)"
+    },
+    "dev": false,
+    "googleClient": {
+        "enabled": false,
+        "id": "",
+        "key": "Path to client secret json"
+    },
+    "hcaptcha": {
+        "enabled": false,
+        "secret": "",
+        "easy": "",
+        "moderate": "",
+        "hard": "",
+        "all": ""
+    },
+    "logs": {
+        "level": 2,
+        "path": "app.log"
+    },
+    "mail": {
+        "enabled": true,
+        "server": "mail.example.com",
+        "sender": "bot@example.com",
+        "username": "user",
+        "password": "password"
+    },
+    "redis": {
+        "host": "/var/run/redis/redis-server.sock",
+        "user": "",
+        "password": ""
+    },
+    "session": {
+        "maxLife": 86400,
+        "expiration": 900
+    },
+    "site": {
+        "description": "Explore Example",
+        "domain": "example.com",
+        "name": "Example",
+        "port": 8080,
+        "prefork": false
+    },
+    "ssl": {
+        "enabled": false,
+        "cert": "Path to ssl Cert",
+        "key": "Path to ssl Key",
+        "port": 8443
+    }
+}
