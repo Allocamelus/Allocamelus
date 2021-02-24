@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/allocamelus/camel"
+	"github.com/allocamelus/allocamelus/internal/app"
 	"github.com/jdinabox/goutils/logger"
 )
 
@@ -21,6 +21,6 @@ func init() {
 }
 
 func main() {
-	c := camel.New(configPath)
-	logger.Fatal(c.InitListener())
+	a := app.New(configPath)
+	logger.Fatal(a.InitListener())
 }
