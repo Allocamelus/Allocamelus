@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 
+	"github.com/allocamelus/allocamelus/configs"
 	"github.com/go-redis/redis/v8"
 	"github.com/jdinabox/goutils/logger"
 	"k8s.io/klog/v2"
@@ -10,25 +11,25 @@ import (
 
 // Data struct
 type Data struct {
-	Config   *Config
+	Config   *configs.Config
 	database *sql.DB
 	redis    *redis.Client
 }
 
-// NewData initialize and return Data
+// New initializes and returns Data struct
 //
 // Also inits klog
-func NewData(configPath string) *Data {
+func New(configPath string) *Data {
 	data := new(Data)
 
-	data.Config = NewConfig(configPath)
+	data.Config = configs.NewConfig(configPath)
 
 	logger.InitKlog(data.Config.Logs.Level, data.Config.Logs.Path)
 
 	if err := data.initDatabase(); err != nil {
 		klog.Fatal("Backplate Database Error ", err)
-		klog.Flush()
 	}
+
 	data.initRedis()
 
 	return data
