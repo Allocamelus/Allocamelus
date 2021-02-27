@@ -18,6 +18,16 @@ func (u *User) SetDefaultPerms() {
 }
 
 // CanPost can user post
-func (u *User) CanPost() bool {
-	return (u.Permissions&Post == Post)
+func (p Perms) CanPost() bool {
+	return (p&Post == Post)
+}
+
+// CanUploadMedia can user upload media
+func (p Perms) CanUploadMedia() bool {
+	return (p&UploadMedia == UploadMedia)
+}
+
+// IsAdmin is user admin
+func (p Perms) IsAdmin() bool {
+	return (p&Admin == Admin)
 }

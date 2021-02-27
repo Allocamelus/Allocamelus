@@ -27,7 +27,7 @@ type User struct {
 	// Salt used in Argon2id to derive encryption key
 	PrivateKeySalt string `msg:"privateKeySalt,omitempty" json:"-"`
 	PrivateKey     string `msg:"privateKey,omitempty" json:"-"`
-	// Backup Private Key
+	// Backup PrivateKey encrypted with encodedBackupKey
 	BackupKey string `msg:"backupKey,omitempty" json:"-"`
 	// Encoded Key for encrypting BackupKey
 	encodedBackupKey string
@@ -39,6 +39,9 @@ func New(uniqueName, name, email string) (*User, error) {
 	user.UniqueName = uniqueName
 	user.Name = name
 	user.Email = email
+	if errs := user.ValidatePublic(); errs != nil {
+		return nil, errs
+	}
 	user.SetDefaultPerms()
 	return user, nil
 }
@@ -51,8 +54,8 @@ func initCreate(p data.Prepare) {
 }
 
 // Insert new user into database
-// 	returns user Id & backup Key on success
-func (u *User) Insert() (id int64, backupKey string, err error) {
+// 	returns userId int64 & encodedBackupKey string on success
+func (u *User) Insert() (int64, string, error) {
 	// Insert user into database
 	r, err := preCreate.Exec(
 		u.UniqueName, u.Name,
@@ -62,12 +65,12 @@ func (u *User) Insert() (id int64, backupKey string, err error) {
 		u.BackupKey,
 	)
 	if err != nil {
-		return
+		return 0, "", err
 	}
 
-	id, err = r.LastInsertId()
+	id, err := r.LastInsertId()
 	// err not expected here with proper setup
 	logger.Error(err)
 
-	return id, "", nil
+	return id, u.encodedBackupKey, nil
 }
