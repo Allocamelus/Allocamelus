@@ -18,5 +18,5 @@ func V1(app *fiber.App) {
 	v1.User(api)
 
 	// 404 Error
-	api.Use(func(c *fiber.Ctx) error { return apierr.Err404(c, apierr.NotFound) })
+	api.Use(apierr.ErrNotFound)
 }
