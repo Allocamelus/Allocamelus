@@ -27,7 +27,7 @@ const (
 
 // ValidatePublic values
 func (u *User) ValidatePublic() error {
-	var errs validation.Errors
+	errs := make(validation.Errors)
 	if err := u.ValidUniqueName(); err != nil {
 		errs["unique-name"] = err
 	}
@@ -69,7 +69,7 @@ func (u *User) ValidUniqueName() error {
 	}
 	// Check Database for uniqueName
 	var taken int8
-	err := preCheckUniqueName.QueryRow(u.UniqueName).Scan(taken)
+	err := preCheckUniqueName.QueryRow(u.UniqueName).Scan(&taken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
@@ -120,7 +120,7 @@ func (u *User) ValidEmail() error {
 		}
 		// Check Database for uniqueName
 		var taken int8
-		err := preCheckEmail.QueryRow(u.Email).Scan(taken)
+		err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
 		if err != nil && err != sql.ErrNoRows {
 			logger.Error(err)
 		}
