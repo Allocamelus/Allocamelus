@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/allocamelus/allocamelus/internal/router/handlers/api/errors"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	v1 "github.com/allocamelus/allocamelus/internal/router/routes/api/v1"
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,5 +18,5 @@ func V1(app *fiber.App) {
 	v1.User(api)
 
 	// 404 Error
-	api.Use(func(c *fiber.Ctx) error { return errors.Err404(c, "not-found") })
+	api.Use(func(c *fiber.Ctx) error { return apierr.Err404(c, apierr.NotFound) })
 }
