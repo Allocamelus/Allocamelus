@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/jdinabox/goutils/argon2id"
+	"github.com/allocamelus/allocamelus/pkg/argon2id"
 	"github.com/jdinabox/goutils/logger"
 	jsoniter "github.com/json-iterator/go"
 	"k8s.io/klog/v2"
