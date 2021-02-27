@@ -118,26 +118,20 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Likes")
 				return
 			}
-		case "roles":
+		case "permissions":
 			{
 				var zb0002 int64
 				zb0002, err = dc.ReadInt64()
 				if err != nil {
-					err = msgp.WrapError(err, "Roles")
+					err = msgp.WrapError(err, "Permissions")
 					return
 				}
-				z.Roles = Perms(zb0002)
+				z.Permissions = Perms(zb0002)
 			}
 		case "created":
 			z.Created, err = dc.ReadInt64()
 			if err != nil {
 				err = msgp.WrapError(err, "Created")
-				return
-			}
-		case "password":
-			z.Password, err = dc.ReadString()
-			if err != nil {
-				err = msgp.WrapError(err, "Password")
 				return
 			}
 		case "publicKey":
@@ -146,10 +140,10 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "PublicKey")
 				return
 			}
-		case "privateSalt":
-			z.PrivateSalt, err = dc.ReadString()
+		case "privateKeySalt":
+			z.PrivateKeySalt, err = dc.ReadString()
 			if err != nil {
-				err = msgp.WrapError(err, "PrivateSalt")
+				err = msgp.WrapError(err, "PrivateKeySalt")
 				return
 			}
 		case "privateKey":
@@ -178,31 +172,23 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 // EncodeMsg implements msgp.Encodable
 func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 	// omitempty: check for empty values
-	zb0001Len := uint32(14)
-	var zb0001Mask uint16 /* 14 bits */
-	if z.Roles == 0 {
-		zb0001Len--
-		zb0001Mask |= 0x80
-	}
-	if z.Password == "" {
+	zb0001Len := uint32(13)
+	var zb0001Mask uint16 /* 13 bits */
+	if z.PublicKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x200
 	}
-	if z.PublicKey == "" {
+	if z.PrivateKeySalt == "" {
 		zb0001Len--
 		zb0001Mask |= 0x400
 	}
-	if z.PrivateSalt == "" {
+	if z.PrivateKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x800
 	}
-	if z.PrivateKey == "" {
-		zb0001Len--
-		zb0001Mask |= 0x1000
-	}
 	if z.BackupKey == "" {
 		zb0001Len--
-		zb0001Mask |= 0x2000
+		zb0001Mask |= 0x1000
 	}
 	// variable map header, size zb0001Len
 	err = en.Append(0x80 | uint8(zb0001Len))
@@ -282,17 +268,15 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "Likes")
 		return
 	}
-	if (zb0001Mask & 0x80) == 0 { // if not empty
-		// write "roles"
-		err = en.Append(0xa5, 0x72, 0x6f, 0x6c, 0x65, 0x73)
-		if err != nil {
-			return
-		}
-		err = en.WriteInt64(int64(z.Roles))
-		if err != nil {
-			err = msgp.WrapError(err, "Roles")
-			return
-		}
+	// write "permissions"
+	err = en.Append(0xab, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73)
+	if err != nil {
+		return
+	}
+	err = en.WriteInt64(int64(z.Permissions))
+	if err != nil {
+		err = msgp.WrapError(err, "Permissions")
+		return
 	}
 	// write "created"
 	err = en.Append(0xa7, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64)
@@ -305,18 +289,6 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		return
 	}
 	if (zb0001Mask & 0x200) == 0 { // if not empty
-		// write "password"
-		err = en.Append(0xa8, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64)
-		if err != nil {
-			return
-		}
-		err = en.WriteString(z.Password)
-		if err != nil {
-			err = msgp.WrapError(err, "Password")
-			return
-		}
-	}
-	if (zb0001Mask & 0x400) == 0 { // if not empty
 		// write "publicKey"
 		err = en.Append(0xa9, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x4b, 0x65, 0x79)
 		if err != nil {
@@ -328,19 +300,19 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 			return
 		}
 	}
-	if (zb0001Mask & 0x800) == 0 { // if not empty
-		// write "privateSalt"
-		err = en.Append(0xab, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x53, 0x61, 0x6c, 0x74)
+	if (zb0001Mask & 0x400) == 0 { // if not empty
+		// write "privateKeySalt"
+		err = en.Append(0xae, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79, 0x53, 0x61, 0x6c, 0x74)
 		if err != nil {
 			return
 		}
-		err = en.WriteString(z.PrivateSalt)
+		err = en.WriteString(z.PrivateKeySalt)
 		if err != nil {
-			err = msgp.WrapError(err, "PrivateSalt")
+			err = msgp.WrapError(err, "PrivateKeySalt")
 			return
 		}
 	}
-	if (zb0001Mask & 0x1000) == 0 { // if not empty
+	if (zb0001Mask & 0x800) == 0 { // if not empty
 		// write "privateKey"
 		err = en.Append(0xaa, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79)
 		if err != nil {
@@ -352,7 +324,7 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 			return
 		}
 	}
-	if (zb0001Mask & 0x2000) == 0 { // if not empty
+	if (zb0001Mask & 0x1000) == 0 { // if not empty
 		// write "backupKey"
 		err = en.Append(0xa9, 0x62, 0x61, 0x63, 0x6b, 0x75, 0x70, 0x4b, 0x65, 0x79)
 		if err != nil {
@@ -371,31 +343,23 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// omitempty: check for empty values
-	zb0001Len := uint32(14)
-	var zb0001Mask uint16 /* 14 bits */
-	if z.Roles == 0 {
-		zb0001Len--
-		zb0001Mask |= 0x80
-	}
-	if z.Password == "" {
+	zb0001Len := uint32(13)
+	var zb0001Mask uint16 /* 13 bits */
+	if z.PublicKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x200
 	}
-	if z.PublicKey == "" {
+	if z.PrivateKeySalt == "" {
 		zb0001Len--
 		zb0001Mask |= 0x400
 	}
-	if z.PrivateSalt == "" {
+	if z.PrivateKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x800
 	}
-	if z.PrivateKey == "" {
-		zb0001Len--
-		zb0001Mask |= 0x1000
-	}
 	if z.BackupKey == "" {
 		zb0001Len--
-		zb0001Mask |= 0x2000
+		zb0001Mask |= 0x1000
 	}
 	// variable map header, size zb0001Len
 	o = append(o, 0x80|uint8(zb0001Len))
@@ -423,35 +387,28 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "likes"
 	o = append(o, 0xa5, 0x6c, 0x69, 0x6b, 0x65, 0x73)
 	o = msgp.AppendInt64(o, z.Likes)
-	if (zb0001Mask & 0x80) == 0 { // if not empty
-		// string "roles"
-		o = append(o, 0xa5, 0x72, 0x6f, 0x6c, 0x65, 0x73)
-		o = msgp.AppendInt64(o, int64(z.Roles))
-	}
+	// string "permissions"
+	o = append(o, 0xab, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73)
+	o = msgp.AppendInt64(o, int64(z.Permissions))
 	// string "created"
 	o = append(o, 0xa7, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64)
 	o = msgp.AppendInt64(o, z.Created)
 	if (zb0001Mask & 0x200) == 0 { // if not empty
-		// string "password"
-		o = append(o, 0xa8, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64)
-		o = msgp.AppendString(o, z.Password)
-	}
-	if (zb0001Mask & 0x400) == 0 { // if not empty
 		// string "publicKey"
 		o = append(o, 0xa9, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x4b, 0x65, 0x79)
 		o = msgp.AppendString(o, z.PublicKey)
 	}
-	if (zb0001Mask & 0x800) == 0 { // if not empty
-		// string "privateSalt"
-		o = append(o, 0xab, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x53, 0x61, 0x6c, 0x74)
-		o = msgp.AppendString(o, z.PrivateSalt)
+	if (zb0001Mask & 0x400) == 0 { // if not empty
+		// string "privateKeySalt"
+		o = append(o, 0xae, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79, 0x53, 0x61, 0x6c, 0x74)
+		o = msgp.AppendString(o, z.PrivateKeySalt)
 	}
-	if (zb0001Mask & 0x1000) == 0 { // if not empty
+	if (zb0001Mask & 0x800) == 0 { // if not empty
 		// string "privateKey"
 		o = append(o, 0xaa, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79)
 		o = msgp.AppendString(o, z.PrivateKey)
 	}
-	if (zb0001Mask & 0x2000) == 0 { // if not empty
+	if (zb0001Mask & 0x1000) == 0 { // if not empty
 		// string "backupKey"
 		o = append(o, 0xa9, 0x62, 0x61, 0x63, 0x6b, 0x75, 0x70, 0x4b, 0x65, 0x79)
 		o = msgp.AppendString(o, z.BackupKey)
@@ -519,26 +476,20 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Likes")
 				return
 			}
-		case "roles":
+		case "permissions":
 			{
 				var zb0002 int64
 				zb0002, bts, err = msgp.ReadInt64Bytes(bts)
 				if err != nil {
-					err = msgp.WrapError(err, "Roles")
+					err = msgp.WrapError(err, "Permissions")
 					return
 				}
-				z.Roles = Perms(zb0002)
+				z.Permissions = Perms(zb0002)
 			}
 		case "created":
 			z.Created, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "Created")
-				return
-			}
-		case "password":
-			z.Password, bts, err = msgp.ReadStringBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "Password")
 				return
 			}
 		case "publicKey":
@@ -547,10 +498,10 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "PublicKey")
 				return
 			}
-		case "privateSalt":
-			z.PrivateSalt, bts, err = msgp.ReadStringBytes(bts)
+		case "privateKeySalt":
+			z.PrivateKeySalt, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "PrivateSalt")
+				err = msgp.WrapError(err, "PrivateKeySalt")
 				return
 			}
 		case "privateKey":
@@ -579,6 +530,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 11 + msgp.StringPrefixSize + len(z.UniqueName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 6 + msgp.Int64Size + 8 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.Password) + 10 + msgp.StringPrefixSize + len(z.PublicKey) + 12 + msgp.StringPrefixSize + len(z.PrivateSalt) + 11 + msgp.StringPrefixSize + len(z.PrivateKey) + 10 + msgp.StringPrefixSize + len(z.BackupKey)
+	s = 1 + 3 + msgp.Int64Size + 11 + msgp.StringPrefixSize + len(z.UniqueName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size + 10 + msgp.StringPrefixSize + len(z.PublicKey) + 15 + msgp.StringPrefixSize + len(z.PrivateKeySalt) + 11 + msgp.StringPrefixSize + len(z.PrivateKey) + 10 + msgp.StringPrefixSize + len(z.BackupKey)
 	return
 }

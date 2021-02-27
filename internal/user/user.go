@@ -1,3 +1,5 @@
+//go:generate msgp
+
 package user
 
 import (
@@ -10,61 +12,54 @@ import (
 // Perms permissions
 type Perms int64
 
-const (
-	// Post perm allows user to post
-	Post Perms = 1 << iota
-	// Comment perm allows user to comment
-	Comment
-	// UploadMedia perm allows user to upload media
-	UploadMedia
-)
-
-//go:generate msgp
-
 // User Struct
 type User struct {
-	ID         int64  `msg:"id" json:"id"`
-	UniqueName string `msg:"uniqueName" json:"uniqueName"`
-	Name       string `msg:"name" json:"name"`
-	Email      string `msg:"email" json:"email"`
-	Avatar     bool   `msg:"avatar" json:"avatar"`
-	Bio        string `msg:"bio" json:"bio"`
-	Likes      int64  `msg:"likes" json:"likes"`
-	Roles      Perms  `msg:"roles,omitempty" json:"-"`
-	Created    int64  `msg:"created" json:"created"`
-	Password   string `msg:"password,omitempty" json:"-"`
-	PublicKey  string `msg:"publicKey,omitempty" json:"publicKey,omitempty"`
+	ID          int64  `msg:"id" json:"id"`
+	UniqueName  string `msg:"uniqueName" json:"uniqueName"`
+	Name        string `msg:"name" json:"name"`
+	Email       string `msg:"email" json:"email"`
+	Avatar      bool   `msg:"avatar" json:"avatar"`
+	Bio         string `msg:"bio" json:"bio"`
+	Likes       int64  `msg:"likes" json:"likes"`
+	Permissions Perms  `msg:"permissions" json:"-"`
+	Created     int64  `msg:"created" json:"created"`
+	PublicKey   string `msg:"publicKey,omitempty" json:"publicKey,omitempty"`
 	// Salt used in Argon2id to derive encryption key
-	PrivateSalt string `msg:"privateSalt,omitempty" json:"-"`
-	PrivateKey  string `msg:"privateKey,omitempty" json:"-"`
+	PrivateKeySalt string `msg:"privateKeySalt,omitempty" json:"-"`
+	PrivateKey     string `msg:"privateKey,omitempty" json:"-"`
 	// Backup Private Key
 	BackupKey string `msg:"backupKey,omitempty" json:"-"`
+	// Encoded Key for encrypting BackupKey
+	encodedBackupKey string
 }
 
 // New user with generated keys and hashed password
-func New(plainTxtPassword string) *User {
-	return &User{}
+func New(uniqueName, name, email string) (*User, error) {
+	user := new(User)
+	user.UniqueName = uniqueName
+	user.Name = name
+	user.Email = email
+	user.SetDefaultPerms()
+	return user, nil
 }
 
 var preCreate *sql.Stmt
 
 func initCreate(p data.Prepare) {
-	preCreate = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, password, permissions, created, publicKey, privateSalt, privateKey, backupKey)
-		VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)`)
+	preCreate = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created, publicKey, privateKeySalt, privateKey, backupKey)
+		VALUES (?, ?, ?, '0', '', ?, ?, ?, ?, ?, ?)`)
 }
 
-// Create create new user in database
+// Insert new user into database
 // 	returns user Id & backup Key on success
-func Create(user *User) (id int64, backupKey string, err error) {
-
+func (u *User) Insert() (id int64, backupKey string, err error) {
 	// Insert user into database
 	r, err := preCreate.Exec(
-		user.UniqueName, user.Name,
-		user.Email, user.Avatar,
-		user.Password, user.Roles,
-		user.Created, user.PublicKey,
-		user.PrivateSalt, user.PrivateKey,
-		user.BackupKey,
+		u.UniqueName, u.Name,
+		u.Email, u.Permissions,
+		u.Created, u.PublicKey,
+		u.PrivateKeySalt, u.PrivateKey,
+		u.BackupKey,
 	)
 	if err != nil {
 		return

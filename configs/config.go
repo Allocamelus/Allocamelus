@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 
+	"github.com/jdinabox/goutils/argon2id"
 	"github.com/jdinabox/goutils/logger"
 	jsoniter "github.com/json-iterator/go"
 	"k8s.io/klog/v2"
@@ -13,14 +14,8 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // Config configuration struct
 type Config struct {
-	Argon2Cost struct {
-		Time    uint32
-		Memory  uint32
-		Threads uint8
-		KeyLen  uint32
-		SaltLen int32
-	}
-	Cookie struct {
+	Argon2Cost argon2id.Cost
+	Cookie     struct {
 		PreFix string
 	}
 	Db struct {

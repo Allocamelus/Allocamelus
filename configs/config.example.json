@@ -3,7 +3,8 @@
         "time": 3,
         "memory": 81920,
         "threads": 2,
-        "keyLen": 32
+        "keyLen": 32,
+        "saltLen": 32
     },
     "cookie": {
         "prefix": "backplate-s_"
