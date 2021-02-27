@@ -33,7 +33,7 @@ func (u *User) GenerateKeys(password string) error {
 }
 
 func (u *User) generateKeys(password string) error {
-	cost := argon2id.Cost(g.Config.Argon2Cost)
+	cost := g.Config.Argon2Cost
 
 	// Make sure keyLen is 32 bytes
 	cost.KeyLen = 32
