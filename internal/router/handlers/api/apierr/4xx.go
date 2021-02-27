@@ -1,8 +1,13 @@
-package errors
+package apierr
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jdinabox/goutils/fiber/write"
+)
+
+var (
+	// NotFound 404
+	NotFound = New("not-found")
 )
 
 // Err400 400 Bad Request
@@ -17,8 +22,8 @@ func Err401(c *fiber.Ctx, wwwAuth string, data interface{}) error {
 }
 
 // Err404 404 Not Found
-func Err404(c *fiber.Ctx, data string) error {
-	return write.JSON(c, 404, Error(data))
+func Err404(c *fiber.Ctx, data interface{}) error {
+	return write.JSON(c, 404, data)
 }
 
 // Err422 Unprocessable Entity
