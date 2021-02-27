@@ -18,19 +18,26 @@ func initValidate(p data.Prepare) {
 	preCheckEmail = p(`SELECT EXISTS(SELECT * FROM Users WHERE email=?)`)
 }
 
+const (
+	invalidLength = "invalid-length"
+	invalidChars  = "invalid-characters"
+	invalidEmail  = "invalid-email"
+	taken         = "taken"
+)
+
 // ValidatePublic values
 func (u *User) ValidatePublic() error {
 	var errs validation.Errors
-	if err := u.validUniqueName(); err != nil {
-		errs["uniqueName"] = err
+	if err := u.ValidUniqueName(); err != nil {
+		errs["unique-name"] = err
 	}
-	if err := u.validName(); err != nil {
+	if err := u.ValidName(); err != nil {
 		errs["name"] = err
 	}
-	if err := u.validEmail(); err != nil {
+	if err := u.ValidEmail(); err != nil {
 		errs["email"] = err
 	}
-	if err := u.validBio(); err != nil {
+	if err := u.ValidBio(); err != nil {
 		errs["bio"] = err
 	}
 	return errs
@@ -38,16 +45,17 @@ func (u *User) ValidatePublic() error {
 
 var (
 	// ErrUniqueNameLength 5 to 64 characters
-	ErrUniqueNameLength = errors.New("user/validate: Unique Name length 5 to 64 characters")
+	ErrUniqueNameLength = errors.New(invalidLength + "-5to64")
 	// ErrUniqueNameInvalid characters
-	ErrUniqueNameInvalid = errors.New("user/validate: Unique Name invalid characters")
+	ErrUniqueNameInvalid = errors.New(invalidChars)
 	// ErrUniqueNameTaken characters
-	ErrUniqueNameTaken = errors.New("user/validate: Unique Name taken")
+	ErrUniqueNameTaken = errors.New(taken)
 	regexUniqueName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
 	preCheckUniqueName *sql.Stmt
 )
 
-func (u *User) validUniqueName() error {
+// ValidUniqueName Validate
+func (u *User) ValidUniqueName() error {
 	// Check Length
 	if err := validation.Validate(u.UniqueName,
 		validation.Required,
@@ -73,13 +81,14 @@ func (u *User) validUniqueName() error {
 }
 
 var (
-	// ErrNameLength 5 to 64 characters
-	ErrNameLength = errors.New("user/validate: Name length 1 to 128 characters")
+	// ErrNameLength 1 to 128 characters
+	ErrNameLength = errors.New(invalidLength + "-1to128")
 	// ErrNameInvalid characters
-	ErrNameInvalid = errors.New("user/validate: Name invalid characters")
+	ErrNameInvalid = errors.New(invalidChars)
 )
 
-func (u *User) validName() error {
+// ValidName Validate
+func (u *User) ValidName() error {
 	// Check Length
 	if err := validation.Validate(u.Name,
 		validation.Required,
@@ -96,13 +105,14 @@ func (u *User) validName() error {
 
 var (
 	// ErrEmailInvalid Invalid Email
-	ErrEmailInvalid = errors.New("user/validate: Invalid Email")
+	ErrEmailInvalid = errors.New(invalidEmail)
 	// ErrEmailTaken characters
-	ErrEmailTaken = errors.New("user/validate: Email taken")
+	ErrEmailTaken = errors.New(taken)
 	preCheckEmail *sql.Stmt
 )
 
-func (u *User) validEmail() error {
+// ValidEmail Validate
+func (u *User) ValidEmail() error {
 	if len(u.Email) != 0 {
 		// Check Email
 		if err := validation.Validate(u.Email, is.Email); err != nil {
@@ -122,13 +132,14 @@ func (u *User) validEmail() error {
 }
 
 var (
-	// ErrBioLength 5 to 64 characters
-	ErrBioLength = errors.New("user/validate: Bio length 0 to 255 characters")
+	// ErrBioLength 0 to 255 characters
+	ErrBioLength = errors.New(invalidLength + "-0to255")
 	// ErrBioInvalid characters
-	ErrBioInvalid = errors.New("user/validate: Bio invalid characters")
+	ErrBioInvalid = errors.New(invalidChars)
 )
 
-func (u *User) validBio() error {
+// ValidBio Validate
+func (u *User) ValidBio() error {
 	if len(u.Bio) != 0 {
 		// Check length
 		if err := validation.Validate(u.Bio, validation.Length(0, 255)); err != nil {

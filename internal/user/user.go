@@ -15,7 +15,7 @@ type Perms int64
 // User Struct
 type User struct {
 	ID          int64  `msg:"id" json:"id"`
-	UniqueName  string `msg:"uniqueName" json:"uniqueName"`
+	UniqueName  string `msg:"uniqueName" json:"unique-name"`
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
@@ -34,16 +34,13 @@ type User struct {
 }
 
 // New user with generated keys and hashed password
-func New(uniqueName, name, email string) (*User, error) {
+func New(uniqueName, name, email string) *User {
 	user := new(User)
 	user.UniqueName = uniqueName
 	user.Name = name
 	user.Email = email
-	if errs := user.ValidatePublic(); errs != nil {
-		return nil, errs
-	}
 	user.SetDefaultPerms()
-	return user, nil
+	return user
 }
 
 var preCreate *sql.Stmt
