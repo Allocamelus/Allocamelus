@@ -4,6 +4,7 @@ package user
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/jdinabox/goutils/logger"
@@ -40,6 +41,7 @@ func New(uniqueName, name, email string) *User {
 	user.Name = name
 	user.Email = email
 	user.SetDefaultPerms()
+	user.Created = time.Now().Unix()
 	return user
 }
 

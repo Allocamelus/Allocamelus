@@ -113,27 +113,27 @@ func (c *Config) Validate() error {
 
 	if c.Argon2Cost.Time == 0 {
 		c.Argon2Cost.Time = 3
-		klog.V(1).Info("Warning - Config: Missing/Invalid Argon2 Time Cost | Using Default (3)")
+		klog.Info("Warning - Config: Missing/Invalid Argon2 Time Cost | Using Default (3)")
 	}
 	if c.Argon2Cost.Memory == 0 {
-		c.Argon2Cost.Memory = 81920
-		klog.V(1).Info("Warning - Config: Missing/Invalid Argon2 Memory Cost | Using Default (81920)")
+		c.Argon2Cost.Memory = 128 * 1024
+		klog.Info("Warning - Config: Missing/Invalid Argon2 Memory Cost | Using Default (128MB)")
 	}
 	if c.Argon2Cost.Threads == 0 {
 		c.Argon2Cost.Threads = 2
-		klog.V(1).Info("Warning - Config: Missing/Invalid Argon2 Thread Cost | Using Default (2)")
+		klog.Info("Warning - Config: Missing/Invalid Argon2 Thread Cost | Using Default (2)")
 	}
 	if c.Argon2Cost.KeyLen == 0 {
 		c.Argon2Cost.KeyLen = 32
-		klog.V(1).Info("Warning - Config: Missing/Invalid Argon2 Key Length | Using Default (32)")
+		klog.Info("Warning - Config: Missing/Invalid Argon2 Key Length | Using Default (32)")
 	}
 	if c.Argon2Cost.SaltLen == 0 {
 		c.Argon2Cost.SaltLen = 32
-		klog.V(1).Info("Warning - Config: Missing/Invalid Argon2 Salt Length | Using Default (32)")
+		klog.Info("Warning - Config: Missing/Invalid Argon2 Salt Length | Using Default (32)")
 	}
 
 	if c.Cookie.PreFix == "" {
-		klog.V(1).Info("Warning - Config: Missing Cookie Prefix")
+		klog.Info("Warning - Config: Missing Cookie Prefix")
 	}
 
 	if c.Db.Net == "" {
@@ -153,7 +153,7 @@ func (c *Config) Validate() error {
 		hasErr = true
 	}
 	if c.Db.Password == "" {
-		klog.V(1).Info("Warning - Config: Missing Database Password")
+		klog.Info("Warning - Config: Missing Database Password")
 	}
 
 	if c.Dev {
@@ -177,15 +177,15 @@ func (c *Config) Validate() error {
 			hasErr = true
 		}
 		if c.HCaptcha.Easy == "" || c.HCaptcha.Moderate == "" || c.HCaptcha.Hard == "" || c.HCaptcha.All == "" {
-			klog.V(1).Info("Warning - Config: Missing HCaptcha Key(s)")
+			klog.Info("Warning - Config: Missing HCaptcha Key(s)")
 		}
 	}
 
 	if c.Path.Public == "" {
-		klog.V(1).Info("Warning - Config: Missing Public File Path")
+		klog.Info("Warning - Config: Missing Public File Path")
 	}
 	if c.Path.Dist == "" {
-		klog.V(1).Info("Warning - Config: Missing Public/dist File Path")
+		klog.Info("Warning - Config: Missing Public/dist File Path")
 	}
 
 	if c.Redis.Host == "" {
@@ -193,28 +193,28 @@ func (c *Config) Validate() error {
 		hasErr = true
 	}
 	if c.Redis.User == "" {
-		klog.V(1).Info("Warning - Config: Missing Redis User")
+		klog.Info("Warning - Config: Missing Redis User")
 	}
 	if c.Redis.Password == "" {
-		klog.V(1).Info("Warning - Config: Missing Redis Password")
+		klog.Info("Warning - Config: Missing Redis Password")
 	}
 
 	if c.Session.MaxLife == 0 {
 		c.Session.MaxLife = 86400
-		klog.V(1).Info("Warning - Config: Missing/Invalid Session MaxLife Time | Using Default (86400)s")
+		klog.Info("Warning - Config: Missing/Invalid Session MaxLife Time | Using Default (86400)s")
 	}
 	if c.Session.Expiration == 0 {
 		c.Session.Expiration = 900
-		klog.V(1).Info("Warning - Config: Missing/Invalid Session Expiration Time | Using Default (900)s")
+		klog.Info("Warning - Config: Missing/Invalid Session Expiration Time | Using Default (900)s")
 	}
 
 	if c.Site.Description == "" {
 		c.Site.Description = "Site Description"
-		klog.V(1).Info("Warning - Config: Missing Site Description | Using Default (Site Description)")
+		klog.Info("Warning - Config: Missing Site Description | Using Default (Site Description)")
 	}
 	if c.Site.Domain == "" {
 		c.Site.Domain = "localhost"
-		klog.V(1).Info("Warning - Config: Missing/Invalid Site Domain | Using Default (localhost)")
+		klog.Info("Warning - Config: Missing/Invalid Site Domain | Using Default (localhost)")
 	}
 
 	if c.Mail.Enabled {
@@ -224,7 +224,7 @@ func (c *Config) Validate() error {
 		}
 		if c.Mail.Sender == "" {
 			c.Mail.Sender = "bot@" + c.Site.Domain
-			klog.V(1).Info("Warning - Config: Missing Mail Sender | Using Default (bot@Site.Domain)")
+			klog.Info("Warning - Config: Missing Mail Sender | Using Default (bot@Site.Domain)")
 		}
 		if c.Mail.Username == "" {
 			klog.Error("Error - Config: Missing Mail Username")
@@ -238,11 +238,11 @@ func (c *Config) Validate() error {
 
 	if c.Site.Name == "" {
 		c.Site.Description = "Site Name"
-		klog.V(1).Info("Warning - Config: Missing Site Name | Using Default (Site Name)")
+		klog.Info("Warning - Config: Missing Site Name | Using Default (Site Name)")
 	}
 	if c.Site.Port == 0 {
 		c.Site.Port = 8080
-		klog.V(1).Info("Warning - Config: Missing/Invalid Site Port | Using Default (8080)")
+		klog.Info("Warning - Config: Missing/Invalid Site Port | Using Default (8080)")
 	}
 
 	if c.Ssl.Enabled {
@@ -252,7 +252,7 @@ func (c *Config) Validate() error {
 		}
 		if c.Ssl.Port == 0 {
 			c.Ssl.Port = 8443
-			klog.V(1).Info("Warning - Config: Missing Ssl Port | Using Default (8443)")
+			klog.Info("Warning - Config: Missing Ssl Port | Using Default (8443)")
 		}
 	}
 
