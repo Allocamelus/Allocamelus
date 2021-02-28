@@ -40,7 +40,6 @@ func New(uniqueName, name, email string) *User {
 	user.UniqueName = uniqueName
 	user.Name = name
 	user.Email = email
-	user.SetDefaultPerms()
 	user.Created = time.Now().Unix()
 	return user
 }

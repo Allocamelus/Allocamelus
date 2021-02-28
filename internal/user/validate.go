@@ -115,20 +115,29 @@ var (
 
 // ValidEmail Validate
 func (u *User) ValidEmail() error {
-	if len(u.Email) != 0 {
-		// Check Email
-		if err := validation.Validate(u.Email, is.Email); err != nil {
-			return ErrEmailInvalid
-		}
-		// Check Database for uniqueName
-		var taken int8
-		err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
-		if err != nil && err != sql.ErrNoRows {
-			logger.Error(err)
-		}
-		if taken != 0 {
-			return ErrEmailTaken
-		}
+	// Check Email
+	if err := validation.Validate(u.Email,
+		validation.Required,
+		is.Email,
+	); err != nil {
+		return ErrEmailInvalid
+	}
+	return nil
+}
+
+// EmailUnique check if Email Exists
+func (u *User) EmailUnique() error {
+	if len(u.Email) == 0 {
+		return ErrEmailInvalid
+	}
+	// Check Database for uniqueName
+	var taken int8
+	err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
+	if err != nil && err != sql.ErrNoRows {
+		logger.Error(err)
+	}
+	if taken != 0 {
+		return ErrEmailTaken
 	}
 	return nil
 }
