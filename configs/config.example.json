@@ -6,6 +6,9 @@
         "keyLen": 32,
         "saltLen": 32
     },
+    "cloudflare": {
+        "enabled": false
+    },
     "cookie": {
         "prefix": "backplate-s_"
     },
