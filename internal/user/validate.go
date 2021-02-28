@@ -31,7 +31,7 @@ const (
 func (u *User) ValidatePublic() error {
 	errs := make(validation.Errors)
 	if err := u.ValidUniqueName(); err != nil {
-		errs["unique-name"] = err
+		errs["uniqueName"] = err
 	}
 	if err := u.ValidName(); err != nil {
 		errs["name"] = err

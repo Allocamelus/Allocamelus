@@ -16,7 +16,7 @@ type Perms int64
 // User Struct
 type User struct {
 	ID          int64  `msg:"id" json:"id"`
-	UniqueName  string `msg:"uniqueName" json:"unique-name"`
+	UniqueName  string `msg:"uniqueName" json:"uniqueName"`
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
