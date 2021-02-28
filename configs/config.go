@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
+	"github.com/allocamelus/allocamelus/pkg/email"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	jsoniter "github.com/json-iterator/go"
 	"k8s.io/klog/v2"
@@ -46,13 +47,7 @@ type Config struct {
 		Level int8
 		Path  string
 	}
-	Mail struct {
-		Enabled  bool
-		Server   string
-		Sender   string
-		Username string
-		Password string
-	}
+	Mail email.Config
 	Path struct {
 		Public string
 		Dist   string
@@ -221,6 +216,9 @@ func (c *Config) Validate() error {
 	}
 
 	if c.Mail.Enabled {
+		if c.Mail.Insecure {
+			klog.Info("Config: Insecure Email Mode Enabled")
+		}
 		if c.Mail.Server == "" {
 			klog.Error("Error - Config: Missing Mail Server")
 			hasErr = true
