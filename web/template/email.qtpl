@@ -1,0 +1,36 @@
+Email template. All the other email templates implement this interface.
+{% stripspace %}
+{% import g "go-site/data/globals" %}
+{% interface Email {
+	Header()
+	Title()
+	Body()
+} %}
+
+Page prints a html email implementing Email interface.
+{% func EmailTemplate(p Email) %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{%= p.Header() %}
+		<title>{%= p.Title() %}</title>
+	</head>
+	<body>
+		{%= p.Body() %}
+	</body>
+</html>
+{% endfunc %}
+
+{% comment %}
+twsx
+{% endcomment %}
+Email implementation. Other emails may inherit from it if they need
+overriding only certain Email methods
+{% code type BaseEmail struct {} %}
+{% func (p *BaseEmail) Header() %}{% endfunc %}
+{% func (p *BaseEmail) Title() %}Email{% endfunc %}
+{% func (p *BaseEmail) Body() %}{% endfunc %}
+{% endstripspace %}

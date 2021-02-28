@@ -1,0 +1,38 @@
+// ResetPassword email template. Implements BaseEmail methods.
+{% import "github.com/allocamelus/allocamelus/web/template" %}
+{% import "github.com/allocamelus/allocamelus/web/template/email/partials" %}
+
+{% code
+type ResetPassword struct {
+    template.BaseEmail
+    SiteName string
+    Subject string
+    Link string
+}
+%}
+
+{% collapsespace %}
+{% func (e *ResetPassword) Header() %}{%= partials.ActionCSS() %} {% endfunc %}
+{% func (e *ResetPassword) Title() %}{%s e.Subject %}{% endfunc %}
+{% func (e *ResetPassword) Body() %}
+    <div class="t">{%s= e.SiteName %}</div>
+    <div class="b">
+        <div class="pb-2"> Someone made a request to reset your password </div>
+        <div class="pb-2"> Click Below to Reset it </div>
+        <div class="l"><a href="{%s= e.Link %}">Reset</a></div>
+        <div class="s py-2">Link: <a href="{%s= e.Link %}">{%s= e.Link %}</a></div>
+        <div> If you did not, you can ignore this email. </div>
+    </div>
+{% endfunc %}
+{% endcollapsespace %}
+
+{% func ResetPlain(siteName, link string) %}
+{%s= siteName %}
+
+Someone made a request to reset your password
+Use the link below to reset it
+
+{%s= link %}
+
+If you did not, you can ignore this email
+{% endfunc %}
