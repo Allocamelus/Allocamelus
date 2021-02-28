@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 // Perms permissions

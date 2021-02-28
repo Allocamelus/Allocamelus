@@ -3,9 +3,9 @@ package data
 import (
 	"time"
 
-	"github.com/jdinabox/goutils/fiber/session"
-	"github.com/jdinabox/goutils/fiber/session/stores"
-	"github.com/jdinabox/goutils/random"
+	"github.com/allocamelus/allocamelus/pkg/fiberutil/session"
+	"github.com/allocamelus/allocamelus/pkg/fiberutil/session/stores"
+	"github.com/allocamelus/allocamelus/pkg/random"
 )
 
 // NewSessionStore initializes the Session handler

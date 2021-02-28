@@ -3,7 +3,7 @@ package g
 import (
 	"github.com/allocamelus/allocamelus/configs"
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/jdinabox/goutils/fiber/session"
+	"github.com/allocamelus/allocamelus/pkg/fiberutil/session"
 )
 
 // Data global

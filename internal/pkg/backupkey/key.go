@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/jdinabox/goutils/random"
+	"github.com/allocamelus/allocamelus/pkg/random"
 	"github.com/mr-tron/base58"
 )
 

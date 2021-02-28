@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	jsoniter "github.com/json-iterator/go"
 	"k8s.io/klog/v2"
 )

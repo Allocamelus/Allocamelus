@@ -1,11 +1,11 @@
 package account
 
 import (
+	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jdinabox/goutils/fiber/write"
 )
 
 // Logout handler
 func Logout(c *fiber.Ctx) error {
-	return write.JSON(c, 200, fiber.Map{"type": "logout"})
+	return fiberutil.JSON(c, 200, fiber.Map{"type": "logout"})
 }

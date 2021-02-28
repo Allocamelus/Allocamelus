@@ -1,8 +1,8 @@
 package apierr
 
 import (
+	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jdinabox/goutils/fiber/write"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 
 // Err400 400 Bad Request
 func Err400(c *fiber.Ctx, data interface{}) error {
-	return write.JSON(c, 400, data)
+	return fiberutil.JSON(c, 400, data)
 }
 
 // ErrInvalidRequestParams 400
@@ -25,12 +25,12 @@ func ErrInvalidRequestParams(c *fiber.Ctx) error {
 // Err401 401 Unauthorized
 func Err401(c *fiber.Ctx, wwwAuth string, data interface{}) error {
 	c.Append("WWW-Authenticate", wwwAuth)
-	return write.JSON(c, 401, data)
+	return fiberutil.JSON(c, 401, data)
 }
 
 // Err404 404 Not Found
 func Err404(c *fiber.Ctx, data interface{}) error {
-	return write.JSON(c, 404, data)
+	return fiberutil.JSON(c, 404, data)
 }
 
 // ErrNotFound 404
@@ -40,5 +40,5 @@ func ErrNotFound(c *fiber.Ctx) error {
 
 // Err422 Unprocessable Entity
 func Err422(c *fiber.Ctx, data interface{}) error {
-	return write.JSON(c, 422, data)
+	return fiberutil.JSON(c, 422, data)
 }

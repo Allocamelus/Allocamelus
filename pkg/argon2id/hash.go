@@ -1,7 +1,7 @@
 package argon2id
 
 import (
-	"github.com/jdinabox/goutils/random"
+	"github.com/allocamelus/allocamelus/pkg/random"
 	"golang.org/x/crypto/argon2"
 )
 

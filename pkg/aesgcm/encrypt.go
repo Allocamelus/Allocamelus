@@ -5,8 +5,8 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 
-	"github.com/jdinabox/goutils/logger"
-	"github.com/jdinabox/goutils/random"
+	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/allocamelus/allocamelus/pkg/random"
 )
 
 // Encrypt Using AES GCM
