@@ -39,6 +39,7 @@
     },
     "mail": {
         "enabled": true,
+        "insecure": false,
         "server": "mail.example.com",
         "sender": "bot@example.com",
         "username": "user",
