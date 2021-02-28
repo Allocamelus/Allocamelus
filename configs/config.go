@@ -15,7 +15,10 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 // Config configuration struct
 type Config struct {
 	Argon2Cost argon2id.Cost
-	Cookie     struct {
+	Cloudflare struct {
+		Enabled bool
+	}
+	Cookie struct {
 		PreFix string
 	}
 	Db struct {
