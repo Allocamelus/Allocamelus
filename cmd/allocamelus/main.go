@@ -4,7 +4,7 @@ import (
 	"flag"
 
 	"github.com/allocamelus/allocamelus/internal/app"
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 var configPath string

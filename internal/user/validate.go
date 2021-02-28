@@ -6,9 +6,9 @@ import (
 	"regexp"
 
 	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"github.com/jdinabox/goutils/logger"
 	"github.com/nbutton23/zxcvbn-go"
 )
 

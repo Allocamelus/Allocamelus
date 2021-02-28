@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
-	"github.com/jdinabox/goutils/logger"
 )
 
 // Session saving middelware

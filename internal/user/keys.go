@@ -8,7 +8,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/pkg/aesgcm"
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 var (

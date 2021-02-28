@@ -4,8 +4,8 @@ import (
 	"database/sql"
 
 	"github.com/allocamelus/allocamelus/configs"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/go-redis/redis/v8"
-	"github.com/jdinabox/goutils/logger"
 	"k8s.io/klog/v2"
 )
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 // ErrInvalidHash returned when hash is not argon2id

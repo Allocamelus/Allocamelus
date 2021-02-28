@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/jdinabox/goutils/logger"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 // Decrypt Using AES GCM
