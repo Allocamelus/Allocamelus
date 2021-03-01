@@ -9,8 +9,8 @@ import (
 func User(api fiber.Router) {
 	// /api/v1/user
 	u := api.Group("/user")
-	// /api/v1/user/create
-	u.Post("/create", user.Create)
+	u.Post("/", user.Create)
+
 	// /api/v1/user/email-token
 	u.Post("/email-token", user.EmailToken)
 
