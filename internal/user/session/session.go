@@ -20,26 +20,26 @@ type Session struct {
 	LoggedIn   bool       `msg:"loggedIn"`
 	UserID     int64      `msg:"userId"`
 	Perms      user.Perms `msg:"perms"`
+	PrivateKey string     `msg:"privateKey,omitempty"`
 	LoginToken []byte     `msg:"loginToken"`
 }
 
 const storeName = "session"
 
-var errInvalidID = errors.New("session/session: Error Invalid UserID")
-
 // NewFromID new session from user id
-func NewFromID(c *fiber.Ctx, userID int64) (*Session, error) {
+func NewFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) {
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
+	session.PrivateKey = privateKey
 
 	pkSalt, err := user.GetPrivateKeySalt(userID)
-	if logger.Error(err) {
-		return nil, errInvalidID
+	if err != nil {
+		return nil, err
 	}
 	perms, err := user.GetPerms(userID)
-	if logger.Error(err) {
-		return nil, errInvalidID
+	if err != nil {
+		return nil, err
 	}
 
 	session.Perms = perms

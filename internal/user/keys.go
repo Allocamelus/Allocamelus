@@ -16,10 +16,14 @@ import (
 var (
 	// ErrGeneratingKeys Error for when pgp key generation or encryption fails
 	ErrGeneratingKeys = errors.New("user/user: Error generating/encrypting user keys")
+	// ErrDecryptingKey Error Decrypting Key
+	ErrDecryptingKey  = errors.New("user/user: Error Decrypting Key")
+	prePrivateKey     *sql.Stmt
 	prePrivateKeySalt *sql.Stmt
 )
 
 func initKeys(p data.Prepare) {
+	prePrivateKey = p(`SELECT privateKey FROM Users WHERE userId = ? LIMIT 1`)
 	prePrivateKeySalt = p(`SELECT privateKeySalt FROM Users WHERE userId = ? LIMIT 1`)
 }
 
@@ -37,6 +41,39 @@ func (u *User) GenerateKeys(password string) error {
 		return ErrGeneratingKeys
 	}
 	return nil
+}
+
+// GetAndDecryptPK get and decrypt private key
+//	return string (private key) error (err)
+func GetAndDecryptPK(userID int64, password string) (string, error) {
+	cryptPK, err := GetPrivateKey(userID)
+	if err != nil {
+		return "", err
+	}
+	cost, err := GetPrivateKeySalt(userID)
+	if err != nil {
+		return "", err
+	}
+	costObj, _, err := argon2id.Parse(cost)
+	// Should not happen log just incase
+	if logger.Error(err) {
+		return "", errors.New("user/keys: Error Parsing password cost")
+	}
+
+	passwordObj := argon2id.HashSalt(password, costObj.Salt, costObj.Cost)
+
+	pk, err := aesgcm.DecryptBase64(passwordObj.Key, cryptPK)
+	if err != nil {
+		return "", ErrDecryptingKey
+	}
+
+	return string(pk), nil
+}
+
+// GetPrivateKey get user's encrypted privateKey
+func GetPrivateKey(userID int64) (pk string, err error) {
+	err = prePrivateKey.QueryRow(userID).Scan(&pk)
+	return
 }
 
 // GetPrivateKeySalt get user's privateKeySalt
