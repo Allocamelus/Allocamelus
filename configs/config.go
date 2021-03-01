@@ -49,8 +49,11 @@ type Config struct {
 	}
 	Mail email.Config
 	Path struct {
-		Public string
-		Dist   string
+		Public struct {
+			VerifyEmail   string
+			ResetPassword string
+		}
+		Dist string
 	}
 	Redis struct {
 		Host     string
@@ -179,8 +182,11 @@ func (c *Config) Validate() error {
 		}
 	}
 
-	if c.Path.Public == "" {
-		klog.Info("Warning - Config: Missing Public File Path")
+	if c.Path.Public.VerifyEmail == "" {
+		klog.Info("Warning - Config: Missing Public Verify Email Path")
+	}
+	if c.Path.Public.ResetPassword == "" {
+		klog.Info("Warning - Config: Missing Public Reset Password Path")
 	}
 	if c.Path.Dist == "" {
 		klog.Info("Warning - Config: Missing Public/dist File Path")

@@ -25,6 +25,7 @@ require (
 	github.com/tinylib/msgp v1.1.5
 	github.com/valyala/fasthttp v1.21.0 // indirect
 	github.com/valyala/fastjson v1.6.3
+	github.com/valyala/quicktemplate v1.6.3
 	github.com/xhit/go-simple-mail/v2 v2.8.0
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
 	golang.org/x/sys v0.0.0-20210228012217-479acdf4ea46 // indirect

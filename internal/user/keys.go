@@ -32,6 +32,11 @@ func (u *User) GenerateKeys(password string) error {
 	return nil
 }
 
+// GetEncodedBackupKey returns user.encodedBackupKey
+func (u *User) GetEncodedBackupKey() string {
+	return u.encodedBackupKey
+}
+
 func (u *User) generateKeys(password string) error {
 	cost := g.Config.Argon2Cost
 
@@ -50,6 +55,13 @@ func (u *User) generateKeys(password string) error {
 	if err != nil {
 		return err
 	}
+
+	publicKey, err := privateKey.PublicKey()
+	if err != nil {
+		return err
+	}
+
+	u.PublicKey = publicKey.Armored
 
 	u.PrivateKeySalt = hashedObj.ToStringNoKey()
 	// Encrypt privateKey
