@@ -1,6 +1,5 @@
 Email template. All the other email templates implement this interface.
 {% stripspace %}
-{% import g "go-site/data/globals" %}
 {% interface Email {
 	Header()
 	Title()

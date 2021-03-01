@@ -7,187 +7,184 @@
 package template
 
 //line web/template/email.qtpl:3
-import g "go-site/data/globals"
-
-//line web/template/email.qtpl:4
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 type Email interface {
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	Header() string
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	StreamHeader(qw422016 *qt422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	WriteHeader(qq422016 qtio422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	Title() string
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	StreamTitle(qw422016 *qt422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	WriteTitle(qq422016 qtio422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	Body() string
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	StreamBody(qw422016 *qt422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 	WriteBody(qq422016 qtio422016.Writer)
-//line web/template/email.qtpl:4
+//line web/template/email.qtpl:3
 }
 
 // Page prints a html email implementing Email interface.
 
-//line web/template/email.qtpl:11
+//line web/template/email.qtpl:10
 func StreamEmailTemplate(qw422016 *qt422016.Writer, p Email) {
-//line web/template/email.qtpl:11
+//line web/template/email.qtpl:10
 	qw422016.N().S(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge">`)
-//line web/template/email.qtpl:18
+//line web/template/email.qtpl:17
 	p.StreamHeader(qw422016)
-//line web/template/email.qtpl:18
+//line web/template/email.qtpl:17
 	qw422016.N().S(`<title>`)
-//line web/template/email.qtpl:19
+//line web/template/email.qtpl:18
 	p.StreamTitle(qw422016)
-//line web/template/email.qtpl:19
+//line web/template/email.qtpl:18
 	qw422016.N().S(`</title></head><body>`)
-//line web/template/email.qtpl:22
+//line web/template/email.qtpl:21
 	p.StreamBody(qw422016)
-//line web/template/email.qtpl:22
+//line web/template/email.qtpl:21
 	qw422016.N().S(`</body></html>`)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 }
 
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 func WriteEmailTemplate(qq422016 qtio422016.Writer, p Email) {
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	StreamEmailTemplate(qw422016, p)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	qt422016.ReleaseWriter(qw422016)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 }
 
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 func EmailTemplate(p Email) string {
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	WriteEmailTemplate(qb422016, p)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	qs422016 := string(qb422016.B)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 	return qs422016
-//line web/template/email.qtpl:25
+//line web/template/email.qtpl:24
 }
 
 // Email implementation. Other emails may inherit from it if they needoverriding only certain Email methods
 
-//line web/template/email.qtpl:32
+//line web/template/email.qtpl:31
 type BaseEmail struct{}
 
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 func (p *BaseEmail) StreamHeader(qw422016 *qt422016.Writer) {
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 }
 
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 func (p *BaseEmail) WriteHeader(qq422016 qtio422016.Writer) {
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	p.StreamHeader(qw422016)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	qt422016.ReleaseWriter(qw422016)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 }
 
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 func (p *BaseEmail) Header() string {
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	p.WriteHeader(qb422016)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	qs422016 := string(qb422016.B)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 	return qs422016
-//line web/template/email.qtpl:33
+//line web/template/email.qtpl:32
 }
 
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 func (p *BaseEmail) StreamTitle(qw422016 *qt422016.Writer) {
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qw422016.N().S(`Email`)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 }
 
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 func (p *BaseEmail) WriteTitle(qq422016 qtio422016.Writer) {
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	p.StreamTitle(qw422016)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qt422016.ReleaseWriter(qw422016)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 }
 
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 func (p *BaseEmail) Title() string {
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	p.WriteTitle(qb422016)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qs422016 := string(qb422016.B)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 	return qs422016
-//line web/template/email.qtpl:34
+//line web/template/email.qtpl:33
 }
 
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 func (p *BaseEmail) StreamBody(qw422016 *qt422016.Writer) {
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 }
 
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 func (p *BaseEmail) WriteBody(qq422016 qtio422016.Writer) {
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	p.StreamBody(qw422016)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	qt422016.ReleaseWriter(qw422016)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 }
 
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 func (p *BaseEmail) Body() string {
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	p.WriteBody(qb422016)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	qs422016 := string(qb422016.B)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 	return qs422016
-//line web/template/email.qtpl:35
+//line web/template/email.qtpl:34
 }

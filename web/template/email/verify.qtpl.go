@@ -27,7 +27,7 @@ var (
 
 //line web/template/email/verify.qtpl:6
 type Verify struct {
-	layouts.BaseEmail
+	template.BaseEmail
 	SiteName string
 	Subject  string
 	Link     string
