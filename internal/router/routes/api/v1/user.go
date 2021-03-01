@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/emailtoken"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,7 +13,10 @@ func User(api fiber.Router) {
 	u.Post("/", user.Create)
 
 	// /api/v1/user/email-token
-	u.Post("/email-token", user.EmailToken)
+	uET := u.Group("/email-token")
+	uET.Post("/", emailtoken.Create)
+	// /api/v1/user/email-token/validate
+	uET.Post("/validate", emailtoken.Validate)
 
 	// /api/v1/user/:id
 	uID := u.Group("/:id")

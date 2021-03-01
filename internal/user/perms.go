@@ -23,10 +23,20 @@ func (u *User) SetDefaultPerms() {
 	u.Permissions = DefaultPerms
 }
 
-var preUpdatePerms *sql.Stmt
+var (
+	preUpdatePerms *sql.Stmt
+	preGetPerms    *sql.Stmt
+)
 
 func initPerms(p data.Prepare) {
 	preUpdatePerms = p(`UPDATE Users SET permissions = ? WHERE userId = ?`)
+	preGetPerms = p(`SELECT permissions FROM Users WHERE userId = ? LIMIT 1`)
+}
+
+// GetPerms get user's permissions
+func GetPerms(userID int64) (perms Perms, err error) {
+	err = preGetPerms.QueryRow(userID).Scan(&perms)
+	return
 }
 
 // UpdatePerms update user's permissions

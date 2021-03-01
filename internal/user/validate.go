@@ -115,8 +115,13 @@ var (
 
 // ValidEmail Validate
 func (u *User) ValidEmail() error {
+	return ValidEmail(u.Email)
+}
+
+// ValidEmail Validate
+func ValidEmail(email string) error {
 	// Check Email
-	if err := validation.Validate(u.Email,
+	if err := validation.Validate(email,
 		validation.Required,
 		is.Email,
 	); err != nil {
