@@ -35,6 +35,7 @@ func Check(selector, token string, t Types) (*Token, error) {
 	if err != nil {
 		return nil, ErrInvalid
 	}
+
 	if err := tkn.Check(token, tkn.UserID, t); err != nil {
 		if err == ErrExpiredToken {
 			return nil, err
@@ -87,7 +88,7 @@ func (t *Token) Check(token string, userID int64, ty Types) error {
 
 	if subtle.ConstantTimeEq(int32(t.Type), int32(ty)) == 1 {
 		if subtle.ConstantTimeCompare(byteutil.Itob(int(t.UserID)), byteutil.Itob(int(userID))) == 1 {
-			if subtle.ConstantTimeCompare([]byte(t.token), []byte(hashToken(token))) == 1 {
+			if subtle.ConstantTimeCompare([]byte(t.TokenHash), []byte(hashToken(token))) == 1 {
 				return nil
 			}
 		}

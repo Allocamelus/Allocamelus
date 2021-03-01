@@ -1,4 +1,4 @@
-package user
+package emailtoken
 
 import (
 	"strings"
@@ -16,20 +16,20 @@ var (
 	errExpiredToken = "expired-token"
 )
 
-type emailTokenRequest struct {
+type validateRequest struct {
 	Selector string `json:"selector" form:"selector"`
 	Token    string `json:"token" form:"token"`
 }
 
-type emailTokenResp struct {
+type validateResp struct {
 	Success bool   `json:"success"`
 	UserID  int64  `json:"userId,omitempty"`
 	Error   string `json:"errors,omitempty"`
 }
 
-// EmailToken handler
-func EmailToken(c *fiber.Ctx) error {
-	request := new(emailTokenRequest)
+// Validate Email Token handler
+func Validate(c *fiber.Ctx) error {
+	request := new(validateRequest)
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
@@ -43,7 +43,7 @@ func EmailToken(c *fiber.Ctx) error {
 		} else {
 			respErr = errInvalidToken
 		}
-		return apierr.Err422(c, emailTokenResp{Error: respErr})
+		return apierr.Err422(c, validateResp{Error: respErr})
 	}
 	if err := user.UpdatePerms(tkn.UserID, user.DefaultPerms); logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
@@ -52,5 +52,5 @@ func EmailToken(c *fiber.Ctx) error {
 	if err := tkn.Delete(); logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
 	}
-	return fiberutil.JSON(c, 200, emailTokenResp{Success: true, UserID: userID})
+	return fiberutil.JSON(c, 200, validateResp{Success: true, UserID: userID})
 }
