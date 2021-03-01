@@ -2,14 +2,17 @@ package user
 
 import (
 	"strings"
+	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
 	userToken "github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/allocamelus/allocamelus/pkg/random"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -76,20 +79,13 @@ func Create(c *fiber.Ctx) error {
 			return apierr.Err422(c, createResp{Errors: errs.(validation.Errors)})
 		}
 
-		var clientIP string
-		if c.Get("CF-Connecting-IP") != "" {
-			clientIP = c.Get("CF-Connecting-IP")
-		} else if len(c.IPs()) >= 1 {
-			clientIP = c.IPs()[0]
-		}
-
 		captchaSolved := true
 		if g.Config.HCaptcha.Enabled {
 			if err := hcaptcha.Verify(hcaptcha.Values{
 				Secret:  g.Data.Config.HCaptcha.Secret,
 				Token:   token.Captcha,
 				SiteKey: g.Data.Config.HCaptcha.Moderate,
-				IP:      clientIP,
+				IP:      clientip.Get(c),
 			}); err != nil {
 				if err != hcaptcha.ErrInvalidToken {
 					logger.Error(err)
@@ -103,16 +99,16 @@ func Create(c *fiber.Ctx) error {
 			return apierr.Err401(c, "X-captcha", createResp{Errors: []string{"invalid-captcha"}})
 		}
 
-		newUser.GenerateKeys(token.Password)
-
-		// Check After GenerateKeys to prevent some timing based checking
 		if err := newUser.IsEmailUnique(); err != nil {
+			time.Sleep(time.Millisecond * (300 + time.Duration(random.FastInt(250))))
 			// Fail silently to prevent email leaks
 			return fiberutil.JSON(c, 200, createResp{
 				Success:   true,
 				BackupKey: newUser.BackupKey,
 			})
 		}
+
+		newUser.GenerateKeys(token.Password)
 
 		backupKey, err := newUser.Insert()
 		if logger.Error(err) {
