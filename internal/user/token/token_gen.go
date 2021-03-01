@@ -52,12 +52,6 @@ func (z *Token) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Selector")
 				return
 			}
-		case "token":
-			z.Token, err = dc.ReadString()
-			if err != nil {
-				err = msgp.WrapError(err, "Token")
-				return
-			}
 		case "tokenHash":
 			z.TokenHash, err = dc.ReadString()
 			if err != nil {
@@ -83,9 +77,9 @@ func (z *Token) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Token) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 7
+	// map header, size 6
 	// write "id"
-	err = en.Append(0x87, 0xa2, 0x69, 0x64)
+	err = en.Append(0x86, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
@@ -124,16 +118,6 @@ func (z *Token) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "Selector")
 		return
 	}
-	// write "token"
-	err = en.Append(0xa5, 0x74, 0x6f, 0x6b, 0x65, 0x6e)
-	if err != nil {
-		return
-	}
-	err = en.WriteString(z.Token)
-	if err != nil {
-		err = msgp.WrapError(err, "Token")
-		return
-	}
 	// write "tokenHash"
 	err = en.Append(0xa9, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x48, 0x61, 0x73, 0x68)
 	if err != nil {
@@ -160,9 +144,9 @@ func (z *Token) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Token) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 7
+	// map header, size 6
 	// string "id"
-	o = append(o, 0x87, 0xa2, 0x69, 0x64)
+	o = append(o, 0x86, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userId"
 	o = append(o, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
@@ -173,9 +157,6 @@ func (z *Token) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "selector"
 	o = append(o, 0xa8, 0x73, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72)
 	o = msgp.AppendString(o, z.Selector)
-	// string "token"
-	o = append(o, 0xa5, 0x74, 0x6f, 0x6b, 0x65, 0x6e)
-	o = msgp.AppendString(o, z.Token)
 	// string "tokenHash"
 	o = append(o, 0xa9, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x48, 0x61, 0x73, 0x68)
 	o = msgp.AppendString(o, z.TokenHash)
@@ -231,12 +212,6 @@ func (z *Token) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Selector")
 				return
 			}
-		case "token":
-			z.Token, bts, err = msgp.ReadStringBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "Token")
-				return
-			}
 		case "tokenHash":
 			z.TokenHash, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
@@ -263,7 +238,7 @@ func (z *Token) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Token) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 5 + msgp.Int8Size + 9 + msgp.StringPrefixSize + len(z.Selector) + 6 + msgp.StringPrefixSize + len(z.Token) + 10 + msgp.StringPrefixSize + len(z.TokenHash) + 11 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 5 + msgp.Int8Size + 9 + msgp.StringPrefixSize + len(z.Selector) + 10 + msgp.StringPrefixSize + len(z.TokenHash) + 11 + msgp.Int64Size
 	return
 }
 

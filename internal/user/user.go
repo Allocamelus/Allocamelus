@@ -34,7 +34,7 @@ type User struct {
 	encodedBackupKey string
 }
 
-// New user with generated keys and hashed password
+// New user
 func New(uniqueName, name, email string) *User {
 	user := new(User)
 	user.UniqueName = uniqueName
@@ -53,7 +53,7 @@ func initCreate(p data.Prepare) {
 
 // Insert new user into database
 // 	returns userId int64 & encodedBackupKey string on success
-func (u *User) Insert() (int64, string, error) {
+func (u *User) Insert() (string, error) {
 	// Insert user into database
 	r, err := preInsert.Exec(
 		u.UniqueName, u.Name,
@@ -63,12 +63,12 @@ func (u *User) Insert() (int64, string, error) {
 		u.BackupKey,
 	)
 	if err != nil {
-		return 0, "", err
+		return "", err
 	}
 
-	id, err := r.LastInsertId()
+	u.ID, err = r.LastInsertId()
 	// err not expected here with proper setup
 	logger.Error(err)
 
-	return id, u.GetEncodedBackupKey(), nil
+	return u.GetEncodedBackupKey(), nil
 }
