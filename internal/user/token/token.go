@@ -57,7 +57,7 @@ type Token struct {
 	UserID     int64  `msg:"userId"`
 	Type       Types  `msg:"type"`
 	Selector   string `msg:"selector"`
-	Token      string `msg:"token"`
+	token      string
 	TokenHash  string `msg:"tokenHash"`
 	Expiration int64  `msg:"expiration"`
 }
@@ -88,6 +88,7 @@ var (
 
 // Init prepared statements
 func Init(p data.Prepare) {
+	initCheck(p)
 	preSelectorExist = p(`SELECT EXISTS(SELECT * FROM UserTokens WHERE selector = ?)`)
 	preInsert = p(`INSERT INTO UserTokens (userId, tokenType, selector, token, expiration) VALUES (?, ?, ?, ?, ?)`)
 }
@@ -102,9 +103,14 @@ func (t *Token) Insert() error {
 	return err
 }
 
+// GetToken return token string
+func (t *Token) GetToken() string {
+	return t.token
+}
+
 func (t *Token) generatePair() {
 	t.Selector = genSelector()
-	t.Token, t.TokenHash = genTokenPair(t.Type)
+	t.token, t.TokenHash = genTokenPair(t.Type)
 }
 
 func genSelector() (selector string) {

@@ -114,19 +114,19 @@ func Create(c *fiber.Ctx) error {
 			})
 		}
 
-		userID, backupKey, err := newUser.Insert()
+		backupKey, err := newUser.Insert()
 		if logger.Error(err) {
 			return apierr.ErrSomthingWentWrong(c)
 		}
 
-		emailToken, err := userToken.NewAndInsert(userToken.Email, userID)
+		emailToken, err := userToken.NewAndInsert(userToken.Email, newUser.ID)
 		if logger.Error(err) {
 			return apierr.ErrSomthingWentWrong(c)
 		}
 		// Send Email
-		if err := emailToken.SendEmail(newUser.Email); logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
-		}
+		go func() {
+			logger.Error(emailToken.SendEmail(newUser.Email))
+		}()
 
 		return fiberutil.JSON(c, 200, createResp{Success: true, BackupKey: backupKey})
 	}

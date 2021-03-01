@@ -11,6 +11,8 @@ func User(api fiber.Router) {
 	u := api.Group("/user")
 	// /api/v1/user/create
 	u.Post("/create", user.Create)
+	// /api/v1/user/email-token
+	u.Post("/email-token", user.EmailToken)
 
 	// /api/v1/user/:id
 	uID := u.Group("/:id")
