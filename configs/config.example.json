@@ -45,6 +45,12 @@
         "username": "user",
         "password": "password"
     },
+    "path": {
+        "public": {
+            "verifyEmail": "/account/verify-email",
+            "resetPassword": "/account/reset-password"
+        }
+    },
     "redis": {
         "host": "/var/run/redis/redis-server.sock",
         "user": "",

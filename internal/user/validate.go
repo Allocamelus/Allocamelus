@@ -70,12 +70,12 @@ func (u *User) ValidUniqueName() error {
 		return ErrUniqueNameInvalid
 	}
 	// Check Database for uniqueName
-	var taken int8
+	var taken bool
 	err := preCheckUniqueName.QueryRow(u.UniqueName).Scan(&taken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken != 0 {
+	if taken {
 		return ErrUniqueNameTaken
 	}
 
@@ -125,18 +125,18 @@ func (u *User) ValidEmail() error {
 	return nil
 }
 
-// EmailUnique check if Email Exists
-func (u *User) EmailUnique() error {
+// IsEmailUnique check if Email Exists
+func (u *User) IsEmailUnique() error {
 	if len(u.Email) == 0 {
 		return ErrEmailInvalid
 	}
 	// Check Database for uniqueName
-	var taken int8
+	var taken bool
 	err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken != 0 {
+	if taken {
 		return ErrEmailTaken
 	}
 	return nil

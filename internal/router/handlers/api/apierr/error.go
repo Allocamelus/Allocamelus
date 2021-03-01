@@ -3,7 +3,11 @@ package apierr
 import (
 	"errors"
 	"strings"
+
+	jsoniter "github.com/json-iterator/go"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // APIErr struct with error
 type APIErr struct {
@@ -29,4 +33,9 @@ func (e *APIErr) AppendStr(s string) error {
 		return errors.New("apierr/error: Error appending string")
 	}
 	return nil
+}
+
+// MarshalStr APIErr
+func (e *APIErr) MarshalStr() (string, error) {
+	return json.MarshalToString(e)
 }

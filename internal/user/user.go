@@ -44,10 +44,10 @@ func New(uniqueName, name, email string) *User {
 	return user
 }
 
-var preCreate *sql.Stmt
+var preInsert *sql.Stmt
 
 func initCreate(p data.Prepare) {
-	preCreate = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created, publicKey, privateKeySalt, privateKey, backupKey)
+	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created, publicKey, privateKeySalt, privateKey, backupKey)
 		VALUES (?, ?, ?, '0', '', ?, ?, ?, ?, ?, ?)`)
 }
 
@@ -55,7 +55,7 @@ func initCreate(p data.Prepare) {
 // 	returns userId int64 & encodedBackupKey string on success
 func (u *User) Insert() (int64, string, error) {
 	// Insert user into database
-	r, err := preCreate.Exec(
+	r, err := preInsert.Exec(
 		u.UniqueName, u.Name,
 		u.Email, u.Permissions,
 		u.Created, u.PublicKey,
@@ -70,5 +70,5 @@ func (u *User) Insert() (int64, string, error) {
 	// err not expected here with proper setup
 	logger.Error(err)
 
-	return id, u.encodedBackupKey, nil
+	return id, u.GetEncodedBackupKey(), nil
 }
