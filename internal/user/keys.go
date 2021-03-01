@@ -1,8 +1,10 @@
 package user
 
 import (
+	"database/sql"
 	"errors"
 
+	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/backupkey"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
@@ -14,7 +16,12 @@ import (
 var (
 	// ErrGeneratingKeys Error for when pgp key generation or encryption fails
 	ErrGeneratingKeys = errors.New("user/user: Error generating/encrypting user keys")
+	prePrivateKeySalt *sql.Stmt
 )
+
+func initKeys(p data.Prepare) {
+	prePrivateKeySalt = p(`SELECT privateKeySalt FROM Users WHERE userId = ? LIMIT 1`)
+}
 
 // GenerateKeys from User
 //
@@ -30,6 +37,12 @@ func (u *User) GenerateKeys(password string) error {
 		return ErrGeneratingKeys
 	}
 	return nil
+}
+
+// GetPrivateKeySalt get user's privateKeySalt
+func GetPrivateKeySalt(userID int64) (pkSalt string, err error) {
+	err = prePrivateKeySalt.QueryRow(userID).Scan(&pkSalt)
+	return
 }
 
 // GetEncodedBackupKey returns user.encodedBackupKey
