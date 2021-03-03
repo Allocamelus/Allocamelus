@@ -53,6 +53,7 @@ const (
 	errInvalidCaptcha          = "invalid-captcha"
 	errInvalidUsernamePassword = "invalid-username-password"
 	errUnverifiedEmail         = "unverified-email"
+	errAuthenticated           = "already-authenticated"
 )
 
 // Auth User authentication handler
@@ -79,6 +80,17 @@ func Auth(c *fiber.Ctx) error {
 				return apierr.ErrSomthingWentWrong(c)
 			}
 			return authErr(c, errInvalidUsernamePassword)
+		}
+
+		// TODO: Multiple accounts
+		if user.LoggedIn(c) {
+			s := user.ContextSession(c)
+			if userID == s.UserID {
+				// Allow user to re-auth if the session can't decrypt
+				if s.CanDecrypt() {
+					return apierr.Err403(c, authResp{Error: errAuthenticated})
+				}
+			}
 		}
 
 		// Check if user is Verified
