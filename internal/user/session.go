@@ -1,6 +1,6 @@
 //go:generate msgp
 
-package session
+package user
 
 import (
 	"bytes"
@@ -10,18 +10,17 @@ import (
 	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/g"
-	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
 // Session user session struct
 type Session struct {
-	LoggedIn   bool       `msg:"loggedIn"`
-	UserID     int64      `msg:"userId"`
-	Perms      user.Perms `msg:"perms"`
-	PrivateKey string     `msg:"privateKey,omitempty"`
-	LoginToken []byte     `msg:"loginToken"`
+	LoggedIn   bool   `msg:"loggedIn"`
+	UserID     int64  `msg:"userId"`
+	Perms      Perms  `msg:"perms"`
+	PrivateKey string `msg:"privateKey,omitempty"`
+	LoginToken []byte `msg:"loginToken"`
 }
 
 const storeName = "session"
@@ -33,11 +32,11 @@ func NewFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) 
 	session.UserID = userID
 	session.PrivateKey = privateKey
 
-	pkSalt, err := user.GetPrivateKeySalt(userID)
+	pkSalt, err := GetPrivateKeySalt(userID)
 	if err != nil {
 		return nil, err
 	}
-	perms, err := user.GetPerms(userID)
+	perms, err := GetPerms(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +44,20 @@ func NewFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) 
 	session.Perms = perms
 	session.LoginToken = genLoginToken(c, []byte(pkSalt))
 	return session, nil
+}
+
+// ToContext set user session to context
+func ToContext(c *fiber.Ctx) {
+	c.Locals(storeName, FromStore(c))
+}
+
+// FromContext get user session from fiber context
+func FromContext(c *fiber.Ctx) *Session {
+	session := c.Locals(storeName)
+	if session != nil {
+		return session.(*Session)
+	}
+	return &Session{}
 }
 
 // ToStore set user session to session store
@@ -88,7 +101,7 @@ func (s *Session) checkToken(c *fiber.Ctx) error {
 		return errToken
 	}
 
-	pkSalt, err := user.GetPrivateKeySalt(s.UserID)
+	pkSalt, err := GetPrivateKeySalt(s.UserID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
