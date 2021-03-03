@@ -53,6 +53,9 @@ const (
 
 // Create user handler
 func Create(c *fiber.Ctx) error {
+	if user.LoggedIn(c) {
+		return apierr.Err403(c, createResp{Errors: []string{"logged-in"}})
+	}
 	request := new(createRequest)
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
@@ -79,7 +82,6 @@ func Create(c *fiber.Ctx) error {
 			return apierr.Err422(c, createResp{Errors: errs.(validation.Errors)})
 		}
 
-		captchaSolved := true
 		if g.Config.HCaptcha.Enabled {
 			if err := hcaptcha.Verify(hcaptcha.Values{
 				Secret:  g.Data.Config.HCaptcha.Secret,
@@ -91,12 +93,8 @@ func Create(c *fiber.Ctx) error {
 					logger.Error(err)
 					return apierr.ErrSomthingWentWrong(c)
 				}
-				captchaSolved = false
+				return apierr.Err401(c, "X-captcha", createResp{Errors: []string{"invalid-captcha"}})
 			}
-		}
-
-		if !captchaSolved {
-			return apierr.Err401(c, "X-captcha", createResp{Errors: []string{"invalid-captcha"}})
 		}
 
 		if err := newUser.IsEmailUnique(); err != nil {

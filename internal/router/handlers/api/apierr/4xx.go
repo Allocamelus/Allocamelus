@@ -28,6 +28,11 @@ func Err401(c *fiber.Ctx, wwwAuth string, data interface{}) error {
 	return fiberutil.JSON(c, 401, data)
 }
 
+// Err403 403 Forbidden
+func Err403(c *fiber.Ctx, data interface{}) error {
+	return fiberutil.JSON(c, 403, data)
+}
+
 // Err404 404 Not Found
 func Err404(c *fiber.Ctx, data interface{}) error {
 	return fiberutil.JSON(c, 404, data)

@@ -41,7 +41,6 @@ func Create(c *fiber.Ctx) error {
 		return apierr.Err422(c, createResp{Error: errInvalidEmail})
 	}
 
-	captchaSolved := true
 	if g.Config.HCaptcha.Enabled {
 		if err := hcaptcha.Verify(hcaptcha.Values{
 			Secret:  g.Data.Config.HCaptcha.Secret,
@@ -53,12 +52,8 @@ func Create(c *fiber.Ctx) error {
 				logger.Error(err)
 				return apierr.ErrSomthingWentWrong(c)
 			}
-			captchaSolved = false
+			return apierr.Err401(c, "X-captcha", createResp{Error: "invalid-captcha"})
 		}
-	}
-
-	if !captchaSolved {
-		return apierr.Err401(c, "X-captcha", createResp{Error: "invalid-captcha"})
 	}
 
 	userID, err := user.GetIDByEmail(request.Email)
@@ -71,11 +66,11 @@ func Create(c *fiber.Ctx) error {
 		return fiberutil.JSON(c, 200, createResp{Success: true})
 	}
 
-	perms, err := user.GetPerms(userID)
+	verified, err := user.IsVerified(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
 	}
-	if perms != 0 {
+	if verified {
 		// Fail silently
 		return fiberutil.JSON(c, 200, createResp{Success: true})
 	}

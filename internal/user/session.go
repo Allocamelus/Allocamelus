@@ -1,5 +1,3 @@
-//go:generate msgp
-
 package user
 
 import (
@@ -10,23 +8,15 @@ import (
 	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
-// Session user session struct
-type Session struct {
-	LoggedIn   bool   `msg:"loggedIn"`
-	UserID     int64  `msg:"userId"`
-	Perms      Perms  `msg:"perms"`
-	PrivateKey string `msg:"privateKey,omitempty"`
-	LoginToken []byte `msg:"loginToken"`
-}
-
 const storeName = "session"
 
 // NewSessionFromID new session from user id
-func NewSessionFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) {
+func NewSessionFromID(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session, error) {
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
@@ -60,36 +50,47 @@ func SessionFromContext(c *fiber.Ctx) *Session {
 	return &Session{}
 }
 
+// LoggedIn User
+func LoggedIn(c *fiber.Ctx) bool {
+	return SessionFromContext(c).LoggedIn
+}
+
 // ToStore set user session to session store
-func (s *Session) ToStore(c *fiber.Ctx) {
+func (s *Session) ToStore(c *fiber.Ctx) error {
 	if s != nil {
+		sessionBytes, err := s.MarshalMsg(nil)
+		if err != nil {
+			return err
+		}
+
 		store := g.Session.Get(c)
 		store.Regenerate()
-		store.Set(storeName, *s)
-	} else {
-		logger.Error(errors.New("session/session: nil *Session"))
+		return store.Set(storeName, sessionBytes)
 	}
+	return errors.New("session/session: nil *Session")
 }
 
 // SessionFromStore get user session from session store
 func SessionFromStore(c *fiber.Ctx) *Session {
-	session := Session{}
+	session := new(Session)
 	store := g.Session.Get(c)
-	sessionInter, err := store.Get(storeName)
+	sessionBytes, err := store.GetBytes(storeName)
 	if err != nil {
-		return &session
+		return session
 	}
 
-	session = sessionInter.(Session)
+	_, err = session.UnmarshalMsg(sessionBytes)
+	logger.Error(err)
+
 	if !session.LoggedIn {
-		return &session
+		return session
 	}
 
 	if err := session.checkToken(c); err != nil {
 		// default session values
-		session = Session{}
+		session = new(Session)
 	}
-	return &session
+	return session
 }
 
 var (
