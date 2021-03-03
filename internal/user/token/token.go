@@ -86,9 +86,7 @@ var (
 	preInsert        *sql.Stmt
 )
 
-// Init prepared statements
-func Init(p data.Prepare) {
-	initCheck(p)
+func initToken(p data.Prepare) {
 	preSelectorExist = p(`SELECT EXISTS(SELECT * FROM UserTokens WHERE selector = ?)`)
 	preInsert = p(`INSERT INTO UserTokens (userId, tokenType, selector, token, expiration) VALUES (?, ?, ?, ?, ?)`)
 }

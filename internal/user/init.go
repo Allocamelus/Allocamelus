@@ -9,6 +9,7 @@ import (
 func Init(p data.Prepare) {
 	token.Init(p)
 	initID(p)
+	initKeys(p)
 	initPerms(p)
 	initCreate(p)
 	initValidate(p)
