@@ -25,8 +25,8 @@ type Session struct {
 
 const storeName = "session"
 
-// NewFromID new session from user id
-func NewFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) {
+// NewSessionFromID new session from user id
+func NewSessionFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) {
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
@@ -46,13 +46,13 @@ func NewFromID(c *fiber.Ctx, userID int64, privateKey string) (*Session, error) 
 	return session, nil
 }
 
-// ToContext set user session to context
-func ToContext(c *fiber.Ctx) {
-	c.Locals(storeName, FromStore(c))
+// SessionToContext set user session to context
+func SessionToContext(c *fiber.Ctx) {
+	c.Locals(storeName, SessionFromStore(c))
 }
 
-// FromContext get user session from fiber context
-func FromContext(c *fiber.Ctx) *Session {
+// SessionFromContext get user session from fiber context
+func SessionFromContext(c *fiber.Ctx) *Session {
 	session := c.Locals(storeName)
 	if session != nil {
 		return session.(*Session)
@@ -71,8 +71,8 @@ func (s *Session) ToStore(c *fiber.Ctx) {
 	}
 }
 
-// FromStore get user session from session store
-func FromStore(c *fiber.Ctx) *Session {
+// SessionFromStore get user session from session store
+func SessionFromStore(c *fiber.Ctx) *Session {
 	session := Session{}
 	store := g.Session.Get(c)
 	sessionInter, err := store.Get(storeName)

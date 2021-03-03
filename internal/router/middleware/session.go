@@ -9,7 +9,7 @@ import (
 
 // Session saving middelware
 func Session(c *fiber.Ctx) error {
-	user.ToContext(c)
+	user.SessionToContext(c)
 	// next routes
 	if err := c.Next(); !logger.Error(err) {
 		g.Session.Set(c)
