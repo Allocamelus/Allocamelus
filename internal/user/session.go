@@ -41,8 +41,8 @@ func SessionToContext(c *fiber.Ctx) {
 	c.Locals(storeName, SessionFromStore(c))
 }
 
-// SessionFromContext get user session from fiber context
-func SessionFromContext(c *fiber.Ctx) *Session {
+// ContextSession get user session from fiber context
+func ContextSession(c *fiber.Ctx) *Session {
 	session := c.Locals(storeName)
 	if session != nil {
 		return session.(*Session)
@@ -52,7 +52,7 @@ func SessionFromContext(c *fiber.Ctx) *Session {
 
 // LoggedIn User
 func LoggedIn(c *fiber.Ctx) bool {
-	return SessionFromContext(c).LoggedIn
+	return ContextSession(c).LoggedIn
 }
 
 // ToStore set user session to session store
@@ -91,6 +91,11 @@ func SessionFromStore(c *fiber.Ctx) *Session {
 		session = new(Session)
 	}
 	return session
+}
+
+// CanDecrypt can session decrypt
+func (s *Session) CanDecrypt() bool {
+	return !(len(s.PrivateKey.Armored) == 0)
 }
 
 var (

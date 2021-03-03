@@ -13,6 +13,9 @@ import (
 // ErrNoSession returned by Data Get on no session found
 var ErrNoSession = errors.New("Error No Session")
 
+// fiber.Ctx.Local name/key
+const ctxName = "fiCtxS"
+
 // Data interface of storage of session
 type Data interface {
 	// Returns session, error
@@ -73,7 +76,7 @@ func (s *Store) Get(c *fiber.Ctx) *Session {
 		key = s.Key.Generator(s.Key.Length)
 	}
 
-	if session, ok := c.Locals("session").(*Session); ok {
+	if session, ok := c.Locals(ctxName).(*Session); ok {
 		if !s.timesGood(session) {
 			session.Regenerate()
 		}
@@ -89,14 +92,14 @@ func (s *Store) Get(c *fiber.Ctx) *Session {
 	} else {
 		session.Status = NotUpdated
 	}
-	c.Locals("session", session)
+	c.Locals(ctxName, session)
 
 	return session
 }
 
 // Set session to store
 func (s *Store) Set(c *fiber.Ctx) {
-	session, ok := c.Locals("session").(*Session)
+	session, ok := c.Locals(ctxName).(*Session)
 	if ok {
 		if s.timesGood(session) {
 			if session.Status == NotUpdated {
