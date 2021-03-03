@@ -18,11 +18,13 @@ var (
 	ErrGeneratingKeys = errors.New("user/user: Error generating/encrypting user keys")
 	// ErrDecryptingKey Error Decrypting Key
 	ErrDecryptingKey  = errors.New("user/user: Error Decrypting Key")
+	prePublicKey      *sql.Stmt
 	prePrivateKey     *sql.Stmt
 	prePrivateKeySalt *sql.Stmt
 )
 
 func initKeys(p data.Prepare) {
+	prePublicKey = p(`SELECT publicKey FROM Users WHERE userId = ? LIMIT 1`)
 	prePrivateKey = p(`SELECT privateKey FROM Users WHERE userId = ? LIMIT 1`)
 	prePrivateKeySalt = p(`SELECT privateKeySalt FROM Users WHERE userId = ? LIMIT 1`)
 }
@@ -68,6 +70,12 @@ func GetAndDecryptPK(userID int64, password string) (string, error) {
 	}
 
 	return string(pk), nil
+}
+
+// GetPublicKey get user's encrypted publicKey
+func GetPublicKey(userID int64) (pk pgp.PublicKey, err error) {
+	err = prePublicKey.QueryRow(userID).Scan(&pk.Armored)
+	return
 }
 
 // GetPrivateKey get user's encrypted privateKey
