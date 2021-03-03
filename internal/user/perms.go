@@ -45,6 +45,20 @@ func UpdatePerms(userID int64, perms Perms) error {
 	return err
 }
 
+// IsVerified is user perms != 0
+func IsVerified(userID int64) (bool, error) {
+	perms, err := GetPerms(userID)
+	if err != nil {
+		return false, err
+	}
+	return perms.NotZero(), nil
+}
+
+// NotZero is perms != 0
+func (p Perms) NotZero() bool {
+	return (p != 0)
+}
+
 // CanPost can user post
 func (p Perms) CanPost() bool {
 	return (p&Post == Post)

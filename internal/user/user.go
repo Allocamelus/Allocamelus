@@ -7,11 +7,21 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 // Perms permissions
 type Perms int64
+
+// Session user session struct
+type Session struct {
+	LoggedIn   bool           `msg:"loggedIn"`
+	UserID     int64          `msg:"userId"`
+	Perms      Perms          `msg:"perms"`
+	PrivateKey pgp.PrivateKey `msg:"privateKey"`
+	LoginToken []byte         `msg:"loginToken"`
+}
 
 // User Struct
 type User struct {

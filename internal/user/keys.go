@@ -47,29 +47,31 @@ func (u *User) GenerateKeys(password string) error {
 
 // GetAndDecryptPK get and decrypt private key
 //	return string (private key) error (err)
-func GetAndDecryptPK(userID int64, password string) (string, error) {
+func GetAndDecryptPK(userID int64, password string) (*pgp.PrivateKey, error) {
+	pk := new(pgp.PrivateKey)
 	cryptPK, err := GetPrivateKey(userID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	cost, err := GetPrivateKeySalt(userID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	costObj, _, err := argon2id.Parse(cost)
 	// Should not happen log just incase
 	if logger.Error(err) {
-		return "", errors.New("user/keys: Error Parsing password cost")
+		return nil, errors.New("user/keys: Error Parsing password cost")
 	}
 
 	passwordObj := argon2id.HashSalt(password, costObj.Salt, costObj.Cost)
 
-	pk, err := aesgcm.DecryptBase64(passwordObj.Key, cryptPK)
+	pkArmored, err := aesgcm.DecryptBase64(passwordObj.Key, cryptPK)
 	if err != nil {
-		return "", ErrDecryptingKey
+		return nil, ErrDecryptingKey
 	}
 
-	return string(pk), nil
+	pk.Armored = string(pkArmored)
+	return pk, nil
 }
 
 // GetPublicKey get user's encrypted publicKey

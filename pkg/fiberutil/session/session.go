@@ -6,11 +6,14 @@ import (
 	"time"
 )
 
-// ErrNilKey returned when key has 0 or less length
-var ErrNilKey = errors.New("Session: Error 0 length key")
-
-// ErrNilValue returned when value is nil
-var ErrNilValue = errors.New("Session: Error nil vale")
+var (
+	// ErrNilKey returned when key has 0 or less length
+	ErrNilKey = errors.New("Session: Error 0 length key")
+	// ErrNilValue returned when value is nil
+	ErrNilValue = errors.New("Session: Error nil value")
+	// ErrValueType returned when value type is invalid
+	ErrValueType = errors.New("Session: Error invalid value type")
+)
 
 // Status of Session
 type Status int8
@@ -99,6 +102,18 @@ func (s *Session) Get(key string) (interface{}, error) {
 		return nil, ErrNilValue
 	}
 	return nil, ErrNilKey
+}
+
+// GetBytes from session
+func (s *Session) GetBytes(key string) ([]byte, error) {
+	bInter, err := s.Get(key)
+	if err != nil {
+		return nil, err
+	}
+	if b, ok := bInter.([]byte); ok {
+		return b, nil
+	}
+	return nil, ErrValueType
 }
 
 // Delete session does not regenerate
