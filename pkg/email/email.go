@@ -96,14 +96,13 @@ func (e *Email) Send(config Config) error {
 		email.SetFrom(e.From).
 			AddTo(to).
 			SetSubject(e.Subject)
-
-		if e.Body.HTML != "" {
-			email.SetBody(mail.TextHTML, e.Body.HTML)
-			if e.Body.Plain != "" {
-				email.AddAlternative(mail.TextPlain, e.Body.Plain)
+		if e.Body.Plain != "" {
+			email.SetBody(mail.TextPlain, e.Body.Plain)
+			if e.Body.HTML != "" {
+				email.AddAlternative(mail.TextHTML, e.Body.HTML)
 			}
 		} else {
-			email.SetBody(mail.TextPlain, e.Body.Plain)
+			email.SetBody(mail.TextHTML, e.Body.HTML)
 		}
 		// Call Send and pass the client
 		err = email.Send(smtpClient)
