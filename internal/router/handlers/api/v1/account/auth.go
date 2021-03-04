@@ -8,6 +8,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -54,6 +55,8 @@ const (
 	errInvalidUsernamePassword = "invalid-username-password"
 	errUnverifiedEmail         = "unverified-email"
 	errAuthenticated           = "already-authenticated"
+	// Persistent Auth Failed
+	errAuthToken = "persistent-auth-failed"
 )
 
 // Auth User authentication handler
@@ -146,7 +149,15 @@ func Auth(c *fiber.Ctx) error {
 			}
 			return authErr(c, errInvalidUsernamePassword)
 		}
-		// TODO: Implement Remember
+
+		if authToken.Remember {
+			// Set persistent auth token
+			if err := token.SetAuth(c, userID); logger.Error(err) {
+				// successful failure
+				return fiberutil.JSON(c, 200, authResp{Success: true, Error: errAuthToken})
+			}
+		}
+
 		return fiberutil.JSON(c, 200, authResp{Success: true})
 	}
 	return apierr.Err422(c, errInvalidWith)

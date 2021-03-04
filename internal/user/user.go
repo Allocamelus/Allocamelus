@@ -21,6 +21,7 @@ type Session struct {
 	Perms      Perms          `msg:"perms"`
 	PrivateKey pgp.PrivateKey `msg:"privateKey"`
 	LoginToken []byte         `msg:"loginToken"`
+	NotNew     bool           `msg:"notNew"`
 }
 
 // User Struct
