@@ -10,7 +10,7 @@
         "enabled": false
     },
     "cookie": {
-        "prefix": "backplate-s_"
+        "prefix": "allocamelus_"
     },
     "db": {
         "Net": "unix",

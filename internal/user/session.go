@@ -9,14 +9,15 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
 const storeName = "session"
 
-// NewSessionFromID new session from user id
-func NewSessionFromID(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session, error) {
+// NewSession new session
+func NewSession(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session, error) {
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
@@ -36,9 +37,15 @@ func NewSessionFromID(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*S
 	return session, nil
 }
 
+// NewSessionFromID new session from user id
+// Can not Decrypt
+func NewSessionFromID(c *fiber.Ctx, userID int64) (*Session, error) {
+	return NewSession(c, userID, pgp.PrivateKey{})
+}
+
 // SessionToContext set user session to context
 func SessionToContext(c *fiber.Ctx) {
-	c.Locals(storeName, SessionFromStore(c))
+	c.Locals(storeName, GetSession(c))
 }
 
 // ContextSession get user session from fiber context
@@ -70,8 +77,27 @@ func (s *Session) ToStore(c *fiber.Ctx) error {
 	return errors.New("session/session: nil *Session")
 }
 
-// SessionFromStore get user session from session store
-func SessionFromStore(c *fiber.Ctx) *Session {
+// GetSession get session from store
+// attempt auth login on New session
+func GetSession(c *fiber.Ctx) *Session {
+	session := sessionFromStore(c)
+	// If Not Not New
+	if !session.NotNew {
+		var err error
+		session, err = authTokenLogin(c)
+		if err != nil {
+			if err != sql.ErrNoRows && err != token.ErrAuthCookie {
+				logger.Error(err)
+			}
+			// empty session
+			session = new(Session)
+		}
+	}
+	return session
+}
+
+// sessionFromStore get user session from session store
+func sessionFromStore(c *fiber.Ctx) *Session {
 	session := new(Session)
 	store := g.Session.Get(c)
 	sessionBytes, err := store.GetBytes(storeName)
@@ -81,6 +107,9 @@ func SessionFromStore(c *fiber.Ctx) *Session {
 
 	_, err = session.UnmarshalMsg(sessionBytes)
 	logger.Error(err)
+
+	// Set NotNew because token was fetched from store
+	session.NotNew = true
 
 	if !session.LoggedIn {
 		return session

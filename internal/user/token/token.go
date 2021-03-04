@@ -27,9 +27,8 @@ const (
 )
 
 const (
-	selectorBytes  int = 9
-	tokenBytes     int = 32
-	tokenCodeBytes int = 8
+	selectorBytes int = 9
+	tokenBytes    int = 32
 	// 1 hours
 	emailMaxLife time.Duration = time.Hour * 1
 	// 1 hours
@@ -59,6 +58,7 @@ type Token struct {
 	Selector   string `msg:"selector"`
 	token      string
 	TokenHash  string `msg:"tokenHash"`
+	Created    int64  `msg:"created"`
 	Expiration int64  `msg:"expiration"`
 }
 
@@ -68,6 +68,7 @@ func New(t Types, userID int64) *Token {
 	token.UserID = userID
 	token.Type = t
 	token.generatePair()
+	token.Created = time.Now().Unix()
 	token.Expiration = time.Now().Add(TypeMaxLife(t)).Unix()
 	return token
 }
@@ -88,7 +89,7 @@ var (
 
 func initToken(p data.Prepare) {
 	preSelectorExist = p(`SELECT EXISTS(SELECT * FROM UserTokens WHERE selector = ?)`)
-	preInsert = p(`INSERT INTO UserTokens (userId, tokenType, selector, token, expiration) VALUES (?, ?, ?, ?, ?)`)
+	preInsert = p(`INSERT INTO UserTokens (userId, tokenType, selector, token, created, expiration) VALUES (?, ?, ?, ?, ?, ?)`)
 }
 
 // Insert token into database
@@ -96,7 +97,7 @@ func (t *Token) Insert() error {
 	_, err := preInsert.Exec(
 		t.UserID, t.Type,
 		t.Selector, t.TokenHash,
-		t.Expiration,
+		t.Created, t.Expiration,
 	)
 	return err
 }

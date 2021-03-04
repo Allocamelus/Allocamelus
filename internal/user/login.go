@@ -1,10 +1,14 @@
 package user
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/user/event"
+	"github.com/allocamelus/allocamelus/internal/user/token"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -54,14 +58,44 @@ func PasswordLogin(c *fiber.Ctx, userID int64, password string) error {
 	privateKey, err := GetAndDecryptPK(userID, password)
 	if err != nil {
 		if err == ErrDecryptingKey {
+			publickey, err := GetPublicKey(userID)
+			logger.Error(err)
+			event.InsertLoginAttempt(c, userID, publickey)
 			return ErrInvalidPassword
 		}
 		return err
 	}
-	session, err := NewSessionFromID(c, userID, *privateKey)
+
+	session, err := NewSession(c, userID, *privateKey)
 	if err != nil {
 		return err
 	}
-	session.ToStore(c)
-	return nil
+
+	return session.ToStore(c)
+}
+
+// Logout user logs own errors
+func Logout(c *fiber.Ctx) {
+	session := g.Session.Get(c)
+	session.Delete()
+	err := token.DeleteAuth(c)
+	if err != sql.ErrNoRows && err != token.ErrAuthCookie {
+		logger.Error(err)
+	}
+}
+
+func authTokenLogin(c *fiber.Ctx) (*Session, error) {
+	userToken, err := token.GetAuth(c)
+	if err != nil {
+		return nil, err
+	}
+
+	session, err := NewSessionFromID(c, userToken.UserID)
+	if err != nil {
+		return nil, err
+	}
+	if err := session.ToStore(c); err != nil {
+		return nil, err
+	}
+	return session, nil
 }
