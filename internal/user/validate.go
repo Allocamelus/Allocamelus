@@ -177,6 +177,11 @@ var (
 
 // ValidPassword check password
 func (u *User) ValidPassword(pass string) error {
+	return ValidPassword(pass, u.UniqueName, u.Name, u.Email)
+}
+
+// ValidPassword check password
+func ValidPassword(pass string, userInputs ...string) error {
 	if err := validation.Validate(pass,
 		validation.Required,
 		validation.Length(8, 1024),
@@ -190,7 +195,7 @@ func (u *User) ValidPassword(pass string) error {
 	}
 	if rating := zxcvbn.PasswordStrength(
 		pass[:passLen],
-		[]string{u.UniqueName, u.Name, u.Email},
+		userInputs,
 	); rating.Score <= 2 {
 		return ErrPasswordStrength
 	}

@@ -8,7 +8,6 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
-	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 // Perms permissions
@@ -58,8 +57,8 @@ func New(uniqueName, name, email string) *User {
 var preInsert *sql.Stmt
 
 func initCreate(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created, publicKey, privateKeySalt, privateKey, backupKey)
-		VALUES (?, ?, ?, '0', '', ?, ?, ?, ?, ?, ?)`)
+	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created)
+		VALUES (?, ?, ?, '0', '', ?, ?)`)
 }
 
 // Insert new user into database
@@ -69,17 +68,22 @@ func (u *User) Insert() (string, error) {
 	r, err := preInsert.Exec(
 		u.UniqueName, u.Name,
 		u.Email, u.Permissions,
-		u.Created, u.PublicKey,
-		u.PrivateKeySalt, u.PrivateKey,
-		u.BackupKey,
+		u.Created,
 	)
 	if err != nil {
 		return "", err
 	}
 
 	u.ID, err = r.LastInsertId()
-	// err not expected here with proper setup
-	logger.Error(err)
+	if err != nil {
+		return "", err
+	}
+
+	// Insert Key into userKeys table
+	err = u.insertKey()
+	if err != nil {
+		return "", err
+	}
 
 	return u.GetEncodedBackupKey(), nil
 }
