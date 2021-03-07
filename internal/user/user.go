@@ -8,6 +8,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 )
 
 // Perms permissions
@@ -34,14 +35,6 @@ type User struct {
 	Likes       int64  `msg:"likes" json:"likes"`
 	Permissions Perms  `msg:"permissions" json:"-"`
 	Created     int64  `msg:"created" json:"created"`
-	PublicKey   string `msg:"publicKey,omitempty" json:"publicKey,omitempty"`
-	// Salt used in Argon2id to derive encryption key
-	PrivateKeySalt string `msg:"privateKeySalt,omitempty" json:"-"`
-	PrivateKey     string `msg:"privateKey,omitempty" json:"-"`
-	// Backup PrivateKey encrypted with encodedBackupKey
-	BackupKey string `msg:"backupKey,omitempty" json:"-"`
-	// Encoded Key for encrypting BackupKey
-	encodedBackupKey string
 }
 
 // New user
@@ -62,8 +55,8 @@ func initCreate(p data.Prepare) {
 }
 
 // Insert new user into database
-// 	returns userId int64 & encodedBackupKey string on success
-func (u *User) Insert() (string, error) {
+// 	returns nil and sets user.ID on success
+func (u *User) Insert() error {
 	// Insert user into database
 	r, err := preInsert.Exec(
 		u.UniqueName, u.Name,
@@ -71,19 +64,29 @@ func (u *User) Insert() (string, error) {
 		u.Created,
 	)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	u.ID, err = r.LastInsertId()
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	// Insert Key into userKeys table
-	err = u.insertKey()
+	return nil
+}
+
+// UpdatePassword for User
+//
+// Password Reset Event should be called after this
+func UpdatePassword(userID int64, password string) (backupKey string, err error) {
+	k, err := key.NewPair(userID, password)
 	if err != nil {
-		return "", err
+		return
 	}
-
-	return u.GetEncodedBackupKey(), nil
+	// update key
+	err = k.UpdateKey()
+	if err != nil {
+		return
+	}
+	return k.GetEncodedBackupKey(), nil
 }

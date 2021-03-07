@@ -52,12 +52,6 @@ func (z *Event) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "EncInfo")
 				return
 			}
-		case "encInfoKey":
-			z.EncInfoKey, err = dc.ReadString()
-			if err != nil {
-				err = msgp.WrapError(err, "EncInfoKey")
-				return
-			}
 		default:
 			err = dc.Skip()
 			if err != nil {
@@ -71,9 +65,9 @@ func (z *Event) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Event) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 5
+	// map header, size 4
 	// write "userId"
-	err = en.Append(0x85, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
+	err = en.Append(0x84, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
 	if err != nil {
 		return
 	}
@@ -112,25 +106,15 @@ func (z *Event) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "EncInfo")
 		return
 	}
-	// write "encInfoKey"
-	err = en.Append(0xaa, 0x65, 0x6e, 0x63, 0x49, 0x6e, 0x66, 0x6f, 0x4b, 0x65, 0x79)
-	if err != nil {
-		return
-	}
-	err = en.WriteString(z.EncInfoKey)
-	if err != nil {
-		err = msgp.WrapError(err, "EncInfoKey")
-		return
-	}
 	return
 }
 
 // MarshalMsg implements msgp.Marshaler
 func (z *Event) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 5
+	// map header, size 4
 	// string "userId"
-	o = append(o, 0x85, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
+	o = append(o, 0x84, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
 	o = msgp.AppendInt64(o, z.UserID)
 	// string "type"
 	o = append(o, 0xa4, 0x74, 0x79, 0x70, 0x65)
@@ -141,9 +125,6 @@ func (z *Event) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "encInfo"
 	o = append(o, 0xa7, 0x65, 0x6e, 0x63, 0x49, 0x6e, 0x66, 0x6f)
 	o = msgp.AppendString(o, z.EncInfo)
-	// string "encInfoKey"
-	o = append(o, 0xaa, 0x65, 0x6e, 0x63, 0x49, 0x6e, 0x66, 0x6f, 0x4b, 0x65, 0x79)
-	o = msgp.AppendString(o, z.EncInfoKey)
 	return
 }
 
@@ -193,12 +174,6 @@ func (z *Event) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "EncInfo")
 				return
 			}
-		case "encInfoKey":
-			z.EncInfoKey, bts, err = msgp.ReadStringBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "EncInfoKey")
-				return
-			}
 		default:
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -213,7 +188,7 @@ func (z *Event) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Event) Msgsize() (s int) {
-	s = 1 + 7 + msgp.Int64Size + 5 + msgp.Int8Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.EncInfo) + 11 + msgp.StringPrefixSize + len(z.EncInfoKey)
+	s = 1 + 7 + msgp.Int64Size + 5 + msgp.Int8Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.EncInfo)
 	return
 }
 

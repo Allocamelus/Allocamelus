@@ -7,6 +7,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/user/event"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -55,10 +56,10 @@ var ErrInvalidPassword = errors.New("user/login: Invalid User Password")
 
 // PasswordLogin Attempt
 func PasswordLogin(c *fiber.Ctx, userID int64, password string) error {
-	privateKey, err := GetAndDecryptPK(userID, password)
+	privateKey, err := key.GetAndDecryptPK(userID, password)
 	if err != nil {
-		if err == ErrDecryptingKey {
-			publickey, err := GetPublicKey(userID)
+		if err == key.ErrDecryptingKey {
+			publickey, err := key.GetPublicKey(userID)
 			logger.Error(err)
 			event.InsertLoginAttempt(c, userID, publickey)
 			return ErrInvalidPassword

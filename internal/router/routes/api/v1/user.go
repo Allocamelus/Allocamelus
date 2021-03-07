@@ -2,7 +2,9 @@ package v1
 
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user"
-	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/emailtoken"
+	emailtoken "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/email-token"
+	passreset "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset"
+	passresetval "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset/validate"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,6 +19,15 @@ func User(api fiber.Router) {
 	uET.Post("/", emailtoken.Create)
 	// /api/v1/user/email-token/validate
 	uET.Post("/validate", emailtoken.Validate)
+
+	// /api/v1/user/password-reset
+	uPR := u.Group("/password-reset")
+	// /api/v1/user/password-reset/token
+	uPR.Post("/token", passreset.CreateToken)
+	// /api/v1/user/password-reset/validate
+	uPRV := uPR.Group("/validate")
+	// /api/v1/user/password-reset/validate/token
+	uPRV.Post("/token", passresetval.Token)
 
 	// /api/v1/user/:id
 	uID := u.Group("/:id")

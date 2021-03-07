@@ -1,17 +1,14 @@
 package event
 
 import (
-	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/gofiber/fiber/v2"
 )
 
 // InsertLoginAttempt for user
-func InsertLoginAttempt(c *fiber.Ctx, userID int64, pk pgp.PublicKey) error {
-	a, err := New(c, LoginAttempt, userID, pk)
-	if err != nil {
-		return err
-	}
-	return a.Insert()
+func InsertLoginAttempt(c *fiber.Ctx, userID int64, pk ...*key.Key) error {
+	_, err := InsertNew(c, LoginAttempt, userID, pk...)
+	return err
 }
 
 // GetLoginAttempts for user

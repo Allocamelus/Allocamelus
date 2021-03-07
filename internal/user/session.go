@@ -9,6 +9,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,7 @@ func NewSession(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session
 	session.UserID = userID
 	session.PrivateKey = privateKey
 
-	pkSalt, err := GetPrivateKeySalt(userID)
+	pkSalt, err := key.GetPrivateKeySalt(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +137,7 @@ func (s *Session) checkToken(c *fiber.Ctx) error {
 		return errToken
 	}
 
-	pkSalt, err := GetPrivateKeySalt(s.UserID)
+	pkSalt, err := key.GetPrivateKeySalt(s.UserID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
