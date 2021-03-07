@@ -1,6 +1,8 @@
 package key
 
 import (
+	"crypto/sha512"
+	"encoding/base64"
 	"errors"
 	"strconv"
 
@@ -10,6 +12,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/aesgcm"
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"golang.org/x/crypto/sha3"
 )
 
 // Generate Keys from User
@@ -54,7 +57,14 @@ func (k *Key) generateKeys(password string) error {
 	// Generate backup/recovery key
 	backupKey, encodedBackupKey := backupkey.Create()
 	k.BackupKey = aesgcm.EncryptBase64(backupKey, []byte(privateKey.Armored))
+	k.RecoveryKeyHash = hashRecoveryKey(backupKey)
 	k.encodedBackupKey = encodedBackupKey
 
 	return nil
+}
+
+func hashRecoveryKey(rk []byte) string {
+	s2 := sha512.Sum512(rk)
+	s3 := sha3.Sum512(s2[:])
+	return base64.RawStdEncoding.EncodeToString(s3[:])
 }
