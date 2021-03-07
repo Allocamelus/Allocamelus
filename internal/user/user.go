@@ -29,7 +29,7 @@ type User struct {
 	ID          int64  `msg:"id" json:"id"`
 	UniqueName  string `msg:"uniqueName" json:"uniqueName"`
 	Name        string `msg:"name" json:"name"`
-	Email       string `msg:"email" json:"email"`
+	Email       string `msg:"email" json:"email,omitempty"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
 	Bio         string `msg:"bio" json:"bio"`
 	Likes       int64  `msg:"likes" json:"likes"`
@@ -47,11 +47,15 @@ func New(uniqueName, name, email string) *User {
 	return user
 }
 
-var preInsert *sql.Stmt
+var (
+	preInsert    *sql.Stmt
+	preGetPublic *sql.Stmt
+)
 
-func initCreate(p data.Prepare) {
+func initUser(p data.Prepare) {
 	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created)
-		VALUES (?, ?, ?, '0', '', ?, ?)`)
+		VALUES (?, ?, ?, 0, '', ?, ?)`)
+	preGetPublic = p(`SELECT uniqueName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
 // Insert new user into database
@@ -73,6 +77,16 @@ func (u *User) Insert() error {
 	}
 
 	return nil
+}
+
+// GetPublic user info
+// TODO: Likes
+// TODO: Cache
+func GetPublic(userID int64) (User, error) {
+	var u User
+	u.ID = userID
+	err := preGetPublic.QueryRow(userID).Scan(&u.UniqueName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
+	return u, err
 }
 
 // UpdatePassword for User

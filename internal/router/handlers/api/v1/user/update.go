@@ -6,6 +6,7 @@ import (
 )
 
 // Update user handler
+// TODO
 func Update(c *fiber.Ctx) error {
 	return fiberutil.JSON(c, 200, fiber.Map{"type": "update"})
 }

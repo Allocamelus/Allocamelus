@@ -14,6 +14,6 @@ func Init(p data.Prepare) {
 	token.Init(p)
 	initID(p)
 	initPerms(p)
-	initCreate(p)
+	initUser(p)
 	initValidate(p)
 }

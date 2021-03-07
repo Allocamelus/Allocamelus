@@ -6,6 +6,7 @@ import (
 )
 
 // Delete User handler
+// TODO
 func Delete(c *fiber.Ctx) error {
 	return fiberutil.JSON(c, 200, fiber.Map{"type": "delete"})
 }
