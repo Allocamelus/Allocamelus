@@ -25,6 +25,8 @@ type Key struct {
 	privateKey     pgp.PrivateKey `msg:"privateKey,omitempty"`
 	// Backup PrivateKey encrypted with encodedBackupKey
 	BackupKey string `msg:"backupKey,omitempty"`
+	// Hash of encodedBackupKey
+	RecoveryKeyHash string `msg:"recoveryKeyHash,omitempty"`
 	// Encoded Key for encrypting BackupKey
 	encodedBackupKey string
 }
@@ -68,8 +70,8 @@ func initKeys(p data.Prepare) {
 	prePrivKeyAndSalt = keySelectQueryBuilder(p, "privateKey", "keySalt")
 	preBackupKey = keySelectQueryBuilder(p, "backupKey")
 	preUpdateKeyReplaced = p(`UPDATE UserKeys SET replaced = ? WHERE userKeyId = ?`)
-	preInsertKey = p(`INSERT INTO UserKeys (userId, created, publicKey, keySalt, privateKey, backupKey)
-		VALUES (?, ?, ?, ?, ?, ?)`)
+	preInsertKey = p(`INSERT INTO UserKeys (userId, created, publicKey, keySalt, privateKey, recoveryKeyHash, backupKey)
+		VALUES (?, ?, ?, ?, ?, ?, ?)`)
 }
 
 // NewPair Generate Key pair from userId and password
@@ -117,7 +119,8 @@ func (k *Key) Insert() error {
 	_, err := preInsertKey.Exec(
 		k.userID, time.Now().Unix(),
 		k.PublicKey.Armored, k.PrivateKeySalt,
-		k.PrivateKey, k.BackupKey,
+		k.PrivateKey, k.RecoveryKeyHash,
+		k.BackupKey,
 	)
 	if err != nil {
 		return err
