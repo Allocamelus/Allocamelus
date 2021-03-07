@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"time"
 
 	// Mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -22,7 +23,7 @@ func (d *Data) initDatabase() error {
 
 	d.database.SetMaxOpenConns(100)
 	d.database.SetMaxIdleConns(10)
-	d.database.SetConnMaxLifetime(10)
+	d.database.SetConnMaxLifetime(5 * time.Second)
 
 	// Open doesn't open a connection. Validate DSN data:
 	err = d.database.Ping()
