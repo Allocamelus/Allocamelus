@@ -26,7 +26,7 @@ type createRequest struct {
 
 type createResp struct {
 	Success bool   `json:"success"`
-	Error   string `json:"errors,omitempty"`
+	Error   string `json:"error,omitempty"`
 }
 
 // Create Email Token handler
@@ -75,13 +75,14 @@ func Create(c *fiber.Ctx) error {
 		return fiberutil.JSON(c, 200, createResp{Success: true})
 	}
 
-	tkn, err := token.NewAndInsert(token.Email, userID)
-	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
-	}
-
-	// Send Email
+	// New go routine to create and send email token
 	go func() {
+		// Email verification token
+		tkn, err := token.NewAndInsert(token.Email, userID)
+		if logger.Error(err) {
+			return
+		}
+		// Send Email
 		logger.Error(tkn.SendEmail(request.Email))
 	}()
 

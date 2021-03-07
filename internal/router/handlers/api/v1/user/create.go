@@ -5,9 +5,11 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/backupkey"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 	userToken "github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
@@ -43,7 +45,7 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type createResp struct {
 	Success   bool        `json:"success"`
-	BackupKey string      `json:"backupKey"`
+	BackupKey string      `json:"backupKey,omitempty"`
 	Errors    interface{} `json:"errors,omitempty"`
 }
 
@@ -99,16 +101,21 @@ func Create(c *fiber.Ctx) error {
 
 		if err := newUser.IsEmailUnique(); err != nil {
 			time.Sleep(time.Millisecond * (300 + time.Duration(random.FastInt(250))))
+			_, backupKey := backupkey.Create()
 			// Fail silently to prevent email leaks
 			return fiberutil.JSON(c, 200, createResp{
 				Success:   true,
-				BackupKey: newUser.BackupKey,
+				BackupKey: backupKey,
 			})
 		}
 
-		newUser.GenerateKeys(token.Password)
+		err := newUser.Insert()
+		if logger.Error(err) {
+			return apierr.ErrSomthingWentWrong(c)
+		}
 
-		backupKey, err := newUser.Insert()
+		// Create and Insert keys into database
+		keyPair, err := key.InsertNew(newUser.ID, token.Password)
 		if logger.Error(err) {
 			return apierr.ErrSomthingWentWrong(c)
 		}
@@ -122,7 +129,7 @@ func Create(c *fiber.Ctx) error {
 			logger.Error(emailToken.SendEmail(newUser.Email))
 		}()
 
-		return fiberutil.JSON(c, 200, createResp{Success: true, BackupKey: backupKey})
+		return fiberutil.JSON(c, 200, createResp{Success: true, BackupKey: keyPair.GetEncodedBackupKey()})
 	}
 	return apierr.Err422(c, apierr.New("invalid-with-value"))
 }

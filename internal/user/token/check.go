@@ -19,17 +19,19 @@ var (
 	// ErrExpiredToken Error Expired Token
 	ErrExpiredToken = errors.New("token/check: Error Expired Token")
 	// ErrInvalid Error Invalid
-	ErrInvalid = errors.New("token/check: Error Invalid")
-	preGet     *sql.Stmt
-	preDelete  *sql.Stmt
+	ErrInvalid         = errors.New("token/check: Error Invalid")
+	preGet             *sql.Stmt
+	preDelete          *sql.Stmt
+	preDelByUIDAndType *sql.Stmt
 )
 
 func initCheck(p data.Prepare) {
 	preGet = p(`SELECT userTokenId, userId,	tokenType, token, expiration FROM UserTokens WHERE selector = ? LIMIT 1`)
 	preDelete = p(`DELETE FROM UserTokens WHERE userTokenId=?`)
+	preDelByUIDAndType = p(`DELETE FROM UserTokens WHERE userId=? AND tokenType = ?`)
 }
 
-// Check Selector Token UserId and Type
+// Check Selector Token and Type
 func Check(selector, token string, t Types) (*Token, error) {
 	tkn, err := Get(selector)
 	if err != nil {
@@ -37,6 +39,22 @@ func Check(selector, token string, t Types) (*Token, error) {
 	}
 
 	if err := tkn.Check(token, tkn.UserID, t); err != nil {
+		if err == ErrExpiredToken {
+			return nil, err
+		}
+		return nil, ErrInvalid
+	}
+	return tkn, nil
+}
+
+// CheckWithID Selector Token UserId and Type
+func CheckWithID(selector, token string, userID int64, t Types) (*Token, error) {
+	tkn, err := Get(selector)
+	if err != nil {
+		return nil, ErrInvalid
+	}
+
+	if err := tkn.Check(token, userID, t); err != nil {
 		if err == ErrExpiredToken {
 			return nil, err
 		}

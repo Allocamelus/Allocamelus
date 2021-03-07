@@ -71,6 +71,12 @@ func DeleteAuth(c *fiber.Ctx) error {
 	return token.Delete()
 }
 
+// DeleteAuthByID user's Auth tokens from database
+func DeleteAuthByID(userID int64) error {
+	_, err := preDelByUIDAndType.Exec(userID, Auth)
+	return err
+}
+
 func unsetAuthCookie(c *fiber.Ctx) {
 	c.Cookie(&fiber.Cookie{
 		Name:     g.Config.Cookie.PreFix + authNamePostfix,
