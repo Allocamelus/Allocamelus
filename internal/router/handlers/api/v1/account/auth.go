@@ -49,8 +49,6 @@ var (
 
 const (
 	withA10                    = "allocamelus"
-	xA10                       = "X-Allocamelus"
-	xA10Captcha                = xA10 + "-Captcha"
 	errInvalidCaptcha          = "invalid-captcha"
 	errInvalidUsernamePassword = "invalid-username-password"
 	errUnverifiedEmail         = "unverified-email"
@@ -134,7 +132,7 @@ func Auth(c *fiber.Ctx) error {
 						logger.Error(err)
 						return apierr.ErrSomthingWentWrong(c)
 					}
-					return apierr.Err401(c, xA10Captcha, authResp{
+					return apierr.Err422(c, authResp{
 						Error:   errInvalidCaptcha,
 						Captcha: siteKey,
 					})
@@ -164,5 +162,5 @@ func Auth(c *fiber.Ctx) error {
 }
 
 func authErr(c *fiber.Ctx, err string) error {
-	return apierr.Err401(c, xA10, authResp{Error: err})
+	return apierr.Err422(c, authResp{Error: err})
 }

@@ -52,7 +52,7 @@ func Create(c *fiber.Ctx) error {
 				logger.Error(err)
 				return apierr.ErrSomthingWentWrong(c)
 			}
-			return apierr.Err401(c, "X-captcha", createResp{Error: "invalid-captcha"})
+			return apierr.Err422(c, createResp{Error: "invalid-captcha"})
 		}
 	}
 
