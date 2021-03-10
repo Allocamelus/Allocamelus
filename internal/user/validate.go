@@ -84,7 +84,7 @@ func (u *User) ValidUniqueName() error {
 
 var (
 	// ErrNameLength 1 to 128 characters
-	ErrNameLength = errors.New(invalidLength + "--min1-max128")
+	ErrNameLength = errors.New(invalidLength + "-min1-max128")
 	// ErrNameInvalid characters
 	ErrNameInvalid = errors.New(invalidChars)
 )

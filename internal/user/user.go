@@ -31,10 +31,10 @@ type User struct {
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email,omitempty"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
-	Bio         string `msg:"bio" json:"bio"`
+	Bio         string `msg:"bio" json:"bio,omitempty"`
 	Likes       int64  `msg:"likes" json:"likes"`
 	Permissions Perms  `msg:"permissions" json:"-"`
-	Created     int64  `msg:"created" json:"created"`
+	Created     int64  `msg:"created" json:"created,omitempty"`
 }
 
 // New user
