@@ -1,8 +1,6 @@
 package post
 
 import (
-	"strconv"
-
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -17,24 +15,28 @@ type getResponse struct {
 
 // Get post handler
 func Get(c *fiber.Ctx) error {
-	postIDstr := c.Params("id")
-	if len(postIDstr) == 0 {
-		return apierr.ErrNotFound(c)
+	p, errFunc := getForUser(c)
+	if errFunc != nil {
+		return errFunc(c)
 	}
-	postID, err := strconv.Atoi(postIDstr)
-	if err != nil {
-		return apierr.ErrNotFound(c)
+
+	p.MDtoHTMLContent()
+	return fiberutil.JSON(c, 200, getResponse{*p})
+}
+
+func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return nil, apierr.ErrNotFound
 	}
 
 	p, err := post.GetForUser(int64(postID), user.ContextSession(c))
 	if err != nil {
 		if err != post.ErrNoPost {
 			logger.Error(err)
-			return apierr.ErrSomthingWentWrong(c)
+			return nil, apierr.ErrSomthingWentWrong
 		}
-		return apierr.ErrNotFound(c)
+		return nil, apierr.ErrNotFound
 	}
-
-	p.MDtoHTMLContent()
-	return fiberutil.JSON(c, 200, getResponse{p})
+	return &p, nil
 }

@@ -38,14 +38,16 @@ func New(userID int64, content string, publish bool) *Post {
 }
 
 var (
-	preInsert *sql.Stmt
-	preGet    *sql.Stmt
+	preInsert  *sql.Stmt
+	preGet     *sql.Stmt
+	prePublish *sql.Stmt
 )
 
 func initPost(p data.Prepare) {
 	preInsert = p(`INSERT INTO Posts (userId, created, published, content)
 	VALUES (?, ?, ?, ?)`)
 	preGet = p(`SELECT userId, created, published, updated, content, media FROM Posts WHERE postId = ? LIMIT 1`)
+	prePublish = p(`UPDATE Posts SET published = ? WHERE postId = ?`)
 }
 
 // Insert into database
@@ -87,7 +89,7 @@ func GetForUser(postID int64, u *user.Session) (Post, error) {
 	}
 
 	// Check if user can view post
-	if p.IsDraft() {
+	if !p.IsPublished() {
 		if !u.LoggedIn || !p.isPoster(u.UserID) {
 			return Post{}, ErrNoPost
 		}
@@ -101,6 +103,15 @@ func GetForUser(postID int64, u *user.Session) (Post, error) {
 	return p, err
 }
 
+// Publish post if not already
+func (p *Post) Publish() error {
+	if !p.IsPublished() {
+		_, err := prePublish.Exec(time.Now().Unix(), p.ID)
+		return err
+	}
+	return nil
+}
+
 // MDtoHTMLContent convert markdown to html and sanitize
 func (p *Post) MDtoHTMLContent() {
 	p.Content = bluemonday.UGCPolicy().Sanitize(
@@ -108,8 +119,8 @@ func (p *Post) MDtoHTMLContent() {
 	)
 }
 
-// IsDraft is post draft
-func (p *Post) IsDraft() bool {
+// IsPublished is post draft
+func (p *Post) IsPublished() bool {
 	return (p.Published != 0)
 }
 
