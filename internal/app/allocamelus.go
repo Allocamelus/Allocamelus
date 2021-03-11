@@ -12,12 +12,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
+	jsoniter "github.com/json-iterator/go"
 )
 
 // Allocamelus struct
 type Allocamelus struct {
 	Fiber *fiber.App
 }
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // New Allocamelus server
 func New(configPath string) *Allocamelus {
@@ -28,7 +31,8 @@ func New(configPath string) *Allocamelus {
 	user.Init(g.Data.Prepare)
 
 	app := fiber.New(fiber.Config{
-		Prefork: g.Data.Config.Site.Prefork,
+		Prefork:     g.Data.Config.Site.Prefork,
+		JSONEncoder: json.Marshal,
 	})
 
 	if g.Data.Config.Dev {
