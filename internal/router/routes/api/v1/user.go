@@ -5,6 +5,7 @@ import (
 	emailtoken "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/email-token"
 	passreset "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset"
 	passresetval "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset/validate"
+	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -33,7 +34,7 @@ func User(api fiber.Router) {
 	uUN := u.Group("/:uniqueName")
 	uUN.Get("/", user.Get)
 	// /api/v1/user/:uniqueName/delete
-	uUN.Delete("/delete", user.Delete)
+	uUN.Delete("/delete", middleware.Protected, user.Delete)
 	// /api/v1/user/:uniqueName/update
-	uUN.Delete("/update", user.Update)
+	uUN.Delete("/update", middleware.Protected, user.Update)
 }

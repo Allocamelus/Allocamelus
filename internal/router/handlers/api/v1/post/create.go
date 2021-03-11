@@ -15,7 +15,7 @@ const (
 )
 
 type createRequest struct {
-	IsDraft bool   `json:"isDraft" form:"isDraft"`
+	Publish bool   `json:"publish" form:"publish"`
 	Content string `json:"content" form:"content"`
 }
 
@@ -30,9 +30,6 @@ type createResponce struct {
 // Create post handler
 func Create(c *fiber.Ctx) error {
 	sUser := user.ContextSession(c)
-	if !sUser.LoggedIn {
-		return post403(c, errUnauthorized)
-	}
 	if !sUser.Perms.CanPost() {
 		return post403(c, errInsufficientPerms)
 	}
@@ -42,7 +39,7 @@ func Create(c *fiber.Ctx) error {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 
-	newPost := post.New(sUser.UserID, request.Content, !request.IsDraft)
+	newPost := post.New(sUser.UserID, request.Content, request.Publish)
 	if err := newPost.ContentValid(); err != nil {
 		return post403(c, err.Error())
 	}

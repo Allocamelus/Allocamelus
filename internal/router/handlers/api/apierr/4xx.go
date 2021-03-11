@@ -10,6 +10,8 @@ var (
 	InvalidRequestParams = New("invalid-request-parameters")
 	// NotFound 404
 	NotFound = New("not-found")
+	// Unauthorized403 because not using www-Authenticate headers
+	Unauthorized403 = New("unauthorized")
 )
 
 // Err400 400 Bad Request
@@ -31,6 +33,11 @@ func Err401(c *fiber.Ctx, wwwAuth string, data interface{}) error {
 // Err403 403 Forbidden
 func Err403(c *fiber.Ctx, data interface{}) error {
 	return fiberutil.JSON(c, 403, data)
+}
+
+// ErrUnauthorized403 403
+func ErrUnauthorized403(c *fiber.Ctx) error {
+	return Err403(c, Unauthorized403)
 }
 
 // Err404 404 Not Found
