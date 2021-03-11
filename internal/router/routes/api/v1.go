@@ -17,6 +17,9 @@ func V1(app *fiber.App) {
 	// /api/v1/user
 	v1.User(api)
 
+	// /api/v1/post
+	v1.Post(api)
+
 	// 404 Error
 	api.Use(apierr.ErrNotFound)
 }
