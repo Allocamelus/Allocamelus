@@ -1,0 +1,25 @@
+$box-shadow: 0px 1px 2px 0px hsla(0, 0%, 0%, 0.5);
+$primary-color: hsl(204, 85%, 33%);
+$hover-color: hsl(204, 85%, 23%);
+
+$link-color: hsl(212, 100%, 40%);
+$link-hover-color: mix($link-color, black, 85%);
+
+$dark-primary: hsl(204, 6%, 11%);
+$dark-primary-1: mix($dark-primary, white, 95%);
+$dark-primary-2: mix($dark-primary, white, 93%);
+$dark-primary-3: mix($dark-primary, white, 92%);
+$dark-primary-4: mix($dark-primary, white, 91%);
+$dark-primary-6: mix($dark-primary, white, 89%);
+$dark-primary-8: mix($dark-primary, white, 88%);
+$dark-primary-12: mix($dark-primary, white, 86%);
+$dark-primary-16: mix($dark-primary, white, 85%);
+$dark-primary-26: mix($dark-primary, white, 84%);
+
+$light-title-color: hsl(0, 0%, 13%);
+$dark-title-color: hsl(0, 0%, 90%);
+
+$dark-link-color: hsl(194, 100%, 50%);
+$dark-link-hover-color: mix($dark-link-color, black, 85%);
+
+$top-offset: 40px;

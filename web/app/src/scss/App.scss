@@ -1,0 +1,55 @@
+@import "./_vars";
+@import "./_helper.scss";
+
+// Font Awesome
+$fa-font-path: "/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/brands";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/solid";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  letter-spacing: 0.25px;
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin-top: $top-offset;
+}
+
+.link {
+  //color: hsl(204, 86%, 39%);
+  color: $link-color;
+  background-color: transparent;
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+.link:hover {
+  color: $link-hover-color;
+}
+
+body.dark-theme {
+  background-color: hsl(0, 0%, 7%);
+}
+.dark-theme {
+  #app {
+    color: $dark-title-color;
+  }
+  .link {
+    color: $dark-link-color;
+    &.actBtn {
+      span {
+        color: hsl(0, 0%, 99%);
+      }
+    }
+  }
+  .link:hover {
+    color: $dark-link-hover-color;
+  }
+}

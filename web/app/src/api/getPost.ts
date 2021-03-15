@@ -1,0 +1,13 @@
+import v1 from "./v1";
+import { Post } from '../models/post_gen'
+export async function getPost(postId: any) {
+  return v1.get("/post/" + postId)
+    .then(r => {
+      if (r.data.error == undefined) {
+        return Post.createFrom(r.data)
+      }
+    })
+    .catch(e => {
+      return e
+    })
+}
