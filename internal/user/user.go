@@ -16,12 +16,12 @@ type Perms int64
 
 // Session user session struct
 type Session struct {
-	LoggedIn   bool           `msg:"loggedIn"`
-	UserID     int64          `msg:"userId"`
-	Perms      Perms          `msg:"perms"`
-	PrivateKey pgp.PrivateKey `msg:"privateKey"`
-	LoginToken []byte         `msg:"loginToken"`
-	NotNew     bool           `msg:"notNew"`
+	LoggedIn   bool           `msg:"loggedIn" json:"loggedIn"`
+	UserID     int64          `msg:"userId" json:"userId"`
+	Perms      Perms          `msg:"perms" json:"perms"`
+	PrivateKey pgp.PrivateKey `msg:"privateKey" json:"-"`
+	LoginToken []byte         `msg:"loginToken" json:"-"`
+	NotNew     bool           `msg:"notNew"  json:"notNew"`
 }
 
 // User Struct
