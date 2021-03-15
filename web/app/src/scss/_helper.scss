@@ -1,0 +1,92 @@
+.show {
+  display: block !important;
+}
+.hide {
+  display: none !important;
+}
+.right {
+  float: right !important;
+}
+.left {
+  float: left !important;
+}
+.flex {
+  display: flex;
+}
+.error {
+  color: hsl(0, 100%, 50%) !important;
+}
+.fontLarge {
+  font-size: large !important;
+}
+.txtR {
+  text-align: right !important;
+}
+.txtC {
+  text-align: center !important;
+}
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+}
+
+.min-h--150 {
+  min-height: 150px;
+}
+
+// Create all usefull font sizes
+$size-list: 14 16 20 24 32 40 64 96;
+@each $current-size in $size-list {
+  //$i: index($size-list, $current-size);
+  .txt-#{$current-size} {
+    font-size: $current-size + px;
+  }
+}
+// create margin and padding classes
+// (p|m)(t|r|b|l|y|x|a)-(0-5)
+$spacing-size-list: (0, 2, 6, 10, 16, 26);
+$spacing-direction-list: (
+  t: top,
+  r: right,
+  b: bottom,
+  l: left,
+  y: (
+    top,
+    bottom
+  ),
+  x: (
+    right,
+    left
+  ),
+  a: all
+);
+$spacing-type-list: (padding, margin);
+// for each type in $spacing-type-list
+@each $spacing-type in $spacing-type-list {
+  // for each size in spacing-size-list
+  @for $i from 0 to length($spacing-size-list) {
+    // add to 1 because $i because nth() starts at 1
+    $n: $i + 1;
+    // for each key, value in spacing-direction-list
+    @each $direction-key, $direction-value in $spacing-direction-list {
+      // get/set size from spacing-size-list
+      $spacing-size: nth($spacing-size-list, $n);
+      // start creating class
+      // first letter from type, direction, and class number
+      .#{str-slice($spacing-type, 1, 1)}#{$direction-key}-#{$i} {
+          // x and y in spacing-direction-list are arrays
+          // for is used to go over both
+          @for $i1 from 0 to length($direction-value) {
+            @if $direction-value != all {
+              // add direction to the type
+              #{$spacing-type}-#{nth($direction-value, $i1+1)}: #{$spacing-size}px !important;
+            } @else {
+              #{$spacing-type}: #{$spacing-size}px !important;
+            }
+          }
+        }
+    }
+  }
+}
