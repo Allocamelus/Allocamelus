@@ -16,26 +16,30 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-type authRequest struct {
+// AuthRequest struct
+type AuthRequest struct {
 	With  string `json:"with" form:"with"`
 	Token string `json:"token" form:"token"`
 }
 
-type authA10Token struct {
+// AuthA10Token struct
+type AuthA10Token struct {
 	UniqueName string `json:"uniqueName"`
 	Password   string `json:"password"`
 	Remember   bool   `json:"remember"`
 	Captcha    string `json:"captcha"`
 }
 
-func (t *authA10Token) trimSpace() {
+func (t *AuthA10Token) trimSpace() {
 	t.UniqueName = strings.TrimSpace(t.UniqueName)
 	t.Password = strings.TrimSpace(t.Password)
 	t.Captcha = strings.TrimSpace(t.Captcha)
 }
 
-type authResp struct {
+// AuthResp struct
+type AuthResp struct {
 	Success bool   `json:"success"`
+	UserID  int64  `json:"userId,omitempty"`
 	Error   string `json:"error,omitempty"`
 	// Require Captcha
 	Captcha string `json:"captcha,omitempty"`
@@ -59,12 +63,12 @@ const (
 
 // Auth User authentication handler
 func Auth(c *fiber.Ctx) error {
-	request := new(authRequest)
+	request := new(AuthRequest)
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 	if request.With == withA10 {
-		var authToken authA10Token
+		var authToken AuthA10Token
 		if err := json.Unmarshal([]byte(request.Token), &authToken); err != nil {
 			return apierr.Err422(c, errInvalidAuthToken)
 		}
@@ -89,7 +93,7 @@ func Auth(c *fiber.Ctx) error {
 			if userID == s.UserID {
 				// Allow user to re-auth if the session can't decrypt
 				if s.CanDecrypt() {
-					return apierr.Err403(c, authResp{Error: errAuthenticated})
+					return apierr.Err403(c, AuthResp{Error: errAuthenticated})
 				}
 			}
 		}
@@ -132,7 +136,7 @@ func Auth(c *fiber.Ctx) error {
 						logger.Error(err)
 						return apierr.ErrSomthingWentWrong(c)
 					}
-					return apierr.Err422(c, authResp{
+					return apierr.Err422(c, AuthResp{
 						Error:   errInvalidCaptcha,
 						Captcha: siteKey,
 					})
@@ -152,15 +156,15 @@ func Auth(c *fiber.Ctx) error {
 			// Set persistent auth token
 			if err := token.SetAuth(c, userID); logger.Error(err) {
 				// successful failure
-				return fiberutil.JSON(c, 200, authResp{Success: true, Error: errAuthToken})
+				return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID, Error: errAuthToken})
 			}
 		}
 
-		return fiberutil.JSON(c, 200, authResp{Success: true})
+		return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID})
 	}
 	return apierr.Err422(c, errInvalidWith)
 }
 
 func authErr(c *fiber.Ctx, err string) error {
-	return apierr.Err422(c, authResp{Error: err})
+	return apierr.Err422(c, AuthResp{Error: err})
 }
