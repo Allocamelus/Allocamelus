@@ -19,11 +19,13 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^4.0.2",
     "@types/node": "^14.14.33",
     "@types/zxcvbn": "^4.4.0",
     "@vitejs/plugin-vue": "^1.1.5",
     "@vue/compiler-sfc": "^3.0.5",
     "@vuedx/typescript-plugin-vue": "^0.6.3",
+    "postcss-csso": "^5.0.0",
     "sass": "^1.32.8",
     "typescript": "^4.1.3",
     "vite": "^2.0.5"

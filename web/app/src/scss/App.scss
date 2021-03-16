@@ -1,5 +1,7 @@
-@import "./_vars";
-@import "./_helper.scss";
+@import "vars";
+@import "helper";
+@import "container";
+@import "nav";
 
 // Font Awesome
 $fa-font-path: "/webfonts";
@@ -14,12 +16,16 @@ $fa-font-path: "/webfonts";
   box-sizing: border-box;
   letter-spacing: 0.25px;
 }
+
+body {
+  background-color: hsl(0, 0%, 99%);
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: $top-offset;
+  margin-top: $nav-height;
 }
 
 .link {
@@ -34,20 +40,17 @@ $fa-font-path: "/webfonts";
   color: $link-hover-color;
 }
 
+/*! purgecss ignore */
 body.dark-theme {
-  background-color: hsl(0, 0%, 7%);
+  background-color: adjust-color($primary-color, $saturation: -20%, $lightness: -7%);
 }
+
 .dark-theme {
   #app {
     color: $dark-title-color;
   }
   .link {
     color: $dark-link-color;
-    &.actBtn {
-      span {
-        color: hsl(0, 0%, 99%);
-      }
-    }
   }
   .link:hover {
     color: $dark-link-hover-color;

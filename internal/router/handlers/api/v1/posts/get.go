@@ -12,14 +12,14 @@ import (
 )
 
 type getResponse struct {
-	Posts []*post.Post `json:"posts"`
+	*post.List
 }
 
 const perPage int64 = 15
 
 // Get post handler
 func Get(c *fiber.Ctx) error {
-	page, _ := strconv.ParseInt(c.Params("page"), 10, 64)
+	page, _ := strconv.ParseInt(c.Query("p"), 10, 64)
 	if page == 0 {
 		page = 1
 	}
@@ -40,7 +40,7 @@ func Get(c *fiber.Ctx) error {
 		return apierr.ErrSomthingWentWrong(c)
 	}
 
-	for _, p := range posts {
+	for _, p := range posts.Posts {
 		p.MDtoHTMLContent()
 	}
 
