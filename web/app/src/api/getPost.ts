@@ -7,7 +7,4 @@ export async function getPost(postId: any) {
         return Post.createFrom(r.data)
       }
     })
-    .catch(e => {
-      return e
-    })
 }

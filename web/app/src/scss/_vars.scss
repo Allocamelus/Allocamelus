@@ -1,11 +1,13 @@
 $box-shadow: 0px 1px 2px 0px hsla(0, 0%, 0%, 0.5);
-$primary-color: hsl(204, 85%, 33%);
-$hover-color: hsl(204, 85%, 23%);
+$primary-color: hsl(358, 65%, 10%);
+$primary-hover-color: mix($primary-color, #000, 85%);
+$secondary-color: hsl(341, 74%, 29%);
+$tertiary-color: hsl(10, 40%, 45%);
 
-$link-color: hsl(212, 100%, 40%);
-$link-hover-color: mix($link-color, black, 85%);
+$link-color: hsl(360, 100%, 35%);
+$link-hover-color: mix($link-color, black, 80%);
 
-$dark-primary: hsl(204, 6%, 11%);
+$dark-primary: hsl(340, 5%, 8%);
 $dark-primary-1: mix($dark-primary, white, 95%);
 $dark-primary-2: mix($dark-primary, white, 93%);
 $dark-primary-3: mix($dark-primary, white, 92%);
@@ -19,7 +21,7 @@ $dark-primary-26: mix($dark-primary, white, 84%);
 $light-title-color: hsl(0, 0%, 13%);
 $dark-title-color: hsl(0, 0%, 90%);
 
-$dark-link-color: hsl(194, 100%, 50%);
+$dark-link-color: hsl(200, 100%, 50%);
 $dark-link-hover-color: mix($dark-link-color, black, 85%);
 
-$top-offset: 40px;
+$nav-height: 45px;

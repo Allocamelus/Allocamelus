@@ -1,4 +1,4 @@
-import { createStore, mapActions } from 'vuex'
+import { createStore, mapActions, mapGetters } from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import { UnixTime, MinToSec } from "./models/time";
 const vuexLocal = new VuexPersistence({
@@ -36,10 +36,18 @@ export default createStore({
       context.commit('increment')
     }
   },
+  getters: {
+    loggedIn (state, getters) {
+      return state.session.loggedIn
+    }
+  },
   methods: {
     ...mapActions([
       'increment' // map `this.increment()` to `this.$store.dispatch('increment')`
-    ])
+    ]),
+    ...mapGetters({
+      loggedIn: 'loggedIn'
+    })
   },
   plugins: [vuexLocal.plugin]
 })
