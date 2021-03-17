@@ -15,7 +15,7 @@
     </div>
     <div class="container__sidebar">
       <box class="pa-4 box--auto-mb">
-        <div v-if="$store.getters.loggedIn">
+        <div v-if="loggedIn">
           <router-link class="link" to="/post/new">New Post</router-link>
         </div>
         <div v-else>
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive } from "vue";
-import { onBeforeRouteUpdate } from "vue-router";
+import { defineComponent, toRefs, reactive, computed } from "vue";
+import { useStore } from "vuex";
 import { getPosts } from "../api/getPosts";
 import { List } from "../models/post_gen";
 import Box from "../components/Box.vue";
@@ -40,33 +40,38 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
+    const usedSession = () => store.dispatch("usedSession");
     const data = reactive({
       list: new List(),
       // TODO Better Errors
       err: "",
     });
-    onBeforeRouteUpdate(async (to, from, next) => {
-      await getPosts(to.params.page)
-        .then((r) => {
-          console.log(r);
-          data.list = r;
-        })
-        .catch((e) => {
-          data.err = String(e);
-        });
-      next();
-    });
     getPosts(props.page)
       .then((r) => {
-        console.log(r);
         data.list = r;
+        usedSession();
       })
       .catch((e) => {
         data.err = String(e);
       });
     return {
       ...toRefs(data),
+      usedSession,
+      loggedIn: computed(() => store.getters.loggedIn),
     };
+  },
+  async beforeRouteUpdate(to, from) {
+    this.list = new List();
+
+    getPosts(to.params.page)
+      .then((r) => {
+        this.list = r;
+      })
+      .catch((e) => {
+        this.err = String(e);
+      });
+    this.usedSession();
   },
   components: {
     Box,

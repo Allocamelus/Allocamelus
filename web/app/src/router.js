@@ -6,6 +6,12 @@ const routes = [
     component: () => import('./views/About.vue'),
   },
   {
+    path: "/login",
+    name: "Login",
+    component: () => import('./views/Login.vue'),
+    props: route => ({ redirect: route.query.r })
+  },
+  {
     path: "/post/:id(\\d+)",
     component: () => import('./views/Post.vue'),
     props: true,

@@ -9,3 +9,11 @@ export function UnixTime(append?: number) {
 export function MinToSec(minutes: number) {
   return minutes * 60
 }
+// HoursToSec hours in seconds
+export function HoursToSec(hours: number) {
+  return MinToSec(hours * 60)
+}
+// DaysToSec hours in seconds
+export function DaysToSec(days: number) {
+  return HoursToSec(days * 24)
+}
