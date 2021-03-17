@@ -2,7 +2,7 @@ $box-shadow: 0px 1px 2px 0px hsla(0, 0%, 0%, 0.5);
 $primary-color: hsl(358, 65%, 10%);
 $primary-hover-color: mix($primary-color, #000, 85%);
 $secondary-color: hsl(341, 74%, 29%);
-$secondary-hover-color: mix($secondary-color, #000, 85%);
+$secondary-hover-color: mix($secondary-color, black, 85%);
 $tertiary-color: hsl(10, 40%, 45%);
 
 $link-color: hsl(360, 100%, 35%);
@@ -25,4 +25,4 @@ $dark-title-color: hsl(0, 0%, 90%);
 $dark-link-color: hsl(200, 100%, 50%);
 $dark-link-hover-color: mix($dark-link-color, black, 85%);
 
-$nav-height: 45px;
+$nav-height: 42px;
