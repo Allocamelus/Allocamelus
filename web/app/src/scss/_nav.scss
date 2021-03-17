@@ -12,32 +12,39 @@
   height: $nav-height;
   line-height: $nav-height;
   z-index: 5;
+  display: flex;
+  justify-content: space-between;
+
   ul {
     list-style-type: none;
-    display: inline;
+    display: flex;
     padding: 0;
     position: relative;
-    li {
-      display: inline;
-      padding: 0;
-      a {
-        padding: 0 10px;
-        color: hsl(0, 0%, 100%);
-        text-decoration: none;
-        font-family: "Roboto", sans-serif;
-        font-size: 17px;
-        //font-weight: 500;
-        letter-spacing: 0.02em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        position: relative;
-      }
-    }
   }
-  .fa-adjust {
-    font-size: 16px;
-    padding: 12px;
+  a {
+    padding: 0 10px;
+    color: hsl(0, 0%, 100%);
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    //font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+  }
+  .fa-adjust-wrapper {
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    padding: 0 3px;
+    .fa-adjust {
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
   }
   .active {
     background-color: hsl(204, 85%, 27%);

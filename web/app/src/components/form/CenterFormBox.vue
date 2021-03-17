@@ -34,7 +34,7 @@ export default defineComponent({
 @import "@/scss/vars";
 
 .form-box {
-  max-width: 405px;
+  max-width: 400px;
   margin: 0 auto;
   position: relative;
   top: calc(50% - #{$nav-height});
@@ -43,6 +43,7 @@ export default defineComponent({
   flex-direction: column;
 }
 .form-box-wrapper {
+  width: 100%;
   height: calc(100vh - #{$nav-height});
 }
 @media (max-width: 425px) {
