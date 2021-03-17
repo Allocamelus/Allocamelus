@@ -4,9 +4,14 @@ import { API_AuthRequest, API_AuthResp, API_AuthA10Token } from "../../models/ap
 const a10 = "allocamelus"
 
 export async function auth(request: API_AuthRequest) {
-  return v1.post("account/auth", JSON.stringify(request))
-    .then(r => {
-      return API_AuthResp.createFrom(r)
+  return v1.post("account/auth",
+    JSON.stringify(request), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(r => {      
+      return API_AuthResp.createFrom(r.data)
     })
 }
 

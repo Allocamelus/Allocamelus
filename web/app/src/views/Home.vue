@@ -14,9 +14,6 @@ export default defineComponent({
     return {};
   },
   created() {
-    setInterval(() => {
-      this.$store.dispatch("increment");
-    }, 1000);
   },
   async beforeRouteUpdate(to, from, next) {
     console.log(this.$store);

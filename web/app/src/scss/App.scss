@@ -15,6 +15,9 @@ $fa-font-path: "/webfonts";
   padding: 0;
   box-sizing: border-box;
   letter-spacing: 0.25px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -22,9 +25,6 @@ body {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin-top: $nav-height;
 }
 
@@ -42,7 +42,7 @@ body {
 
 /*! purgecss ignore */
 body.dark-theme {
-  background-color: adjust-color($primary-color, $saturation: -20%, $lightness: -7%);
+  background-color: hsl(0, 60%, 3%);
 }
 
 .dark-theme {
