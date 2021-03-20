@@ -85,6 +85,14 @@ const HtmlInvalidUsernamePassword = htmlErrBuilder(
   ),
   HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");
 
+function gotoRedirect(router, redirect) {
+  var url = "/";
+  if (redirect?.length > 0) {
+    url = props.redirect;
+  }
+  router.push(url);
+}
+
 export default defineComponent({
   props: {
     redirect: {
@@ -112,11 +120,7 @@ export default defineComponent({
     });
 
     if (store.getters.loggedIn) {
-      var url = "/";
-      if (props.redirect?.length > 0) {
-        url = props.redirect;
-      }
-      router.push(url);
+      gotoRedirect(router, props.redirect)
     }
 
     return {
@@ -195,6 +199,7 @@ export default defineComponent({
               userId: r.userId,
               authToken: vm.remember,
             });
+            gotoRedirect(vm.$router, vm.redirect)
           }
         })
         .catch((e) => {
