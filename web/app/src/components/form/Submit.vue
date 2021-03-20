@@ -29,7 +29,7 @@ export default defineComponent({
 .submit {
   background-color: $secondary-color;
   color: #fff;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   padding: 8px 12px;
   border: none;

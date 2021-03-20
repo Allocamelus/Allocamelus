@@ -2,6 +2,7 @@
 @import "helper";
 @import "container";
 @import "nav";
+@import "footer";
 
 // Font Awesome
 $fa-font-path: "/webfonts";
@@ -15,7 +16,7 @@ $fa-font-path: "/webfonts";
   padding: 0;
   box-sizing: border-box;
   letter-spacing: 0.25px;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -27,6 +28,11 @@ body {
 #app {
   margin-top: $nav-height;
   display: flex;
+  flex-direction: column;
+}
+
+#bodyContent {
+  height: calc(100vh - #{$nav-height});
 }
 
 .link {

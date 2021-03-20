@@ -1,6 +1,10 @@
 import { createStore } from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import { UnixTime, MinToSec, DaysToSec } from "./models/time";
+
+import { status } from "./api/account/auth/status"
+import { keepAlive } from "./api/account/auth/keepAlive"
+
 const vuexLocal = new VuexPersistence({
   key: "a10storage",
   storage: window.localStorage,
@@ -44,7 +48,9 @@ export default createStore({
       state.session = payload.session
     },
     usedSession(state) {
-      state.session.expires = UnixTime(MinToSec(15))
+      if (state.session.expires < UnixTime(MinToSec(15))) {
+        state.session.expires = UnixTime(MinToSec(15))
+      }
     },
     toggleTheme(state) {
       state.theme = (state.theme == 'dark') ? 'light' : 'dark'
@@ -71,11 +77,35 @@ export default createStore({
         }
       })
     },
-    usedSession({ commit, state }) {
-      if (state.session.expires < UnixTime(MinToSec(15))) {
-        commit('usedSession')
+    sessionCheck({ commit, state }) {
+      console.log(state);
+      if (state.session.loggedIn || state.session.fresh) {
+        status().then(session => {
+          console.log(session);
+          if (state.session.loggedIn != session.loggedIn || state.session.userId != session.userId) {
+            commit({
+              type: 'newSession',
+              session: {
+                loggedIn: session.loggedIn,
+                userId: session.userId,
+                fresh: true,
+                created: UnixTime(),
+                expires: MinToSec(15)
+              }
+            })
+          } else {
+            commit('usedSession')
+          }
+        }).catch(e => {
+          console.error(e);
+        })
       }
     },
+    sessionKeepAlive({ commit }) {
+      keepAlive().then(() => {
+        commit('usedSession')
+      })
+    }
   },
   getters: {
     loggedIn(state, getters) {
