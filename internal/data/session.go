@@ -1,8 +1,6 @@
 package data
 
 import (
-	"time"
-
 	"github.com/allocamelus/allocamelus/pkg/fiberutil/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil/session/stores"
 	"github.com/allocamelus/allocamelus/pkg/random"
@@ -11,8 +9,8 @@ import (
 // NewSessionStore initializes the Session handler
 func (d *Data) NewSessionStore() *session.Store {
 	return session.New(session.Store{
-		MaxLife:    time.Second * time.Duration(d.Config.Session.MaxLife),
-		Expiration: time.Second * time.Duration(d.Config.Session.Expiration),
+		MaxLife:    d.Config.Session.Duration.MaxLife,
+		Expiration: d.Config.Session.Duration.Expiration,
 		Cookie: session.Cookie{
 			Name:     d.Config.Cookie.PreFix + "sid",
 			Domain:   d.Config.Site.Domain,

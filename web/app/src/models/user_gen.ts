@@ -27,3 +27,21 @@ export class User {
         this.created = source["created"];
     }
 }
+export class Session {
+    loggedIn: boolean;
+    userId: number;
+    perms: number;
+    notNew: boolean;
+
+    static createFrom(source: any = {}) {
+        return new Session(source);
+    }
+
+    constructor(source: any = {}) {
+        if ('string' === typeof source) source = JSON.parse(source);
+        this.loggedIn = source["loggedIn"];
+        this.userId = source["userId"];
+        this.perms = source["perms"];
+        this.notNew = source["notNew"];
+    }
+}

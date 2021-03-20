@@ -3,6 +3,7 @@ package configs
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
 	"github.com/allocamelus/allocamelus/pkg/email"
@@ -63,6 +64,10 @@ type Config struct {
 	Session struct {
 		MaxLife    int64
 		Expiration int64
+		Duration   struct {
+			MaxLife    time.Duration
+			Expiration time.Duration
+		}
 	}
 	Site struct {
 		Description string
@@ -86,7 +91,23 @@ func NewConfig(path string) *Config {
 
 	err = config.Validate()
 	logger.Fatal(err)
+
+	config.fillTime()
 	return config
+}
+
+func (c *Config) fillTime() {
+	c.Session.Duration = struct {
+		MaxLife    time.Duration
+		Expiration time.Duration
+	}{
+		MaxLife:    secToDuration(c.Session.MaxLife),
+		Expiration: secToDuration(c.Session.Expiration),
+	}
+}
+
+func secToDuration(t int64) time.Duration {
+	return time.Second * time.Duration(t)
 }
 
 // ReadConfig initializes Config
