@@ -13,7 +13,7 @@ func Account(api fiber.Router) {
 
 	// /api/v1/account/auth
 	aA := a.Group("/auth")
-	aA.Post("/auth", account.Auth)
+	aA.Post("/", account.Auth)
 	// /api/v1/account/auth/keep-alive
 	aA.Post("/keep-alive", auth.KeepAlive)
 	// /api/v1/account/auth/status

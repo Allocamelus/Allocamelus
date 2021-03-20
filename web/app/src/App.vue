@@ -36,7 +36,7 @@
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
-import { MinToSec } from "./models/time";
+import { MinToSec, SecToMs } from "./models/time";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -54,13 +54,23 @@ export default defineComponent({
       toggleTheme = () => store.commit("toggleTheme"),
       sessionCheck = () => store.dispatch("sessionCheck"),
       sessionKeepAlive = () => store.dispatch("sessionKeepAlive");
+    const data = reactive({
+      sesKeepAliveInterval: null,
+    });
 
     sessionCheck();
-    console.log("setup");
-    setTimeout(sessionKeepAlive, MinToSec(9));
+    var keepAliveDelay = async () => {
+      const interval = SecToMs(MinToSec(5));
+      setTimeout(
+        (data.sessionKAInter = setInterval(sessionKeepAlive, interval)),
+        interval
+      );
+    };
+    keepAliveDelay();
 
     setTheme(theme.value);
     return {
+      ...toRefs(data),
       loggedIn,
       theme,
       toggleTheme,
