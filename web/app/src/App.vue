@@ -1,25 +1,42 @@
 <template>
-  <div id="nav">
-    <div>
+  <nav id="nav">
+    <div class="flex">
       <router-link to="/" class="px-4">Allocamelus</router-link>
     </div>
     <div class="flex">
       <div class="fa-adjust-wrapper">
-        <i class="fas fa-adjust" :class="toggleButtonClass" @click="toggleTheme"></i>
+        <i
+          class="fas fa-adjust"
+          :class="toggleButtonClass"
+          @click="toggleTheme"
+        ></i>
       </div>
-      <ul>
-        <router-link to="/about">About</router-link>
+      <div class="flex">
         <router-link to="/login">Login</router-link>
-        <router-link to="/posts">Posts</router-link>
-      </ul>
+      </div>
     </div>
+  </nav>
+  <div id="bodyContent">
+    <router-view class="pt-5" />
   </div>
-  <router-view class="pt-5" />
+  <footer id="footer">
+    <div>
+      <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
+      <router-link to="/about" class="dash">About</router-link>
+    </div>
+    <div></div>
+    <div>
+      <!-- TODO -->
+      <router-link to="/tos">Terms</router-link>
+      <router-link to="/privacy" class="dash">Privacy</router-link>
+    </div>
+  </footer>
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
+import { MinToSec } from "./models/time";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -34,27 +51,35 @@ export default defineComponent({
     const store = useStore(),
       loggedIn = computed(() => store.getters.loggedIn),
       theme = computed(() => store.getters.theme),
-      toggleTheme = () => store.commit("toggleTheme");
+      toggleTheme = () => store.commit("toggleTheme"),
+      sessionCheck = () => store.dispatch("sessionCheck"),
+      sessionKeepAlive = () => store.dispatch("sessionKeepAlive");
+
+    sessionCheck();
+    console.log("setup");
+    setTimeout(sessionKeepAlive, MinToSec(9));
+
     setTheme(theme.value);
     return {
       loggedIn,
       theme,
       toggleTheme,
+      sessionCheck,
     };
   },
   watch: {
     theme(newTheme, old) {
-      setTheme(this.theme)
+      setTheme(this.theme);
     },
   },
   computed: {
     toggleButtonClass() {
-      if (this.theme != 'dark') {
-        return "fa-flip-horizontal"
+      if (this.theme != "dark") {
+        return "fa-flip-horizontal";
       }
-      return ""
-    }
-  }
+      return "";
+    },
+  },
 });
 </script>
 

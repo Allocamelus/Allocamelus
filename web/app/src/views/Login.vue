@@ -1,12 +1,12 @@
 <template>
   <center-form-box>
-    <div :class="showCaptcha ? '' : 'hide'">
+    <div v-show="showCaptcha">
       <div id="loginCaptchaContainer"></div>
       <div class="mt-3 link" @click="captcha.show = false">
         <i class="fas fa-chevron-left"></i> Back
       </div>
     </div>
-    <div :class="!showCaptcha ? '' : 'hide'">
+    <div v-show="!showCaptcha">
       <h2>Login</h2>
       <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
       <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
@@ -112,7 +112,7 @@ export default defineComponent({
     });
 
     if (store.getters.loggedIn) {
-      var url = "/posts";
+      var url = "/";
       if (props.redirect?.length > 0) {
         url = props.redirect;
       }

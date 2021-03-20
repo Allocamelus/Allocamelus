@@ -4,6 +4,7 @@ $primary-hover-color: mix($primary-color, #000, 85%);
 $secondary-color: hsl(341, 74%, 29%);
 $secondary-hover-color: mix($secondary-color, black, 85%);
 $tertiary-color: hsl(10, 40%, 45%);
+$footer-color: hsl(332, 23%, 16%);
 
 $link-color: hsl(360, 100%, 35%);
 $link-hover-color: mix($link-color, black, 80%);
@@ -26,3 +27,4 @@ $dark-link-color: hsl(200, 100%, 50%);
 $dark-link-hover-color: mix($dark-link-color, black, 85%);
 
 $nav-height: 42px;
+$footer-height: 45px;

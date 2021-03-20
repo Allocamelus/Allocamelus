@@ -21,18 +21,15 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
-    const usedSession = () => store.dispatch("usedSession");
     const data = reactive({
       post: new Post(),
     });
 
     getPost(props.id).then((r) => {
       data.post = r;
-      usedSession();
     });
     return {
       ...toRefs(data),
-      usedSession,
     };
   },
   async beforeRouteUpdate(to, from) {
@@ -40,7 +37,6 @@ export default defineComponent({
 
     getPost(to.params.id).then((r) => {
       this.post = r;
-      this.usedSession();
     });
   },
 });

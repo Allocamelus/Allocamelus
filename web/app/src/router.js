@@ -17,11 +17,6 @@ const routes = [
     props: true,
   },
   {
-    path: "/posts",
-    component: () => import('./views/Posts.vue'),
-    props: route => ({ page: route.query.p })
-  },
-  {
     path: "/",
     name: "Home",
     component: () => import('./views/Home.vue'),
