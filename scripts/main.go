@@ -9,7 +9,7 @@ import (
 
 func main() {
 	tsGen("web/app/src/models/post_gen.ts", "", post.Post{}, post.List{})
-	tsGen("web/app/src/models/user_gen.ts", "", user.User{})
+	tsGen("web/app/src/models/user_gen.ts", "", user.User{}, user.Session{})
 	tsGen("web/app/src/models/api_account_gen.ts", "API_",
 		account.AuthResp{},
 		account.AuthRequest{},
