@@ -86,7 +86,8 @@
   :slotted(.rippleJS .ripple) {
     background: hsla(202, 10%, 64%, 50%);
   }
-  &[data-pointer] {
+  &[data-pointer],
+  :slotted([data-pointer]) {
     cursor: pointer;
   }
 }

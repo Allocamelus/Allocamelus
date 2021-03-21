@@ -6,11 +6,13 @@
         v-for="post in list.posts"
         :key="post.id"
         class="box--link box--auto-mb"
-        data-pointer
-        @click="$router.push(`/post/${post.id}`)"
       >
         <user-name :user="list.user(post.userId)"></user-name>
-        <div v-html="post.content"></div>
+        <div
+          @click="$router.push(`/post/${post.id}`)"
+          data-pointer
+          v-html="post.content"
+        ></div>
       </box>
     </div>
     <div class="container__sidebar">
