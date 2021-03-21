@@ -5,22 +5,14 @@
     max-width: 550px;
     box-sizing: border-box;
   }
-  .container__sidebar {
-    display: none;
-  }
 }
+
 @media (min-width: 425px) and (max-width: 768px) {
   /* For tablets: */
   .container {
     width: 98%;
     padding: 5px;
     max-width: 675px;
-  }
-  .container__feed {
-    width: 100%;
-  }
-  .container__sidebar {
-    display: none;
   }
 }
 
@@ -29,6 +21,9 @@
     width: 95%;
     max-width: 875px;
   }
+}
+
+@media (max-width: 934px) {
   .container__feed {
     width: 100%;
   }

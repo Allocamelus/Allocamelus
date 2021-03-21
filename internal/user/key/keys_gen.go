@@ -54,6 +54,12 @@ func (z *Key) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "BackupKey")
 				return
 			}
+		case "recoveryKeyHash":
+			z.RecoveryKeyHash, err = dc.ReadString()
+			if err != nil {
+				err = msgp.WrapError(err, "RecoveryKeyHash")
+				return
+			}
 		default:
 			err = dc.Skip()
 			if err != nil {
@@ -68,8 +74,8 @@ func (z *Key) DecodeMsg(dc *msgp.Reader) (err error) {
 // EncodeMsg implements msgp.Encodable
 func (z *Key) EncodeMsg(en *msgp.Writer) (err error) {
 	// omitempty: check for empty values
-	zb0001Len := uint32(5)
-	var zb0001Mask uint8 /* 5 bits */
+	zb0001Len := uint32(6)
+	var zb0001Mask uint8 /* 6 bits */
 	if z.PrivateKeySalt == "" {
 		zb0001Len--
 		zb0001Mask |= 0x4
@@ -81,6 +87,10 @@ func (z *Key) EncodeMsg(en *msgp.Writer) (err error) {
 	if z.BackupKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x10
+	}
+	if z.RecoveryKeyHash == "" {
+		zb0001Len--
+		zb0001Mask |= 0x20
 	}
 	// variable map header, size zb0001Len
 	err = en.Append(0x80 | uint8(zb0001Len))
@@ -146,6 +156,18 @@ func (z *Key) EncodeMsg(en *msgp.Writer) (err error) {
 			return
 		}
 	}
+	if (zb0001Mask & 0x20) == 0 { // if not empty
+		// write "recoveryKeyHash"
+		err = en.Append(0xaf, 0x72, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x4b, 0x65, 0x79, 0x48, 0x61, 0x73, 0x68)
+		if err != nil {
+			return
+		}
+		err = en.WriteString(z.RecoveryKeyHash)
+		if err != nil {
+			err = msgp.WrapError(err, "RecoveryKeyHash")
+			return
+		}
+	}
 	return
 }
 
@@ -153,8 +175,8 @@ func (z *Key) EncodeMsg(en *msgp.Writer) (err error) {
 func (z *Key) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// omitempty: check for empty values
-	zb0001Len := uint32(5)
-	var zb0001Mask uint8 /* 5 bits */
+	zb0001Len := uint32(6)
+	var zb0001Mask uint8 /* 6 bits */
 	if z.PrivateKeySalt == "" {
 		zb0001Len--
 		zb0001Mask |= 0x4
@@ -166,6 +188,10 @@ func (z *Key) MarshalMsg(b []byte) (o []byte, err error) {
 	if z.BackupKey == "" {
 		zb0001Len--
 		zb0001Mask |= 0x10
+	}
+	if z.RecoveryKeyHash == "" {
+		zb0001Len--
+		zb0001Mask |= 0x20
 	}
 	// variable map header, size zb0001Len
 	o = append(o, 0x80|uint8(zb0001Len))
@@ -196,6 +222,11 @@ func (z *Key) MarshalMsg(b []byte) (o []byte, err error) {
 		// string "backupKey"
 		o = append(o, 0xa9, 0x62, 0x61, 0x63, 0x6b, 0x75, 0x70, 0x4b, 0x65, 0x79)
 		o = msgp.AppendString(o, z.BackupKey)
+	}
+	if (zb0001Mask & 0x20) == 0 { // if not empty
+		// string "recoveryKeyHash"
+		o = append(o, 0xaf, 0x72, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x4b, 0x65, 0x79, 0x48, 0x61, 0x73, 0x68)
+		o = msgp.AppendString(o, z.RecoveryKeyHash)
 	}
 	return
 }
@@ -248,6 +279,12 @@ func (z *Key) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "BackupKey")
 				return
 			}
+		case "recoveryKeyHash":
+			z.RecoveryKeyHash, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "RecoveryKeyHash")
+				return
+			}
 		default:
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -262,6 +299,6 @@ func (z *Key) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Key) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 10 + z.PublicKey.Msgsize() + 15 + msgp.StringPrefixSize + len(z.PrivateKeySalt) + 14 + msgp.StringPrefixSize + len(z.PrivateKey) + 10 + msgp.StringPrefixSize + len(z.BackupKey)
+	s = 1 + 3 + msgp.Int64Size + 10 + z.PublicKey.Msgsize() + 15 + msgp.StringPrefixSize + len(z.PrivateKeySalt) + 14 + msgp.StringPrefixSize + len(z.PrivateKey) + 10 + msgp.StringPrefixSize + len(z.BackupKey) + 16 + msgp.StringPrefixSize + len(z.RecoveryKeyHash)
 	return
 }

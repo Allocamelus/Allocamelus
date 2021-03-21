@@ -9,7 +9,7 @@
         data-pointer
         @click="$router.push(`/post/${post.id}`)"
       >
-        <div>{{ post.id }}</div>
+        <user-name :user="list.user(post.userId)"></user-name>
         <div v-html="post.content"></div>
       </box>
     </div>
@@ -29,14 +29,16 @@
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
 import { useStore } from "vuex";
-import { getPosts } from "../api/getPosts";
-import { List } from "../models/post_gen";
+import { get as getPosts } from "../api/posts/get";
+import { Posts } from "../models/posts";
 import Box from "../components/Box.vue";
+import UserName from "../components/user/Name.vue";
+
 export default defineComponent({
   setup(props) {
     const store = useStore();
     const data = reactive({
-      list: new List(),
+      list: new Posts(),
       page: 1,
       // TODO Better Errors
       err: "",
@@ -66,6 +68,7 @@ export default defineComponent({
   },
   components: {
     Box,
+    UserName,
   },
 });
 </script>

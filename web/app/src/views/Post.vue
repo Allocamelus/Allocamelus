@@ -9,7 +9,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
-import { getPost } from "@/api/getPost";
+import { get as getPost} from "../api/post/get";
 import { Post } from "@/models/post_gen";
 
 export default defineComponent({
