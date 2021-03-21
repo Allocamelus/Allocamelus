@@ -25,10 +25,6 @@ type Post struct {
 	Media     bool   `msg:"media" json:"media"`
 }
 
-type List struct {
-	Posts []*Post `msg:"posts" json:"posts"`
-}
-
 // New Post
 func New(userID int64, content string, publish bool) *Post {
 	p := new(Post)
@@ -93,7 +89,8 @@ func Get(postID int64) (Post, error) {
 // GetPublicPosts
 // TODO: Likes, Views & Cache
 func GetPublicPosts(startNum, perPage int64) (*List, error) {
-	var posts []*Post
+	posts := new(List)
+	posts.Posts = map[int64]*Post{}
 	rows, err := preGetPublicPosts.Latest.Query(startNum, perPage)
 	if err != nil {
 		return nil, err
@@ -108,10 +105,10 @@ func GetPublicPosts(startNum, perPage int64) (*List, error) {
 			return nil, err
 		}
 
-		posts = append(posts, p)
+		posts.Posts[p.ID] = p
 	}
 
-	return &List{Posts: posts}, nil
+	return posts, nil
 }
 
 // GetPublicTotal Posts
