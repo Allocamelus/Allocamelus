@@ -2,7 +2,6 @@
   <div>
     <p>{{ id }}</p>
     <div v-html="post.content"></div>
-    <router-link to="/post/10">10</router-link>
   </div>
 </template>
 
