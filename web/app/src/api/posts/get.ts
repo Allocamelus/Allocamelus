@@ -1,5 +1,6 @@
 import v1 from "../v1";
-import { Posts } from '../../models/posts'
+import { API_Posts } from '../../models/api_posts'
+import { API_Error } from "../../models/api_error";
 
 export async function get(pageNum: number) {
   if (pageNum == undefined) {
@@ -8,7 +9,9 @@ export async function get(pageNum: number) {
   return v1.get("/posts?p=" + pageNum)
     .then(r => {
       if (r.data.error == undefined) {
-        return Posts.createFrom(r.data)
+        return API_Posts.createFrom(r.data)
+      } else {
+        throw new API_Error(r.data)
       }
     })
 }

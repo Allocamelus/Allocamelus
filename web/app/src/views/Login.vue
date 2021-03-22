@@ -60,16 +60,10 @@ import { API_AuthA10Token } from "../models/api_account_gen";
 import { authA10 } from "../api/account/auth";
 import InputLabel from "../components/form/InputLabel.vue";
 import ApiResp from "../models/responses";
-
-function htmlErrBuilder(first, second = "") {
-  var err = `<strong>`;
-  err += first;
-  err += `</strong>`;
-  if (second.length > 0) {
-    err += `<br>` + second;
-  }
-  return err;
-}
+import {
+  htmlErrBuilder,
+  HtmlSomthingWentWrong,
+} from "../components/htmlErrors";
 
 const HtmlInvalidUsernamePassword = htmlErrBuilder(
     `Invalid Username/Email or Password`,
@@ -78,10 +72,6 @@ const HtmlInvalidUsernamePassword = htmlErrBuilder(
   HtmlUnverifiedEmail = htmlErrBuilder(
     `Please verify your email to login`,
     `Don't see the verification email? <a class="link" href="/account/verify_email">Resend It</a>`
-  ),
-  HtmlSomthingWentWrong = htmlErrBuilder(
-    `Something went wrong`,
-    `Try again later`
   ),
   HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");
 
@@ -120,7 +110,7 @@ export default defineComponent({
     });
 
     if (store.getters.loggedIn) {
-      gotoRedirect(router, props.redirect)
+      gotoRedirect(router, props.redirect);
     }
 
     return {
@@ -199,7 +189,7 @@ export default defineComponent({
               userId: r.userId,
               authToken: vm.remember,
             });
-            gotoRedirect(vm.$router, vm.redirect)
+            gotoRedirect(vm.$router, vm.redirect);
           }
         })
         .catch((e) => {

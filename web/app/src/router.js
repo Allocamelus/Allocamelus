@@ -21,6 +21,12 @@ const routes = [
     name: "Home",
     component: () => import('./views/Home.vue'),
   },
+  {
+    path: '/u/:uniqueName(.*)*',
+    name: 'User',
+    component: () => import('./views/User.vue'),
+    props: true
+  }
 ];
 export default createRouter({
   // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
