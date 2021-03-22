@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <error-box :error="err" class="py-3 px-4">
-      <user-name :user="apiPost.user"></user-name>
-      <div v-html="apiPost.post.content"></div>
+      <post-box :post="apiPost.post" :user="apiPost.user"></post-box>
     </error-box>
   </div>
 </template>
@@ -13,11 +12,12 @@ import { useRouter } from "vue-router";
 import { get as getPost } from "../api/post/get";
 import { API_Post } from "../models/api_post";
 import ErrorBox from "../components/box/Error.vue";
-import UserName, { TwoLine } from "../components/user/Name.vue";
+import UserName from "../components/user/Name.vue";
 import ApiResp from "../models/responses";
 import { Html404Func, HtmlSomthingWentWrong } from "../components/htmlErrors";
 import { API_Error } from "../models/api_error";
 import sanitize from "../pkg/sanitize";
+import PostBox from "../components/post/Box.vue";
 
 function postErrors(api_error, path) {
   if (api_error instanceof API_Error) {
@@ -53,7 +53,6 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      TwoLine,
     };
   },
   watch: {
@@ -85,6 +84,7 @@ export default defineComponent({
   components: {
     UserName,
     ErrorBox,
+    PostBox,
   },
 });
 </script>

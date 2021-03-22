@@ -13,6 +13,9 @@
 .flex {
   display: flex;
 }
+.mw-100 {
+  max-width: 100%;
+}
 .error {
   color: hsl(0, 100%, 50%) !important;
 }
@@ -36,6 +39,17 @@
   min-height: 150px;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.dot-before {
+  &::before {
+    content: "\2022";
+    margin: 0 2px;
+  }
+}
+
 // Create all usefull font sizes
 $size-list: 14 16 20 24 32 40 64 96;
 @each $current-size in $size-list {
@@ -54,13 +68,13 @@ $spacing-direction-list: (
   l: left,
   y: (
     top,
-    bottom
+    bottom,
   ),
   x: (
     right,
-    left
+    left,
   ),
-  a: all
+  a: all,
 );
 $spacing-type-list: (padding, margin);
 // for each type in $spacing-type-list
@@ -76,17 +90,17 @@ $spacing-type-list: (padding, margin);
       // start creating class
       // first letter from type, direction, and class number
       .#{str-slice($spacing-type, 1, 1)}#{$direction-key}-#{$i} {
-          // x and y in spacing-direction-list are arrays
-          // for is used to go over both
-          @for $i1 from 0 to length($direction-value) {
-            @if $direction-value != all {
-              // add direction to the type
-              #{$spacing-type}-#{nth($direction-value, $i1+1)}: #{$spacing-size}px !important;
-            } @else {
-              #{$spacing-type}: #{$spacing-size}px !important;
-            }
+        // x and y in spacing-direction-list are arrays
+        // for is used to go over both
+        @for $i1 from 0 to length($direction-value) {
+          @if $direction-value != all {
+            // add direction to the type
+            #{$spacing-type}-#{nth($direction-value, $i1+1)}: #{$spacing-size}px !important;
+          } @else {
+            #{$spacing-type}: #{$spacing-size}px !important;
           }
         }
+      }
     }
   }
 }
