@@ -36,7 +36,7 @@
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
-import { MinToSec, SecToMs } from "./models/time";
+import { MinToSec, SecToMs } from "./pkg/time";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {

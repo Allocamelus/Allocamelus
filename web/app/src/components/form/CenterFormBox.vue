@@ -8,7 +8,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import Box from "../Box.vue";
+import Box from "../box/Box.vue";
 
 export default defineComponent({
   name: "center-form-box",
