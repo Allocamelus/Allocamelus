@@ -1,5 +1,5 @@
 <template>
-  <nav id="nav">
+  <nav id="nav" class="bg-primary-600 text-gray-50">
     <div class="flex">
       <router-link to="/" class="px-4">Allocamelus</router-link>
     </div>
@@ -40,9 +40,9 @@ import { MinToSec, SecToMs } from "./pkg/time";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
-    document.body.classList.add("dark-theme");
+    document.documentElement.classList.add("dark");
   } else {
-    document.body.classList.remove("dark-theme");
+    document.documentElement.classList.remove("dark");
   }
 }
 
