@@ -1,10 +1,14 @@
 import v1 from "../v1";
-import { Post } from '../../models/post_gen'
+import { API_Post } from '../../models/api_post'
+import { API_Error } from "../../models/api_error";
+
 export async function get(postId: any) {
   return v1.get("/post/" + postId)
     .then(r => {
       if (r.data.error == undefined) {
-        return Post.createFrom(r.data)
+        return API_Post.createFrom(r.data)
+      } else {
+        throw new API_Error(r.data)
       }
     })
 }

@@ -78,10 +78,8 @@ export default createStore({
       })
     },
     sessionCheck({ commit, state }) {
-      console.log(state);
       if (state.session.loggedIn || state.session.fresh) {
         status().then(session => {
-          console.log(session);
           if (state.session.loggedIn != session.loggedIn || state.session.userId != session.userId) {
             commit({
               type: 'newSession',

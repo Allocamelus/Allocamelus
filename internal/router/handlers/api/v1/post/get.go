@@ -10,7 +10,8 @@ import (
 )
 
 type getResponse struct {
-	post.Post
+	Post *post.Post `json:"post"`
+	User *user.User `json:"user"`
 }
 
 // Get post handler
@@ -21,7 +22,11 @@ func Get(c *fiber.Ctx) error {
 	}
 
 	p.MDtoHTMLContent()
-	return fiberutil.JSON(c, 200, getResponse{*p})
+	u, err := user.GetPublic(p.UserID)
+	if logger.Error(err) {
+		return apierr.ErrSomthingWentWrong(c)
+	}
+	return fiberutil.JSON(c, 200, getResponse{Post: p, User: &u})
 }
 
 func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {

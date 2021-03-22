@@ -1,12 +1,12 @@
 import { User } from "./user_gen";
 import { Post } from './post_gen'
 
-export class Posts {
+export class API_Posts {
   posts: { [key: number]: Post };
   users: { [key: number]: User };
 
   static createFrom(source: any = {}) {
-    return new Posts(source);
+    return new API_Posts(source);
   }
 
   constructor(source: any = {}) {

@@ -4,6 +4,7 @@ export default {
     InvalidAuthToken: "invalid-auth-token",
     InvalidWith: "invalid-with-value",
     InvalidCaptcha: "invalid-captcha",
+    NotFound: "not-found",
   },
   Account: {
     Auth: {
