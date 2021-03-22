@@ -5,12 +5,16 @@
       class="name-container"
       :to="'/u/' + user.uniqueName"
     >
-      <div class="name">{{ user.name }}</div>
-      <div class="unique-name">@{{ user.uniqueName }}</div>
+      <div class="name">{{ user.name }} Long Name For Testing</div>
+      <div class="unique-name">
+        @{{ user.uniqueName }}_Long_Name_For_Testing
+      </div>
     </router-link>
     <div class="name-container" v-else>
-      <div class="name">{{ user.name }}</div>
-      <div class="unique-name">@{{ user.uniqueName }}</div>
+      <div class="name">{{ user.name }} Long Name For Testing</div>
+      <div class="unique-name">
+        @{{ user.uniqueName }}_Long_Name_For_Testing
+      </div>
     </div>
   </div>
 </template>
@@ -48,11 +52,12 @@ export default defineComponent({
 
 .name-wrapper {
   .name-container {
-    white-space: nowrap;
     display: flex;
-    padding: 4px 0;
-    margin-bottom: 4px;
-    color: $light-title-color;
+    padding: 3px 0;
+    color: $light-text-3;
+
+    overflow: hidden;
+    overflow-wrap: break-word;
   }
   &.one-line {
     .unique-name {
@@ -68,6 +73,7 @@ export default defineComponent({
   &.two-line {
     .name-container {
       flex-direction: column;
+      margin-bottom: 4px;
       .name {
         font-size: 22px;
         margin-bottom: 4px;
@@ -77,22 +83,25 @@ export default defineComponent({
 }
 
 .name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: 600;
 }
 
 .unique-name {
-  color: hsl(0, 0%, 30%);
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  color: $light-text-12;
+  font-size: 15px;
   font-weight: 400;
 }
 
 .dark-theme {
   .name-container {
-    color: $dark-title-color;
+    color: $dark-text-4;
   }
   .unique-name {
-    color: hsl(0, 0%, 60%);
+    color: $dark-text-26;
   }
 }
 </style>

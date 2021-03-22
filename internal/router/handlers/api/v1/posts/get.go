@@ -13,8 +13,9 @@ import (
 )
 
 type getResponse struct {
-	Posts post.ListPosts `json:"posts"`
-	Users user.ListUsers `json:"users"`
+	Posts post.ListPosts  `json:"posts"`
+	Users user.ListUsers  `json:"users"`
+	Order map[int64]int64 `json:"order"`
 }
 
 const perPage int64 = 15
@@ -47,5 +48,5 @@ func Get(c *fiber.Ctx) error {
 		p.MDtoHTMLContent()
 	}
 
-	return fiberutil.JSON(c, 200, getResponse{Posts: posts.Posts, Users: users.Users})
+	return fiberutil.JSON(c, 200, getResponse{Posts: posts.Posts, Users: users.Users, Order: posts.Order})
 }

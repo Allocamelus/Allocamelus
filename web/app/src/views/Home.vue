@@ -3,16 +3,15 @@
     <div class="container__feed">
       <div v-if="err.length > 0" v-html="err"></div>
       <box
-        v-for="post in list.posts"
-        :key="post.id"
+        v-for="(postId, index) in list.order"
+        :key="index"
         class="box--link box--auto-mb"
       >
-        <user-name :user="list.user(post.userId)"></user-name>
-        <div
-          @click="$router.push(`/post/${post.id}`)"
-          data-pointer
-          v-html="post.content"
-        ></div>
+       <post-box
+          :post="list.post(postId)"
+          :user="list.user(list.post(postId).userId)"
+          :isLink="true"
+        ></post-box>
       </box>
     </div>
     <div class="container__sidebar">
@@ -34,7 +33,7 @@ import { useStore } from "vuex";
 import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_posts";
 import Box from "../components/box/Box.vue";
-import UserName from "../components/user/Name.vue";
+import PostBox from "../components/post/Box.vue";
 
 export default defineComponent({
   setup(props) {
@@ -61,7 +60,7 @@ export default defineComponent({
     };
   },
   async beforeRouteUpdate(to, from) {
-    this.list = new List();
+    this.list = new API_Posts();
 
     getPosts(this.page)
       .then((r) => {
@@ -73,7 +72,7 @@ export default defineComponent({
   },
   components: {
     Box,
-    UserName,
+    PostBox,
   },
 });
 </script>

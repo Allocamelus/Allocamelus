@@ -89,14 +89,15 @@ func Get(postID int64) (Post, error) {
 // GetPublicPosts
 // TODO: Likes, Views & Cache
 func GetPublicPosts(startNum, perPage int64) (*List, error) {
-	posts := new(List)
-	posts.Posts = map[int64]*Post{}
+	posts := NewList()
+
 	rows, err := preGetPublicPosts.Latest.Query(startNum, perPage)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	var index int64
 	for rows.Next() {
 		p := new(Post)
 
@@ -106,6 +107,8 @@ func GetPublicPosts(startNum, perPage int64) (*List, error) {
 		}
 
 		posts.Posts[p.ID] = p
+		posts.Order[index] = p.ID
+		index++
 	}
 
 	return posts, nil

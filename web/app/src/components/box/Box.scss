@@ -49,13 +49,6 @@
     letter-spacing: 0.5px;
   }
 
-  :slotted(.box__has-dot) {
-    display: inline-block;
-    &::before {
-      content: "\2022";
-      margin: 0 2px;
-    }
-  }
   :slotted(.box__username) {
     display: inline;
     font-weight: 500;
@@ -86,10 +79,6 @@
   }
   :slotted(.rippleJS .ripple) {
     background: hsla(202, 10%, 64%, 50%);
-  }
-  &[data-pointer],
-  :slotted([data-pointer]) {
-    cursor: pointer;
   }
 }
 /*.box--link:hover {
