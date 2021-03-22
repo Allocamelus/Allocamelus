@@ -33,7 +33,7 @@ import { defineComponent, toRefs, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_posts";
-import Box from "../components/Box.vue";
+import Box from "../components/box/Box.vue";
 import UserName from "../components/user/Name.vue";
 
 export default defineComponent({
@@ -52,7 +52,9 @@ export default defineComponent({
       .catch((e) => {
         data.err = String(e);
       });
+
     document.title = `Home - ${import.meta.env.VITE_SITE_NAME}`;
+
     return {
       ...toRefs(data),
       loggedIn: computed(() => store.getters.loggedIn),

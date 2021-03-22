@@ -113,6 +113,8 @@ export default defineComponent({
       gotoRedirect(router, props.redirect);
     }
 
+    document.title = `Login - ${import.meta.env.VITE_SITE_NAME}`;
+
     return {
       ...toRefs(data),
     };

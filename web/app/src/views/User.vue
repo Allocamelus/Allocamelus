@@ -18,7 +18,7 @@ import { useStore } from "vuex";
 import { get as getUser } from "../api/user/get";
 import { User } from "../models/user_gen";
 import UserName, { TwoLine } from "../components/user/Name.vue";
-import ErrorBox from "../components/ErrorBox.vue";
+import ErrorBox from "../components/box/Error.vue";
 import ApiResp from "../models/responses";
 import { Html404Func, HtmlSomthingWentWrong } from "../components/htmlErrors";
 import { API_Error } from "../models/api_error";

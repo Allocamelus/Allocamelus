@@ -12,7 +12,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { get as getPost } from "../api/post/get";
 import { API_Post } from "../models/api_post";
-import ErrorBox from "../components/ErrorBox.vue";
+import ErrorBox from "../components/box/Error.vue";
 import UserName, { TwoLine } from "../components/user/Name.vue";
 import ApiResp from "../models/responses";
 import { Html404Func, HtmlSomthingWentWrong } from "../components/htmlErrors";

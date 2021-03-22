@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import VuexPersistence from 'vuex-persist'
-import { UnixTime, MinToSec, DaysToSec } from "./models/time";
+import { UnixTime, MinToSec, DaysToSec } from "./pkg/time";
 
 import { status } from "./api/account/auth/status"
 import { keepAlive } from "./api/account/auth/keepAlive"
