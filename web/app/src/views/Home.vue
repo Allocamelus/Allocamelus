@@ -1,5 +1,5 @@
 <template>
-  <div class="container container--flex">
+  <div class="container">
     <div class="container__feed">
       <div v-if="err.length > 0" v-html="err"></div>
       <box

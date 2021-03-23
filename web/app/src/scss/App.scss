@@ -1,18 +1,6 @@
 @import "vars";
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
 @layer base {
-  // Font Awesome
-  // hack to get tailwind to purge unneeded css
-  $fa-font-path: "/webfonts";
-  @import "@fortawesome/fontawesome-free/scss/fontawesome";
-  @import "@fortawesome/fontawesome-free/scss/brands";
-  @import "@fortawesome/fontawesome-free/scss/regular";
-  @import "@fortawesome/fontawesome-free/scss/solid";
-
   html {
     box-sizing: border-box;
   }
@@ -76,5 +64,24 @@
     .copyright {
       @apply font-medium text-base self-center;
     }
+  }
+}
+
+@layer components {
+  .container {
+    // Base
+    @apply mx-auto justify-center px-2;
+    // xs 425px
+    @apply xs:w-full;
+    // sm 640px
+    @apply sm:px-4;
+    // md	768px
+    @apply md:px-5;
+    // lg	1024px
+    @apply lg:px-14 lg:max-w-4.5xl;
+    // xl	1280px
+    @apply xl:max-w-6xl;
+    // 2xl 1536px
+    @apply 2xl:max-w-8xl;
   }
 }

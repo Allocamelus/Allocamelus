@@ -1,0 +1,14 @@
+@import "vars";
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  // Font Awesome
+  // hack to get tailwind to purge unneeded css
+  @import "@fortawesome/fontawesome-free/scss/fontawesome";
+  @import "@fortawesome/fontawesome-free/scss/brands";
+  @import "@fortawesome/fontawesome-free/scss/regular";
+  @import "@fortawesome/fontawesome-free/scss/solid";
+}

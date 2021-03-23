@@ -1,10 +1,21 @@
 const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      maxWidth: {
+        '4.5xl': '60rem',
+        '8xl': '88rem',
+      }
+    },
+    screens: {
+      'xs': '425px',
+      ...defaultTheme.screens,
+      '3xl': '1904px',
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
@@ -30,4 +41,7 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  corePlugins: {
+    container: false, // use custom container
+  }
 }
