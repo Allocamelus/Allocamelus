@@ -1,9 +1,9 @@
 <template>
-  <nav id="nav" class="bg-primary-600 text-gray-50">
-    <div class="flex">
+  <nav id="nav">
+    <div>
       <router-link to="/" class="px-4">Allocamelus</router-link>
     </div>
-    <div class="flex">
+    <div>
       <div class="fa-adjust-wrapper">
         <i
           class="fas fa-adjust"
@@ -11,7 +11,7 @@
           @click="toggleTheme"
         ></i>
       </div>
-      <div class="flex">
+      <div>
         <router-link to="/login">Login</router-link>
       </div>
     </div>

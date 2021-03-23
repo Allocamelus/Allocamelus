@@ -15,12 +15,15 @@ module.exports = {
         300: '#4a2e2f',
         400: '#3a1b1c',
         500: '#351516',
-        600: '#2a090a',
+        600: '#2a090a', // Base
         700: '#260809',
         800: '#1c0607',
         900: '#130405',
       },
+      footer: '#321f28',
       gray: colors.trueGray,
+      white: colors.white,
+      black: colors.black,
     }
   },
   variants: {

@@ -51,3 +51,8 @@ $dark-link-hover-color: mix($dark-link-color, black, 85%);
 
 $nav-height: 42px;
 $footer-height: 45px;
+
+* {
+  --nav-height: #{$nav-height};
+  --footer-height: #{$footer-height};
+}
