@@ -25,7 +25,7 @@ export default (time: number) => {
 
 export function MDY(time: number) {
 	var t = new Date(time*1000)
-	return MD(time) + ", " + t.getFullYear
+	return MD(time) + ", " + t.getFullYear()
 }
 
 export function MD(time: number) {
