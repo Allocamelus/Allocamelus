@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3 checkbox-container" @click="toggleCheck()">
+  <div class="min-w-max pr-1 cursor-pointer select-none" @click="toggleCheck()">
     <input type="checkbox" v-model="checked" :name="name" @click.capture.stop />
     <slot>Checkbox</slot>
   </div>
@@ -33,5 +33,26 @@ export default defineComponent({
 });
 </script>
 
-<style src="./Checkbox.scss" lang="scss" scoped>
+<style lang="scss" scoped>
+@mixin before($content) {
+  &::before {
+    content: $content;
+  }
+}
+@layer components {
+  input,
+  :slotted(label),
+  :slotted(div) {
+    @apply cursor-pointer select-none;
+  }
+  input[type="checkbox"] {
+    @apply font-awesome appearance-none font-normal mr-1;
+    @apply dark:text-warm-gray-50 focus:outline-none;
+    font-size: 1.01em;
+    @include before("\f14a");
+    &:checked {
+      @include before("\f0c8");
+    }
+  }
+}
 </style>

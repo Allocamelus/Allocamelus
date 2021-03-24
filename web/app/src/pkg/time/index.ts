@@ -5,6 +5,10 @@ export function UnixTime(append?: number) {
   return Math.floor(Date.now() / 1000)
 }
 
+export function UnixToDate(time: number) {
+  return new Date(time * 1000)
+}
+
 // SecToMs seconds to millisecond
 export function SecToMs(seconds:number) {
   return seconds * 1000

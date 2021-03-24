@@ -10,26 +10,34 @@
     :maxLen="maxLenC"
     :required="required"
   >
-    <div class="iconPassBox">
+    <div class="flex items-center mr-1.5">
       <div
         v-if="check"
-        class="iconPassSec"
+        class="justify-between mr-1.5 grid grid-rows-2 grid-flow-col gap-0.5"
         :class="strengthClass"
         title="Password Strength"
-      ></div>
-      <i
-        class="far iconPass"
-        v-on:click="togglePass()"
-        :class="show ? 'fa-eye-slash' : 'fa-eye'"
+      >
+        <div class="ps-4"></div>
+        <div class="ps-3"></div>
+        <div class="ps-1"></div>
+        <div class="ps-2"></div>
+      </div>
+      <component
+        class="cursor-pointer text-secondary-600 hover:text-secondary-700"
+        @click="togglePass"
+        :is="show ? 'eye-off-sm' : 'eye-sm'"
         title="Toggle Visibility"
-      ></i></div
-  ></text-input>
+      ></component>
+    </div>
+  </text-input>
 </template>
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { debounce } from "debounce";
 import TextInput from "./TextInput.vue";
+import EyeSm from "../icon/EyeSm.vue";
+import EyeOffSm from "../icon/EyeOffSm.vue";
 
 export default defineComponent({
   name: "password-input",
@@ -106,7 +114,7 @@ export default defineComponent({
     strengthClass() {
       if (this.check) {
         if (this.password.length == 0) {
-          return ""
+          return "";
         }
         return {
           s1: this.score == 1,
@@ -120,7 +128,7 @@ export default defineComponent({
   },
   methods: {
     scoreDeb() {
-      this.score = this.zxcvbn(this.password.substring(0,64)).score;
+      this.score = this.zxcvbn(this.password.substring(0, 64)).score;
     },
     togglePass() {
       this.show = !this.show;
@@ -131,9 +139,43 @@ export default defineComponent({
   },
   components: {
     TextInput,
+    EyeSm,
+    EyeOffSm,
   },
 });
 </script>
 
-<style src="./PasswordInput.scss" lang="scss" scoped>
+<style lang="scss" scoped>
+@layer components {
+  .ps-1,
+  .ps-2,
+  .ps-3,
+  .ps-4 {
+    @apply h-1.5 w-1.5 bg-gray-500;
+  }
+  .s1 {
+    .ps-1 {
+      @apply bg-red-600;
+    }
+  }
+  .s2 {
+    .ps-1,
+    .ps-2 {
+      @apply bg-yellow-400;
+    }
+  }
+  .s3 {
+    div {
+      @apply bg-orange-600;
+    }
+    .ps-4 {
+      @apply bg-gray-500;
+    }
+  }
+  .s4 {
+    div {
+      @apply bg-green-600;
+    }
+  }
+}
 </style>

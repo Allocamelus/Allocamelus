@@ -1,17 +1,18 @@
 <template>
   <nav id="nav">
-    <div class="flex">
+    <div>
       <router-link to="/" class="px-4">Allocamelus</router-link>
     </div>
-    <div class="flex">
-      <div class="fa-adjust-wrapper">
-        <i
-          class="fas fa-adjust"
-          :class="toggleButtonClass"
-          @click="toggleTheme"
-        ></i>
+    <div>
+      <div class="flex justify-start items-center px-1">
+        <div class="p-2 rounded-3xl cursor-pointer">
+          <component
+            :is="this.theme != 'dark' ? 'moon-sm' : 'sun-sm'"
+            @click="toggleTheme"
+          ></component>
+        </div>
       </div>
-      <div class="flex">
+      <div>
         <router-link to="/login">Login</router-link>
       </div>
     </div>
@@ -36,13 +37,15 @@
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
+import SunSm from "./components/icon/SunSm.vue";
+import MoonSm from "./components/icon/MoonSm.vue";
 import { MinToSec, SecToMs } from "./pkg/time";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
-    document.body.classList.add("dark-theme");
+    document.documentElement.classList.add("dark");
   } else {
-    document.body.classList.remove("dark-theme");
+    document.documentElement.classList.remove("dark");
   }
 }
 
@@ -82,16 +85,12 @@ export default defineComponent({
       setTheme(this.theme);
     },
   },
-  computed: {
-    toggleButtonClass() {
-      if (this.theme != "dark") {
-        return "fa-flip-horizontal";
-      }
-      return "";
-    },
-  },
+  components: { MoonSm, SunSm },
 });
 </script>
+
+<style src="./scss/index.scss" lang="scss">
+</style>
 
 <style src="./scss/App.scss" lang="scss">
 </style>

@@ -1,15 +1,13 @@
 <template>
-  <div class="input-container" :class="focused ? 'focus' : ''">
+  <div class="input-container">
     <input
       v-model.trim="text"
       @input="emiter"
       :type="type"
       :name="name"
       :minlength="minLenC"
-      :maxlength="maxLenC+1"
+      :maxlength="maxLenC + 1"
       class="input"
-      @focus="focused = true"
-      @blur="focused = false"
       :required="requiredC"
     />
     <slot></slot>
@@ -54,7 +52,6 @@ export default defineComponent({
   setup(props) {
     const data = reactive({
       text: props.modelValue,
-      focused: false,
     });
     return {
       ...toRefs(data),
@@ -114,5 +111,18 @@ export default defineComponent({
 });
 </script>
 
-<style src="./input.scss" lang="scss" scoped>
+<style  lang="scss" scoped>
+@layer components {
+  .input-container {
+    @apply w-full rounded-sm box-border border border-solid;
+    @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
+    @apply flex justify-between items-center my-1 p-0;
+    @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
+  }
+
+  .input {
+    @apply focus:outline-none box-content flex-1 border-none outline-none;
+    @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
+  }
+}
 </style>
