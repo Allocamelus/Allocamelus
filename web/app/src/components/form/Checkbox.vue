@@ -49,9 +49,9 @@ export default defineComponent({
     @apply font-awesome appearance-none font-normal mr-1;
     @apply dark:text-warm-gray-50 focus:outline-none;
     font-size: 1.01em;
-    @include before("\f14a");
+    @include before("\f0c8");
     &:checked {
-      @include before("\f0c8");
+      @include before("\f14a");
     }
   }
 }
