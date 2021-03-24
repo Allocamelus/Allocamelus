@@ -37,7 +37,7 @@
             </checkbox>
             <div class="text-sm mt-2 mr-3">
               Don't have an account?
-              <a class="link whitespace-nowrap" href="/signup">Sign Up</a>
+              <router-link class="link whitespace-nowrap" to="/signup">Sign Up</router-link>
             </div>
           </div>
           <submit class="mt-3 self-end" title="Login">Login</submit>
