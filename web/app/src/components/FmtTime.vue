@@ -1,19 +1,20 @@
 <template>
-  <div>
-    <router-link v-if="isLink" class="time" :to="link">
-      {{ timeFmt }}
-    </router-link>
-    <div v-else class="time">
-      {{ timeFmt }}
-    </div>
-  </div>
+  <component
+    :is="isLink ? 'router-link' : 'div'"
+    class="text-sm font-normal text-gray-700 dark:text-gray-400"
+    :class="type"
+    :to="link"
+    :title="MDY_HM"
+  >
+    {{ timeFmt }}
+  </component>
 </template>
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { UnixTime } from "../pkg/time";
 import FmtTime from "../pkg/fmtTime";
-import FmtShort from "../pkg/fmtTime/sort";
+import FmtShort, { MDY_HM } from "../pkg/fmtTime/sort";
 
 export const Raw_Time = "raw";
 export const Fmt_Time = "fmt";
@@ -59,22 +60,9 @@ export default defineComponent({
           return String(this.timeC);
       }
     },
+    MDY_HM() {
+      return MDY_HM(this.timeC);
+    },
   },
 });
 </script>
-
-<style lang="scss" scoped>
-@import "@/scss/vars";
-
-.time {
-  font-size: 15px;
-  font-weight: 400;
-  color: $light-text-12;
-}
-
-.dark-theme {
-  .time {
-    color: $dark-text-26;
-  }
-}
-</style>

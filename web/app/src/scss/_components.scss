@@ -1,0 +1,28 @@
+@layer components {
+  .container {
+    // Base
+    @apply mx-auto justify-center px-2;
+    // xs 425px
+    @apply xs:w-full;
+    // sm 640px
+    @apply sm:px-4;
+    // md	768px
+    @apply md:px-5;
+    // lg	1024px
+    @apply lg:px-14 lg:max-w-4.5xl;
+    // xl	1280px
+    @apply xl:max-w-6xl;
+    // 2xl 1536px
+    @apply 2xl:max-w-8xl;
+  }
+  .dot-before {
+    &::before {
+      @apply mx-1 text-xs font-normal;
+      content: "\2022";
+    }
+  }
+  .link {
+    @apply text-rose-800 dark:text-rose-500;
+    @apply hover:text-rose-900 dark:hover:text-rose-600;
+  }
+}

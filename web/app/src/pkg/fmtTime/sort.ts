@@ -1,4 +1,4 @@
-import { UnixTime } from "../time"
+import { UnixTime, UnixToDate } from "../time"
 import { times, fmtTime } from "./index";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -23,12 +23,32 @@ export default (time: number) => {
   }
 }
 
-export function MDY(time: number) {
-	var t = new Date(time*1000)
-	return MD(time) + ", " + t.getFullYear
+function convertToDate(time: number | Date) {
+  if (typeof time == 'number') {
+    time = UnixToDate(time)
+  }
+  return time
 }
 
-export function MD(time: number) {
-	var t = new Date(time*1000)
-	return months[t.getMonth()] + " " + t.getDate()
+function paddedTime(date: Date) {
+   var min = String(date.getUTCMinutes())
+   if (min.length == 1) {
+     min = `0${min}`
+   }
+   return `${date.getUTCHours()}:${min}`
+}
+
+export function MDY_HM(time: number | Date) {
+  time = convertToDate(time)
+  return `${MDY(time)} UTC ${paddedTime(time)}`
+}
+
+export function MDY(time: number | Date) {
+  time = convertToDate(time)
+  return `${MD(time)}, ${time.getUTCFullYear()}`
+}
+
+export function MD(time: number | Date) {
+  time = convertToDate(time)
+  return `${months[time.getUTCMonth()]} ${time.getUTCDate()}`
 }

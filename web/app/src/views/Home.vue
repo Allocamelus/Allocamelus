@@ -1,21 +1,22 @@
 <template>
-  <div class="container container--flex">
-    <div class="container__feed">
+  <div class="container flex">
+    <feed>
       <div v-if="err.length > 0" v-html="err"></div>
+
       <box
         v-for="(postId, index) in list.order"
         :key="index"
-        class="box--link box--auto-mb"
+        class="py-3 px-4 mb-3"
       >
-       <post-box
+        <post-box
           :post="list.post(postId)"
           :user="list.user(list.post(postId).userId)"
           :isLink="true"
         ></post-box>
       </box>
-    </div>
-    <div class="container__sidebar">
-      <box class="pa-4 box--auto-mb">
+    </feed>
+    <sidebar>
+      <box class="py-3 px-4">
         <div v-if="loggedIn">
           <router-link class="link" to="/post/new">New Post</router-link>
         </div>
@@ -23,7 +24,7 @@
           <router-link class="link" to="/login">Login</router-link>
         </div>
       </box>
-    </div>
+    </sidebar>
   </div>
 </template>
 
@@ -34,6 +35,8 @@ import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_posts";
 import Box from "../components/box/Box.vue";
 import PostBox from "../components/post/Box.vue";
+import Feed from "../components/Feed.vue";
+import Sidebar from "../components/Sidebar.vue";
 
 export default defineComponent({
   setup(props) {
@@ -73,6 +76,8 @@ export default defineComponent({
   components: {
     Box,
     PostBox,
+    Feed,
+    Sidebar,
   },
 });
 </script>

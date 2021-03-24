@@ -1,22 +1,13 @@
 <template>
-  <div class="name-wrapper" :class="displayType">
-    <router-link
-      v-if="isLink"
-      class="name-container"
-      :to="'/u/' + user.uniqueName"
-    >
-      <div class="name">{{ user.name }} Long Name For Testing</div>
-      <div class="unique-name">
-        @{{ user.uniqueName }}_Long_Name_For_Testing
-      </div>
-    </router-link>
-    <div class="name-container" v-else>
-      <div class="name">{{ user.name }} Long Name For Testing</div>
-      <div class="unique-name">
-        @{{ user.uniqueName }}_Long_Name_For_Testing
-      </div>
-    </div>
-  </div>
+  <component
+    :is="isLink ? 'router-link': 'div'"
+    class="name-container"
+    :class="displayType"
+    :to="'/u/' + user.uniqueName"
+  >
+    <div class="name">{{ user.name }}</div>
+    <div class="unique-name">@{{ user.uniqueName }}</div>
+  </component>
 </template>
 
 <script>
@@ -50,58 +41,45 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/scss/vars";
 
-.name-wrapper {
-  .name-container {
-    display: flex;
-    padding: 3px 0;
-    color: $light-text-3;
-
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
-  &.one-line {
+@layer components {
+  .one-line {
+    @apply min-w-0 truncate;
     .unique-name {
-      margin-left: 4px;
+      @apply ml-1;
     }
     a {
-      text-decoration: none;
+      @apply no-underline;
     }
     &:hover .name {
-      text-decoration: underline;
+      @apply underline;
     }
   }
-  &.two-line {
-    .name-container {
-      flex-direction: column;
-      margin-bottom: 4px;
+  .two-line {
+    &.name-container {
+      @apply flex flex-col mb-1 items-start;
       .name {
-        font-size: 22px;
-        margin-bottom: 4px;
+        @apply text-xl mb-1;
       }
     }
   }
-}
-
-.name {
-  white-space: nowrap;
-  font-weight: 600;
-}
-
-.unique-name {
-  white-space: nowrap;
-  overflow: hidden;
-  overflow-wrap: break-word;
-  color: $light-text-12;
-  font-size: 15px;
-  font-weight: 400;
-}
-
-.dark-theme {
   .name-container {
-    color: $dark-text-4;
+    @apply min-w-0 items-center py-1 text-gray-800 dark:text-gray-200 truncate;
+    /*
+      overflow: hidden;
+      overflow-wrap: break-word;
+      */
   }
+
+  .name {
+    @apply inline whitespace-nowrap align-middle font-semibold;
+    // white-space: nowrap;
+  }
+
   .unique-name {
-    color: $dark-text-26;
+    @apply inline whitespace-nowrap align-middle text-gray-700 dark:text-gray-400 text-sm font-normal;
+    /* white-space: nowrap;
+    overflow: hidden;
+    overflow-wrap: break-word;*/
   }
 }
 </style>

@@ -24,21 +24,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/vars";
-
-.submit {
-  background-color: $secondary-color;
-  color: #fff;
-  font-weight: 500;
-  font-size: 15px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  -webkit-transition: 0.15s;
-  transition: 0.15s;
-}
-.submit:hover {
-  background-color: $secondary-hover-color;
+@layer components {
+  .submit {
+    @apply text-white font-medium text-base leading-4 py-2.5 px-3.5 rounded cursor-pointer;
+    @apply bg-secondary-600 transition duration-75 hover:bg-secondary-800;
+  }
 }
 </style>

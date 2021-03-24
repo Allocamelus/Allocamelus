@@ -31,26 +31,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/vars";
-
-.form-box {
-  max-width: 400px;
-  margin: 0 auto;
-  position: relative;
-  top: calc(50% - #{$nav-height});
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-}
-.form-box-wrapper {
-  width: 100%;
-  height: calc(100vh - #{$nav-height});
-}
-@media (max-width: 425px) {
-  .form-box,
-  .dark-theme .form-box {
-    background-color: transparent;
-    box-shadow: unset;
+@layer components {
+  .form-box {
+    @apply flex flex-col mx-auto flex-grow;
+    @apply xs-max:bg-transparent xs-max:shadow-none xs-max:dark:bg-transparent;
+    // TODO
+    max-width: 400px;
+  }
+  .form-box-wrapper {
+    @apply w-full flex justify-center items-center;
+    height: calc(100vh - calc(var(--nav-height) * 2));
   }
 }
 </style>

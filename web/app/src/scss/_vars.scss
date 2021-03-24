@@ -6,48 +6,12 @@ $secondary-hover-color: mix($secondary-color, black, 85%);
 $tertiary-color: hsl(10, 40%, 45%);
 $footer-color: hsl(332, 23%, 16%);
 
-$link-color: hsl(360, 100%, 35%);
-$link-hover-color: mix($link-color, black, 80%);
-
-$dark-primary: hsl(340, 5%, 8%);
-$dark-primary-1: mix($dark-primary, white, 95%);
-$dark-primary-2: mix($dark-primary, white, 93%);
-$dark-primary-3: mix($dark-primary, white, 92%);
-$dark-primary-4: mix($dark-primary, white, 91%);
-$dark-primary-6: mix($dark-primary, white, 89%);
-$dark-primary-8: mix($dark-primary, white, 88%);
-$dark-primary-12: mix($dark-primary, white, 86%);
-$dark-primary-16: mix($dark-primary, white, 85%);
-$dark-primary-26: mix($dark-primary, white, 84%);
-
-$light-title-color: hsl(0, 0%, 13%);
-$dark-title-color: hsl(0, 0%, 90%);
-$light-text: hsl(0, 0%, 10%);
-$light-text-1: hsl(0, 0%, 11%);
-$light-text-2: hsl(0, 0%, 12%);
-$light-text-3: hsl(0, 0%, 13%);
-$light-text-4: hsl(0, 0%, 14%);
-$light-text-6: hsl(0, 0%, 16%);
-$light-text-8: hsl(0, 0%, 18%);
-$light-text-12: hsl(0, 0%, 22%);
-$light-text-16: hsl(0, 0%, 26%);
-$light-text-26: hsl(0, 0%, 36%);
-$light-text-36: hsl(0, 0%, 46%);
-
-$dark-text: hsl(0, 0%, 95%);
-$dark-text-1: hsl(0, 0%, 94%);
-$dark-text-2: hsl(0, 0%, 93%);
-$dark-text-3: hsl(0, 0%, 92%);
-$dark-text-4: hsl(0, 0%, 91%);
-$dark-text-6: hsl(0, 0%, 89%);
-$dark-text-8: hsl(0, 0%, 87%);
-$dark-text-12: hsl(0, 0%, 83%);
-$dark-text-16: hsl(0, 0%, 79%);
-$dark-text-26: hsl(0, 0%, 69%);
-$dark-text-36: hsl(0, 0%, 59%);
-
-$dark-link-color: hsl(200, 100%, 50%);
-$dark-link-hover-color: mix($dark-link-color, black, 85%);
+$fa-font-path: "/webfonts";
 
 $nav-height: 42px;
 $footer-height: 45px;
+
+* {
+  --nav-height: #{$nav-height};
+  --footer-height: #{$footer-height};
+}

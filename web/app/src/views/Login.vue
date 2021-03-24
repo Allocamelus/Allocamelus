@@ -2,16 +2,16 @@
   <center-form-box>
     <div v-show="showCaptcha">
       <div id="loginCaptchaContainer"></div>
-      <div class="mt-3 link" @click="captcha.show = false">
+      <div class="mt-2 link" @click="captcha.show = false">
         <i class="fas fa-chevron-left"></i> Back
       </div>
     </div>
     <div v-show="!showCaptcha">
-      <h2>Login</h2>
+      <h2 class="text-2xl font-medium">Login</h2>
       <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
       <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
         <div>
-          <input-label :for="'name'" :err="err.username">Username</input-label>
+          <input-label for="name" :err="err.username">Username</input-label>
           <text-input
             v-model="username"
             name="name"
@@ -20,8 +20,8 @@
             @error="err.username = $event"
           ></text-input>
         </div>
-        <div class="mt-2">
-          <input-label :for="'password'" :err="err.password"
+        <div class="mt-3">
+          <input-label for="password" :err="err.password"
             >Password</input-label
           >
           <password-input
@@ -30,17 +30,17 @@
             @error="err.password = $event"
           ></password-input>
         </div>
-        <div class="bottom-wrapper">
-          <div class="bottom-text">
-            <checkbox v-model="remember" :name="'remember'">
+        <div class="flex justify-between mt-3">
+          <div class="flex flex-col">
+            <checkbox v-model="remember" name="remember">
               <label for="remember">Remember Me</label>
             </checkbox>
-            <div class="box__text--medium mt-3">
+            <div class="text-sm mt-2 mr-3">
               Don't have an account?
-              <a class="link" href="/signup">Sign Up</a>
+              <a class="link whitespace-nowrap" href="/signup">Sign Up</a>
             </div>
           </div>
-          <submit class="mt-3" :title="'Login'">Login</submit>
+          <submit class="mt-3 self-end" title="Login">Login</submit>
         </div>
       </form>
     </div>
@@ -210,13 +210,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.bottom-wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-.submit {
-  align-self: flex-end;
-}
-</style>
