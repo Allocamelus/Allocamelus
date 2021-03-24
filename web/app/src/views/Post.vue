@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <error-box :error="err" class="py-3 px-4">
-      <post-box :post="apiPost.post" :user="apiPost.user"></post-box>
+    <error-box :error="err" class="py-3 px-4 max-w-prose mx-auto">
+      <post-box :post="apiPost.post" :user="apiPost.user" :dynamicContent="true"></post-box>
     </error-box>
   </div>
 </template>

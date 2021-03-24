@@ -1,19 +1,37 @@
 <template>
   <div>
-    <div class="post-head mw-100">
-      <div class="flex mw-100">
-        <user-name :user="user" class="mw-100"></user-name>
-        <fmt-time
-          :time="post.published"
-          class="dot-before post-time"
-          :type="Fmt_Short_Time"
-        ></fmt-time>
+    <div
+      class="text-gray-700 dark:text-gray-300 flex items-center truncate justify-between"
+    >
+      <div class="flex min-w-0">
+        <user-name :user="user"></user-name>
+        <div class="dot-before flex items-center">
+          <router-link :to="link" class="no-underline group">
+            <fmt-time
+              :time="post.published"
+              :type="Fmt_Short_Time"
+              class="group-hover:underline"
+            ></fmt-time>
+          </router-link>
+        </div>
       </div>
-      <div class="ml-3">t</div>
+      <!-- TODO: license https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
+      <!-- TODO: Real options -->
+      <div
+        class="ml-3 p-1 rounded-full group hover:bg-opacity-30 hover:bg-rose-800"
+      >
+        <dots-vertical-md
+          class="text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
+          sizeClass="h-4.5 w-4.5"
+        ></dots-vertical-md>
+      </div>
     </div>
     <div
       @click="textClick"
-      :class="isLink ? 'pointer' : ''"
+      :class="[
+        isLink ? 'cursor-pointer' : '',
+        dynamicContent ? ['text-lg', 'sm:text-xl'] : '',
+      ]"
       v-html="post.content"
     ></div>
   </div>
@@ -23,6 +41,7 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
+import DotsVerticalMd from "../icon/DotsVerticalMd.vue";
 
 export default defineComponent({
   name: "post-box",
@@ -34,6 +53,10 @@ export default defineComponent({
       type: Object,
     },
     isLink: {
+      type: Boolean,
+      default: false,
+    },
+    dynamicContent: {
       type: Boolean,
       default: false,
     },
@@ -55,31 +78,6 @@ export default defineComponent({
       }
     },
   },
-  components: { FmtTime, UserName },
+  components: { FmtTime, UserName, DotsVerticalMd },
 });
 </script>
-
-<style lang="scss" scoped>
-@import "@/scss/vars";
-.post-head {
-  color: $light-text-8;
-  &,
-  .dot-before {
-    display: flex;
-    align-items: center;
-  }
-}
-.post-time {
-  white-space: nowrap;
-}
-.dot-before::before {
-  font-weight: 400;
-  font-size: 10px;
-  margin: 0 4px;
-}
-.dark-theme {
-  .post-head {
-    color: $dark-text-26;
-  }
-}
-</style>

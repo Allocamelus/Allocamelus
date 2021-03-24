@@ -2,18 +2,13 @@
 
 @layer base {
   html {
-    box-sizing: border-box;
+    @apply box-border;
   }
   * {
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
-    letter-spacing: 0.25px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply m-0 p-0 tracking-wide subpixel-antialiased;
   }
   body {
-    @apply text-gray-900 dark:text-gray-50 bg-gray-100 dark:bg-gray-900;
+    @apply text-gray-900 dark:text-gray-50 bg-warm-gray-200 dark:bg-black-lighter;
   }
   #nav {
     @apply bg-primary-600 text-gray-50 shadow;
@@ -26,15 +21,6 @@
     a {
       @apply text-lg font-sans text-white;
       @apply truncate p-2 no-underline tracking-wide relative;
-    }
-    .fa-adjust-wrapper {
-      @apply flex justify-start items-center px-1;
-      .fa-adjust {
-        @apply text-base p-2 rounded-3xl cursor-pointer;
-      }
-    }
-    .active {
-      background-color: hsl(204, 85%, 27%);
     }
   }
   #bodyContent {
@@ -67,21 +53,4 @@
   }
 }
 
-@layer components {
-  .container {
-    // Base
-    @apply mx-auto justify-center px-2;
-    // xs 425px
-    @apply xs:w-full;
-    // sm 640px
-    @apply sm:px-4;
-    // md	768px
-    @apply md:px-5;
-    // lg	1024px
-    @apply lg:px-14 lg:max-w-4.5xl;
-    // xl	1280px
-    @apply xl:max-w-6xl;
-    // 2xl 1536px
-    @apply 2xl:max-w-8xl;
-  }
-}
+@import "components";

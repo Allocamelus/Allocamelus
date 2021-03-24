@@ -4,12 +4,13 @@
       <router-link to="/" class="px-4">Allocamelus</router-link>
     </div>
     <div>
-      <div class="fa-adjust-wrapper">
-        <i
-          class="fas fa-adjust"
-          :class="toggleButtonClass"
-          @click="toggleTheme"
-        ></i>
+      <div class="flex justify-start items-center px-1">
+        <div class="p-2 rounded-3xl cursor-pointer">
+          <component
+            :is="this.theme != 'dark' ? 'moon-sm' : 'sun-sm'"
+            @click="toggleTheme"
+          ></component>
+        </div>
       </div>
       <div>
         <router-link to="/login">Login</router-link>
@@ -36,6 +37,8 @@
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
+import SunSm from "./components/icon/SunSm.vue";
+import MoonSm from "./components/icon/MoonSm.vue";
 import { MinToSec, SecToMs } from "./pkg/time";
 
 function setTheme(theme = "dark") {
@@ -82,14 +85,7 @@ export default defineComponent({
       setTheme(this.theme);
     },
   },
-  computed: {
-    toggleButtonClass() {
-      if (this.theme != "dark") {
-        return "fa-flip-horizontal";
-      }
-      return "";
-    },
-  },
+  components: { MoonSm, SunSm },
 });
 </script>
 

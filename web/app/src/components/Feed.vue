@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-900 rounded-xl shadow break-words overflow-hidden">
+  <div class="flex flex-col flex-grow max-w-full">
     <slot></slot>
   </div>
 </template>

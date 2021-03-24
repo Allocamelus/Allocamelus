@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-900 rounded-xl shadow break-words overflow-hidden">
+  <div class="hidden ml-6 w-64 items-stretch md:flex flex-col">
     <slot></slot>
   </div>
 </template>
