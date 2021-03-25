@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex">
+  <div class="container flex py-5">
     <feed>
       <div v-if="err.length > 0" v-html="err"></div>
 

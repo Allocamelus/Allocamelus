@@ -40,7 +40,7 @@ export default defineComponent({
   }
   .form-box-wrapper {
     @apply w-full flex justify-center items-center;
-    height: calc(100vh - calc(var(--nav-height) * 2));
+    min-height: calc(100vh - var(--nav-height));
   }
 }
 </style>

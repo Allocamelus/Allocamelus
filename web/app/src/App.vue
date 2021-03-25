@@ -18,7 +18,7 @@
     </div>
   </nav>
   <div id="bodyContent">
-    <router-view class="pt-5" />
+    <router-view />
   </div>
   <footer id="footer">
     <div>

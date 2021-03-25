@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container py-5">
     <error-box :error="err" class="py-3 px-4">
       <user-name :user="user" :displayType="TwoLine"></user-name>
       <div></div>
