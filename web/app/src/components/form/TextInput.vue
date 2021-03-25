@@ -9,6 +9,7 @@
       :maxlength="maxLenC + 1"
       class="input"
       :required="requiredC"
+      :placeholder="placeholder"
     />
     <slot></slot>
   </div>
@@ -44,6 +45,10 @@ export default defineComponent({
     required: {
       type: Boolean,
       default: false,
+    },
+    placeholder: {
+      type: String,
+      default: "",
     },
     regex: RegExp,
     regexMsg: String,
@@ -123,6 +128,7 @@ export default defineComponent({
   .input {
     @apply focus:outline-none box-content flex-1 border-none outline-none;
     @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
+    @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
   }
 }
 </style>

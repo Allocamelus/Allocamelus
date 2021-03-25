@@ -2,8 +2,8 @@
   <center-form-box>
     <div v-show="showCaptcha">
       <div id="loginCaptchaContainer"></div>
-      <div class="mt-2 link" @click="captcha.show = false">
-        <i class="fas fa-chevron-left"></i> Back
+      <div class="mt-2 link flex items-center cursor-pointer" @click="captcha.show = false">
+        <chevron-left-sm></chevron-left-sm> Back
       </div>
     </div>
     <div v-show="!showCaptcha">
@@ -35,10 +35,10 @@
             <checkbox v-model="remember" name="remember">
               <label for="remember">Remember Me</label>
             </checkbox>
-            <div class="text-sm mt-2 mr-3">
+            <small-text class="mt-2 mr-3">
               Don't have an account?
-              <router-link class="link whitespace-nowrap" to="/signup">Sign Up</router-link>
-            </div>
+              <router-link class="link whitespace-nowrap" to="/signup">Sign Up</router-link >
+            </small-text>
           </div>
           <submit class="mt-3 self-end" title="Login">Login</submit>
         </div>
@@ -51,14 +51,18 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+
 import CenterFormBox from "../components/form/CenterFormBox.vue";
 import TextInput from "../components/form/TextInput.vue";
 import PasswordInput from "../components/form/PasswordInput.vue";
 import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
+import InputLabel from "../components/form/InputLabel.vue";
+import SmallText from "../components/form/SmallText.vue";
+import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
+
 import { API_AuthA10Token } from "../models/api_account_gen";
 import { authA10 } from "../api/account/auth";
-import InputLabel from "../components/form/InputLabel.vue";
 import ApiResp from "../models/responses";
 import {
   htmlErrBuilder,
@@ -207,6 +211,8 @@ export default defineComponent({
     Checkbox,
     Submit,
     InputLabel,
+    SmallText,
+    ChevronLeftSm,
   },
 });
 </script>
