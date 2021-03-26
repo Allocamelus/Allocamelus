@@ -5,7 +5,7 @@ import { API_CreateA10Token, API_CreateRequest, API_CreateResp } from "../../mod
 const a9s = "allocamelus"
 
 export async function create(request: API_CreateRequest) {
-  return v1.post("user/create",
+  return v1.post("user",
     JSON.stringify(request), {
     headers: {
       'Content-Type': 'application/json'

@@ -130,5 +130,24 @@ export default defineComponent({
     @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
     @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
   }
+  @variants hover, focus, active {
+    .input,
+    .dark .input {
+      &:-webkit-autofill {
+        background-color: transparent !important;
+      }
+    }
+    .input:-webkit-autofill {
+      -webkit-text-fill-color: theme("colors.black.lighter");
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
+      @screen xs-max {
+        -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
+      }
+    }
+    .dark .input:-webkit-autofill {
+      -webkit-text-fill-color: theme("colors.white");
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.800") inset;
+    }
+  }
 }
 </style>
