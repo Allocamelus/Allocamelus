@@ -33,9 +33,6 @@ func (u *User) ValidatePublic() error {
 	if err := u.ValidUniqueName(); err != nil {
 		errs["uniqueName"] = err
 	}
-	if err := u.ValidName(); err != nil {
-		errs["name"] = err
-	}
 	if err := u.ValidEmail(); err != nil {
 		errs["email"] = err
 	}

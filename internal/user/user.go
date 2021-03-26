@@ -54,7 +54,7 @@ var (
 
 func initUser(p data.Prepare) {
 	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created)
-		VALUES (?, ?, ?, 0, '', ?, ?)`)
+		VALUES (?, '', ?, 0, '', ?, ?)`)
 	preGetPublic = p(`SELECT uniqueName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
@@ -63,9 +63,8 @@ func initUser(p data.Prepare) {
 func (u *User) Insert() error {
 	// Insert user into database
 	r, err := preInsert.Exec(
-		u.UniqueName, u.Name,
-		u.Email, u.Permissions,
-		u.Created,
+		u.UniqueName, u.Email,
+		u.Permissions, u.Created,
 	)
 	if err != nil {
 		return err

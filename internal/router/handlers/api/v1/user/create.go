@@ -20,22 +20,20 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-type createRequest struct {
+type CreateRequest struct {
 	With  string `json:"with" form:"with"`
 	Token string `json:"token" form:"token"`
 }
 
-type createA10Token struct {
+type CreateA10Token struct {
 	UniqueName string `json:"uniqueName"`
-	Name       string `json:"name"`
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Captcha    string `json:"captcha"`
 }
 
-func (t *createA10Token) trimSpace() {
+func (t *CreateA10Token) trimSpace() {
 	t.UniqueName = strings.TrimSpace(t.UniqueName)
-	t.Name = strings.TrimSpace(t.Name)
 	t.Email = strings.TrimSpace(t.Email)
 	t.Password = strings.TrimSpace(t.Password)
 	t.Captcha = strings.TrimSpace(t.Captcha)
@@ -43,7 +41,7 @@ func (t *createA10Token) trimSpace() {
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-type createResp struct {
+type CreateResp struct {
 	Success   bool        `json:"success"`
 	BackupKey string      `json:"backupKey,omitempty"`
 	Errors    interface{} `json:"errors,omitempty"`
@@ -56,22 +54,22 @@ const (
 // Create user handler
 func Create(c *fiber.Ctx) error {
 	if user.LoggedIn(c) {
-		return apierr.Err403(c, createResp{Errors: []string{"logged-in"}})
+		return apierr.Err403(c, CreateResp{Errors: []string{"logged-in"}})
 	}
-	request := new(createRequest)
+	request := new(CreateRequest)
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 	// TODO: add openpgp.js or somthing similar for request encryption w/ client application
 	// TODO: add other providers
 	if request.With == withA10 {
-		var token createA10Token
+		var token CreateA10Token
 		if err := json.Unmarshal([]byte(request.Token), &token); err != nil {
 			return apierr.Err422(c, apierr.New("invalid-create-token"))
 		}
 		token.trimSpace()
 
-		newUser := user.New(token.UniqueName, token.Name, token.Email)
+		newUser := user.New(token.UniqueName, "", token.Email)
 
 		userErrs := make(validation.Errors)
 		if err := newUser.ValidatePublic(); err != nil {
@@ -81,7 +79,7 @@ func Create(c *fiber.Ctx) error {
 		userErrs["password"] = newUser.ValidPassword(token.Password)
 
 		if errs := userErrs.Filter(); errs != nil {
-			return apierr.Err422(c, createResp{Errors: errs.(validation.Errors)})
+			return apierr.Err422(c, CreateResp{Errors: errs.(validation.Errors)})
 		}
 
 		if g.Config.HCaptcha.Enabled {
@@ -95,7 +93,7 @@ func Create(c *fiber.Ctx) error {
 					logger.Error(err)
 					return apierr.ErrSomthingWentWrong(c)
 				}
-				return apierr.Err422(c, createResp{Errors: []string{"invalid-captcha"}})
+				return apierr.Err422(c, CreateResp{Errors: []string{"invalid-captcha"}})
 			}
 		}
 
@@ -103,7 +101,7 @@ func Create(c *fiber.Ctx) error {
 			time.Sleep(time.Millisecond * (300 + time.Duration(random.FastInt(250))))
 			_, backupKey := backupkey.Create()
 			// Fail silently to prevent email leaks
-			return fiberutil.JSON(c, 200, createResp{
+			return fiberutil.JSON(c, 200, CreateResp{
 				Success:   true,
 				BackupKey: backupKey,
 			})
@@ -129,7 +127,7 @@ func Create(c *fiber.Ctx) error {
 			logger.Error(emailToken.SendEmail(newUser.Email))
 		}()
 
-		return fiberutil.JSON(c, 200, createResp{Success: true, BackupKey: keyPair.GetEncodedBackupKey()})
+		return fiberutil.JSON(c, 200, CreateResp{Success: true, BackupKey: keyPair.GetEncodedBackupKey()})
 	}
 	return apierr.Err422(c, apierr.New("invalid-with-value"))
 }
