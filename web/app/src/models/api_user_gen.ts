@@ -32,7 +32,7 @@ export class API_CreateRequest {
     }
 }
 export class API_CreateA10Token {
-    uniqueName: string;
+    userName: string;
     email: string;
     password: string;
     captcha: string;
@@ -43,7 +43,7 @@ export class API_CreateA10Token {
 
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
-        this.uniqueName = source["uniqueName"];
+        this.userName = source["userName"];
         this.email = source["email"];
         this.password = source["password"];
         this.captcha = source["captcha"];

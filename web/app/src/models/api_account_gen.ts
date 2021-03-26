@@ -34,7 +34,7 @@ export class API_AuthRequest {
     }
 }
 export class API_AuthA10Token {
-    uniqueName: string;
+    userName: string;
     password: string;
     remember: boolean;
     captcha: string;
@@ -45,7 +45,7 @@ export class API_AuthA10Token {
 
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
-        this.uniqueName = source["uniqueName"];
+        this.userName = source["userName"];
         this.password = source["password"];
         this.remember = source["remember"];
         this.captcha = source["captcha"];

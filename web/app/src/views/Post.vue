@@ -65,7 +65,7 @@ export default defineComponent({
       }
 
       document.title =
-        `${newPost.user.name} (@${newPost.user.uniqueName}) - ` +
+        `${newPost.user.name} (@${newPost.user.userName}) - ` +
         `"${truncatedContent}" - ` +
         `${import.meta.env.VITE_SITE_NAME}`;
     },

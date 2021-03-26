@@ -16,11 +16,11 @@ type getResponse struct {
 
 // Get user handler
 func Get(c *fiber.Ctx) error {
-	uniqueName := c.Params("uniqueName")
-	if len(uniqueName) == 0 {
+	userName := c.Params("userName")
+	if len(userName) == 0 {
 		return apierr.ErrNotFound(c)
 	}
-	userID, err := user.GetIDByUniqueName(uniqueName)
+	userID, err := user.GetIDByUserName(userName)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)

@@ -58,7 +58,7 @@ func CreateToken(c *fiber.Ctx) error {
 		}
 	}
 
-	userID, err := user.GetIDByUniqueName(request.Identifier)
+	userID, err := user.GetIDByUserName(request.Identifier)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)

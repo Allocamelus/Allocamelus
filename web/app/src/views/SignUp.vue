@@ -1,14 +1,17 @@
 <template>
   <center-form-box>
     <div v-show="showCaptcha">
-      <div id="loginCaptchaContainer"></div>
-      <div class="mt-2 link flex items-center cursor-pointer" @click="captcha.show = false">
+      <div id="signUpCaptchaContainer"></div>
+      <div
+        class="mt-2 link flex items-center cursor-pointer"
+        @click="captcha.show = false"
+      >
         <chevron-left-sm></chevron-left-sm> Back
       </div>
     </div>
     <div v-show="!showCaptcha">
-      <h2 class="text-2xl font-medium">Login</h2>
-      <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
+      <h2 class="text-2xl font-medium">Sign Up</h2>
+      <div v-if="err.signUp.length > 0" class="mt-3" v-html="err.signUp"></div>
       <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
         <div>
           <input-label for="name" :err="err.username">Username</input-label>
@@ -17,30 +20,52 @@
             name="name"
             :check="true"
             :required="true"
+            placeholder="mary-smith"
+            :regex="/^[a-zA-Z0-9_-]*$/"
+            regexMsg="Alphanumeric characters, Underscores and Dashes Only"
             @error="err.username = $event"
           ></text-input>
         </div>
         <div class="mt-3">
-          <input-label for="password" :err="err.password"
-            >Password</input-label
-          >
+          <input-label for="email" :err="err.email">Email</input-label>
+          <text-input
+            v-model="email"
+            :check="true"
+            :required="true"
+            :regex="/.+@.+\..+/"
+            regexMsg="Invalid Email"
+            placeholder="mary@example.com"
+            @error="err.email = $event"
+          ></text-input>
+        </div>
+        <div class="mt-3">
+          <input-label for="password" :err="err.password">Password</input-label>
           <password-input
             v-model="password"
+            :check="true"
             :required="true"
             @error="err.password = $event"
           ></password-input>
         </div>
+
         <div class="flex justify-between mt-3">
-          <div class="flex flex-col">
-            <checkbox v-model="remember" name="remember">
-              <label for="remember">Remember Me</label>
-            </checkbox>
-            <small-text class="mt-2 mr-3">
-              Don't have an account?
-              <router-link class="link whitespace-nowrap" to="/signup">Sign Up</router-link >
+          <div class="flex flex-col justify-end">
+            <small-text class="mr-3">
+              By Signing Up, you agree to the
+              <router-link class="link whitespace-nowrap" to="/tos"
+                >Terms of Service</router-link
+              >
+            </small-text>
+            <small-text class="mt-1 mr-3">
+              Have an account?
+              <router-link class="link whitespace-nowrap" to="/login"
+                >Login</router-link
+              >
             </small-text>
           </div>
-          <submit class="mt-3 self-end" title="Login">Login</submit>
+          <submit class="mt-3 self-end whitespace-nowrap" title="Sign Up"
+            >Sign Up</submit
+          >
         </div>
       </form>
     </div>
@@ -64,6 +89,7 @@ import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
 import { API_AuthA10Token } from "../models/api_account_gen";
 import { authA10 } from "../api/account/auth";
 import ApiResp from "../models/responses";
+import { siteKeys } from "../api/meta/captcha/siteKeys";
 import {
   htmlErrBuilder,
   HtmlSomthingWentWrong,
@@ -98,11 +124,13 @@ export default defineComponent({
     const router = useRouter();
     const data = reactive({
       err: {
-        login: "",
+        signUp: "",
         username: "",
+        email: "",
         password: "",
       },
       username: "",
+      email: "",
       password: "",
       remember: false,
       captcha: {
@@ -117,22 +145,32 @@ export default defineComponent({
       gotoRedirect(router, props.redirect);
     }
 
-    document.title = `Login - ${import.meta.env.VITE_SITE_NAME}`;
+    document.title = `Sign Up - ${import.meta.env.VITE_SITE_NAME}`;
 
     return {
       ...toRefs(data),
     };
   },
   created() {
-    window.loginCaptachaSubmit = () => {
+    (async () => {
+      siteKeys().then((sk) => {
+        this.captcha.siteKey = sk.siteKey(sk.difficulties.user.create);
+        var srcCap = document.createElement("script");
+        srcCap.src =
+          "https://hcaptcha.com/1/api.js?onload=signUpCaptachaLoaded&render=explicit";
+        document.head.appendChild(srcCap);
+      });
+      // TODO: Error handling
+    })();
+    window.signUpCaptachaSubmit = () => {
       this.onSubmit();
     };
-    window.loginCaptachaLoaded = () => {
+    window.signUpCaptachaLoaded = () => {
       this.captcha.loaded = true;
-      window.hcaptcha.render("loginCaptchaContainer", {
+      window.hcaptcha.render("signUpCaptchaContainer", {
         sitekey: this.captcha.siteKey,
         theme: "dark",
-        callback: "loginCaptachaSubmit",
+        callback: "signUpCaptachaSubmit",
       });
     };
   },
@@ -170,24 +208,24 @@ export default defineComponent({
           if (!r.success) {
             switch (r.error) {
               case ApiResp.Account.Auth.InvalidUsernamePassword:
-                vm.err.login = HtmlInvalidUsernamePassword;
+                vm.err.signUp = HtmlInvalidUsernamePassword;
                 return;
               case ApiResp.Account.Auth.UnverifiedEmail:
-                vm.err.login = HtmlUnverifiedEmail;
+                vm.err.signUp = HtmlUnverifiedEmail;
                 return;
               case ApiResp.Shared.InvalidCaptcha:
                 vm.captcha.show = true;
                 vm.captcha.siteKey = r.captcha;
-                vm.err.login = HtmlLoadingCaptcha;
+                vm.err.signUp = HtmlLoadingCaptcha;
                 if (!vm.captcha.loaded) {
                   var srcCap = document.createElement("script");
                   srcCap.src =
-                    "https://hcaptcha.com/1/api.js?onload=loginCaptachaLoaded&render=explicit";
+                    "https://hcaptcha.com/1/api.js?onload=signUpCaptachaLoaded&render=explicit";
                   document.head.appendChild(srcCap);
                 }
                 return;
               default:
-                vm.err.login = HtmlSomthingWentWrong;
+                vm.err.signUp = HtmlSomthingWentWrong;
                 return;
             }
           } else {
@@ -200,7 +238,7 @@ export default defineComponent({
         })
         .catch((e) => {
           vm.captcha.show = false;
-          vm.err.login = HtmlSomthingWentWrong;
+          vm.err.signUp = HtmlSomthingWentWrong;
         });
     },
   },

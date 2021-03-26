@@ -30,11 +30,11 @@ func User(api fiber.Router) {
 	// /api/v1/user/password-reset/validate/token
 	uPRV.Post("/token", passresetval.Token)
 
-	// /api/v1/user/:uniqueName
-	uUN := u.Group("/:uniqueName")
+	// /api/v1/user/:userName
+	uUN := u.Group("/:userName")
 	uUN.Get("/", user.Get)
-	// /api/v1/user/:uniqueName/delete
+	// /api/v1/user/:userName/delete
 	uUN.Delete("/delete", middleware.Protected, user.Delete)
-	// /api/v1/user/:uniqueName/update
+	// /api/v1/user/:userName/update
 	uUN.Delete("/update", middleware.Protected, user.Update)
 }

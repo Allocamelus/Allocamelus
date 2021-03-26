@@ -7,17 +7,17 @@ import (
 )
 
 var (
-	preIDByEmail      *sql.Stmt
-	preEmailByID      *sql.Stmt
-	preUniqueNameByID *sql.Stmt
-	preIDByUniqueName *sql.Stmt
+	preIDByEmail    *sql.Stmt
+	preEmailByID    *sql.Stmt
+	preUserNameByID *sql.Stmt
+	preIDByUserName *sql.Stmt
 )
 
 func initID(p data.Prepare) {
 	preIDByEmail = p(`SELECT userId FROM Users WHERE email = ? LIMIT 1`)
 	preEmailByID = p(`SELECT email FROM Users WHERE userId = ? LIMIT 1`)
-	preUniqueNameByID = p(`SELECT uniqueName FROM Users WHERE userId = ? LIMIT 1`)
-	preIDByUniqueName = p(`SELECT userId FROM Users WHERE uniqueName = ? LIMIT 1`)
+	preUserNameByID = p(`SELECT userName FROM Users WHERE userId = ? LIMIT 1`)
+	preIDByUserName = p(`SELECT userId FROM Users WHERE userName = ? LIMIT 1`)
 }
 
 // GetIDByEmail get user id by email
@@ -32,14 +32,14 @@ func GetEmailByID(userID int64) (email string, err error) {
 	return
 }
 
-// GetUniqueNameByID get uniqueName by user id
-func GetUniqueNameByID(userID int64) (uniqueName string, err error) {
-	err = preUniqueNameByID.QueryRow(userID).Scan(&uniqueName)
+// GetUserNameByID get userName by user id
+func GetUserNameByID(userID int64) (userName string, err error) {
+	err = preUserNameByID.QueryRow(userID).Scan(&userName)
 	return
 }
 
-// GetIDByUniqueName get user id by uniquename
-func GetIDByUniqueName(uniquename string) (userID int64, err error) {
-	err = preIDByUniqueName.QueryRow(uniquename).Scan(&userID)
+// GetIDByUserName get user id by username
+func GetIDByUserName(username string) (userID int64, err error) {
+	err = preIDByUserName.QueryRow(username).Scan(&userID)
 	return
 }

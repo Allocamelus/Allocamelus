@@ -26,14 +26,14 @@ type CreateRequest struct {
 }
 
 type CreateA10Token struct {
-	UniqueName string `json:"uniqueName"`
-	Email      string `json:"email"`
-	Password   string `json:"password"`
-	Captcha    string `json:"captcha"`
+	UserName string `json:"userName"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Captcha  string `json:"captcha"`
 }
 
 func (t *CreateA10Token) trimSpace() {
-	t.UniqueName = strings.TrimSpace(t.UniqueName)
+	t.UserName = strings.TrimSpace(t.UserName)
 	t.Email = strings.TrimSpace(t.Email)
 	t.Password = strings.TrimSpace(t.Password)
 	t.Captcha = strings.TrimSpace(t.Captcha)
@@ -69,7 +69,7 @@ func Create(c *fiber.Ctx) error {
 		}
 		token.trimSpace()
 
-		newUser := user.New(token.UniqueName, "", token.Email)
+		newUser := user.New(token.UserName, "", token.Email)
 
 		userErrs := make(validation.Errors)
 		if err := newUser.ValidatePublic(); err != nil {
