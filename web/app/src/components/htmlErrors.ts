@@ -27,3 +27,5 @@ export const Html404Func = (path: string = "") => {
 }
 
 export const Html404 = Html404Func()
+
+export const HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");

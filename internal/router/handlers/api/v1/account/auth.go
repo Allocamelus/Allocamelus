@@ -24,14 +24,14 @@ type AuthRequest struct {
 
 // AuthA10Token struct
 type AuthA10Token struct {
-	UniqueName string `json:"uniqueName"`
-	Password   string `json:"password"`
-	Remember   bool   `json:"remember"`
-	Captcha    string `json:"captcha"`
+	UserName string `json:"userName"`
+	Password string `json:"password"`
+	Remember bool   `json:"remember"`
+	Captcha  string `json:"captcha"`
 }
 
 func (t *AuthA10Token) trimSpace() {
-	t.UniqueName = strings.TrimSpace(t.UniqueName)
+	t.UserName = strings.TrimSpace(t.UserName)
 	t.Password = strings.TrimSpace(t.Password)
 	t.Captcha = strings.TrimSpace(t.Captcha)
 }
@@ -73,12 +73,12 @@ func Auth(c *fiber.Ctx) error {
 			return apierr.Err422(c, errInvalidAuthToken)
 		}
 		authToken.trimSpace()
-		if len(authToken.UniqueName) == 0 || len(authToken.Password) == 0 {
+		if len(authToken.UserName) == 0 || len(authToken.Password) == 0 {
 			return authErr(c, errInvalidUsernamePassword)
 		}
 
 		// Check if user exists
-		userID, err := user.GetIDByUniqueName(authToken.UniqueName)
+		userID, err := user.GetIDByUserName(authToken.UserName)
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error(err)

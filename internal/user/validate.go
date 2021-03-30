@@ -15,26 +15,21 @@ import (
 var regexpInvalidChars = regexp.MustCompile(`^[^<>\[\]]*$`)
 
 func initValidate(p data.Prepare) {
-	preCheckUniqueName = p(`SELECT EXISTS(SELECT * FROM Users WHERE uniqueName=?)`)
+	preCheckUserName = p(`SELECT EXISTS(SELECT * FROM Users WHERE userName=?)`)
 	preCheckEmail = p(`SELECT EXISTS(SELECT * FROM Users WHERE email=?)`)
 }
 
 const (
 	invalidLength = "invalid-length"
 	invalidChars  = "invalid-characters"
-	invalidEmail  = "invalid-email"
-	weakPassword  = "weak-password"
 	taken         = "taken"
 )
 
 // ValidatePublic values
 func (u *User) ValidatePublic() error {
 	errs := make(validation.Errors)
-	if err := u.ValidUniqueName(); err != nil {
-		errs["uniqueName"] = err
-	}
-	if err := u.ValidName(); err != nil {
-		errs["name"] = err
+	if err := u.ValidUserName(); err != nil {
+		errs["userName"] = err
 	}
 	if err := u.ValidEmail(); err != nil {
 		errs["email"] = err
@@ -46,37 +41,37 @@ func (u *User) ValidatePublic() error {
 }
 
 var (
-	// ErrUniqueNameLength 5 to 64 characters
-	ErrUniqueNameLength = errors.New(invalidLength + "-min5-max64")
-	// ErrUniqueNameInvalid characters
-	ErrUniqueNameInvalid = errors.New(invalidChars)
-	// ErrUniqueNameTaken characters
-	ErrUniqueNameTaken = errors.New(taken)
-	regexUniqueName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
-	preCheckUniqueName *sql.Stmt
+	// ErrUserNameLength 5 to 64 characters
+	ErrUserNameLength = errors.New(invalidLength + "-min5-max64")
+	// ErrUserNameInvalid characters
+	ErrUserNameInvalid = errors.New(invalidChars)
+	// ErrUserNameTaken characters
+	ErrUserNameTaken = errors.New(taken)
+	regexUserName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
+	preCheckUserName *sql.Stmt
 )
 
-// ValidUniqueName Validate
-func (u *User) ValidUniqueName() error {
+// ValidUserName Validate
+func (u *User) ValidUserName() error {
 	// Check Length
-	if err := validation.Validate(u.UniqueName,
+	if err := validation.Validate(u.UserName,
 		validation.Required,
 		validation.Length(5, 64),
 	); err != nil {
-		return ErrUniqueNameLength
+		return ErrUserNameLength
 	}
-	// Check regex for Unique Name
-	if !regexUniqueName.MatchString(u.UniqueName) {
-		return ErrUniqueNameInvalid
+	// Check regex for User Name
+	if !regexUserName.MatchString(u.UserName) {
+		return ErrUserNameInvalid
 	}
-	// Check Database for uniqueName
-	var taken bool
-	err := preCheckUniqueName.QueryRow(u.UniqueName).Scan(&taken)
+	// Check Database for userName
+	var isTaken bool
+	err := preCheckUserName.QueryRow(u.UserName).Scan(&isTaken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken {
-		return ErrUniqueNameTaken
+	if isTaken {
+		return ErrUserNameTaken
 	}
 
 	return nil
@@ -107,7 +102,7 @@ func (u *User) ValidName() error {
 
 var (
 	// ErrEmailInvalid Invalid Email
-	ErrEmailInvalid = errors.New(invalidEmail)
+	ErrEmailInvalid = errors.New("invalid-email")
 	// ErrEmailTaken characters
 	ErrEmailTaken = errors.New(taken)
 	preCheckEmail *sql.Stmt
@@ -135,13 +130,13 @@ func (u *User) IsEmailUnique() error {
 	if len(u.Email) == 0 {
 		return ErrEmailInvalid
 	}
-	// Check Database for uniqueName
-	var taken bool
-	err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
+	// Check Database for userName
+	var isTaken bool
+	err := preCheckEmail.QueryRow(u.Email).Scan(&isTaken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken {
+	if isTaken {
 		return ErrEmailTaken
 	}
 	return nil
@@ -172,12 +167,12 @@ func (u *User) ValidBio() error {
 // ErrPasswordLength 8 to 1024
 var (
 	ErrPasswordLength   = errors.New(invalidLength + "-min8-max1024")
-	ErrPasswordStrength = errors.New(weakPassword)
+	ErrPasswordStrength = errors.New("weak-password")
 )
 
 // ValidPassword check password
 func (u *User) ValidPassword(pass string) error {
-	return ValidPassword(pass, u.UniqueName, u.Name, u.Email)
+	return ValidPassword(pass, u.UserName, u.Name, u.Email)
 }
 
 // ValidPassword check password

@@ -1,3 +1,7 @@
+const invalidLength = "invalid-length",
+  invalidChars = "invalid-characters",
+  taken = "taken"
+
 export default {
   Shared: {
     A10: "allocamelus",
@@ -23,7 +27,28 @@ export default {
   },
   User: {
     Create: {
-      InvalidCreateToken: "invalid-create-token"
+      InvalidCreateToken: "invalid-create-token",
+      LoggedIn: "logged-in",
+    },
+    Validate: {
+      UserName: {
+        Length: invalidLength + "-min5-max64",
+        Taken: taken,
+      },
+      Name: {
+        Length: invalidLength + "-min1-max128",
+      },
+      Email: {
+        Invalid: "invalid-email"
+      },
+      Bio: {
+        Length: invalidLength + "-min0-max255",
+      },
+      Password: {
+        Length: invalidLength + "-min8-max1024",
+        Strength: "weak-password",
+      },
+      Invalid: invalidChars,
     }
   }
   // TODO: Add rest of the api codes

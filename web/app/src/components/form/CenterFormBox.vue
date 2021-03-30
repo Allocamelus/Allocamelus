@@ -41,6 +41,9 @@ export default defineComponent({
   .form-box-wrapper {
     @apply w-full flex justify-center items-center;
     min-height: calc(100vh - var(--nav-height));
+    @screen xs-max {
+      min-height: calc(100vh - calc(var(--nav-height)*1.5));
+    }
   }
 }
 </style>

@@ -35,7 +35,7 @@ function userErrors(api_error, path) {
 }
 export default defineComponent({
   props: {
-    uniqueName: {
+    userName: {
       type: Array,
       required: true,
     },
@@ -48,7 +48,7 @@ export default defineComponent({
       err: "",
     });
 
-    getUser(props.uniqueName[0])
+    getUser(props.userName[0])
       .then((r) => {
         data.user = r;
       })
@@ -63,7 +63,7 @@ export default defineComponent({
   },
   watch: {
     user(newUser, old) {
-      document.title = `${newUser.name} (@${newUser.uniqueName}) - ${
+      document.title = `${newUser.name} (@${newUser.userName}) - ${
         import.meta.env.VITE_SITE_NAME
       }`;
     },
@@ -71,7 +71,7 @@ export default defineComponent({
   async beforeRouteUpdate(to, from) {
     this.user = new User();
 
-    getUser(to.params.uniqueName[0])
+    getUser(to.params.userName[0])
       .then((r) => {
         this.user = r;
       })

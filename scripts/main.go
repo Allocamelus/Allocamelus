@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/account"
+	apiUser "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
 )
@@ -14,6 +15,11 @@ func main() {
 		account.AuthResp{},
 		account.AuthRequest{},
 		account.AuthA10Token{},
+	)
+	tsGen("web/app/src/models/api_user_gen.ts", "API_",
+		apiUser.CreateResp{},
+		apiUser.CreateRequest{},
+		apiUser.CreateA10Token{},
 	)
 }
 
