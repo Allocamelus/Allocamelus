@@ -18,21 +18,21 @@ import (
 )
 
 var (
-	errInvalidUniqueName = "invalid-unique-name"
-	errInvalidToken      = "invalid-token"
-	errExpiredToken      = "expired-token"
+	errInvalidUserName = "invalid-user-name"
+	errInvalidToken    = "invalid-token"
+	errExpiredToken    = "expired-token"
 )
 
 type tokenRequest struct {
-	UniqueName string `json:"uniqueName" form:"uniqueName"`
-	Selector   string `json:"selector" form:"selector"`
-	Token      string `json:"token" form:"token"`
+	UserName string `json:"userName" form:"userName"`
+	Selector string `json:"selector" form:"selector"`
+	Token    string `json:"token" form:"token"`
 	// New password
 	Password string `json:"password" form:"password"`
 }
 
 func (tr *tokenRequest) trim() {
-	tr.UniqueName = strings.TrimSpace(tr.UniqueName)
+	tr.UserName = strings.TrimSpace(tr.UserName)
 	tr.Selector = strings.TrimSpace(tr.Selector)
 	tr.Token = strings.TrimSpace(tr.Token)
 	tr.Password = strings.TrimSpace(tr.Password)
@@ -51,13 +51,13 @@ func Token(c *fiber.Ctx) error {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 	request.trim()
-	userID, err := user.GetIDByUniqueName(request.UniqueName)
+	userID, err := user.GetIDByUserName(request.UserName)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
 			return apierr.ErrSomthingWentWrong(c)
 		}
-		return err422(c, errInvalidUniqueName)
+		return err422(c, errInvalidUserName)
 	}
 
 	tkn, err := token.CheckWithID(request.Selector, request.Token, userID, token.Reset)
@@ -68,7 +68,7 @@ func Token(c *fiber.Ctx) error {
 		return err422(c, errInvalidToken)
 	}
 
-	if err := user.ValidPassword(request.Password, request.UniqueName); err != nil {
+	if err := user.ValidPassword(request.Password, request.UserName); err != nil {
 		return err422(c, err.Error())
 	}
 

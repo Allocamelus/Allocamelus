@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container">
+  <div class="input-container my-1 p-0">
     <input
       v-model.trim="text"
       @input="emiter"
@@ -10,6 +10,9 @@
       class="input"
       :required="requiredC"
       :placeholder="placeholder"
+      :disabled="disabled"
+      :readonly="readonly"
+      ref="input"
     />
     <slot></slot>
   </div>
@@ -22,6 +25,10 @@ import * as Errs from "./errors";
 export default defineComponent({
   props: {
     modelValue: String,
+    watchModel: {
+      type: Boolean,
+      default: false,
+    },
     name: {
       type: String,
       default: "text",
@@ -50,6 +57,14 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
     regex: RegExp,
     regexMsg: String,
   },
@@ -61,6 +76,13 @@ export default defineComponent({
     return {
       ...toRefs(data),
     };
+  },
+  watch: {
+    modelValue(newValue, old) {
+      if (this.watchModel) {
+        this.text = newValue;
+      }
+    },
   },
   computed: {
     minLenC() {
@@ -121,7 +143,7 @@ export default defineComponent({
   .input-container {
     @apply w-full rounded-sm box-border border border-solid;
     @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
-    @apply flex justify-between items-center my-1 p-0;
+    @apply flex justify-between items-center;
     @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
   }
 
@@ -129,6 +151,25 @@ export default defineComponent({
     @apply focus:outline-none box-content flex-1 border-none outline-none;
     @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
     @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
+  }
+  @variants hover, focus, active {
+    .input,
+    .dark .input {
+      &:-webkit-autofill {
+        background-color: transparent !important;
+      }
+    }
+    .input:-webkit-autofill {
+      -webkit-text-fill-color: theme("colors.black.lighter");
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
+      @screen xs-max {
+        -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
+      }
+    }
+    .dark .input:-webkit-autofill {
+      -webkit-text-fill-color: theme("colors.white");
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.800") inset;
+    }
   }
 }
 </style>

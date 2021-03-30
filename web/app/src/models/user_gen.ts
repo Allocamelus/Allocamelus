@@ -3,7 +3,7 @@
 
 export class User {
     id: number;
-    uniqueName: string;
+    userName: string;
     name: string;
     email?: string;
     avatar: boolean;
@@ -18,7 +18,7 @@ export class User {
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
         this.id = source["id"];
-        this.uniqueName = source["uniqueName"];
+        this.userName = source["userName"];
         this.name = source["name"];
         this.email = source["email"];
         this.avatar = source["avatar"];

@@ -27,7 +27,7 @@ export default defineComponent({
 @layer components {
   .submit {
     @apply text-white font-medium text-base leading-4 py-2.5 px-3.5 rounded cursor-pointer;
-    @apply bg-secondary-600 transition duration-75 hover:bg-secondary-800;
+    @apply bg-secondary-600 transition duration-75 hover:bg-secondary-800 disabled:opacity-50;
   }
 }
 </style>

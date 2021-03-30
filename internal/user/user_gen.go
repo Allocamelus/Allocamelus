@@ -322,10 +322,10 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "ID")
 				return
 			}
-		case "uniqueName":
-			z.UniqueName, err = dc.ReadString()
+		case "userName":
+			z.UserName, err = dc.ReadString()
 			if err != nil {
-				err = msgp.WrapError(err, "UniqueName")
+				err = msgp.WrapError(err, "UserName")
 				return
 			}
 		case "name":
@@ -398,14 +398,14 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "ID")
 		return
 	}
-	// write "uniqueName"
+	// write "userName"
 	err = en.Append(0xaa, 0x75, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x4e, 0x61, 0x6d, 0x65)
 	if err != nil {
 		return
 	}
-	err = en.WriteString(z.UniqueName)
+	err = en.WriteString(z.UserName)
 	if err != nil {
-		err = msgp.WrapError(err, "UniqueName")
+		err = msgp.WrapError(err, "UserName")
 		return
 	}
 	// write "name"
@@ -488,9 +488,9 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "id"
 	o = append(o, 0x89, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
-	// string "uniqueName"
+	// string "userName"
 	o = append(o, 0xaa, 0x75, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x4e, 0x61, 0x6d, 0x65)
-	o = msgp.AppendString(o, z.UniqueName)
+	o = msgp.AppendString(o, z.UserName)
 	// string "name"
 	o = append(o, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
 	o = msgp.AppendString(o, z.Name)
@@ -539,10 +539,10 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "ID")
 				return
 			}
-		case "uniqueName":
-			z.UniqueName, bts, err = msgp.ReadStringBytes(bts)
+		case "userName":
+			z.UserName, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "UniqueName")
+				err = msgp.WrapError(err, "UserName")
 				return
 			}
 		case "name":
@@ -605,6 +605,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 11 + msgp.StringPrefixSize + len(z.UniqueName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 11 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
 	return
 }

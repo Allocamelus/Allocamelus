@@ -1,8 +1,25 @@
 <template>
   <center-form-box>
     <div v-show="showCaptcha">
-      <div id="loginCaptchaContainer"></div>
-      <div class="mt-2 link flex items-center cursor-pointer" @click="captcha.show = false">
+      <div v-if="captcha.siteKey.length > 0">
+        <vue-hcaptcha
+          class="mx-auto max-w-max"
+          :sitekey="captcha.siteKey"
+          theme="dark"
+          @rendered="captcha.loaded = true"
+          @verify="
+            (token, eKey) => {
+              captcha.token = token;
+              onSubmit();
+            }
+          "
+          @expired="captcha.token = ''"
+        ></vue-hcaptcha>
+      </div>
+      <div
+        class="mt-2 link flex items-center cursor-pointer"
+        @click="captcha.show = false"
+      >
         <chevron-left-sm></chevron-left-sm> Back
       </div>
     </div>
@@ -21,9 +38,7 @@
           ></text-input>
         </div>
         <div class="mt-3">
-          <input-label for="password" :err="err.password"
-            >Password</input-label
-          >
+          <input-label for="password" :err="err.password">Password</input-label>
           <password-input
             v-model="password"
             :required="true"
@@ -35,10 +50,12 @@
             <checkbox v-model="remember" name="remember">
               <label for="remember">Remember Me</label>
             </checkbox>
-            <small-text class="mt-2 mr-3">
+            <text-small class="mt-2 mr-3">
               Don't have an account?
-              <router-link class="link whitespace-nowrap" to="/signup">Sign Up</router-link >
-            </small-text>
+              <router-link class="link whitespace-nowrap" to="/signup">
+                Sign Up
+              </router-link>
+            </text-small>
           </div>
           <submit class="mt-3 self-end" title="Login">Login</submit>
         </div>
@@ -58,7 +75,7 @@ import PasswordInput from "../components/form/PasswordInput.vue";
 import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
-import SmallText from "../components/form/SmallText.vue";
+import SmallText from "../components/text/Small.vue";
 import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
 
 import { API_AuthA10Token } from "../models/api_account_gen";
@@ -67,6 +84,7 @@ import ApiResp from "../models/responses";
 import {
   htmlErrBuilder,
   HtmlSomthingWentWrong,
+  HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
 
 const HtmlInvalidUsernamePassword = htmlErrBuilder(
@@ -76,8 +94,7 @@ const HtmlInvalidUsernamePassword = htmlErrBuilder(
   HtmlUnverifiedEmail = htmlErrBuilder(
     `Please verify your email to login`,
     `Don't see the verification email? <a class="link" href="/account/verify_email">Resend It</a>`
-  ),
-  HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");
+  );
 
 function gotoRedirect(router, redirect) {
   var url = "/";
@@ -123,19 +140,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  created() {
-    window.loginCaptachaSubmit = () => {
-      this.onSubmit();
-    };
-    window.loginCaptachaLoaded = () => {
-      this.captcha.loaded = true;
-      window.hcaptcha.render("loginCaptchaContainer", {
-        sitekey: this.captcha.siteKey,
-        theme: "dark",
-        callback: "loginCaptachaSubmit",
-      });
-    };
-  },
   computed: {
     showCaptcha() {
       if (this.captcha.show) {
@@ -159,7 +163,7 @@ export default defineComponent({
       }
       authA10(
         API_AuthA10Token.createFrom({
-          uniqueName: vm.username,
+          userName: vm.username,
           password: vm.password,
           remember: vm.remember,
           captcha: vm.captcha.token,
@@ -179,12 +183,6 @@ export default defineComponent({
                 vm.captcha.show = true;
                 vm.captcha.siteKey = r.captcha;
                 vm.err.login = HtmlLoadingCaptcha;
-                if (!vm.captcha.loaded) {
-                  var srcCap = document.createElement("script");
-                  srcCap.src =
-                    "https://hcaptcha.com/1/api.js?onload=loginCaptachaLoaded&render=explicit";
-                  document.head.appendChild(srcCap);
-                }
                 return;
               default:
                 vm.err.login = HtmlSomthingWentWrong;

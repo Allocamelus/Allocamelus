@@ -27,7 +27,7 @@ type Session struct {
 // User Struct
 type User struct {
 	ID          int64  `msg:"id" json:"id"`
-	UniqueName  string `msg:"uniqueName" json:"uniqueName"`
+	UserName    string `msg:"userName" json:"userName"`
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email,omitempty"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
@@ -38,9 +38,9 @@ type User struct {
 }
 
 // New user
-func New(uniqueName, name, email string) *User {
+func New(userName, name, email string) *User {
 	user := new(User)
-	user.UniqueName = uniqueName
+	user.UserName = userName
 	user.Name = name
 	user.Email = email
 	user.Created = time.Now().Unix()
@@ -53,9 +53,9 @@ var (
 )
 
 func initUser(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (uniqueName, name, email, avatar, bio, permissions, created)
-		VALUES (?, ?, ?, 0, '', ?, ?)`)
-	preGetPublic = p(`SELECT uniqueName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
+	preInsert = p(`INSERT INTO Users (userName, name, email, avatar, bio, permissions, created)
+		VALUES (?, '', ?, 0, '', ?, ?)`)
+	preGetPublic = p(`SELECT userName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
 // Insert new user into database
@@ -63,9 +63,8 @@ func initUser(p data.Prepare) {
 func (u *User) Insert() error {
 	// Insert user into database
 	r, err := preInsert.Exec(
-		u.UniqueName, u.Name,
-		u.Email, u.Permissions,
-		u.Created,
+		u.UserName, u.Email,
+		u.Permissions, u.Created,
 	)
 	if err != nil {
 		return err
@@ -85,7 +84,7 @@ func (u *User) Insert() error {
 func GetPublic(userID int64) (User, error) {
 	var u User
 	u.ID = userID
-	err := preGetPublic.QueryRow(userID).Scan(&u.UniqueName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
+	err := preGetPublic.QueryRow(userID).Scan(&u.UserName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
 	return u, err
 }
 

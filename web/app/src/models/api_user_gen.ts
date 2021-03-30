@@ -1,30 +1,28 @@
 /* Do not change, this code is generated from Golang structs */
 
 
-export class API_AuthResp {
+export class API_CreateResp {
     success: boolean;
-    userId?: number;
-    error?: string;
-    captcha?: string;
+    backupKey?: string;
+    errors?: any;
 
     static createFrom(source: any = {}) {
-        return new API_AuthResp(source);
+        return new API_CreateResp(source);
     }
 
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
         this.success = source["success"];
-        this.userId = source["userId"];
-        this.error = source["error"];
-        this.captcha = source["captcha"];
+        this.backupKey = source["backupKey"];
+        this.errors = source["errors"];
     }
 }
-export class API_AuthRequest {
+export class API_CreateRequest {
     with: string;
     token: string;
 
     static createFrom(source: any = {}) {
-        return new API_AuthRequest(source);
+        return new API_CreateRequest(source);
     }
 
     constructor(source: any = {}) {
@@ -33,21 +31,21 @@ export class API_AuthRequest {
         this.token = source["token"];
     }
 }
-export class API_AuthA10Token {
+export class API_CreateA10Token {
     userName: string;
+    email: string;
     password: string;
-    remember: boolean;
     captcha: string;
 
     static createFrom(source: any = {}) {
-        return new API_AuthA10Token(source);
+        return new API_CreateA10Token(source);
     }
 
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
         this.userName = source["userName"];
+        this.email = source["email"];
         this.password = source["password"];
-        this.remember = source["remember"];
         this.captcha = source["captcha"];
     }
 }

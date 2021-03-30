@@ -12,6 +12,12 @@ const routes = [
     props: route => ({ redirect: route.query.r })
   },
   {
+    path: "/signup",
+    name: "Signup",
+    component: () => import('./views/SignUp.vue'),
+    props: route => ({ redirect: route.query.r })
+  },
+  {
     path: "/post/:id(\\d+)",
     component: () => import('./views/Post.vue'),
     props: true,
@@ -22,7 +28,7 @@ const routes = [
     component: () => import('./views/Home.vue'),
   },
   {
-    path: '/u/:uniqueName(.*)*',
+    path: '/u/:userName(.*)*',
     name: 'User',
     component: () => import('./views/User.vue'),
     props: true

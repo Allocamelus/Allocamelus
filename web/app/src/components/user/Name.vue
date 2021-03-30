@@ -3,10 +3,10 @@
     :is="isLink ? 'router-link': 'div'"
     class="name-container"
     :class="displayType"
-    :to="'/u/' + user.uniqueName"
+    :to="'/u/' + user.userName"
   >
     <div class="name">{{ user.name }}</div>
-    <div class="unique-name">@{{ user.uniqueName }}</div>
+    <div class="user-name">@{{ user.userName }}</div>
   </component>
 </template>
 
@@ -44,7 +44,7 @@ export default defineComponent({
 @layer components {
   .one-line {
     @apply min-w-0 truncate;
-    .unique-name {
+    .user-name {
       @apply ml-1;
     }
     a {
@@ -75,7 +75,7 @@ export default defineComponent({
     // white-space: nowrap;
   }
 
-  .unique-name {
+  .user-name {
     @apply inline whitespace-nowrap align-middle text-gray-700 dark:text-gray-400 text-sm font-normal;
     /* white-space: nowrap;
     overflow: hidden;

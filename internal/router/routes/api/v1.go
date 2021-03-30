@@ -14,6 +14,9 @@ func V1(app *fiber.App) {
 	// /api/v1/account
 	v1.Account(api)
 
+	// /api/v1/meta
+	v1.Meta(api)
+
 	// /api/v1/user
 	v1.User(api)
 
