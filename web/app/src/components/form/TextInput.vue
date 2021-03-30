@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container">
+  <div class="input-container my-1 p-0">
     <input
       v-model.trim="text"
       @input="emiter"
@@ -10,6 +10,9 @@
       class="input"
       :required="requiredC"
       :placeholder="placeholder"
+      :disabled="disabled"
+      :readonly="readonly"
+      ref="input"
     />
     <slot></slot>
   </div>
@@ -50,6 +53,14 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
     regex: RegExp,
     regexMsg: String,
   },
@@ -61,6 +72,11 @@ export default defineComponent({
     return {
       ...toRefs(data),
     };
+  },
+  watch: {
+    modelValue(newValue, old) {
+      this.text = newValue;
+    },
   },
   computed: {
     minLenC() {
@@ -121,7 +137,7 @@ export default defineComponent({
   .input-container {
     @apply w-full rounded-sm box-border border border-solid;
     @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
-    @apply flex justify-between items-center my-1 p-0;
+    @apply flex justify-between items-center;
     @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
   }
 

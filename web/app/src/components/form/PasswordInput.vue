@@ -80,6 +80,9 @@ export default defineComponent({
         this.debouncedCheck();
       }
     },
+    modelValue(newValue, old) {
+      this.password = newValue;
+    },
   },
   created() {
     var vm = this;
