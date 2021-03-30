@@ -7,7 +7,8 @@
       <div class="flex justify-start items-center px-1">
         <div class="p-2 rounded-3xl cursor-pointer">
           <component
-            :is="this.theme != 'dark' ? 'moon-sm' : 'sun-sm'"
+            :is="this.theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
+            class="w-5 h-5"
             @click="toggleTheme"
           ></component>
         </div>
@@ -37,8 +38,10 @@
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
-import SunSm from "./components/icon/SunSm.vue";
-import MoonSm from "./components/icon/MoonSm.vue";
+
+import SunIcon from '@heroicons/vue/solid/SunIcon';
+import MoonIcon from '@heroicons/vue/solid/MoonIcon'
+
 import { MinToSec, SecToMs } from "./pkg/time";
 
 function setTheme(theme = "dark") {
@@ -85,7 +88,7 @@ export default defineComponent({
       setTheme(this.theme);
     },
   },
-  components: { MoonSm, SunSm },
+  components: { SunIcon, MoonIcon },
 });
 </script>
 

@@ -18,10 +18,9 @@
       <!-- TODO: license https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
       <!-- TODO: Real options -->
       <circle-bg class="ml-3">
-        <dots-vertical-md
-          class="text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
-          sizeClass="h-4.5 w-4.5"
-        ></dots-vertical-md>
+        <DotsVerticalIcon
+          class="h-4.5 w-4.5 text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
+        ></DotsVerticalIcon>
       </circle-bg>
     </div>
     <div
@@ -40,7 +39,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
-import DotsVerticalMd from "../icon/DotsVerticalMd.vue";
+import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import CircleBg from "../button/CircleBg.vue";
 
 export default defineComponent({
@@ -78,6 +77,6 @@ export default defineComponent({
       }
     },
   },
-  components: { FmtTime, UserName, DotsVerticalMd, CircleBg },
+  components: { FmtTime, UserName, DotsVerticalIcon, CircleBg },
 });
 </script>

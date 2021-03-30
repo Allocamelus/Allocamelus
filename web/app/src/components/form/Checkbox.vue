@@ -12,8 +12,8 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 
-import RadixBox from "../icon/RadixBox.vue";
-import RadixCheckbox from "../icon/RadixCheckbox.vue";
+import RadixBox from "../icons/RadixBox.vue";
+import RadixCheckbox from "../icons/RadixCheckbox.vue";
 
 export default defineComponent({
   props: {

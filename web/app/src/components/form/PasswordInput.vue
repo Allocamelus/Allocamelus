@@ -24,9 +24,9 @@
         <div class="ps-2"></div>
       </div>
       <component
-        class="cursor-pointer text-secondary-600 hover:text-secondary-700"
+        class="w5 h-5 cursor-pointer text-secondary-600 hover:text-secondary-700"
         @click="togglePass"
-        :is="show ? 'eye-off-sm' : 'eye-sm'"
+        :is="show ? 'EyeOffIcon' : 'EyeIcon'"
         title="Toggle Visibility"
       ></component>
     </div>
@@ -37,8 +37,8 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { debounce } from "debounce";
 import TextInput from "./TextInput.vue";
-import EyeSm from "../icon/EyeSm.vue";
-import EyeOffSm from "../icon/EyeOffSm.vue";
+import EyeIcon from '@heroicons/vue/solid/EyeIcon';
+import EyeOffIcon from '@heroicons/vue/solid/EyeOffIcon'
 
 export default defineComponent({
   name: "password-input",
@@ -149,8 +149,8 @@ export default defineComponent({
   },
   components: {
     TextInput,
-    EyeSm,
-    EyeOffSm,
+    EyeIcon,
+    EyeOffIcon,
   },
 });
 </script>
