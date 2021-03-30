@@ -1,6 +1,7 @@
 <template>
   <text-input
     v-model="password"
+    :watchModel="watchModel"
     :check="checkC"
     @input="emiter"
     @error="$emit('error', $event)"
@@ -43,6 +44,10 @@ export default defineComponent({
   name: "password-input",
   props: {
     modelValue: String,
+    watchModel: {
+      type: Boolean,
+      default: false,
+    },
     check: {
       type: Boolean,
       default: false,
@@ -81,7 +86,9 @@ export default defineComponent({
       }
     },
     modelValue(newValue, old) {
-      this.password = newValue;
+      if (this.watchModel) {
+        this.text = newValue;
+      }
     },
   },
   created() {
