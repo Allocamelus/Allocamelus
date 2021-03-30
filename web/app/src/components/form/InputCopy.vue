@@ -8,10 +8,9 @@
   >
     <div class="flex items-center mr-0.5">
       <circle-bg class="p-1.5" title="Copy" @click="doCopy">
-        <clipboard-list-outline
-          class="text-current group-hover:text-rose-700"
-          sizeClass="w-5 h-5"
-        ></clipboard-list-outline>
+        <ClipboardListIcon
+          class="w-5 h-5 text-current group-hover:text-rose-700"
+        ></ClipboardListIcon>
       </circle-bg>
     </div>
   </text-input>
@@ -20,7 +19,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 
-import ClipboardListOutline from "../icon/ClipboardListOutline.vue";
+import ClipboardListIcon from "@heroicons/vue/outline/ClipboardListIcon";
 import TextInput from "./TextInput.vue";
 import CircleBg from "../button/CircleBg.vue";
 
@@ -55,6 +54,6 @@ export default defineComponent({
       document.execCommand("copy");
     },
   },
-  components: { ClipboardListOutline, TextInput, CircleBg },
+  components: { ClipboardListIcon, TextInput, CircleBg },
 });
 </script>

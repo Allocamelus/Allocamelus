@@ -20,7 +20,7 @@
         class="mt-2 link flex items-center cursor-pointer"
         @click="captcha.show = false"
       >
-        <chevron-left-sm></chevron-left-sm> Back
+        <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
       </div>
     </div>
     <div v-show="!showCaptcha">
@@ -75,8 +75,10 @@ import PasswordInput from "../components/form/PasswordInput.vue";
 import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
-import SmallText from "../components/text/Small.vue";
-import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
+import TextSmall from "../components/text/Small.vue";
+import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
+
+import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
 import { API_AuthA10Token } from "../models/api_account_gen";
 import { authA10 } from "../api/account/auth";
@@ -209,8 +211,9 @@ export default defineComponent({
     Checkbox,
     Submit,
     InputLabel,
-    SmallText,
-    ChevronLeftSm,
+    TextSmall,
+    ChevronLeftIcon,
+    VueHcaptcha,
   },
 });
 </script>

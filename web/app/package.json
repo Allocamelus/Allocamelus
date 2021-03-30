@@ -7,6 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@heroicons/vue": "^1.0.0",
     "@jdinabox/vue-3-hcaptcha": "^0.1.1",
     "axios": "^0.21.1",
     "debounce": "^1.2.1",
