@@ -22,7 +22,7 @@ export class API_MetaCaptchaSiteKeys {
   }
 
   siteKey(key: "easy" | "moderate" | "hard" | "all" | string) {
-    var siteKey
+    var siteKey: string
     try {
       siteKey = this.siteKeys[key]
     } catch {

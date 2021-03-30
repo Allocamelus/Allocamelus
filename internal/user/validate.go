@@ -22,8 +22,6 @@ func initValidate(p data.Prepare) {
 const (
 	invalidLength = "invalid-length"
 	invalidChars  = "invalid-characters"
-	invalidEmail  = "invalid-email"
-	weakPassword  = "weak-password"
 	taken         = "taken"
 )
 
@@ -67,12 +65,12 @@ func (u *User) ValidUserName() error {
 		return ErrUserNameInvalid
 	}
 	// Check Database for userName
-	var taken bool
-	err := preCheckUserName.QueryRow(u.UserName).Scan(&taken)
+	var isTaken bool
+	err := preCheckUserName.QueryRow(u.UserName).Scan(&isTaken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken {
+	if isTaken {
 		return ErrUserNameTaken
 	}
 
@@ -104,7 +102,7 @@ func (u *User) ValidName() error {
 
 var (
 	// ErrEmailInvalid Invalid Email
-	ErrEmailInvalid = errors.New(invalidEmail)
+	ErrEmailInvalid = errors.New("invalid-email")
 	// ErrEmailTaken characters
 	ErrEmailTaken = errors.New(taken)
 	preCheckEmail *sql.Stmt
@@ -133,12 +131,12 @@ func (u *User) IsEmailUnique() error {
 		return ErrEmailInvalid
 	}
 	// Check Database for userName
-	var taken bool
-	err := preCheckEmail.QueryRow(u.Email).Scan(&taken)
+	var isTaken bool
+	err := preCheckEmail.QueryRow(u.Email).Scan(&isTaken)
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err)
 	}
-	if taken {
+	if isTaken {
 		return ErrEmailTaken
 	}
 	return nil
@@ -169,7 +167,7 @@ func (u *User) ValidBio() error {
 // ErrPasswordLength 8 to 1024
 var (
 	ErrPasswordLength   = errors.New(invalidLength + "-min8-max1024")
-	ErrPasswordStrength = errors.New(weakPassword)
+	ErrPasswordStrength = errors.New("weak-password")
 )
 
 // ValidPassword check password
