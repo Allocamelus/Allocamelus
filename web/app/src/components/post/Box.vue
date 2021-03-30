@@ -17,14 +17,12 @@
       </div>
       <!-- TODO: license https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
       <!-- TODO: Real options -->
-      <div
-        class="ml-3 p-1 rounded-full group hover:bg-opacity-30 hover:bg-rose-800"
-      >
+      <circle-bg class="ml-3">
         <dots-vertical-md
           class="text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
           sizeClass="h-4.5 w-4.5"
         ></dots-vertical-md>
-      </div>
+      </circle-bg>
     </div>
     <div
       @click="textClick"
@@ -39,9 +37,11 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
+
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
 import DotsVerticalMd from "../icon/DotsVerticalMd.vue";
+import CircleBg from "../button/CircleBg.vue";
 
 export default defineComponent({
   name: "post-box",
@@ -78,6 +78,6 @@ export default defineComponent({
       }
     },
   },
-  components: { FmtTime, UserName, DotsVerticalMd },
+  components: { FmtTime, UserName, DotsVerticalMd, CircleBg },
 });
 </script>

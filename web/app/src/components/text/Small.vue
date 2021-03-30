@@ -7,5 +7,7 @@
 <script>
 import { defineComponent } from "vue";
 
-export default defineComponent({});
+export default defineComponent({
+  name: "text-small"
+});
 </script>

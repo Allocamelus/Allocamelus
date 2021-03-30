@@ -50,12 +50,12 @@
             <checkbox v-model="remember" name="remember">
               <label for="remember">Remember Me</label>
             </checkbox>
-            <small-text class="mt-2 mr-3">
+            <text-small class="mt-2 mr-3">
               Don't have an account?
               <router-link class="link whitespace-nowrap" to="/signup">
                 Sign Up
               </router-link>
-            </small-text>
+            </text-small>
           </div>
           <submit class="mt-3 self-end" title="Login">Login</submit>
         </div>
@@ -75,7 +75,7 @@ import PasswordInput from "../components/form/PasswordInput.vue";
 import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
-import SmallText from "../components/form/SmallText.vue";
+import SmallText from "../components/text/Small.vue";
 import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
 
 import { API_AuthA10Token } from "../models/api_account_gen";

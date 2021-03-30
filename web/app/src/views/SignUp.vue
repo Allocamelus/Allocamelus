@@ -24,8 +24,8 @@
       </div>
     </div>
     <div v-show="!showCaptcha">
-      <h2 class="text-2xl font-medium">Sign Up</h2>
       <div v-show="showForm">
+        <h2 class="text-2xl font-medium">Sign Up</h2>
         <div
           v-if="err.signUp.length > 0"
           class="mt-3"
@@ -74,18 +74,18 @@
 
           <div class="flex justify-between mt-3">
             <div class="flex flex-col justify-end">
-              <small-text class="mr-3">
+              <text-small class="mr-3">
                 By Signing Up, you agree to the
                 <router-link class="link whitespace-nowrap" to="/tos">
                   Terms of Service
                 </router-link>
-              </small-text>
-              <small-text class="mt-1 mr-3">
+              </text-small>
+              <text-small class="mt-1 mr-3">
                 Have an account?
                 <router-link class="link whitespace-nowrap" to="/login">
                   Login
                 </router-link>
-              </small-text>
+              </text-small>
             </div>
             <submit
               class="mt-3 self-end whitespace-nowrap"
@@ -97,7 +97,27 @@
           </div>
         </form>
       </div>
-      <div v-show="!showForm"></div>
+      <div v-show="!showForm" class="font-medium">
+        <div class="text-lg flex">
+          Account successfully created
+          <div class="text-base">*</div>
+        </div>
+        <text-small>
+          *If an account with the email ({{ email }}) doesn't already exist
+        </text-small>
+        <div class="font-normal my-2">
+          Verify your account by clicking the activation link sent to your email
+        </div>
+        <div>Backup Key:</div>
+        <text-small>
+          Save this, you'll need this to recover your account
+        </text-small>
+        <input-copy
+          v-model="backupKey"
+          :watchModel="true"
+          class="my-2"
+        ></input-copy>
+      </div>
     </div>
   </center-form-box>
 </template>
@@ -113,8 +133,9 @@ import PasswordInput from "../components/form/PasswordInput.vue";
 import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
-import SmallText from "../components/form/SmallText.vue";
+import TextSmall from "../components/text/Small.vue";
 import ChevronLeftSm from "../components/icon/ChevronLeftSm.vue";
+import InputCopy from "../components/form/InputCopy.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
@@ -161,6 +182,7 @@ export default defineComponent({
         siteKey: "",
         token: "",
       },
+      backupKey: "",
       showForm: true,
     });
 
@@ -308,6 +330,9 @@ export default defineComponent({
               vm.err.signUp = HtmlSomthingWentWrong;
             }
           } else {
+            vm.backupKey = r.backupKey;
+            vm.captcha.show = false;
+            vm.showForm = false;
           }
         })
         .catch((e) => {
@@ -315,6 +340,9 @@ export default defineComponent({
           vm.captcha.show = false;
           vm.err.signUp = HtmlSomthingWentWrong;
         });
+    },
+    bk() {
+      this.backupKey = "babcbc";
     },
   },
   components: {
@@ -324,9 +352,10 @@ export default defineComponent({
     Checkbox,
     Submit,
     InputLabel,
-    SmallText,
+    TextSmall,
     ChevronLeftSm,
     VueHcaptcha,
+    InputCopy,
   },
 });
 </script>
