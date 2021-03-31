@@ -88,7 +88,7 @@ export default createStore({
                 userId: session.userId,
                 fresh: true,
                 created: UnixTime(),
-                expires: MinToSec(15)
+                expires: UnixTime(MinToSec(15))
               }
             })
           } else {
