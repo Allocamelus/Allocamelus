@@ -67,6 +67,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { useRouter } from "vue-router";
+import { redirectUrl } from "../router";
 import { useStore } from "vuex";
 
 import CenterFormBox from "../components/form/CenterFormBox.vue";
@@ -98,14 +99,6 @@ const HtmlInvalidUsernamePassword = htmlErrBuilder(
     `Don't see the verification email? <a class="link" href="/account/verify_email">Resend It</a>`
   );
 
-function gotoRedirect(router, redirect) {
-  var url = "/";
-  if (redirect?.length > 0) {
-    url = props.redirect;
-  }
-  router.push(url);
-}
-
 export default defineComponent({
   props: {
     redirect: {
@@ -132,10 +125,6 @@ export default defineComponent({
         theme: store.getters.theme,
       },
     });
-
-    if (store.getters.loggedIn) {
-      gotoRedirect(router, props.redirect);
-    }
 
     document.title = `Login - ${import.meta.env.VITE_SITE_NAME}`;
 
@@ -196,7 +185,7 @@ export default defineComponent({
               userId: r.userId,
               authToken: vm.remember,
             });
-            gotoRedirect(vm.$router, vm.redirect);
+            router.push(redirectUrl(vm.redirect));
           }
         })
         .catch((e) => {

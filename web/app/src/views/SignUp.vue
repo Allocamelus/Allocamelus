@@ -126,6 +126,7 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { redirectUrl } from "../router";
 
 import CenterFormBox from "../components/form/CenterFormBox.vue";
 import TextInput from "../components/form/TextInput.vue";
@@ -147,14 +148,6 @@ import {
   HtmlSomthingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
-
-function gotoRedirect(router, redirect) {
-  var url = "/";
-  if (redirect?.length > 0) {
-    url = props.redirect;
-  }
-  router.push(url);
-}
 
 export default defineComponent({
   props: {
@@ -181,15 +174,11 @@ export default defineComponent({
         loaded: false,
         siteKey: "",
         token: "",
-        theme: store.getters.theme
+        theme: store.getters.theme,
       },
       backupKey: "",
       showForm: true,
     });
-
-    if (store.getters.loggedIn) {
-      gotoRedirect(router, props.redirect);
-    }
 
     document.title = `Sign Up - ${import.meta.env.VITE_SITE_NAME}`;
 
@@ -249,7 +238,7 @@ export default defineComponent({
                   console.log(err);
                   switch (err) {
                     case ApiResp.User.Create.LoggedIn:
-                      gotoRedirect(vm.$router, vm.redirect);
+                      router.push(redirectUrl(vm.redirect));
                       return;
                     case ApiResp.Shared.InvalidCaptcha:
                       vm.captcha.siteKey = "";
