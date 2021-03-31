@@ -27,6 +27,13 @@ const routes = [
     props: route => ({ redirect: route.query.r })
   },
   {
+    path: "/logout",
+    redirect: to => {
+      store.dispatch("sessionLogout")
+      return { path: redirectUrl(to.query.r) }
+    },
+  },
+  {
     path: "/post/:id(\\d+)",
     component: () => import('./views/Post.vue'),
     props: true,
