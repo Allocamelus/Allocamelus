@@ -4,6 +4,7 @@ import { UnixTime, MinToSec, DaysToSec } from "./pkg/time";
 
 import { status } from "./api/account/auth/status"
 import { keepAlive } from "./api/account/auth/keepAlive"
+import { logout } from "./api/account/logout"
 
 const vuexLocal = new VuexPersistence({
   key: "a10storage",
@@ -102,6 +103,15 @@ export default createStore({
     sessionKeepAlive({ commit }) {
       keepAlive().then(() => {
         commit('usedSession')
+      })
+    },
+    sessionLogout({ commit, state }) {
+      if (state.session.loggedIn) {
+        logout()
+      }
+      commit({
+        type: 'newSession',
+        session: sessionDefault()
       })
     }
   },
