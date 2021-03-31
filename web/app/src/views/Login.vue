@@ -5,7 +5,7 @@
         <vue-hcaptcha
           class="mx-auto max-w-max"
           :sitekey="captcha.siteKey"
-          theme="dark"
+          :theme="captcha.theme"
           @rendered="captcha.loaded = true"
           @verify="
             (token, eKey) => {
@@ -129,6 +129,7 @@ export default defineComponent({
         loaded: false,
         siteKey: "",
         token: "",
+        theme: store.getters.theme,
       },
     });
 

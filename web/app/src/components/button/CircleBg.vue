@@ -1,5 +1,5 @@
 <template>
-  <div class="p-1 rounded-full group hover:bg-opacity-30 hover:bg-rose-800">
+  <div class="p-1 rounded-full group hover:bg-opacity-30 hover:bg-rose-800 cursor-pointer">
     <slot></slot>
   </div>
 </template>
