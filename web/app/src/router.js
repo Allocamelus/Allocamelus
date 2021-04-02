@@ -30,7 +30,7 @@ const routes = [
     path: "/logout",
     redirect: to => {
       store.dispatch("sessionLogout")
-      return { path: redirectUrl(to.query.r) }
+      return { path: redirectUrl(to.query.r), query: { ref: "logout" } }
     },
   },
   {

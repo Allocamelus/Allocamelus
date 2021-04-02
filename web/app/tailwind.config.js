@@ -6,13 +6,24 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
+      height: {
+        'footer': 'var(--footer-height)'
+      },
+      lineHeight: {
+        'nav': 'var(--nav-height)',
+      },
       maxWidth: {
         '4.5xl': '60rem',
         '8xl': '88rem',
       },
       spacing: {
+        'nav': 'var(--nav-height)',
         '4.5': '1.125rem',
+        '5.5': '1.375rem',
       },
+      transitionDelay: {
+        '25': '25ms'
+      }
     },
     screens: {
       'xs': '425px',
@@ -22,8 +33,6 @@ module.exports = {
     },
     fontFamily: {
       ...defaultTheme.fontFamily,
-      'awesome': '"Font Awesome 5 Free"',
-      'awesome-brands': '"Font Awesome 5 Brands"'
     },
     colors: {
       transparent: 'transparent',
@@ -52,7 +61,7 @@ module.exports = {
         800: '#470a1e',
         900: '#2a0612',
       },
-      footer: '#321f28',
+      footer: '#371b28',
       black: { lighter: "#050505", DEFAULT: colors.black },
       gray: colors.trueGray,
       green: colors.green,

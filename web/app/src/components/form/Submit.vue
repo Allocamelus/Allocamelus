@@ -1,16 +1,17 @@
 <template>
-  <button
+  <basic-btn
     type="submit"
-    class="submit"
+    class="text-white bg-secondary-600 py-2.5 px-3.5 transition duration-75 hover:bg-secondary-800"
     :title="title"
     @click="$emit('submit', true)"
   >
     <slot></slot>
-  </button>
+  </basic-btn>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import BasicBtn from "../button/BasicBtn.vue";
 
 export default defineComponent({
   props: {
@@ -20,14 +21,6 @@ export default defineComponent({
     },
   },
   emits: ["submit"],
+  components: { BasicBtn },
 });
 </script>
-
-<style lang="scss" scoped>
-@layer components {
-  .submit {
-    @apply text-white font-medium text-base leading-4 py-2.5 px-3.5 rounded cursor-pointer;
-    @apply bg-secondary-600 transition duration-75 hover:bg-secondary-800 disabled:opacity-50;
-  }
-}
-</style>
