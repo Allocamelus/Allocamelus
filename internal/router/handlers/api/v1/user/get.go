@@ -16,22 +16,36 @@ type getResponse struct {
 
 // Get user handler
 func Get(c *fiber.Ctx) error {
-	userName := c.Params("userName")
-	if len(userName) == 0 {
-		return apierr.ErrNotFound(c)
+	_, userID, hasErr, errApi := getUserNameID(c)
+	if hasErr {
+		return errApi
 	}
-	userID, err := user.GetIDByUserName(userName)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			logger.Error(err)
-			return apierr.ErrSomthingWentWrong(c)
-		}
-		return apierr.ErrNotFound(c)
-	}
+
 	u, err := user.GetPublic(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
 	}
 
 	return fiberutil.JSON(c, 200, getResponse{u})
+}
+
+func getUserNameID(c *fiber.Ctx) (userName string, userID int64, hasErr bool, errApi error) {
+	userName = c.Params("userName")
+	if len(userName) == 0 {
+		errApi = apierr.ErrNotFound(c)
+		hasErr = true
+		return
+	}
+	userID, err := user.GetIDByUserName(userName)
+	if err != nil {
+		hasErr = true
+		if err != sql.ErrNoRows {
+			logger.Error(err)
+			errApi = apierr.ErrSomthingWentWrong(c)
+			return
+		}
+		errApi = apierr.ErrNotFound(c)
+		return
+	}
+	return
 }

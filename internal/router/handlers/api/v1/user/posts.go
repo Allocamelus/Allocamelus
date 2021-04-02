@@ -1,4 +1,4 @@
-package posts
+package user
 
 import (
 	"strconv"
@@ -6,29 +6,30 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	postsApi "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/posts"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
-// GetResponse posts response
-type GetResponse struct {
-	Posts post.ListPosts  `json:"posts"`
-	Users user.ListUsers  `json:"users"`
-	Order map[int64]int64 `json:"order"`
-}
-
 const perPage int64 = 15
 
-// Get posts handler
-func Get(c *fiber.Ctx) error {
+//TODO: Share's Code with posts/get
+
+// Posts posts handler
+func Posts(c *fiber.Ctx) error {
+	_, userID, hasErr, errApi := getUserNameID(c)
+	if hasErr {
+		return errApi
+	}
+
 	page, _ := strconv.ParseInt(c.Query("p"), 10, 64)
 	if page == 0 {
 		page = 1
 	}
 
-	totalPosts, err := post.GetPublicTotal()
+	totalPosts, err := post.GetPublicUserTotal(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
 	}
@@ -39,15 +40,17 @@ func Get(c *fiber.Ctx) error {
 		return apierr.ErrNotFound(c)
 	}
 
-	posts, err := post.GetPublicPosts(startNum, perPage)
+	posts, err := post.GetPublicUserPosts(userID, startNum, perPage)
 	if logger.Error(err) {
 		return apierr.ErrSomthingWentWrong(c)
 	}
+
+	// TODO Better Feed
 	users := new(user.List)
 	for _, p := range posts.Posts {
 		users.AddUser(p.UserID)
 		p.MDtoHTMLContent()
 	}
 
-	return fiberutil.JSON(c, 200, GetResponse{Posts: posts.Posts, Users: users.Users, Order: posts.Order})
+	return fiberutil.JSON(c, 200, postsApi.GetResponse{Posts: posts.Posts, Users: users.Users, Order: posts.Order})
 }

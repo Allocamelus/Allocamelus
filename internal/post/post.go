@@ -38,12 +38,8 @@ func New(userID int64, content string, publish bool) *Post {
 }
 
 var (
-	preInsert         *sql.Stmt
-	preGet            *sql.Stmt
-	preGetPublicPosts struct {
-		Total  *sql.Stmt
-		Latest *sql.Stmt
-	}
+	preInsert  *sql.Stmt
+	preGet     *sql.Stmt
 	prePublish *sql.Stmt
 )
 
@@ -51,15 +47,6 @@ func initPost(p data.Prepare) {
 	preInsert = p(`INSERT INTO Posts (userId, created, published, content)
 	VALUES (?, ?, ?, ?)`)
 	preGet = p(`SELECT userId, created, published, updated, content, media FROM Posts WHERE postId = ? LIMIT 1`)
-	preGetPublicPosts.Total = p(`SELECT COUNT(postId) FROM Posts WHERE published != 0`)
-	preGetPublicPosts.Latest = p(`
-	SELECT
-		postId, userId, published,
-		updated, content, media
-	FROM Posts 
-	WHERE published != 0 
-	ORDER BY published DESC
-	LIMIT ?,?`)
 	prePublish = p(`UPDATE Posts SET published = ? WHERE postId = ?`)
 }
 
@@ -84,41 +71,6 @@ func Get(postID int64) (Post, error) {
 	p.ID = postID
 	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content, &p.Media)
 	return p, err
-}
-
-// GetPublicPosts
-// TODO: Likes, Views & Cache
-func GetPublicPosts(startNum, perPage int64) (*List, error) {
-	posts := NewList()
-
-	rows, err := preGetPublicPosts.Latest.Query(startNum, perPage)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var index int64
-	for rows.Next() {
-		p := new(Post)
-
-		err := rows.Scan(&p.ID, &p.UserID, &p.Published, &p.Updated, &p.Content, &p.Media)
-		if err != nil {
-			return nil, err
-		}
-
-		posts.Posts[p.ID] = p
-		posts.Order[index] = p.ID
-		index++
-	}
-
-	return posts, nil
-}
-
-// GetPublicTotal Posts
-// TODO: Cache!!!
-func GetPublicTotal() (total int64, err error) {
-	err = preGetPublicPosts.Total.QueryRow().Scan(&total)
-	return
 }
 
 // Viewing post errors
