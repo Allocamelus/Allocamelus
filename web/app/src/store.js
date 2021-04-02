@@ -27,6 +27,7 @@ function sessionDefault() {
   return {
     loggedIn: false,
     userId: 0,
+    userName: '',
     fresh: true,
     created: UnixTime(),
     expires: UnixTime(MinToSec(10))
@@ -36,13 +37,7 @@ function sessionDefault() {
 export default createStore({
   state: {
     theme: 'dark',
-    session: {
-      loggedIn: false,
-      userId: 0,
-      fresh: true,
-      created: UnixTime(),
-      expires: UnixTime(MinToSec(10))
-    },
+    session: sessionDefault()
   },
   mutations: {
     newSession(state, payload) {
@@ -72,6 +67,7 @@ export default createStore({
         session: {
           loggedIn: true,
           userId: payload.userId,
+          userName: payload.userName,
           fresh: true,
           created: UnixTime(),
           expires: expires
@@ -87,6 +83,7 @@ export default createStore({
               session: {
                 loggedIn: session.loggedIn,
                 userId: session.userId,
+                userName: session.userName,
                 fresh: true,
                 created: UnixTime(),
                 expires: UnixTime(MinToSec(15))
@@ -121,6 +118,9 @@ export default createStore({
         return false
       }
       return state.session.loggedIn
+    },
+    userName(state) {
+      return state.session.userName
     },
     theme(state) {
       return state.theme

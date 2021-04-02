@@ -88,6 +88,12 @@ func (z *Session) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "UserID")
 				return
 			}
+		case "userName":
+			z.UserName, err = dc.ReadString()
+			if err != nil {
+				err = msgp.WrapError(err, "UserName")
+				return
+			}
 		case "perms":
 			{
 				var zb0002 int64
@@ -129,9 +135,9 @@ func (z *Session) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Session) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 6
+	// map header, size 7
 	// write "loggedIn"
-	err = en.Append(0x86, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
+	err = en.Append(0x87, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
 	if err != nil {
 		return
 	}
@@ -148,6 +154,16 @@ func (z *Session) EncodeMsg(en *msgp.Writer) (err error) {
 	err = en.WriteInt64(z.UserID)
 	if err != nil {
 		err = msgp.WrapError(err, "UserID")
+		return
+	}
+	// write "userName"
+	err = en.Append(0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
+	if err != nil {
+		return
+	}
+	err = en.WriteString(z.UserName)
+	if err != nil {
+		err = msgp.WrapError(err, "UserName")
 		return
 	}
 	// write "perms"
@@ -196,13 +212,16 @@ func (z *Session) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Session) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 6
+	// map header, size 7
 	// string "loggedIn"
-	o = append(o, 0x86, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
+	o = append(o, 0x87, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
 	o = msgp.AppendBool(o, z.LoggedIn)
 	// string "userId"
 	o = append(o, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
 	o = msgp.AppendInt64(o, z.UserID)
+	// string "userName"
+	o = append(o, 0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
+	o = msgp.AppendString(o, z.UserName)
 	// string "perms"
 	o = append(o, 0xa5, 0x70, 0x65, 0x72, 0x6d, 0x73)
 	o = msgp.AppendInt64(o, int64(z.Perms))
@@ -252,6 +271,12 @@ func (z *Session) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "UserID")
 				return
 			}
+		case "userName":
+			z.UserName, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "UserName")
+				return
+			}
 		case "perms":
 			{
 				var zb0002 int64
@@ -294,7 +319,7 @@ func (z *Session) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Session) Msgsize() (s int) {
-	s = 1 + 9 + msgp.BoolSize + 7 + msgp.Int64Size + 6 + msgp.Int64Size + 11 + z.PrivateKey.Msgsize() + 11 + msgp.BytesPrefixSize + len(z.LoginToken) + 7 + msgp.BoolSize
+	s = 1 + 9 + msgp.BoolSize + 7 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 6 + msgp.Int64Size + 11 + z.PrivateKey.Msgsize() + 11 + msgp.BytesPrefixSize + len(z.LoginToken) + 7 + msgp.BoolSize
 	return
 }
 
@@ -399,7 +424,7 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		return
 	}
 	// write "userName"
-	err = en.Append(0xaa, 0x75, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x4e, 0x61, 0x6d, 0x65)
+	err = en.Append(0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
 	if err != nil {
 		return
 	}
@@ -489,7 +514,7 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	o = append(o, 0x89, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userName"
-	o = append(o, 0xaa, 0x75, 0x6e, 0x69, 0x71, 0x75, 0x65, 0x4e, 0x61, 0x6d, 0x65)
+	o = append(o, 0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
 	o = msgp.AppendString(o, z.UserName)
 	// string "name"
 	o = append(o, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
@@ -605,6 +630,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 11 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
 	return
 }

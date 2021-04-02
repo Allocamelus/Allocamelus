@@ -183,6 +183,7 @@ export default defineComponent({
           } else {
             vm.$store.dispatch("newLoginSession", {
               userId: r.userId,
+              userName: r.userName,
               authToken: vm.remember,
             });
             this.$router.push(redirectUrl(vm.redirect));

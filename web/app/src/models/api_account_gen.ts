@@ -4,6 +4,7 @@
 export class API_AuthResp {
     success: boolean;
     userId?: number;
+    userName?: string;
     error?: string;
     captcha?: string;
 
@@ -15,6 +16,7 @@ export class API_AuthResp {
         if ('string' === typeof source) source = JSON.parse(source);
         this.success = source["success"];
         this.userId = source["userId"];
+        this.userName = source["userName"];
         this.error = source["error"];
         this.captcha = source["captcha"];
     }

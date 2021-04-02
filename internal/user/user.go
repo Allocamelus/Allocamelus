@@ -18,6 +18,7 @@ type Perms int64
 type Session struct {
 	LoggedIn   bool           `msg:"loggedIn" json:"loggedIn"`
 	UserID     int64          `msg:"userId" json:"userId"`
+	UserName   string         `msg:"userName" json:"userName"`
 	Perms      Perms          `msg:"perms" json:"perms"`
 	PrivateKey pgp.PrivateKey `msg:"privateKey" json:"-"`
 	LoginToken []byte         `msg:"loginToken" json:"-"`

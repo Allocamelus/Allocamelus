@@ -30,6 +30,7 @@ export class User {
 export class Session {
     loggedIn: boolean;
     userId: number;
+    userName: string;
     perms: number;
     notNew: boolean;
 
@@ -41,6 +42,7 @@ export class Session {
         if ('string' === typeof source) source = JSON.parse(source);
         this.loggedIn = source["loggedIn"];
         this.userId = source["userId"];
+        this.userName = source["userName"];
         this.perms = source["perms"];
         this.notNew = source["notNew"];
     }
