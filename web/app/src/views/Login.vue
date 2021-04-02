@@ -185,7 +185,7 @@ export default defineComponent({
               userId: r.userId,
               authToken: vm.remember,
             });
-            router.push(redirectUrl(vm.redirect));
+            this.$router.push(redirectUrl(vm.redirect));
           }
         })
         .catch((e) => {
