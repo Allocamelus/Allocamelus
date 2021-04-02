@@ -10,27 +10,12 @@
   body {
     @apply text-gray-900 dark:text-gray-50 bg-warm-gray-200 dark:bg-black-lighter;
   }
-  #nav {
-    @apply bg-primary-600 text-gray-50 shadow;
-    @apply flex z-50 justify-between m-0 p-0 fixed top-0 w-full;
-    height: var(--nav-height);
-    line-height: var(--nav-height);
-    > div {
-      @apply flex;
-    }
-    a {
-      @apply text-lg font-sans text-white;
-      @apply truncate p-2 no-underline tracking-wide relative;
-    }
-  }
   #bodyContent {
-    margin-top: var(--nav-height);
     min-height: calc(100vh - var(--nav-height));
   }
   #footer {
     @apply flex justify-between items-center py-3 px-5;
-    @apply bg-footer text-white;
-    height: var(--footer-height);
+    @apply bg-footer text-white h-footer;
     > div {
       @apply flex items-center;
     }

@@ -55,7 +55,7 @@ export default defineComponent({
     @apply cursor-pointer select-none;
   }
   input[type="checkbox"] {
-    @apply font-awesome appearance-none font-normal mr-1;
+    @apply appearance-none font-normal mr-1;
     @apply dark:text-warm-gray-50 focus:outline-none;
     &:checked {
       @apply appearance-none;
