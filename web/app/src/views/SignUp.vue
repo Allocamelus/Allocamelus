@@ -238,7 +238,7 @@ export default defineComponent({
                   console.log(err);
                   switch (err) {
                     case ApiResp.User.Create.LoggedIn:
-                      router.push(redirectUrl(vm.redirect));
+                      this.$router.push(redirectUrl(vm.redirect));
                       return;
                     case ApiResp.Shared.InvalidCaptcha:
                       vm.captcha.siteKey = "";
