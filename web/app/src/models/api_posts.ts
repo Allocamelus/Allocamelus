@@ -20,9 +20,9 @@ export class API_Posts {
 
   // Method
   user(userId: number) {
-    return this.users[userId];
+    return User.createFrom(this.users[userId]);
   }
   post(postId: number) {
-    return this.posts[postId];
+    return Post.createFrom(this.posts[postId]);
   }
 }

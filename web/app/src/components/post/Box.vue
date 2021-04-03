@@ -42,14 +42,19 @@ import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
 import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import CircleBg from "../button/CircleBg.vue";
 
+import { Post } from "../../models/post_gen";
+import { User } from "../../models/user_gen";
+
 export default defineComponent({
   name: "post-box",
   props: {
     post: {
-      type: Object,
+      type: Post,
+      required: true,
     },
     user: {
-      type: Object,
+      type: User,
+      required: true,
     },
     isLink: {
       type: Boolean,

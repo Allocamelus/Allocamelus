@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive } from "vue";
+import { defineComponent } from "vue";
+import { User } from "../../models/user_gen";
 
 export const OneLineLink = "one-line";
 export const TwoLine = "two-line";
@@ -19,7 +20,7 @@ export const TwoLine = "two-line";
 export default defineComponent({
   props: {
     user: {
-      type: Object,
+      type: User,
       required: true,
     },
     displayType: {
