@@ -235,7 +235,6 @@ export default defineComponent({
             if (typeof r.errors === "object") {
               if (Array.isArray(r.errors)) {
                 r.errors.forEach((err) => {
-                  console.log(err);
                   switch (err) {
                     case ApiResp.User.Create.LoggedIn:
                       this.$router.push(redirectUrl(vm.redirect));
@@ -326,7 +325,6 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log(e);
           vm.captcha.show = false;
           vm.err.signUp = HtmlSomthingWentWrong;
         });

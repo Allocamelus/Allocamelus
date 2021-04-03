@@ -109,7 +109,6 @@ export default defineComponent({
       userMenu: false,
       userMenuMobile: false,
     });
-    console.log(userName);
 
     sessionCheck();
     var keepAliveDelay = async () => {
