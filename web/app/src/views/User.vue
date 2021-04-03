@@ -76,6 +76,9 @@ export default defineComponent({
     getPosts(props.userName[0], data.page)
       .then((r) => {
         data.postsList = r;
+        if (Object.keys(r.posts).length == 0) {
+          data.err.posts = "No posts here";
+        }
       })
       .catch((e) => {
         data.err.posts = userErrors(e, route.currentRoute.value.fullPath);
@@ -109,6 +112,9 @@ export default defineComponent({
     getPosts(to.params.userName[0], this.page)
       .then((r) => {
         this.postsList = r;
+        if (Object.keys(r.posts).length == 0) {
+          this.err.posts = "No posts here";
+        }
       })
       .catch((e) => {
         this.err.posts = userErrors(e, this.$route.currentRoute.value.fullPath);
