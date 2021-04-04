@@ -46,6 +46,7 @@
         "password": "password"
     },
     "path": {
+        "media": "media/",
         "public": {
             "verifyEmail": "/account/verify-email",
             "resetPassword": "/account/reset-password"
