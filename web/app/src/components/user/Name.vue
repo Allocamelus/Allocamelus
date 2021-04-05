@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="isLink ? 'router-link': 'div'"
+    :is="isLink ? 'router-link' : 'div'"
     class="name-container"
     :class="displayType"
     :to="'/u/' + user.userName"
@@ -44,6 +44,9 @@ export default defineComponent({
 
 @layer components {
   .one-line {
+    &.name-container {
+      @apply pb-1;
+    }
     @apply min-w-0 truncate;
     .user-name {
       @apply ml-1;
@@ -57,14 +60,14 @@ export default defineComponent({
   }
   .two-line {
     &.name-container {
-      @apply flex flex-col mb-1 items-start;
+      @apply flex flex-col items-start;
       .name {
-        @apply text-xl mb-1;
+        @apply text-xl mb-0.5;
       }
     }
   }
   .name-container {
-    @apply min-w-0 items-center py-1 text-gray-800 dark:text-gray-200 truncate;
+    @apply min-w-0 items-center text-gray-800 dark:text-gray-200 truncate;
     /*
       overflow: hidden;
       overflow-wrap: break-word;

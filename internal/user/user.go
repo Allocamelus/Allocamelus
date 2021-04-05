@@ -8,6 +8,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/avatar"
 	"github.com/allocamelus/allocamelus/internal/user/key"
 )
 
@@ -32,6 +33,7 @@ type User struct {
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email,omitempty"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
+	AvatarUrl   string `msg:"-" json:"avatarUrl,omitempty"`
 	Bio         string `msg:"bio" json:"bio,omitempty"`
 	Likes       int64  `msg:"likes" json:"likes"`
 	Permissions Perms  `msg:"permissions" json:"-"`
@@ -86,7 +88,16 @@ func GetPublic(userID int64) (User, error) {
 	var u User
 	u.ID = userID
 	err := preGetPublic.QueryRow(userID).Scan(&u.UserName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
-	return u, err
+	if err != nil {
+		return u, err
+	}
+	if u.Avatar {
+		u.AvatarUrl, err = avatar.GetUrl(userID)
+		if err != nil {
+			return u, err
+		}
+	}
+	return u, nil
 }
 
 // UpdatePassword for User

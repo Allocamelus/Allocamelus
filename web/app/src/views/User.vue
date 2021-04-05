@@ -1,7 +1,10 @@
 <template>
   <div class="container py-5">
-    <error-box :error="err.user" class="py-3 px-4 mb-3">
-      <user-name :user="user" :displayType="TwoLine"></user-name>
+    <error-box :error="err.user" class="p-3.5 mb-3">
+      <div class="flex items-center">
+        <user-avatar :user="user" class="w-20 h-20"></user-avatar>
+        <user-name class="ml-2" :user="user" :displayType="TwoLine"></user-name>
+      </div>
       <div></div>
       <div>{{ user.bio }}</div>
     </error-box>
@@ -35,6 +38,7 @@ import PostFeed from "../components/post/Feed.vue";
 import Feed from "../components/Feed.vue";
 import Sidebar from "../components/Sidebar.vue";
 import Box from "../components/box/Box.vue";
+import UserAvatar from "../components/user/Avatar.vue";
 
 function userErrors(api_error, path) {
   if (api_error instanceof API_Error) {
@@ -127,6 +131,7 @@ export default defineComponent({
     Feed,
     Sidebar,
     Box,
+    UserAvatar,
   },
 });
 </script>

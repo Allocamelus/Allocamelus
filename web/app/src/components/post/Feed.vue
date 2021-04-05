@@ -2,12 +2,13 @@
   <box
     v-for="(postId, index) in list.order"
     :key="index"
-    class="py-3 px-4 mb-3"
+    class="mb-3"
   >
     <post-box
       :post="list.post(postId)"
       :user="list.user(list.post(postId).userId)"
       :isLink="true"
+      class="py-3 px-4"
     ></post-box>
   </box>
 </template>

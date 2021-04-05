@@ -7,6 +7,7 @@ export class User {
     name: string;
     email?: string;
     avatar: boolean;
+    avatarUrl?: string;
     bio?: string;
     likes: number;
     created?: number;
@@ -22,6 +23,7 @@ export class User {
         this.name = source["name"];
         this.email = source["email"];
         this.avatar = source["avatar"];
+        this.avatarUrl = source["avatarUrl"];
         this.bio = source["bio"];
         this.likes = source["likes"];
         this.created = source["created"];
