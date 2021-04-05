@@ -1,9 +1,8 @@
 package user
 
 import (
-	"database/sql"
-
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -29,23 +28,15 @@ func Get(c *fiber.Ctx) error {
 	return fiberutil.JSON(c, 200, getResponse{u})
 }
 
-func getUserNameID(c *fiber.Ctx) (userName string, userID int64, hasErr bool, errApi error) {
-	userName = c.Params("userName")
-	if len(userName) == 0 {
-		errApi = apierr.ErrNotFound(c)
-		hasErr = true
-		return
-	}
-	userID, err := user.GetIDByUserName(userName)
-	if err != nil {
-		hasErr = true
-		if err != sql.ErrNoRows {
-			logger.Error(err)
-			errApi = apierr.ErrSomthingWentWrong(c)
-			return
+func getUserNameID(c *fiber.Ctx) (string, int64, bool, error) {
+	userName, userId, errApi := shared.GetUserNameAndID(c)
+	if !errApi.Empty() {
+		switch errApi {
+		case apierr.NotFound:
+			return "", 0, true, apierr.ErrNotFound(c)
+		default:
+			return "", 0, true, apierr.ErrSomthingWentWrong(c)
 		}
-		errApi = apierr.ErrNotFound(c)
-		return
 	}
-	return
+	return userName, userId, false, nil
 }

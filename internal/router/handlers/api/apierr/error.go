@@ -19,6 +19,11 @@ func New(data interface{}) APIErr {
 	return APIErr{Err: data}
 }
 
+// Empty is error empty
+func (e *APIErr) Empty() bool {
+	return e.Err == nil
+}
+
 // AppendStr append string to Err if is string
 func (e *APIErr) AppendStr(s string) error {
 	switch e.Err.(type) {
