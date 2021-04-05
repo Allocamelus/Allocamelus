@@ -49,7 +49,8 @@
         "media": "media/",
         "public": {
             "verifyEmail": "/account/verify-email",
-            "resetPassword": "/account/reset-password"
+            "resetPassword": "/account/reset-password",
+            "media": "/media/"
         }
     },
     "redis": {

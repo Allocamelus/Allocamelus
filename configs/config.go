@@ -54,6 +54,7 @@ type Config struct {
 		Public struct {
 			VerifyEmail   string
 			ResetPassword string
+			Media         string
 		}
 	}
 	Redis struct {
@@ -212,6 +213,10 @@ func (c *Config) Validate() error {
 	}
 	if c.Path.Public.ResetPassword == "" {
 		klog.Info("Warning - Config: Missing Public Reset Password Path")
+	}
+	if c.Path.Public.Media == "" {
+		c.Path.Public.Media = "/media/"
+		klog.Info("Warning - Config: Missing public media file path | Using Default (/media/)")
 	}
 
 	if c.Redis.Host == "" {

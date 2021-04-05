@@ -14,6 +14,10 @@ func GetUrl(userID int64) (url string, err error) {
 	}
 	var urlPart string
 	err = preGetAvatarUrl.QueryRow(userID).Scan(&urlPart)
-	url = "/media" + urlPart
+	url = g.Config.Path.Public.Media + urlPart
 	return
+}
+
+func NewAvatar(userID int64, file string) {
+
 }
