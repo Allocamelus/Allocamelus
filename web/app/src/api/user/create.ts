@@ -1,10 +1,10 @@
 import v1 from "../v1"
-import { API_CreateA10Token, API_CreateRequest, API_CreateResp } from "../../models/GEN_User_gen";
+import { GEN_CreateA10Token, GEN_CreateRequest, GEN_CreateResp } from "../../models/go_structs_gen";
 
 
 const a9s = "allocamelus"
 
-export async function create(request: API_CreateRequest) {
+export async function create(request: GEN_CreateRequest) {
   return v1.post("user",
     JSON.stringify(request), {
     headers: {
@@ -12,12 +12,12 @@ export async function create(request: API_CreateRequest) {
     }
   })
     .then(r => {      
-      return API_CreateResp.createFrom(r.data)
+      return GEN_CreateResp.createFrom(r.data)
     })
 }
 
-export async function createA9s(token: API_CreateA10Token) {
-  return create(API_CreateRequest.createFrom({
+export async function createA9s(token: GEN_CreateA10Token) {
+  return create(GEN_CreateRequest.createFrom({
     with: a9s,
     token: JSON.stringify(token)
   }))

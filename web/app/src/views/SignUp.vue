@@ -140,7 +140,7 @@ import InputCopy from "../components/form/InputCopy.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import { API_CreateA10Token } from "../models/GEN_User_gen";
+import { GEN_CreateA10Token } from "../models/go_structs_gen";
 import { createA9s } from "../api/user/create";
 import ApiResp from "../models/responses";
 import { siteKeys } from "../api/meta/captcha/siteKeys";
@@ -222,7 +222,7 @@ export default defineComponent({
       }
 
       createA9s(
-        API_CreateA10Token.createFrom({
+        GEN_CreateA10Token.createFrom({
           userName: vm.userName,
           email: vm.email,
           password: vm.password,

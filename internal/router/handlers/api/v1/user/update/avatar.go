@@ -1,8 +1,17 @@
 package update
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"fmt"
+
+	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/gofiber/fiber/v2"
+)
 
 // Avatar Update handler
 func Avatar(c *fiber.Ctx) error {
-	return nil
+	// Get first file from form field "document":
+	file, err := c.FormFile("document")
+	logger.Error(err)
+	// Save file to root directory:
+	return c.SaveFile(file, fmt.Sprintf("./%s", file.Filename))
 }
