@@ -48,18 +48,17 @@ import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
 
-import { Post } from "../../models/post_gen";
-import { User } from "../../models/user_gen";
+import { GEN_User, GEN_Post } from "../../models/go_structs_gen";
 
 export default defineComponent({
   name: "post-box",
   props: {
     post: {
-      type: Post,
+      type: GEN_Post,
       required: true,
     },
     user: {
-      type: User,
+      type: GEN_User,
       required: true,
     },
     isLink: {

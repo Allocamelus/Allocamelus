@@ -29,7 +29,7 @@ import { API_Error } from "../models/api_error";
 import { API_Posts } from "../models/api_posts";
 import { Html404Func, HtmlSomthingWentWrong } from "../components/htmlErrors";
 
-import { User } from "../models/user_gen";
+import { GEN_User } from "../models/go_structs_gen";
 import ApiResp from "../models/responses";
 
 import UserName, { TwoLine } from "../components/user/Name.vue";
@@ -60,7 +60,7 @@ export default defineComponent({
     const route = useRouter();
     const store = useStore();
     const data = reactive({
-      user: new User(),
+      user: new GEN_User(),
       postsList: new API_Posts(),
       page: 1,
       err: {
@@ -101,7 +101,7 @@ export default defineComponent({
     },
   },
   async beforeRouteUpdate(to, from) {
-    this.user = new User();
+    this.user = new GEN_User();
     this.postsList = new API_Posts();
     this.page = 1;
 

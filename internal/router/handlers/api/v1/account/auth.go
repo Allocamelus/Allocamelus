@@ -38,10 +38,9 @@ func (t *AuthA10Token) trimSpace() {
 
 // AuthResp struct
 type AuthResp struct {
-	Success  bool   `json:"success"`
-	UserID   int64  `json:"userId,omitempty"`
-	UserName string `json:"userName,omitempty"`
-	Error    string `json:"error,omitempty"`
+	Success bool      `json:"success"`
+	User    user.User `json:"user,omitempty"`
+	Error   string    `json:"error,omitempty"`
 	// Require Captcha
 	Captcha string `json:"captcha,omitempty"`
 }
@@ -154,20 +153,20 @@ func Auth(c *fiber.Ctx) error {
 		}
 
 		// Get db username
-		username, err := user.GetUserNameByID(userID)
+		currentUser, err := user.GetPublic(userID)
 		if logger.Error(err) {
-			username = authToken.UserName
+			return apierr.ErrSomthingWentWrong(c)
 		}
 
 		if authToken.Remember {
 			// Set persistent auth token
 			if err := token.SetAuth(c, userID); logger.Error(err) {
 				// successful failure
-				return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID, UserName: username, Error: errAuthToken})
+				return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser, Error: errAuthToken})
 			}
 		}
 
-		return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID, UserName: username})
+		return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser})
 	}
 	return apierr.Err422(c, errInvalidWith)
 }

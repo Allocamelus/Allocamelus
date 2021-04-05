@@ -1,5 +1,5 @@
 import v1 from "../v1"
-import { API_CreateA10Token, API_CreateRequest, API_CreateResp } from "../../models/api_user_gen";
+import { API_CreateA10Token, API_CreateRequest, API_CreateResp } from "../../models/GEN_User_gen";
 
 
 const a9s = "allocamelus"

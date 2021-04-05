@@ -12,7 +12,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { User } from "../../models/user_gen";
+import { GEN_User } from "../../models/go_structs_gen";
 
 export const OneLineLink = "one-line";
 export const TwoLine = "two-line";
@@ -20,7 +20,7 @@ export const TwoLine = "two-line";
 export default defineComponent({
   props: {
     user: {
-      type: User,
+      type: GEN_User,
       required: true,
     },
     displayType: {

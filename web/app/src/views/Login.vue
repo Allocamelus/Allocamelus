@@ -81,7 +81,7 @@ import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import { API_AuthA10Token } from "../models/api_account_gen";
+import { GEN_AuthA10Token } from "../models/go_structs_gen";
 import { authA10 } from "../api/account/auth";
 import ApiResp from "../models/responses";
 import {
@@ -154,7 +154,7 @@ export default defineComponent({
         vm.captcha.token = "";
       }
       authA10(
-        API_AuthA10Token.createFrom({
+        GEN_AuthA10Token.createFrom({
           userName: vm.username,
           password: vm.password,
           remember: vm.remember,
@@ -182,8 +182,7 @@ export default defineComponent({
             }
           } else {
             vm.$store.dispatch("newLoginSession", {
-              userId: r.userId,
-              userName: r.userName,
+              user: r.user,
               authToken: vm.remember,
             });
             this.$router.push(redirectUrl(vm.redirect));

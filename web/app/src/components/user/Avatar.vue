@@ -19,12 +19,12 @@
 
 <script>
 import { defineComponent } from "vue";
-import { User } from "../../models/user_gen";
+import { GEN_User } from "../../models/go_structs_gen";
 
 export default defineComponent({
   props: {
     user: {
-      type: User,
+      type: GEN_User,
       required: true,
     },
     isLink: {

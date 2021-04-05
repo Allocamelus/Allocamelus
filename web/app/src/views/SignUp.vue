@@ -140,7 +140,7 @@ import InputCopy from "../components/form/InputCopy.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import { API_CreateA10Token } from "../models/api_user_gen";
+import { API_CreateA10Token } from "../models/GEN_User_gen";
 import { createA9s } from "../api/user/create";
 import ApiResp from "../models/responses";
 import { siteKeys } from "../api/meta/captcha/siteKeys";

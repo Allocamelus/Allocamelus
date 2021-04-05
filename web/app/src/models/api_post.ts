@@ -1,9 +1,8 @@
-import { User } from "./user_gen";
-import { Post } from './post_gen'
+import { GEN_User, GEN_Post } from './go_structs_gen'
 
 export class API_Post {
-  post: Post;
-  user: User;
+  post: GEN_Post;
+  user: GEN_User;
 
   static createFrom(source: any = {}) {
     return new API_Post(source);
@@ -11,7 +10,7 @@ export class API_Post {
 
   constructor(source: any = {}) {
     if ('string' === typeof source) source = JSON.parse(source);
-    this.post = Post.createFrom(source["post"]);
-    this.user = User.createFrom(source["user"])
+    this.post = GEN_Post.createFrom(source["post"]);
+    this.user = GEN_User.createFrom(source["user"])
   }
 }

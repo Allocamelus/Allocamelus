@@ -36,15 +36,23 @@
                 @click="toggleUserMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <!--TODO:User Image-->
-                <UserCircleIcon class="w-5.5 h-5.5"></UserCircleIcon>
+                <!--TODO:User Mobile Menu-->
                 <component
+                  :is="user.avatar ? 'user-avatar' : 'UserCircleIcon'"
+                  :user="user"
+                  :class="user.avatar ? 'w-6 h-6' : 'w-5.5 h-5.5'"
+                  :isLink="true"
+                ></component>
+                <component
+                  v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
                   class="hidden md:block w-4 h-4"
                 ></component>
               </div>
               <dropdown v-model="userMenu" class="w-44">
-                <dropdown-item :to="`/u/${userName}`">Profile</dropdown-item>
+                <dropdown-item :to="`/u/${user.userName}`"
+                  >Profile</dropdown-item
+                >
                 <dropdown-item>Settings (TODO)</dropdown-item>
                 <dropdown-item to="/logout">Logout</dropdown-item>
               </dropdown>
@@ -84,6 +92,7 @@ import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
 import BasicBtn from "./components/button/BasicBtn.vue";
+import UserAvatar from "./components/user/Avatar.vue";
 
 import { MinToSec, SecToMs } from "./pkg/time";
 
@@ -99,7 +108,7 @@ export default defineComponent({
   setup() {
     const store = useStore(),
       loggedIn = computed(() => store.getters.loggedIn),
-      userName = computed(() => store.getters.userName),
+      user = computed(() => store.getters.user),
       theme = computed(() => store.getters.theme),
       toggleTheme = () => store.commit("toggleTheme"),
       sessionCheck = () => store.dispatch("sessionCheck"),
@@ -124,7 +133,7 @@ export default defineComponent({
     return {
       ...toRefs(data),
       loggedIn,
-      userName,
+      user,
       theme,
       toggleTheme,
       sessionCheck,
@@ -159,6 +168,7 @@ export default defineComponent({
     ChevronDownIcon,
     ChevronUpIcon,
     BasicBtn,
+    UserAvatar,
   },
 });
 </script>

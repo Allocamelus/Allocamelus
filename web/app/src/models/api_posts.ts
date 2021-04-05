@@ -1,9 +1,8 @@
-import { User } from "./user_gen";
-import { Post } from './post_gen'
+import { GEN_User, GEN_Post } from "./go_structs_gen";
 
 export class API_Posts {
-  posts: { [key: number]: Post };
-  users: { [key: number]: User };
+  posts: { [key: number]: GEN_User };
+  users: { [key: number]: GEN_Post };
   order: { [key: number]: number };
 
 
@@ -20,9 +19,9 @@ export class API_Posts {
 
   // Method
   user(userId: number) {
-    return User.createFrom(this.users[userId]);
+    return GEN_User.createFrom(this.users[userId]);
   }
   post(postId: number) {
-    return Post.createFrom(this.posts[postId]);
+    return GEN_Post.createFrom(this.posts[postId]);
   }
 }
