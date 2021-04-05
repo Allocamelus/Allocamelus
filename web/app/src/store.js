@@ -76,18 +76,11 @@ export default createStore({
     },
     sessionCheck({ commit, state }) {
       if (state.session.loggedIn || state.session.fresh) {
-        status().then(session => {
-          if (state.session.loggedIn != session.loggedIn || state.session.userId != session.userId) {
+        status().then(loggedIn => {
+          if (loggedIn == false) {
             commit({
               type: 'newSession',
-              session: {
-                loggedIn: session.loggedIn,
-                userId: session.userId,
-                userName: session.userName,
-                fresh: true,
-                created: UnixTime(),
-                expires: UnixTime(MinToSec(15))
-              }
+              session: sessionDefault()
             })
           } else {
             commit('usedSession')
