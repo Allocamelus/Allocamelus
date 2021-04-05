@@ -729,6 +729,11 @@ core-js@3:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.9.1.tgz#cec8de593db8eb2a85ffb0dbdeb312cb6e5460ae"
   integrity sha512-gSjRvzkxQc1zjM/5paAmL4idJBFzuJoo+jDjF1tStYFMV2ERfD02HhahhCGXUyHxQRG4yFKVSdO6g62eoRMcDg==
 
+croppie@^2.6.5:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/croppie/-/croppie-2.6.5.tgz#67d76855b2983bdcd8aa348367398b2b8ef277cf"
+  integrity sha512-IlChnVUGG5T3w2gRZIaQgBtlvyuYnlUWs2YZIXXR3H9KrlO1PtBT3j+ykxvy9eZIWhk+V5SpBmhCQz5UXKrEKQ==
+
 css-tree@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.1.2.tgz#9ae393b5dafd7dae8a622475caec78d3d8fbd7b5"

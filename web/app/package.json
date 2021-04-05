@@ -10,6 +10,7 @@
     "@heroicons/vue": "^1.0.0",
     "@jdinabox/vue-3-hcaptcha": "^0.1.1",
     "axios": "^0.21.1",
+    "croppie": "^2.6.5",
     "debounce": "^1.2.1",
     "throttle-debounce": "^3.0.1",
     "ts-debounce": "^3.0.0",
