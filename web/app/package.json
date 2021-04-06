@@ -12,8 +12,6 @@
     "axios": "^0.21.1",
     "croppie": "^2.6.5",
     "debounce": "^1.2.1",
-    "throttle-debounce": "^3.0.1",
-    "ts-debounce": "^3.0.0",
     "vue": "^3.0.5",
     "vue-router": "^4.0.4",
     "vuex": "^4",
@@ -21,17 +19,17 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@types/node": "^14.14.33",
+    "@types/node": "^14.14.37",
     "@types/zxcvbn": "^4.4.0",
-    "@vitejs/plugin-vue": "^1.1.5",
-    "@vue/compiler-sfc": "^3.0.5",
+    "@vitejs/plugin-vue": "^1.2.1",
+    "@vue/compiler-sfc": "^3.0.11",
     "@vuedx/typescript-plugin-vue": "^0.6.3",
     "autoprefixer": "^10.2.5",
-    "postcss": "^8.2.8",
-    "postcss-csso": "^5.0.0",
+    "postcss": "^8.2.9",
+    "postcss-csso": "^5.0.1",
     "sass": "^1.32.8",
-    "tailwindcss": "^2.0.4",
-    "typescript": "^4.1.3",
-    "vite": "^2.0.5"
+    "tailwindcss": "^2.1.1",
+    "typescript": "^4.2.3",
+    "vite": "^2.1.5"
   }
 }
