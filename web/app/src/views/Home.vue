@@ -2,7 +2,7 @@
   <div class="container flex py-5">
     <feed>
       <div v-if="err.length > 0" v-html="err"></div>
-      <box v-if="loggedIn" class="p-3.5 mb-3">
+      <box v-if="loggedIn" class="p-3.5 mb-3 rounded-xl">
         <text-input
           placeholder="New Post"
           :readonly="true"

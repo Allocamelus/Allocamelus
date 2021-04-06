@@ -2,7 +2,7 @@
   <box
     v-for="(postId, index) in list.order"
     :key="index"
-    class="mb-3"
+    class="mb-3 rounded-xl"
   >
     <post-box
       :post="list.post(postId)"

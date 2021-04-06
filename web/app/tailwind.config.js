@@ -26,8 +26,8 @@ module.exports = {
       }
     },
     screens: {
-      'xs': '425px',
-      'xs-max': { 'max': '425px' },
+      'xs': '430px',
+      'xs-max': { 'max': '430px' },
       ...defaultTheme.screens,
       '3xl': '1904px',
     },
