@@ -3,7 +3,7 @@
     <div class="w-11">
       <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
     </div>
-    <div class="ml-3">
+    <div class="ml-3 flex-grow">
       <div
         class="text-gray-700 dark:text-gray-300 flex items-center truncate justify-between"
       >
