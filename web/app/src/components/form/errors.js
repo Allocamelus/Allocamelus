@@ -12,15 +12,20 @@ export const ErrRequired = "required",
  * @param {string} type for length checkers
  * @return {string} msg pretty readable error
  */
-export function ErrMsg(err, extra = "", type = "characters") {
+export function ErrMsg(err, extra = "", type = "character count") {
   var msg = errMsg(err)
+
+  if (err == ErrMinLength || err == ErrMaxLength) {
+    if (type.length > 0) {
+      msg += ` ${type}`
+    }
+    msg += " of "
+  }
+
   if (err == ErrRegex && (extra == undefined || extra.length <= 0)) {
     msg = "Failed Regex Check"
   } else {
     msg += extra
-  }
-  if (err == ErrMinLength || err == ErrMaxLength) {
-    msg += " " + type
   }
   return msg
 }
@@ -30,9 +35,9 @@ function errMsg(err) {
     case ErrRequired:
       return "Required"
     case ErrMinLength:
-      return "Minimum of "
+      return "Minimum"
     case ErrMaxLength:
-      return "Maximum of "
+      return "Maximum"
     default:
       return ""
   }
