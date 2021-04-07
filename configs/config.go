@@ -51,6 +51,7 @@ type Config struct {
 	Mail email.Config
 	Path struct {
 		Media  string
+		TmpDir string
 		Public struct {
 			VerifyEmail   string
 			ResetPassword string
@@ -208,6 +209,14 @@ func (c *Config) Validate() error {
 		c.Path.Media = "media/"
 		klog.Info("Warning - Config: Missing media file path | Using Default (media/)")
 	}
+	if c.Path.TmpDir == "" {
+		c.Path.TmpDir = "/tmp/allocamelus_tmp_dir"
+		klog.Info("Warning - Config: Missing tmpDir file path | Using Default (/tmp/allocamelus_tmp_dir)")
+	}
+	if err := os.MkdirAll(c.Path.TmpDir, os.ModeSticky|os.ModePerm); err != nil {
+		klog.Error("Error - Config: Creating "+c.Path.TmpDir+" Failed: ", err)
+	}
+
 	if c.Path.Public.VerifyEmail == "" {
 		klog.Info("Warning - Config: Missing Public Verify Email Path")
 	}
