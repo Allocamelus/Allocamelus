@@ -12,7 +12,7 @@
       {{ user.name }}thisisaverylongusernamethisisaverylongusername
     </div>
     <div
-      class="text-gray-700 dark:text-gray-400 text-sm font-normal"
+      class="text-gray-700 dark:text-gray-400 text-sm font-normal flex-none"
       :class="isLink ? 'ml-1' : ''"
     >
       @{{ user.userName }}thisisaverylongusername

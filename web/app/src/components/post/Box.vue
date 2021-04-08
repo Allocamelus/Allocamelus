@@ -3,13 +3,13 @@
     <div class="w-11">
       <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
     </div>
-    <div class="ml-3 flex flex-col flex-grow min-w-0">
+    <div class="ml-3 flex flex-col flex-grow">
       <div
         class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
       >
-        <div class="flex min-w-0">
+        <div class="flex">
           <user-name :user="user"></user-name>
-          <div class="dot-before flex items-center">
+          <div class="dot-before flex items-center whitespace-nowrap">
             <router-link :to="link" class="no-underline group">
               <fmt-time
                 :time="post.published"
