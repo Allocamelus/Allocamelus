@@ -30,7 +30,7 @@ func Get(c *fiber.Ctx) error {
 
 	totalPosts, err := post.GetPublicTotal()
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, totalPosts)
@@ -41,7 +41,7 @@ func Get(c *fiber.Ctx) error {
 
 	posts, err := post.GetPublicPosts(startNum, perPage)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	users := new(user.List)
 	for _, p := range posts.Posts {

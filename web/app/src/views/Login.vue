@@ -86,7 +86,7 @@ import { authA10 } from "../api/account/auth";
 import ApiResp from "../models/responses";
 import {
   htmlErrBuilder,
-  HtmlSomthingWentWrong,
+  HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
 
@@ -177,7 +177,7 @@ export default defineComponent({
                 vm.err.login = HtmlLoadingCaptcha;
                 return;
               default:
-                vm.err.login = HtmlSomthingWentWrong;
+                vm.err.login = HtmlSomethingWentWrong;
                 return;
             }
           } else {
@@ -190,7 +190,7 @@ export default defineComponent({
         })
         .catch((e) => {
           vm.captcha.show = false;
-          vm.err.login = HtmlSomthingWentWrong;
+          vm.err.login = HtmlSomethingWentWrong;
         });
     },
   },

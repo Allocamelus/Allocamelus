@@ -10,7 +10,7 @@ export function htmlErrBuilder(first: string, second: string = "") {
   return err;
 }
 
-export const HtmlSomthingWentWrong = htmlErrBuilder(
+export const HtmlSomethingWentWrong = htmlErrBuilder(
   `Something went wrong`,
   `Try again later`
 )

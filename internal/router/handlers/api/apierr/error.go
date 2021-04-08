@@ -44,3 +44,10 @@ func (e *APIErr) AppendStr(s string) error {
 func (e *APIErr) MarshalStr() (string, error) {
 	return json.MarshalToString(e)
 }
+
+func (e *APIErr) String() string {
+	if e == nil {
+		return ""
+	}
+	return e.Err.(string)
+}

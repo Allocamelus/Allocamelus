@@ -20,7 +20,7 @@ func GetUserNameAndID(c *fiber.Ctx) (userName string, userID int64, errApi apier
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
-			errApi = apierr.SomthingWentWrong
+			errApi = apierr.SomethingWentWrong
 			return
 		}
 		errApi = apierr.NotFound

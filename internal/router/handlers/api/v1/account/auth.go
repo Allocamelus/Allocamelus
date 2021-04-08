@@ -82,7 +82,7 @@ func Auth(c *fiber.Ctx) error {
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return authErr(c, errInvalidUsernamePassword)
 		}
@@ -101,7 +101,7 @@ func Auth(c *fiber.Ctx) error {
 		// Check if user is Verified
 		verified, err := user.IsVerified(userID)
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		if !verified {
 			return authErr(c, errUnverifiedEmail)
@@ -134,7 +134,7 @@ func Auth(c *fiber.Ctx) error {
 				}); err != nil {
 					if err != hcaptcha.ErrInvalidToken {
 						logger.Error(err)
-						return apierr.ErrSomthingWentWrong(c)
+						return apierr.ErrSomethingWentWrong(c)
 					}
 					return apierr.Err422(c, AuthResp{
 						Error:   errInvalidCaptcha,
@@ -147,7 +147,7 @@ func Auth(c *fiber.Ctx) error {
 		if err := user.PasswordLogin(c, userID, authToken.Password); err != nil {
 			if err != user.ErrInvalidPassword {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return authErr(c, errInvalidUsernamePassword)
 		}
@@ -155,7 +155,7 @@ func Auth(c *fiber.Ctx) error {
 		// Get db username
 		currentUser, err := user.GetPublic(userID)
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 
 		if authToken.Remember {

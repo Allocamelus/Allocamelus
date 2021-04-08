@@ -31,7 +31,7 @@ func Posts(c *fiber.Ctx) error {
 
 	totalPosts, err := post.GetPublicUserTotal(userID)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, totalPosts)
@@ -42,7 +42,7 @@ func Posts(c *fiber.Ctx) error {
 
 	posts, err := post.GetPublicUserPosts(userID, startNum, perPage)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	// TODO Better Feed

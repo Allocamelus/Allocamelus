@@ -145,7 +145,7 @@ import { createA9s } from "../api/user/create";
 import ApiResp from "../models/responses";
 import { siteKeys } from "../api/meta/captcha/siteKeys";
 import {
-  HtmlSomthingWentWrong,
+  HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
 
@@ -251,7 +251,7 @@ export default defineComponent({
                       vm.err.signUp = "";
                       return;
                     default:
-                      vm.err.signUp = HtmlSomthingWentWrong;
+                      vm.err.signUp = HtmlSomethingWentWrong;
                       return;
                   }
                 });
@@ -274,7 +274,7 @@ export default defineComponent({
                           }
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
@@ -289,7 +289,7 @@ export default defineComponent({
                           }
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
@@ -303,20 +303,20 @@ export default defineComponent({
                             break;
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
 
                       default:
-                        vm.err.signUp = HtmlSomthingWentWrong;
+                        vm.err.signUp = HtmlSomethingWentWrong;
                         break;
                     }
                   }
                 }
               }
             } else {
-              vm.err.signUp = HtmlSomthingWentWrong;
+              vm.err.signUp = HtmlSomethingWentWrong;
             }
           } else {
             vm.backupKey = r.backupKey;
@@ -326,7 +326,7 @@ export default defineComponent({
         })
         .catch((e) => {
           vm.captcha.show = false;
-          vm.err.signUp = HtmlSomthingWentWrong;
+          vm.err.signUp = HtmlSomethingWentWrong;
         });
     },
     bk() {

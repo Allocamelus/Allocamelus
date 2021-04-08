@@ -31,8 +31,8 @@ func ProtectedDecrypter(c *fiber.Ctx) error {
 // Checks id's of :userName & user session
 func ProtectedSelfOnly(c *fiber.Ctx) error {
 	_, userID, errApi := shared.GetUserNameAndID(c)
-	if errApi == apierr.SomthingWentWrong {
-		return apierr.ErrSomthingWentWrong(c)
+	if errApi == apierr.SomethingWentWrong {
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	currentUserID := user.ContextSession(c).UserID

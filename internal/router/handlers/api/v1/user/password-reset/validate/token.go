@@ -55,7 +55,7 @@ func Token(c *fiber.Ctx) error {
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		return err422(c, errInvalidUserName)
 	}
@@ -74,24 +74,24 @@ func Token(c *fiber.Ctx) error {
 
 	backupKey, err := user.UpdatePassword(userID, request.Password)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	publicKeys, err := key.GetPublicKeys(userID)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	if _, err := event.InsertNew(c, event.Reset, userID, publicKeys...); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	// TODO: Send Password Change Emails
 	if err := tkn.Delete(); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	user.Logout(c)
 	if err := token.DeleteAuthByID(userID); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	return fiberutil.JSON(c, 200, tokenResp{Success: true, BackupKey: backupKey})
