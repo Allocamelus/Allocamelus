@@ -97,8 +97,9 @@ func GetPublic(userID int64) (user User, err error) {
 			return
 		}
 		err = nil
+	} else {
+		user.Avatar = true
 	}
-	user.Avatar = (len(user.AvatarUrl) > 0)
 
 	return
 }

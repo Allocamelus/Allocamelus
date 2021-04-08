@@ -13,7 +13,7 @@
         </div>
       </slot>
     </div>
-    <overlay v-model="show" :blockScrool="blockScrool">
+    <overlay v-model="show" :blockScrool="blockScrool" :xsFullHeigth="false" :xsSelfEnd="true">
       <box
         class="w-full xs:m-3 self-end xs:self-center rounded-t-lg xs:rounded-md text-center"
       >

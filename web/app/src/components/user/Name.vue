@@ -1,10 +1,10 @@
 <template>
   <component
     :is="isLink ? 'router-link' : 'div'"
-    class="min-w-0 text-gray-800 dark:text-gray-200 truncate flex items-center"
+    class="min-w-0 text-gray-800 dark:text-gray-200 truncate flex"
     :class="
       isLink
-        ? 'min-w-0 truncate group no-underline'
+        ? 'min-w-0 truncate group no-underline items-center'
         : 'flex-col items-start'
     "
     :to="'/u/' + user.userName"

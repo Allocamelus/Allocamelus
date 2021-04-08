@@ -11,7 +11,11 @@
         @click="toggleShow"
       ></div>
       <div
-        class="relative flex items-center justify-center w-full h-full xs:h-auto"
+        class="relative flex items-center justify-center w-full"
+        :class="[
+          xsFullHeigth ? 'h-full xs:h-auto' : '',
+          xsSelfEnd ? 'self-end xs:self-center' : '',
+        ]"
       >
         <slot></slot>
       </div>
@@ -30,6 +34,14 @@ export default defineComponent({
     blockScrool: {
       type: Boolean,
       default: true,
+    },
+    xsFullHeigth: {
+      type: Boolean,
+      default: true,
+    },
+    xsSelfEnd: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ["update:modelValue"],
