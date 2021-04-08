@@ -53,33 +53,14 @@
                 class="flex-grow flex"
                 :class="!canEdit ? 'items-center justify-center' : ''"
               >
-                <div
-                  v-if="!canEdit"
-                  class="text-center flex flex-col py-8 px-6 xs:px-8"
-                >
-                  <div class="text-xl font-medium flex">
-                    Sign Up or Login to Follow {{ user.name }}
-                    <div
-                      class="pl-1 font-normal text-gray-700 dark:text-gray-400"
-                    >
-                      @{{ user.userName }}
-                    </div>
+                <sign-up-in-inner v-if="!canEdit">
+                  Sign Up or Login to Follow {{ user.name }}
+                  <div
+                    class="pl-1 font-normal text-gray-700 dark:text-gray-400"
+                  >
+                    @{{ user.userName }}
                   </div>
-                  <div class="flex flex-col items-center mt-5">
-                    <basic-btn
-                      to="/signup"
-                      class="w-full text-white bg-secondary-700 hover:bg-secondary-800 py-2 px-3.5 mb-4"
-                    >
-                      Sign Up
-                    </basic-btn>
-                    <basic-btn
-                      to="/login"
-                      class="w-full py-2 px-3 link border border-rose-800 dark:border-rose-500 hover:border-rose-900 dark:hover:border-rose-600"
-                    >
-                      Login
-                    </basic-btn>
-                  </div>
-                </div>
+                </sign-up-in-inner>
                 <div v-else class="flex flex-grow flex-col py-6 px-6 xs:px-8">
                   <div class="flex items-center mt-2">
                     <user-avatar
@@ -140,6 +121,7 @@ import UserAvatar from "../components/user/Avatar.vue";
 import BasicBtn from "../components/button/BasicBtn.vue";
 import Overlay from "../components/overlay/Overlay.vue";
 import ChangeAvatar from "../components/user/ChangeAvatar.vue";
+import SignUpInInner from "../components/overlay/SignUpInInner.vue";
 
 function userErrors(api_error, path) {
   if (api_error instanceof API_Error) {
@@ -259,6 +241,7 @@ export default defineComponent({
     Overlay,
     XIcon,
     ChangeAvatar,
+    SignUpInInner,
   },
 });
 </script>
