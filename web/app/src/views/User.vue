@@ -14,7 +14,7 @@
             :displayType="TwoLine"
           ></user-name>
         </div>
-        <div class="mt-3 xs:mt-0 xs:ml-3">
+        <div class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0">
           <basic-btn
             class="px-3 py-2 border whitespace-nowrap"
             :class="[
