@@ -2,7 +2,7 @@
   <component
     :is="isLink ? 'router-link' : 'div'"
     :to="'/u/' + user.userName"
-    class="block"
+    class="block flex-shrink-0"
   >
     <component
       :is="user.avatar ? 'img' : 'div'"

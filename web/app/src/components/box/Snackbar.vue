@@ -1,12 +1,12 @@
 <template>
   <transition
     :duration="{ enter: 50, leave: 50 }"
-    enter-from-class="transform opacity-0 -translate-y-11 xs:translate-y-0"
-    enter-active-class="transition ease-out duration-50"
-    enter-to-class="transform opacity-100 translate-y-0 xs:translate-y-4"
+    enter-from-class="transform opacity-0 translate-y-0 xs:translate-y-0"
+    enter-active-class="transition duration-50"
+    enter-to-class="transform opacity-100 translate-y-11 xs:translate-y-4"
     leave-from-class="transform opacity-100 translate-y-0 xs:translate-y-4"
-    leave-active-class="transition ease-in duration-50"
-    leave-to-class="transform opacity-0  -translate-y-11 xs:translate-y-0"
+    leave-active-class="transition duration-50"
+    leave-to-class="transform opacity-0 translate-y-11 xs:translate-y-0"
   >
     <div
       v-show="modelValue"
