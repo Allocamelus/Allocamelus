@@ -2,7 +2,7 @@
   <div class="container py-5">
     <error-box :error="err.user" class="p-3.5 mb-3">
       <div class="flex justify-between">
-        <div class="flex items-center">
+        <div class="flex items-center truncate">
           <component
             :is="canEdit ? 'change-avatar' : 'user-avatar'"
             :user="user"
@@ -14,9 +14,9 @@
             :displayType="TwoLine"
           ></user-name>
         </div>
-        <div>
+        <div class="ml-2">
           <basic-btn
-            class="px-3 py-2 border"
+            class="px-3 py-2 border whitespace-nowrap"
             :class="[
               'border-secondary-700 text-secondary-700 dark:text-rose-600 ',
               'hover:bg-secondary-700 hover:text-white dark:hover:text-white',

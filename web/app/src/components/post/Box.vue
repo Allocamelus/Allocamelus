@@ -1,11 +1,11 @@
 <template>
-  <div class="flex">
+  <div class="flex flex-grow flex-shrink">
     <div class="w-11">
       <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
     </div>
-    <div class="ml-3 flex-grow">
+    <div class="ml-3 flex flex-col flex-grow min-w-0">
       <div
-        class="text-gray-700 dark:text-gray-300 flex items-center truncate justify-between"
+        class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
       >
         <div class="flex min-w-0">
           <user-name :user="user"></user-name>

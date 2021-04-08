@@ -1,25 +1,21 @@
 <template>
   <component
     :is="isLink ? 'router-link' : 'div'"
-    class="min-w-0 text-gray-800 dark:text-gray-200 truncate flex"
-    :class="
-      isLink
-        ? 'min-w-0 truncate group no-underline items-center'
-        : 'flex-col items-start'
-    "
+    class="text-gray-800 dark:text-gray-200 truncate flex"
+    :class="isLink ? 'group no-underline items-center' : 'flex-col'"
     :to="'/u/' + user.userName"
   >
     <div
-      class="whitespace-nowrap align-middle font-semibold"
+      class="truncate flex-shrink font-semibold"
       :class="isLink ? 'group-hover:underline' : 'text-xl mb-0.5'"
     >
-      {{ user.name }}
+      {{ user.name }}thisisaverylongusernamethisisaverylongusername
     </div>
     <div
-      class="whitespace-nowrap align-middle text-gray-700 dark:text-gray-400 text-sm font-normal"
+      class="text-gray-700 dark:text-gray-400 text-sm font-normal"
       :class="isLink ? 'ml-1' : ''"
     >
-      @{{ user.userName }}
+      @{{ user.userName }}thisisaverylongusername
     </div>
   </component>
 </template>
