@@ -1,12 +1,12 @@
 <template>
   <div class="container py-5">
     <error-box :error="err.user" class="p-3.5 mb-3">
-      <div class="flex justify-between">
-        <div class="flex items-center truncate">
+      <div class="flex flex-col xs:flex-row justify-between">
+        <div class="flex items-center">
           <component
             :is="canEdit ? 'change-avatar' : 'user-avatar'"
             :user="user"
-            class="w-20 h-20"
+            class="flex-shrink-0 w-16 h-16 xs:w-20 xs:h-20"
           ></component>
           <user-name
             class="ml-2"
@@ -14,7 +14,7 @@
             :displayType="TwoLine"
           ></user-name>
         </div>
-        <div class="ml-2">
+        <div class="mt-3 xs:mt-0 xs:ml-2">
           <basic-btn
             class="px-3 py-2 border whitespace-nowrap"
             :class="[

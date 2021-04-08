@@ -5,7 +5,7 @@
     @apply box-border;
   }
   * {
-    @apply m-0 p-0 tracking-wide subpixel-antialiased;
+    @apply m-0 p-0 tracking-wide subpixel-antialiased min-w-0 min-h-0;
   }
   body {
     @apply text-gray-900 dark:text-gray-50 bg-warm-gray-200 dark:bg-black-lighter;
