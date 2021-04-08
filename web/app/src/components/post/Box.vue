@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-grow flex-shrink">
-    <div class="w-11">
-      <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
-    </div>
+    <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
     <div class="ml-3 flex flex-col flex-grow">
       <div
         class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
