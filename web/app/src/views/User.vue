@@ -138,7 +138,7 @@ import Sidebar from "../components/Sidebar.vue";
 import Box from "../components/box/Box.vue";
 import UserAvatar from "../components/user/Avatar.vue";
 import BasicBtn from "../components/button/BasicBtn.vue";
-import Overlay from "../components/box/Overlay.vue";
+import Overlay from "../components/overlay/Overlay.vue";
 import ChangeAvatar from "../components/user/ChangeAvatar.vue";
 
 function userErrors(api_error, path) {

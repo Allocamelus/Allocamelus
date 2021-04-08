@@ -65,7 +65,7 @@ import { avatar as UploadAvatar } from "../../api/user/update/avatar";
 import CameraIcon from "@heroicons/vue/solid/CameraIcon";
 
 import Box from "../box/Box.vue";
-import Overlay from "../box/Overlay.vue";
+import Overlay from "../overlay/Overlay.vue";
 import UserAvatar from "./Avatar.vue";
 import FileInput from "../form/FileInput.vue";
 import Snackbar from "../box/Snackbar.vue";
