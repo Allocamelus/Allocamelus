@@ -56,9 +56,9 @@ var (
 )
 
 func initUser(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (userName, name, email, avatar, bio, permissions, created)
-		VALUES (?, '', ?, 0, '', ?, ?)`)
-	preGetPublic = p(`SELECT userName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
+	preInsert = p(`INSERT INTO Users (userName, name, email, bio, permissions, created)
+		VALUES (?, '', ?, '', ?, ?)`)
+	preGetPublic = p(`SELECT userName, name, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
 // Insert new user into database
@@ -84,20 +84,23 @@ func (u *User) Insert() error {
 // GetPublic user info
 // TODO: Likes
 // TODO: Cache
-func GetPublic(userID int64) (User, error) {
-	var u User
-	u.ID = userID
-	err := preGetPublic.QueryRow(userID).Scan(&u.UserName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
+func GetPublic(userID int64) (user User, err error) {
+	user.ID = userID
+	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Created)
 	if err != nil {
-		return u, err
+		return
 	}
-	if u.Avatar {
-		u.AvatarUrl, err = avatar.GetUrl(userID)
-		if err != nil {
-			return u, err
+
+	user.AvatarUrl, err = avatar.GetUrl(userID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return
 		}
+		err = nil
 	}
-	return u, nil
+	user.Avatar = (len(user.AvatarUrl) > 0)
+
+	return
 }
 
 // UpdatePassword for User
