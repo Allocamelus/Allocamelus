@@ -7,6 +7,7 @@
     <component
       :is="user.avatar ? 'img' : 'div'"
       :src="user.avatar ? user.avatarUrl : ''"
+      loading="auto"
       class="w-full h-full rounded-full mr-2 border-none"
       :class="
         user.avatar

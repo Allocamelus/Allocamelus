@@ -63,6 +63,7 @@ module.exports = {
       },
       footer: '#371b28',
       black: { lighter: "#050505", DEFAULT: colors.black },
+      blue: colors.blue,
       gray: colors.trueGray,
       green: colors.green,
       orange: colors.orange,
@@ -75,6 +76,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      display: ['group-hover'],
       opacity: ['disabled'],
     },
   },
