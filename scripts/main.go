@@ -9,14 +9,13 @@ import (
 )
 
 func main() {
-	tsGen("web/app/src/models/post_gen.ts", "", post.Post{})
-	tsGen("web/app/src/models/user_gen.ts", "", user.User{}, user.Session{})
-	tsGen("web/app/src/models/api_account_gen.ts", "API_",
+	tsGen("web/app/src/models/go_structs_gen.ts", "GEN_",
+		post.Post{},
+		user.User{},
+		user.Session{},
 		account.AuthResp{},
 		account.AuthRequest{},
 		account.AuthA10Token{},
-	)
-	tsGen("web/app/src/models/api_user_gen.ts", "API_",
 		apiUser.CreateResp{},
 		apiUser.CreateRequest{},
 		apiUser.CreateA10Token{},

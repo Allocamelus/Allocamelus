@@ -8,6 +8,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
+	"github.com/allocamelus/allocamelus/internal/user/avatar"
 	"github.com/allocamelus/allocamelus/internal/user/key"
 )
 
@@ -18,6 +19,7 @@ type Perms int64
 type Session struct {
 	LoggedIn   bool           `msg:"loggedIn" json:"loggedIn"`
 	UserID     int64          `msg:"userId" json:"userId"`
+	UserName   string         `msg:"userName" json:"userName"`
 	Perms      Perms          `msg:"perms" json:"perms"`
 	PrivateKey pgp.PrivateKey `msg:"privateKey" json:"-"`
 	LoginToken []byte         `msg:"loginToken" json:"-"`
@@ -31,6 +33,7 @@ type User struct {
 	Name        string `msg:"name" json:"name"`
 	Email       string `msg:"email" json:"email,omitempty"`
 	Avatar      bool   `msg:"avatar" json:"avatar"`
+	AvatarUrl   string `msg:"-" json:"avatarUrl,omitempty"`
 	Bio         string `msg:"bio" json:"bio,omitempty"`
 	Likes       int64  `msg:"likes" json:"likes"`
 	Permissions Perms  `msg:"permissions" json:"-"`
@@ -53,9 +56,9 @@ var (
 )
 
 func initUser(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (userName, name, email, avatar, bio, permissions, created)
-		VALUES (?, '', ?, 0, '', ?, ?)`)
-	preGetPublic = p(`SELECT userName, name, avatar, bio, created FROM Users WHERE userId = ? LIMIT 1`)
+	preInsert = p(`INSERT INTO Users (userName, name, email, bio, permissions, created)
+		VALUES (?, '', ?, '', ?, ?)`)
+	preGetPublic = p(`SELECT userName, name, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
 // Insert new user into database
@@ -81,11 +84,24 @@ func (u *User) Insert() error {
 // GetPublic user info
 // TODO: Likes
 // TODO: Cache
-func GetPublic(userID int64) (User, error) {
-	var u User
-	u.ID = userID
-	err := preGetPublic.QueryRow(userID).Scan(&u.UserName, &u.Name, &u.Avatar, &u.Bio, &u.Created)
-	return u, err
+func GetPublic(userID int64) (user User, err error) {
+	user.ID = userID
+	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Created)
+	if err != nil {
+		return
+	}
+
+	user.AvatarUrl, err = avatar.GetUrl(userID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return
+		}
+		err = nil
+	} else {
+		user.Avatar = true
+	}
+
+	return
 }
 
 // UpdatePassword for User

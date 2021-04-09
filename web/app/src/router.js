@@ -53,7 +53,12 @@ const routes = [
     name: 'User',
     component: () => import('./views/User.vue'),
     props: true
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'Error 404',
+    component: () => import('./views/errors/404.vue')
+  },
 ];
 
 const router = createRouter({

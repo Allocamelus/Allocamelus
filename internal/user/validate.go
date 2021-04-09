@@ -86,15 +86,20 @@ var (
 
 // ValidName Validate
 func (u *User) ValidName() error {
+	return ValidName(u.Name)
+}
+
+// ValidName Validate
+func ValidName(name string) error {
 	// Check Length
-	if err := validation.Validate(u.Name,
+	if err := validation.Validate(name,
 		validation.Required,
 		validation.Length(1, 128),
 	); err != nil {
 		return ErrNameLength
 	}
 	// Check regex for Invalid characters
-	if !regexpInvalidChars.MatchString(u.Name) {
+	if !regexpInvalidChars.MatchString(name) {
 		return ErrNameInvalid
 	}
 	return nil
@@ -151,13 +156,17 @@ var (
 
 // ValidBio Validate
 func (u *User) ValidBio() error {
-	if len(u.Bio) != 0 {
+	return ValidBio(u.Bio)
+}
+
+func ValidBio(bio string) error {
+	if len(bio) != 0 {
 		// Check length
-		if err := validation.Validate(u.Bio, validation.Length(0, 255)); err != nil {
+		if err := validation.Validate(bio, validation.Length(0, 255)); err != nil {
 			return ErrBioLength
 		}
 		// Check regex for Invalid characters
-		if !regexpInvalidChars.MatchString(u.Bio) {
+		if !regexpInvalidChars.MatchString(bio) {
 			return ErrBioInvalid
 		}
 	}

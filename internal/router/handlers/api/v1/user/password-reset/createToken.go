@@ -52,7 +52,7 @@ func CreateToken(c *fiber.Ctx) error {
 		}); err != nil {
 			if err != hcaptcha.ErrInvalidToken {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return apierr.Err422(c, createResp{Error: "invalid-captcha"})
 		}
@@ -62,7 +62,7 @@ func CreateToken(c *fiber.Ctx) error {
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		if err := user.ValidEmail(request.Identifier); err != nil {
 			return err422Invalid(c)
@@ -72,7 +72,7 @@ func CreateToken(c *fiber.Ctx) error {
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			// Fail silently
 			return fiberutil.JSON(c, 200, createResp{Success: true})

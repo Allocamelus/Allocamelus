@@ -35,10 +35,10 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import { debounce } from "debounce";
+import { debounce } from "throttle-debounce";
 import TextInput from "./TextInput.vue";
-import EyeIcon from '@heroicons/vue/solid/EyeIcon';
-import EyeOffIcon from '@heroicons/vue/solid/EyeOffIcon'
+import EyeIcon from "@heroicons/vue/solid/EyeIcon";
+import EyeOffIcon from "@heroicons/vue/solid/EyeOffIcon";
 
 export default defineComponent({
   name: "password-input",
@@ -99,7 +99,7 @@ export default defineComponent({
         vm.zxcvbn = zxcvbn.default;
       });
 
-      vm.debouncedCheck = debounce(vm.scoreDeb, 200, true);
+      vm.debouncedCheck = debounce(200, true, vm.scoreDeb);
     }
   },
   computed: {

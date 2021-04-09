@@ -1,71 +1,83 @@
 <template>
-  <nav
-    id="nav"
-    class="bg-primary-600 text-gray-50 shadow z-30 m-0 p-0 fixed top-0 w-full h-nav leading-nav"
-  >
-    <div class="container flex flex-row justify-between h-nav leading-nav">
-      <div class="flex">
-        <router-link
-          to="/"
-          class="pr-4 py-2 text-white text-lg font-sans truncate no-underline tracking-wide relative"
-          >Allocamelus</router-link
-        >
-      </div>
-      <div class="flex">
-        <div class="flex justify-start items-center ml-1">
-          <div class="p-1 rounded-full cursor-pointer" @click="toggleTheme">
-            <span class="sr-only">Toggle Theme</span>
-            <component
-              :is="this.theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
-              class="w-5.5 h-5.5"
-            ></component>
-          </div>
-
-          <div v-if="!loggedIn" class="flex justify-start items-center mx-2">
-            <basic-btn to="/signup" class="border border-white py-2 px-3">
-              Sign Up
-            </basic-btn>
-            <basic-btn to="/login" class="ml-1.5 py-2 pl-3"> Login </basic-btn>
-          </div>
-          <div v-else class="ml-1.5 relative">
-            <div
-              class="p-1 cursor-pointer flex items-center"
-              @click="toggleUserMenu"
-            >
-              <span class="sr-only">Open user menu</span>
-              <!--TODO:User Image-->
-              <UserCircleIcon class="w-5.5 h-5.5"></UserCircleIcon>
+  <div>
+    <nav
+      id="nav"
+      class="bg-primary-600 text-gray-50 shadow z-30 m-0 p-0 fixed top-0 w-full h-nav leading-nav"
+    >
+      <div class="container flex flex-row justify-between h-nav leading-nav">
+        <div class="flex">
+          <router-link
+            to="/"
+            class="pr-4 py-2 text-white text-lg font-sans truncate no-underline tracking-wide relative"
+            >Allocamelus</router-link
+          >
+        </div>
+        <div class="flex">
+          <div class="flex justify-start items-center ml-1">
+            <div class="p-1 rounded-full cursor-pointer" @click="toggleTheme">
+              <span class="sr-only">Toggle Theme</span>
               <component
-                :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
-                class="hidden md:block w-4 h-4"
+                :is="this.theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
+                class="w-5.5 h-5.5"
               ></component>
             </div>
-            <dropdown v-model="userMenu" class="w-44">
-              <dropdown-item>Profile (TODO)</dropdown-item>
-              <dropdown-item>Settings (TODO)</dropdown-item>
-              <dropdown-item to="/logout">Logout</dropdown-item>
-            </dropdown>
+
+            <div v-if="!loggedIn" class="flex justify-start items-center mx-2">
+              <basic-btn to="/signup" class="border border-white py-2 px-3">
+                Sign Up
+              </basic-btn>
+              <basic-btn to="/login" class="ml-1.5 py-2 pl-3">
+                Login
+              </basic-btn>
+            </div>
+            <div v-else class="ml-1.5 relative">
+              <div
+                class="p-1 cursor-pointer flex items-center"
+                @click="toggleUserMenu"
+              >
+                <span class="sr-only">Open user menu</span>
+                <!--TODO:User Mobile Menu-->
+                <component
+                  :is="user.avatar ? 'user-avatar' : 'UserCircleIcon'"
+                  :user="user"
+                  :class="user.avatar ? 'w-6 h-6' : 'w-5.5 h-5.5'"
+                  :isLink="true"
+                ></component>
+                <component
+                  v-if="!user.avatar"
+                  :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
+                  class="hidden md:block w-4 h-4"
+                ></component>
+              </div>
+              <dropdown v-model="userMenu" class="w-44">
+                <dropdown-item :to="`/u/${user.userName}`"
+                  >Profile</dropdown-item
+                >
+                <dropdown-item>Settings (TODO)</dropdown-item>
+                <dropdown-item to="/logout">Logout</dropdown-item>
+              </dropdown>
+            </div>
           </div>
         </div>
       </div>
+    </nav>
+    <div id="bodyContent" class="mt-nav">
+      <router-view />
     </div>
-  </nav>
-  <div id="bodyContent" class="mt-nav">
-    <router-view />
+    <!--TODO: Mobile Menu-->
+    <footer id="footer">
+      <div>
+        <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
+        <router-link to="/about" class="dash">About</router-link>
+      </div>
+      <div></div>
+      <div>
+        <!-- TODO -->
+        <router-link to="/tos">Terms</router-link>
+        <router-link to="/privacy" class="dash">Privacy</router-link>
+      </div>
+    </footer>
   </div>
-  <!--TODO: Mobile Menu-->
-  <footer id="footer">
-    <div>
-      <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
-      <router-link to="/about" class="dash">About</router-link>
-    </div>
-    <div></div>
-    <div>
-      <!-- TODO -->
-      <router-link to="/tos">Terms</router-link>
-      <router-link to="/privacy" class="dash">Privacy</router-link>
-    </div>
-  </footer>
 </template>
 
 <script>
@@ -80,6 +92,7 @@ import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
 import BasicBtn from "./components/button/BasicBtn.vue";
+import UserAvatar from "./components/user/Avatar.vue";
 
 import { MinToSec, SecToMs } from "./pkg/time";
 
@@ -95,6 +108,7 @@ export default defineComponent({
   setup() {
     const store = useStore(),
       loggedIn = computed(() => store.getters.loggedIn),
+      user = computed(() => store.getters.user),
       theme = computed(() => store.getters.theme),
       toggleTheme = () => store.commit("toggleTheme"),
       sessionCheck = () => store.dispatch("sessionCheck"),
@@ -119,6 +133,7 @@ export default defineComponent({
     return {
       ...toRefs(data),
       loggedIn,
+      user,
       theme,
       toggleTheme,
       sessionCheck,
@@ -126,7 +141,7 @@ export default defineComponent({
   },
   watch: {
     theme(newTheme, old) {
-      setTheme(this.theme);
+      setTheme(newTheme);
     },
     $route(to, from) {
       this.userMenu = false;
@@ -153,6 +168,7 @@ export default defineComponent({
     ChevronDownIcon,
     ChevronUpIcon,
     BasicBtn,
+    UserAvatar,
   },
 });
 </script>

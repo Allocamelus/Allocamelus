@@ -5,6 +5,7 @@ import (
 	emailtoken "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/email-token"
 	passreset "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset"
 	passresetval "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset/validate"
+	userupdate "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/update"
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,8 +34,37 @@ func User(api fiber.Router) {
 	// /api/v1/user/:userName
 	uUN := u.Group("/:userName")
 	uUN.Get("/", user.Get)
+	// /api/v1/user/:userName/posts
+	uUN.Get("/posts", user.Posts)
 	// /api/v1/user/:userName/delete
-	uUN.Delete("/delete", middleware.Protected, user.Delete)
+	uUN.Delete("/delete",
+		middleware.Protected,
+		middleware.ProtectedDecrypter,
+		middleware.ProtectedSelfOnly,
+		user.Delete,
+	)
+	userUpdate(uUN)
+}
+
+func userUpdate(un fiber.Router) {
 	// /api/v1/user/:userName/update
-	uUN.Delete("/update", middleware.Protected, user.Update)
+	unGroup := un.Group("/update",
+		middleware.Protected,
+		middleware.ProtectedSelfOnly,
+	)
+	// /api/v1/user/:userName/update/avatar
+	unGroup.Post("/avatar",
+		userupdate.Avatar,
+	)
+	unGroup.Delete("/avatar",
+		userupdate.RemoveAvatar,
+	)
+	// /api/v1/user/:userName/update/bio
+	unGroup.Post("/bio",
+		userupdate.Bio,
+	)
+	// /api/v1/user/:userName/update/name
+	unGroup.Post("/name",
+		userupdate.Name,
+	)
 }

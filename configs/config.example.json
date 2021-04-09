@@ -46,9 +46,12 @@
         "password": "password"
     },
     "path": {
+        "media": "media/",
+        "tmpDir": "/tmp/allocamelus_tmp_dir",
         "public": {
             "verifyEmail": "/account/verify-email",
-            "resetPassword": "/account/reset-password"
+            "resetPassword": "/account/reset-password",
+            "media": "/media/"
         }
     },
     "redis": {

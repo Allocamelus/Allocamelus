@@ -45,7 +45,7 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	if err := newPost.Insert(); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	return fiberutil.JSON(c, 200, createResponce{

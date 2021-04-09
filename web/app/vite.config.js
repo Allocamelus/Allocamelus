@@ -18,6 +18,12 @@ export default defineConfig({
         changeOrigin: true,
         cookieDomainRewrite: "localhost",
         secure: true
+      },
+      '/media': {
+        target: 'https://allocamelus.localhost',
+        changeOrigin: true,
+        cookieDomainRewrite: "localhost",
+        secure: true
       }
     }
   }

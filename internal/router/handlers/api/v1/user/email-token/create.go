@@ -50,7 +50,7 @@ func Create(c *fiber.Ctx) error {
 		}); err != nil {
 			if err != hcaptcha.ErrInvalidToken {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return apierr.Err422(c, createResp{Error: "invalid-captcha"})
 		}
@@ -60,7 +60,7 @@ func Create(c *fiber.Ctx) error {
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		// Fail silently
 		return fiberutil.JSON(c, 200, createResp{Success: true})
@@ -68,7 +68,7 @@ func Create(c *fiber.Ctx) error {
 
 	verified, err := user.IsVerified(userID)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	if verified {
 		// Fail silently

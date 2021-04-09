@@ -43,11 +43,11 @@ func Validate(c *fiber.Ctx) error {
 		return apierr.Err422(c, validateResp{Error: errInvalidToken})
 	}
 	if err := user.UpdatePerms(tkn.UserID, user.DefaultPerms); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	userID := tkn.UserID
 	if err := tkn.Delete(); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	return fiberutil.JSON(c, 200, validateResp{Success: true, UserID: userID})
 }

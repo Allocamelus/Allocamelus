@@ -1,17 +1,28 @@
 <template>
   <component
-    :is="isLink ? 'router-link': 'div'"
-    class="name-container"
-    :class="displayType"
+    :is="isLink ? 'router-link' : 'div'"
+    class="text-gray-800 dark:text-gray-200 truncate flex"
+    :class="isLink ? 'group no-underline items-center' : 'flex-col'"
     :to="'/u/' + user.userName"
   >
-    <div class="name">{{ user.name }}</div>
-    <div class="user-name">@{{ user.userName }}</div>
+    <div
+      class="truncate flex-shrink font-semibold"
+      :class="isLink ? 'group-hover:underline' : 'text-xl mb-0.5'"
+    >
+      {{ user.name }}
+    </div>
+    <div
+      class="text-gray-700 dark:text-gray-400 text-sm font-normal flex-none"
+      :class="isLink ? 'ml-1' : ''"
+    >
+      @{{ user.userName }}
+    </div>
   </component>
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive } from "vue";
+import { defineComponent } from "vue";
+import { GEN_User } from "../../models/go_structs_gen";
 
 export const OneLineLink = "one-line";
 export const TwoLine = "two-line";
@@ -19,7 +30,7 @@ export const TwoLine = "two-line";
 export default defineComponent({
   props: {
     user: {
-      type: Object,
+      type: GEN_User,
       required: true,
     },
     displayType: {
@@ -37,49 +48,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-@import "@/scss/vars";
-
-@layer components {
-  .one-line {
-    @apply min-w-0 truncate;
-    .user-name {
-      @apply ml-1;
-    }
-    a {
-      @apply no-underline;
-    }
-    &:hover .name {
-      @apply underline;
-    }
-  }
-  .two-line {
-    &.name-container {
-      @apply flex flex-col mb-1 items-start;
-      .name {
-        @apply text-xl mb-1;
-      }
-    }
-  }
-  .name-container {
-    @apply min-w-0 items-center py-1 text-gray-800 dark:text-gray-200 truncate;
-    /*
-      overflow: hidden;
-      overflow-wrap: break-word;
-      */
-  }
-
-  .name {
-    @apply inline whitespace-nowrap align-middle font-semibold;
-    // white-space: nowrap;
-  }
-
-  .user-name {
-    @apply inline whitespace-nowrap align-middle text-gray-700 dark:text-gray-400 text-sm font-normal;
-    /* white-space: nowrap;
-    overflow: hidden;
-    overflow-wrap: break-word;*/
-  }
-}
-</style>

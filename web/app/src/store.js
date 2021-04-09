@@ -6,6 +6,8 @@ import { status } from "./api/account/auth/status"
 import { keepAlive } from "./api/account/auth/keepAlive"
 import { logout } from "./api/account/logout"
 
+import { GEN_User } from "./models/go_structs_gen"
+
 const vuexLocal = new VuexPersistence({
   key: "a10storage",
   storage: window.localStorage,
@@ -26,7 +28,7 @@ const vuexLocal = new VuexPersistence({
 function sessionDefault() {
   return {
     loggedIn: false,
-    userId: 0,
+    user: new GEN_User(),
     fresh: true,
     created: UnixTime(),
     expires: UnixTime(MinToSec(10))
@@ -36,13 +38,7 @@ function sessionDefault() {
 export default createStore({
   state: {
     theme: 'dark',
-    session: {
-      loggedIn: false,
-      userId: 0,
-      fresh: true,
-      created: UnixTime(),
-      expires: UnixTime(MinToSec(10))
-    },
+    session: sessionDefault()
   },
   mutations: {
     newSession(state, payload) {
@@ -55,6 +51,21 @@ export default createStore({
     },
     toggleTheme(state) {
       state.theme = (state.theme == 'dark') ? 'light' : 'dark'
+    },
+    updateAvatar(state, url) {
+      if (url?.length > 0) {
+        state.session.user.avatar = true;
+        state.session.user.avatarUrl = url
+      } else {
+        state.session.user.avatar = false;
+        state.session.user.avatarUrl = null
+      }
+    },
+    updateBio(state, bio) {
+      state.session.user.bio = bio;
+    },
+    updateName(state, name) {
+      state.session.user.name = name;
     }
   },
   actions: {
@@ -71,7 +82,7 @@ export default createStore({
         type: 'newSession',
         session: {
           loggedIn: true,
-          userId: payload.userId,
+          user: payload.user,
           fresh: true,
           created: UnixTime(),
           expires: expires
@@ -80,17 +91,11 @@ export default createStore({
     },
     sessionCheck({ commit, state }) {
       if (state.session.loggedIn || state.session.fresh) {
-        status().then(session => {
-          if (state.session.loggedIn != session.loggedIn || state.session.userId != session.userId) {
+        status().then(loggedIn => {
+          if (loggedIn == false) {
             commit({
               type: 'newSession',
-              session: {
-                loggedIn: session.loggedIn,
-                userId: session.userId,
-                fresh: true,
-                created: UnixTime(),
-                expires: UnixTime(MinToSec(15))
-              }
+              session: sessionDefault()
             })
           } else {
             commit('usedSession')
@@ -121,6 +126,9 @@ export default createStore({
         return false
       }
       return state.session.loggedIn
+    },
+    user(state) {
+      return new GEN_User(state.session.user)
     },
     theme(state) {
       return state.theme

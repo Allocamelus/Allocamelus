@@ -81,12 +81,12 @@ import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import { API_AuthA10Token } from "../models/api_account_gen";
+import { GEN_AuthA10Token } from "../models/go_structs_gen";
 import { authA10 } from "../api/account/auth";
 import ApiResp from "../models/responses";
 import {
   htmlErrBuilder,
-  HtmlSomthingWentWrong,
+  HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
 
@@ -154,7 +154,7 @@ export default defineComponent({
         vm.captcha.token = "";
       }
       authA10(
-        API_AuthA10Token.createFrom({
+        GEN_AuthA10Token.createFrom({
           userName: vm.username,
           password: vm.password,
           remember: vm.remember,
@@ -177,12 +177,12 @@ export default defineComponent({
                 vm.err.login = HtmlLoadingCaptcha;
                 return;
               default:
-                vm.err.login = HtmlSomthingWentWrong;
+                vm.err.login = HtmlSomethingWentWrong;
                 return;
             }
           } else {
             vm.$store.dispatch("newLoginSession", {
-              userId: r.userId,
+              user: r.user,
               authToken: vm.remember,
             });
             this.$router.push(redirectUrl(vm.redirect));
@@ -190,7 +190,7 @@ export default defineComponent({
         })
         .catch((e) => {
           vm.captcha.show = false;
-          vm.err.login = HtmlSomthingWentWrong;
+          vm.err.login = HtmlSomethingWentWrong;
         });
     },
   },

@@ -19,15 +19,21 @@ const storeName = "session"
 
 // NewSession new session
 func NewSession(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session, error) {
+	var err error
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
-	session.PrivateKey = privateKey
+	session.UserName, err = GetUserNameByID(userID)
+	if err != nil {
+		return nil, err
+	}
 
+	session.PrivateKey = privateKey
 	pkSalt, err := key.GetPrivateKeySalt(userID)
 	if err != nil {
 		return nil, err
 	}
+
 	perms, err := GetPerms(userID)
 	if err != nil {
 		return nil, err

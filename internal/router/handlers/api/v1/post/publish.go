@@ -20,7 +20,7 @@ func Publish(c *fiber.Ctx) error {
 	}
 
 	if err := p.Publish(); logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	return fiberutil.JSON(c, 200, publishResponse{Success: true})
