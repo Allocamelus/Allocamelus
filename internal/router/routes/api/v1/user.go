@@ -56,6 +56,9 @@ func userUpdate(un fiber.Router) {
 	unGroup.Post("/avatar",
 		userupdate.Avatar,
 	)
+	unGroup.Delete("/avatar",
+		userupdate.RemoveAvatar,
+	)
 	// /api/v1/user/:userName/update/bio
 	unGroup.Post("/bio",
 		userupdate.Bio,

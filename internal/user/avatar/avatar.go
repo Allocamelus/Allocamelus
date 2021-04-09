@@ -2,18 +2,29 @@ package avatar
 
 import (
 	"database/sql"
+	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 )
 
 var (
-	preGetAvatarUrl      *sql.Stmt
-	preInsertAvatar      *sql.Stmt
-	preCleanupOldAvatars *sql.Stmt
+	preHasAvatar    *sql.Stmt
+	preGetAvatarUrl *sql.Stmt
+	preInsertAvatar *sql.Stmt
+	preRemove       *sql.Stmt
 )
 
 const MaxHightWidth uint = 500
+
+func HasAvatar(userID int64) (hasAvatar bool, err error) {
+	if preHasAvatar == nil {
+		preHasAvatar = g.Data.Prepare(`SELECT EXISTS(SELECT * FROM UserAvatars WHERE userId = ? AND active = 1)`)
+	}
+	err = preHasAvatar.QueryRow(userID).Scan(&hasAvatar)
+	return
+}
 
 func GetUrl(userID int64) (url string, err error) {
 	if preGetAvatarUrl == nil {
@@ -37,12 +48,28 @@ func InsertAvatar(userID int64, location string) error {
 	if err != nil {
 		return err
 	}
-	if preCleanupOldAvatars == nil {
-		preCleanupOldAvatars = g.Data.Prepare(`UPDATE UserAvatars SET active = 0 WHERE userAvatarId != ? AND userID = ? AND active = 1`)
+
+	return deactivateOld(userID, avatarId)
+}
+
+func Remove(userID int64) error {
+	if preRemove == nil {
+		preRemove = g.Data.Prepare(`UPDATE UserAvatars SET active = 0 WHERE userID = ? AND active = 1`)
 	}
-	_, err = preCleanupOldAvatars.Exec(avatarId, userID)
+	_, err := preRemove.Exec(userID)
 	if err != nil {
 		return err
 	}
-	return err
+
+	return CleanupOld(userID)
+}
+
+const pathPart = "users/avatars/"
+
+func locationPath(userId int64, filename string) string {
+	return pathPart + strconv.Itoa(int(userId)) + "/" + filename
+}
+
+func filePath(location string) string {
+	return filepath.Join(g.Config.Path.Media, location)
 }

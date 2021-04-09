@@ -57,3 +57,21 @@ func Avatar(c *fiber.Ctx) error {
 
 	return fiberutil.JSON(c, 200, AvatarResp{Success: true, AvatarUrl: newUrl})
 }
+
+// RemoveAvatar handler
+func RemoveAvatar(c *fiber.Ctx) error {
+	userId := user.ContextSession(c).UserID
+
+	hasAvatar, err := avatar.HasAvatar(userId)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	if hasAvatar {
+		if err := avatar.Remove(userId); logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
+		}
+	}
+
+	return c.SendStatus(204)
+}

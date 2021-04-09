@@ -13,3 +13,7 @@ export async function avatar(userName: string, file: File) {
       return API_Avatar_Resp.createFrom(r.data)
     })
 }
+
+export async function removeAvatar(userName: string) {
+  return v1.delete(`/user/${userName}/update/avatar`)
+}

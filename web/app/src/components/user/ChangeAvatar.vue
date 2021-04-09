@@ -9,7 +9,7 @@
           >
             <CameraIcon class="opacity-80 text-white w-5 h-5"></CameraIcon>
           </div>
-          <user-avatar :user="user"></user-avatar>
+          <user-avatar :user="user" class="min-w-full min-h-full"></user-avatar>
         </div>
       </slot>
     </div>
@@ -47,6 +47,7 @@
           <div
             class="cursor-pointer p-3 border-b border-secondary-300 dark:border-secondary-700 text-red-500"
             v-if="user.avatar"
+            @click="avatarRemove"
           >
             Remove Image
           </div>
@@ -70,7 +71,10 @@ import { GEN_User } from "../../models/go_structs_gen";
 import ApiResp from "../../models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
-import { avatar as UploadAvatar } from "../../api/user/update/avatar";
+import {
+  avatar as UploadAvatar,
+  removeAvatar,
+} from "../../api/user/update/avatar";
 
 import CameraIcon from "@heroicons/vue/solid/CameraIcon";
 
@@ -145,6 +149,18 @@ export default defineComponent({
             this.onErr(SomethingWentWrong);
           });
       }
+    },
+    avatarRemove() {
+      removeAvatar(this.user.userName)
+        .then(() => {
+          this.updateStoreAvatar("");
+          this.toggleShow();
+        })
+        .catch((e) => {
+          hasErr = true;
+          console.log(e);
+          this.onErr(SomethingWentWrong);
+        });
     },
     onErr(err) {
       this.err.msg = "";

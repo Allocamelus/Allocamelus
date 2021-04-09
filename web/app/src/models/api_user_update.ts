@@ -10,7 +10,7 @@ export class API_Avatar_Resp extends API_Success_Error {
   constructor(source: any = {}) {
     super(source)
     if ('string' === typeof source) source = JSON.parse(source);
-    this.error = source["error"];
+    this.avatarUrl = source["avatarUrl"];
   }
 }
 

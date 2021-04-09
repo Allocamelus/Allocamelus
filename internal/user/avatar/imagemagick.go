@@ -2,7 +2,6 @@ package avatar
 
 import (
 	"errors"
-	"path/filepath"
 	"strconv"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -26,8 +25,8 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 		return
 	}
 
-	imgPath := "users/avatars/" + strconv.Itoa(int(userId)) + "/" + random.StringBase58(16)
-	fileImagePath := filepath.Join(g.Config.Path.Media, imgPath)
+	imgPath := locationPath(userId, random.StringBase58(16))
+	fileImagePath := filePath(imgPath)
 
 	mw.StripImage()
 
