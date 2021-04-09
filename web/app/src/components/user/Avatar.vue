@@ -4,9 +4,8 @@
     :to="'/u/' + user.userName"
     class="block flex-shrink-0"
   >
-    <component
-      :is="user.avatar ? 'img' : 'div'"
-      :src="user.avatar ? user.avatarUrl : ''"
+    <img
+      :src="user.avatar ? user.avatarUrl : gray5x5Url"
       loading="auto"
       class="w-full h-full rounded-full mr-2 border-none"
       :class="
@@ -21,6 +20,7 @@
 <script>
 import { defineComponent } from "vue";
 import { GEN_User } from "../../models/go_structs_gen";
+import gray5x5Url from "../../assets/gray5x5.jpg";
 
 export default defineComponent({
   props: {
@@ -32,6 +32,11 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    return {
+      gray5x5Url,
+    };
   },
 });
 </script>
