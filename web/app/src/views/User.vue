@@ -2,19 +2,24 @@
   <div class="container py-5">
     <error-box :error="err.user" class="p-3.5 mb-3">
       <div class="flex flex-col xs:flex-row justify-between">
-        <div class="flex items-center min-w-0">
-          <component
-            :is="canEdit ? 'change-avatar' : 'user-avatar'"
-            :user="canEdit ? storeUser : user"
-            class="flex-shrink-0 w-16 h-16 xs:w-20 xs:h-20"
-          ></component>
-          <user-name
-            class="ml-3"
-            :user="canEdit ? storeUser : user"
-            :displayType="TwoLine"
-          ></user-name>
+        <div>
+          <div class="flex items-center min-w-0">
+            <component
+              :is="canEdit ? 'change-avatar' : 'user-avatar'"
+              :user="canEdit ? storeUser : user"
+              class="flex-shrink-0 w-16 h-16 xs:w-20 xs:h-20"
+            ></component>
+            <user-name
+              class="ml-3"
+              :user="canEdit ? storeUser : user"
+              :displayType="TwoLine"
+            ></user-name>
+          </div>
+          <div class="mt-3 text-lg">{{ canEdit ? storeUser.bio : user.bio }}</div>
         </div>
-        <div class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0">
+        <div
+          class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0 flex justify-end items-start"
+        >
           <basic-btn
             class="px-3 py-2 border whitespace-nowrap"
             :class="[
@@ -25,27 +30,26 @@
           >
             {{ canEdit ? "Edit Profile" : "Follow" }}
           </basic-btn>
-          <edit-overlay
-            v-if="canEdit"
-            :show="overlay"
-            :user="storeUser"
-            @close="overlay = false"
-          ></edit-overlay>
-          <sign-up-overlay
-            v-if="!loggedIn"
-            :show="overlay"
-            :user="user"
-            @close="overlay = false"
-          >
-          </sign-up-overlay>
         </div>
+        <edit-overlay
+          v-if="canEdit"
+          :show="overlay"
+          :user="storeUser"
+          @close="overlay = false"
+        ></edit-overlay>
+        <sign-up-overlay
+          v-if="!loggedIn"
+          :show="overlay"
+          :user="user"
+          @close="overlay = false"
+        >
+        </sign-up-overlay>
       </div>
-      <div></div>
-      <div>{{ user.bio }}</div>
     </error-box>
     <div class="flex">
       <feed>
         <div v-if="err.posts.length > 0" v-html="err.posts"></div>
+        <new-post-text-input v-if="loggedIn"></new-post-text-input>
         <post-feed :list="postsList"></post-feed>
       </feed>
       <sidebar></sidebar>
@@ -82,6 +86,7 @@ import Overlay from "../components/overlay/Overlay.vue";
 import ChangeAvatar from "../components/user/ChangeAvatar.vue";
 import EditOverlay from "../components/user/EditOverlay.vue";
 import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
+import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 
 function userErrors(api_error, path) {
   if (api_error instanceof API_Error) {
@@ -206,6 +211,7 @@ export default defineComponent({
     ChangeAvatar,
     EditOverlay,
     SignUpOverlay,
+    NewPostTextInput,
   },
 });
 </script>

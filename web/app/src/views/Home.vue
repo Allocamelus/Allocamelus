@@ -2,14 +2,7 @@
   <div class="container flex py-5">
     <feed>
       <div v-if="err.length > 0" v-html="err"></div>
-      <box v-if="loggedIn" class="p-3.5 mb-3 rounded-xl">
-        <text-input
-          placeholder="New Post"
-          :readonly="true"
-          @click="$router.push('/post/new')"
-        >
-        </text-input>
-      </box>
+      <new-post-text-input v-if="loggedIn"></new-post-text-input>
       <post-feed :list="list"></post-feed>
     </feed>
     <sidebar></sidebar>
@@ -25,7 +18,7 @@ import Box from "../components/box/Box.vue";
 import PostFeed from "../components/post/Feed.vue";
 import Feed from "../components/Feed.vue";
 import Sidebar from "../components/Sidebar.vue";
-import TextInput from "../components/form/TextInput.vue";
+import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 
 export default defineComponent({
   setup(props) {
@@ -67,7 +60,7 @@ export default defineComponent({
     PostFeed,
     Feed,
     Sidebar,
-    TextInput,
+    NewPostTextInput,
   },
 });
 </script>
