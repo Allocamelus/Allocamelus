@@ -48,11 +48,20 @@ func User(api fiber.Router) {
 
 func userUpdate(un fiber.Router) {
 	// /api/v1/user/:userName/update
-	unGroup := un.Group("/update")
-	// /api/v1/user/:userName/update/avatar
-	unGroup.Post("/avatar",
+	unGroup := un.Group("/update",
 		middleware.Protected,
 		middleware.ProtectedSelfOnly,
+	)
+	// /api/v1/user/:userName/update/avatar
+	unGroup.Post("/avatar",
 		userupdate.Avatar,
+	)
+	// /api/v1/user/:userName/update/bio
+	unGroup.Post("/bio",
+		userupdate.Bio,
+	)
+	// /api/v1/user/:userName/update/name
+	unGroup.Post("/name",
+		userupdate.Name,
 	)
 }

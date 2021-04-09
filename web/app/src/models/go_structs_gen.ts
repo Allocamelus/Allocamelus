@@ -189,19 +189,3 @@ export class GEN_CreateA10Token {
         this.captcha = source["captcha"];
     }
 }
-export class GEN_AvatarResp {
-    success: boolean;
-    avatarUrl?: string;
-    error?: string;
-
-    static createFrom(source: any = {}) {
-        return new GEN_AvatarResp(source);
-    }
-
-    constructor(source: any = {}) {
-        if ('string' === typeof source) source = JSON.parse(source);
-        this.success = source["success"];
-        this.avatarUrl = source["avatarUrl"];
-        this.error = source["error"];
-    }
-}
