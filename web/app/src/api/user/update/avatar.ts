@@ -1,4 +1,5 @@
 import v1 from "../../v1";
+import { GEN_AvatarResp } from "../../../models/go_structs_gen";
 
 export async function avatar(userName: string, file: File) {
   var formData = new FormData();
@@ -7,5 +8,7 @@ export async function avatar(userName: string, file: File) {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  })
+  }).then(r => {
+      return GEN_AvatarResp.createFrom(r.data)
+    })
 }

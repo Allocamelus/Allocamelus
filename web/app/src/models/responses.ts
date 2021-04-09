@@ -30,6 +30,10 @@ export default {
       InvalidCreateToken: "invalid-create-token",
       LoggedIn: "logged-in",
     },
+    Avatar: {
+      ContentType: "invalid-content-type",
+      FileSize: "invalid-file-size"
+    },
     Validate: {
       UserName: {
         Length: invalidLength + "-min5-max64",

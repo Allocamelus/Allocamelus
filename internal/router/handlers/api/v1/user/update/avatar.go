@@ -18,7 +18,7 @@ import (
 type AvatarResp struct {
 	Success   bool   `json:"success"`
 	AvatarUrl string `json:"avatarUrl,omitempty"`
-	Error     string `json:"errors,omitempty"`
+	Error     string `json:"error,omitempty"`
 }
 
 // Avatar Update handler

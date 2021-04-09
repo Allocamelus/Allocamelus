@@ -192,7 +192,7 @@ export class GEN_CreateA10Token {
 export class GEN_AvatarResp {
     success: boolean;
     avatarUrl?: string;
-    errors?: string;
+    error?: string;
 
     static createFrom(source: any = {}) {
         return new GEN_AvatarResp(source);
@@ -202,6 +202,6 @@ export class GEN_AvatarResp {
         if ('string' === typeof source) source = JSON.parse(source);
         this.success = source["success"];
         this.avatarUrl = source["avatarUrl"];
-        this.errors = source["errors"];
+        this.error = source["error"];
     }
 }
