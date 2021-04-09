@@ -14,7 +14,7 @@ import { API_Post } from "../models/api_post";
 import ErrorBox from "../components/box/Error.vue";
 import UserName from "../components/user/Name.vue";
 import ApiResp from "../models/responses";
-import { Html404Func, HtmlSomthingWentWrong } from "../components/htmlErrors";
+import { Html404Func, HtmlSomethingWentWrong } from "../components/htmlErrors";
 import { API_Error } from "../models/api_error";
 import sanitize from "../pkg/sanitize";
 import PostBox from "../components/post/Box.vue";
@@ -26,7 +26,7 @@ function postErrors(api_error, path) {
         return Html404Func(path);
     }
   }
-  return HtmlSomthingWentWrong;
+  return HtmlSomethingWentWrong;
 }
 
 export default defineComponent({

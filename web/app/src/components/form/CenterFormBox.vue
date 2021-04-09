@@ -1,6 +1,6 @@
 <template>
   <div class="form-box-wrapper">
-    <Box class="form-box" :class="classes">
+    <Box class="form-box rounded-xl" :class="classes">
       <slot></slot>
     </Box>
   </div>
@@ -42,7 +42,7 @@ export default defineComponent({
     @apply w-full flex justify-center items-center;
     min-height: calc(100vh - var(--nav-height));
     @screen xs-max {
-      min-height: calc(100vh - calc(var(--nav-height)*1.5));
+      min-height: calc(100vh - calc(var(--nav-height) * 1.5));
     }
   }
 }

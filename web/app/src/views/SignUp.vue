@@ -140,12 +140,12 @@ import InputCopy from "../components/form/InputCopy.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import { API_CreateA10Token } from "../models/api_user_gen";
+import { GEN_CreateA10Token } from "../models/go_structs_gen";
 import { createA9s } from "../api/user/create";
 import ApiResp from "../models/responses";
 import { siteKeys } from "../api/meta/captcha/siteKeys";
 import {
-  HtmlSomthingWentWrong,
+  HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
 
@@ -222,7 +222,7 @@ export default defineComponent({
       }
 
       createA9s(
-        API_CreateA10Token.createFrom({
+        GEN_CreateA10Token.createFrom({
           userName: vm.userName,
           email: vm.email,
           password: vm.password,
@@ -235,7 +235,6 @@ export default defineComponent({
             if (typeof r.errors === "object") {
               if (Array.isArray(r.errors)) {
                 r.errors.forEach((err) => {
-                  console.log(err);
                   switch (err) {
                     case ApiResp.User.Create.LoggedIn:
                       this.$router.push(redirectUrl(vm.redirect));
@@ -252,7 +251,7 @@ export default defineComponent({
                       vm.err.signUp = "";
                       return;
                     default:
-                      vm.err.signUp = HtmlSomthingWentWrong;
+                      vm.err.signUp = HtmlSomethingWentWrong;
                       return;
                   }
                 });
@@ -275,7 +274,7 @@ export default defineComponent({
                           }
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
@@ -290,7 +289,7 @@ export default defineComponent({
                           }
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
@@ -304,20 +303,20 @@ export default defineComponent({
                             break;
 
                           default:
-                            vm.err.signUp = HtmlSomthingWentWrong;
+                            vm.err.signUp = HtmlSomethingWentWrong;
                             break;
                         }
                         break;
 
                       default:
-                        vm.err.signUp = HtmlSomthingWentWrong;
+                        vm.err.signUp = HtmlSomethingWentWrong;
                         break;
                     }
                   }
                 }
               }
             } else {
-              vm.err.signUp = HtmlSomthingWentWrong;
+              vm.err.signUp = HtmlSomethingWentWrong;
             }
           } else {
             vm.backupKey = r.backupKey;
@@ -326,9 +325,8 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log(e);
           vm.captcha.show = false;
-          vm.err.signUp = HtmlSomthingWentWrong;
+          vm.err.signUp = HtmlSomethingWentWrong;
         });
     },
     bk() {

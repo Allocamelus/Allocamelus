@@ -24,7 +24,7 @@ func Get(c *fiber.Ctx) error {
 	p.MDtoHTMLContent()
 	u, err := user.GetPublic(p.UserID)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	return fiberutil.JSON(c, 200, getResponse{Post: p, User: &u})
 }
@@ -39,7 +39,7 @@ func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
 	if err != nil {
 		if err != post.ErrNoPost {
 			logger.Error(err)
-			return nil, apierr.ErrSomthingWentWrong
+			return nil, apierr.ErrSomethingWentWrong
 		}
 		return nil, apierr.ErrNotFound
 	}

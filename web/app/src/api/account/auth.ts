@@ -1,9 +1,9 @@
 import v1 from "../v1";
-import { API_AuthRequest, API_AuthResp, API_AuthA10Token } from "../../models/api_account_gen";
+import { GEN_AuthRequest, GEN_AuthResp, GEN_AuthA10Token } from "../../models/go_structs_gen";
 
 const a9s = "allocamelus"
 
-export async function auth(request: API_AuthRequest) {
+export async function auth(request: GEN_AuthRequest) {
   return v1.post("account/auth",
     JSON.stringify(request), {
     headers: {
@@ -11,12 +11,12 @@ export async function auth(request: API_AuthRequest) {
     }
   })
     .then(r => {      
-      return API_AuthResp.createFrom(r.data)
+      return GEN_AuthResp.createFrom(r.data)
     })
 }
 
-export async function authA10(token: API_AuthA10Token) {
-  return auth(API_AuthRequest.createFrom({
+export async function authA10(token: GEN_AuthA10Token) {
+  return auth(GEN_AuthRequest.createFrom({
     with: a9s,
     token: JSON.stringify(token)
   }))

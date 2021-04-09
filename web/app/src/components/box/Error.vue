@@ -1,5 +1,5 @@
 <template>
-  <box>
+  <box class="rounded-xl">
     <div v-if="error.length > 0" v-html="error"></div>
     <slot v-else></slot>
   </box>

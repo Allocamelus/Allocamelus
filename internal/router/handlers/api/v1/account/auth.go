@@ -38,9 +38,9 @@ func (t *AuthA10Token) trimSpace() {
 
 // AuthResp struct
 type AuthResp struct {
-	Success bool   `json:"success"`
-	UserID  int64  `json:"userId,omitempty"`
-	Error   string `json:"error,omitempty"`
+	Success bool      `json:"success"`
+	User    user.User `json:"user,omitempty"`
+	Error   string    `json:"error,omitempty"`
 	// Require Captcha
 	Captcha string `json:"captcha,omitempty"`
 }
@@ -82,7 +82,7 @@ func Auth(c *fiber.Ctx) error {
 		if err != nil {
 			if err != sql.ErrNoRows {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return authErr(c, errInvalidUsernamePassword)
 		}
@@ -101,7 +101,7 @@ func Auth(c *fiber.Ctx) error {
 		// Check if user is Verified
 		verified, err := user.IsVerified(userID)
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		if !verified {
 			return authErr(c, errUnverifiedEmail)
@@ -134,7 +134,7 @@ func Auth(c *fiber.Ctx) error {
 				}); err != nil {
 					if err != hcaptcha.ErrInvalidToken {
 						logger.Error(err)
-						return apierr.ErrSomthingWentWrong(c)
+						return apierr.ErrSomethingWentWrong(c)
 					}
 					return apierr.Err422(c, AuthResp{
 						Error:   errInvalidCaptcha,
@@ -147,20 +147,26 @@ func Auth(c *fiber.Ctx) error {
 		if err := user.PasswordLogin(c, userID, authToken.Password); err != nil {
 			if err != user.ErrInvalidPassword {
 				logger.Error(err)
-				return apierr.ErrSomthingWentWrong(c)
+				return apierr.ErrSomethingWentWrong(c)
 			}
 			return authErr(c, errInvalidUsernamePassword)
+		}
+
+		// Get db username
+		currentUser, err := user.GetPublic(userID)
+		if logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
 		}
 
 		if authToken.Remember {
 			// Set persistent auth token
 			if err := token.SetAuth(c, userID); logger.Error(err) {
 				// successful failure
-				return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID, Error: errAuthToken})
+				return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser, Error: errAuthToken})
 			}
 		}
 
-		return fiberutil.JSON(c, 200, AuthResp{Success: true, UserID: userID})
+		return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser})
 	}
 	return apierr.Err422(c, errInvalidWith)
 }

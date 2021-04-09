@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/allocamelus/allocamelus/pkg/byteutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
@@ -104,21 +103,17 @@ func (t *Token) Check(token string, userID int64, ty Types) error {
 		return ErrInvalidToken
 	}
 
-	if subtle.ConstantTimeEq(int32(t.Type), int32(ty)) == 1 {
-		if subtle.ConstantTimeCompare(byteutil.Itob(int(t.UserID)), byteutil.Itob(int(userID))) == 1 {
-			if subtle.ConstantTimeCompare([]byte(t.TokenHash), []byte(hashToken(token))) == 1 {
-				return nil
-			}
-		}
+	if subtle.ConstantTimeEq(int32(t.Type), int32(ty)) == 0 ||
+		subtle.ConstantTimeEq(int32(t.UserID), int32(userID)) == 0 ||
+		subtle.ConstantTimeEq(int32(t.UserID>>32), int32(userID>>32)) == 0 ||
+		subtle.ConstantTimeCompare([]byte(t.TokenHash), []byte(hashToken(token))) == 0 {
+		return ErrInvalidToken
 	}
 
-	return ErrInvalidToken
+	return nil
 }
 
 // IsExpired has token Expired
 func (t *Token) IsExpired() bool {
-	if t.Expiration < time.Now().Unix() {
-		return true
-	}
-	return false
+	return t.Expiration < time.Now().Unix()
 }

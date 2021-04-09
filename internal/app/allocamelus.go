@@ -2,6 +2,9 @@ package app
 
 import (
 	"crypto/tls"
+	"log"
+	"os"
+	"os/signal"
 	"strconv"
 
 	"github.com/allocamelus/allocamelus/internal/data"
@@ -10,10 +13,12 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/allocamelus/allocamelus/internal/router/routes"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
 	jsoniter "github.com/json-iterator/go"
+	"k8s.io/klog/v2"
 )
 
 // Allocamelus struct
@@ -52,6 +57,21 @@ func New(configPath string) *Allocamelus {
 	return &Allocamelus{
 		Fiber: app,
 	}
+}
+
+// AwaitAndClose waits for Interrupt and shuts down fiber
+func (c *Allocamelus) AwaitAndClose(serverClosed chan struct{}) {
+	sigint := make(chan os.Signal, 1)
+	signal.Notify(sigint, os.Interrupt)
+	<-sigint
+
+	log.Println("Shutting down Fiber")
+	logger.Error(c.Fiber.Shutdown())
+	log.Println("Flushing klog")
+	klog.Flush()
+
+	// Done
+	close(serverClosed)
 }
 
 // InitListener initializes fiber

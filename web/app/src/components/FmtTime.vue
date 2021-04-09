@@ -2,7 +2,6 @@
   <component
     :is="isLink ? 'router-link' : 'div'"
     class="text-sm font-normal text-gray-700 dark:text-gray-400"
-    :class="type"
     :to="link"
     :title="MDY_HM"
   >

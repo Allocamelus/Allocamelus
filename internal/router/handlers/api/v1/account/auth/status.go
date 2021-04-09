@@ -8,10 +8,10 @@ import (
 
 // StatusResp struct
 type StatusResp struct {
-	*user.Session
+	LoggedIn bool `json:"loggedIn"`
 }
 
 // Status handler
 func Status(c *fiber.Ctx) error {
-	return fiberutil.JSON(c, 200, StatusResp{user.ContextSession(c)})
+	return fiberutil.JSON(c, 200, StatusResp{LoggedIn: user.LoggedIn(c)})
 }

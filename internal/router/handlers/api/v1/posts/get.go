@@ -12,7 +12,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type getResponse struct {
+// GetResponse posts response
+type GetResponse struct {
 	Posts post.ListPosts  `json:"posts"`
 	Users user.ListUsers  `json:"users"`
 	Order map[int64]int64 `json:"order"`
@@ -20,7 +21,7 @@ type getResponse struct {
 
 const perPage int64 = 15
 
-// Get post handler
+// Get posts handler
 func Get(c *fiber.Ctx) error {
 	page, _ := strconv.ParseInt(c.Query("p"), 10, 64)
 	if page == 0 {
@@ -29,7 +30,7 @@ func Get(c *fiber.Ctx) error {
 
 	totalPosts, err := post.GetPublicTotal()
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, totalPosts)
@@ -40,7 +41,7 @@ func Get(c *fiber.Ctx) error {
 
 	posts, err := post.GetPublicPosts(startNum, perPage)
 	if logger.Error(err) {
-		return apierr.ErrSomthingWentWrong(c)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 	users := new(user.List)
 	for _, p := range posts.Posts {
@@ -48,5 +49,5 @@ func Get(c *fiber.Ctx) error {
 		p.MDtoHTMLContent()
 	}
 
-	return fiberutil.JSON(c, 200, getResponse{Posts: posts.Posts, Users: users.Users, Order: posts.Order})
+	return fiberutil.JSON(c, 200, GetResponse{Posts: posts.Posts, Users: users.Users, Order: posts.Order})
 }

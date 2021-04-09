@@ -60,7 +60,7 @@ func Create(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
-	// TODO: add openpgp.js or somthing similar for request encryption w/ client application
+	// TODO: add openpgp.js or something similar for request encryption w/ client application
 	// TODO: add other providers
 	if request.With == withA10 {
 		var token CreateA10Token
@@ -91,7 +91,7 @@ func Create(c *fiber.Ctx) error {
 			}); err != nil {
 				if err != hcaptcha.ErrInvalidToken {
 					logger.Error(err)
-					return apierr.ErrSomthingWentWrong(c)
+					return apierr.ErrSomethingWentWrong(c)
 				}
 				return apierr.Err422(c, CreateResp{Errors: []string{"invalid-captcha"}})
 			}
@@ -109,18 +109,18 @@ func Create(c *fiber.Ctx) error {
 
 		err := newUser.Insert()
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 
 		// Create and Insert keys into database
 		keyPair, err := key.InsertNew(newUser.ID, token.Password)
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 
 		emailToken, err := userToken.NewAndInsert(userToken.Email, newUser.ID)
 		if logger.Error(err) {
-			return apierr.ErrSomthingWentWrong(c)
+			return apierr.ErrSomethingWentWrong(c)
 		}
 		// Send Email
 		go func() {
