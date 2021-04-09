@@ -40,7 +40,7 @@ export default defineComponent({
     },
     maxSize: {
       type: Number,
-      default: 5242880, // 5MB
+      default: 52428800, // 50MB
     },
     required: {
       type: Boolean,
