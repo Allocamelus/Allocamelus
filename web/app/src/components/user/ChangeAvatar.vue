@@ -13,7 +13,12 @@
         </div>
       </slot>
     </div>
-    <overlay v-model="show" :blockScrool="blockScrool" :xsFullHeigth="false" :xsSelfEnd="true">
+    <overlay
+      v-model="show"
+      :blockScrool="blockScrool"
+      :xsFullHeigth="false"
+      :xsSelfEnd="true"
+    >
       <box
         class="w-full xs:m-3 self-end xs:self-center rounded-t-lg xs:rounded-md text-center"
       >
@@ -29,11 +34,12 @@
           >
             <file-input
               class="w-full"
-              accept="image/png,image/jpeg,image/gif,image/apng,image/webp"
+              accept="image/png,image/jpeg,image/gif,image/webp"
               :check="true"
+              :maxSize="maxImageSize"
               :required="true"
               @fileChange="avatarUpload"
-              @error="onError"
+              @error="onErr"
             >
               Upload Image
             </file-input>
@@ -58,7 +64,10 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
+
 import { GEN_User } from "../../models/go_structs_gen";
+import ApiResp from "../../models/responses";
 
 import { avatar as UploadAvatar } from "../../api/user/update/avatar";
 
@@ -82,6 +91,10 @@ export default defineComponent({
     },
   },
   setup() {
+    const store = useStore(),
+      updateStoreAvatar = (url) => store.commit("updateAvatar", url),
+      maxImageSize = 5242880;
+
     const data = reactive({
       show: false,
       err: {
@@ -92,6 +105,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
+      updateStoreAvatar,
+      maxImageSize,
     };
   },
   watch: {
@@ -105,10 +120,32 @@ export default defineComponent({
     },
     avatarUpload(avatar) {
       if (this.err.msg == "") {
-        UploadAvatar(this.user.userName, avatar);
+        UploadAvatar(this.user.userName, avatar)
+          .then((r) => {
+            if (r.success) {
+              this.updateStoreAvatar(r.avatarUrl);
+              this.toggleShow();
+            } else {
+              switch (r.error) {
+                case ApiResp.User.Avatar.FileSize:
+                  this.onErr("Image size to large");
+                  break;
+                case ApiResp.User.Avatar.ContentType:
+                  this.onErr("Unsupported Image Type");
+                  break;
+                default:
+                  this.onErr("Something went wrong, Try again later");
+                  break;
+              }
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            this.onErr("Something went wrong, Try again later");
+          });
       }
     },
-    onError(err) {
+    onErr(err) {
       this.err.msg = "";
       if (err.length > 0) {
         this.err.msg = err;

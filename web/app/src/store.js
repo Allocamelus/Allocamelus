@@ -51,6 +51,15 @@ export default createStore({
     },
     toggleTheme(state) {
       state.theme = (state.theme == 'dark') ? 'light' : 'dark'
+    },
+    updateAvatar(state, url) {
+      if (url?.length > 0) {
+        state.session.user.avatar = true;
+        state.session.user.avatarUrl = url
+      } else {
+        state.session.user.avatar = false;
+        state.session.user.avatarUrl = null
+      }
     }
   },
   actions: {

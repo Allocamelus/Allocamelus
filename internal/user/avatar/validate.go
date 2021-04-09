@@ -45,7 +45,7 @@ func ValidateMpFileHeader(fileHead *multipart.FileHeader) error {
 
 func ValidateContentType(contentType string) error {
 	switch contentType {
-	case "image/png", "image/jpeg", "image/gif", "image/apng", "image/webp":
+	case "image/png", "image/jpeg", "image/gif", "image/webp":
 		return nil
 	default:
 		return ErrContentType
