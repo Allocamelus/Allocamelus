@@ -122,7 +122,7 @@ export default createStore({
       return state.session.loggedIn
     },
     user(state) {
-      return state.session.user
+      return new GEN_User(state.session.user)
     },
     theme(state) {
       return state.theme

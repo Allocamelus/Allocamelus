@@ -42,3 +42,5 @@ function errMsg(err) {
       return ""
   }
 }
+
+export const InvalidCharacters = "Invalid Character(s)"
