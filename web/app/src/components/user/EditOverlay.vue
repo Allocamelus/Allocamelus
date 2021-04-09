@@ -3,6 +3,9 @@
     <box
       class="w-full xs-max:h-full xs:m-3 rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none overflow-hidden flex flex-col"
     >
+      <snackbar v-model="err.snackbar.show" :closeBtn="true">
+        {{ err.snackbar.msg }}
+      </snackbar>
       <div class="w-full p-3 border-b border-secondary-600 flex items-end">
         <div class="flex-1 flex justify-start">
           <basic-btn @click="visable = false">
@@ -13,7 +16,7 @@
           <div class="font-medium text-base leading-4">Edit Profile</div>
         </div>
         <div class="flex-1 flex justify-end">
-          <basic-btn>Save</basic-btn>
+          <basic-btn @click="submit">Save</basic-btn>
         </div>
       </div>
       <div class="flex-grow flex">
@@ -72,7 +75,11 @@
 import { defineComponent, reactive, toRefs } from "vue";
 
 import { GEN_User } from "../../models/go_structs_gen";
-import { InvalidCharacters } from "../form/errors";
+import ApiResp from "../../models/responses";
+import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
+
+import { bio as UpdateBio } from "../../api/user/update/bio";
+import { name as UpdateName } from "../../api/user/update/name";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
@@ -84,6 +91,8 @@ import TextInput from "../form/TextInput.vue";
 import Overlay from "../overlay/Overlay.vue";
 import UserAvatar from "./Avatar.vue";
 import ChangeAvatar from "./ChangeAvatar.vue";
+import { useStore } from "vuex";
+import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
   props: {
@@ -98,6 +107,9 @@ export default defineComponent({
   },
   emits: ["close"],
   setup(props) {
+    const store = useStore(),
+      updateStoreBio = (bio) => store.commit("updateBio", bio),
+      updateStoreName = (name) => store.commit("updateName", name);
     const data = reactive({
       visable: props.show,
       name: props.user.name,
@@ -105,12 +117,18 @@ export default defineComponent({
       err: {
         name: "",
         bio: "",
+        snackbar: {
+          show: false,
+          msg: "",
+        },
       },
     });
 
     return {
       ...toRefs(data),
       InvalidCharacters,
+      updateStoreBio,
+      updateStoreName,
     };
   },
   watch: {
@@ -127,6 +145,85 @@ export default defineComponent({
     close() {
       this.$emit("close");
     },
+    submit() {
+      var vm = this;
+      vm.err.snackbar.msg = "";
+      if (!vm.noErrs()) {
+        return;
+      }
+
+      (async () => {
+        if (vm.name != vm.user.name) {
+          console.log(1);
+          UpdateName(vm.user.userName, vm.name)
+            .then((r) => {
+              if (r.success) {
+                vm.updateStoreName(vm.name);
+              } else {
+                switch (r.error) {
+                  case ApiResp.User.Validate.Name.Length:
+                    vm.err.name = "Invalid Length";
+                    break;
+                  case ApiResp.User.Validate.Invalid:
+                    vm.err.name = InvalidCharacters;
+                    break;
+                  default:
+                    vm.snackbarErr(SomethingWentWrong);
+                    break;
+                }
+              }
+            })
+            .catch((e) => {
+              vm.snackbarErr(SomethingWentWrong);
+            });
+        }
+        if (vm.bio != vm.user.bio) {
+          UpdateBio(vm.user.userName, vm.bio)
+            .then((r) => {
+              if (r.success) {
+                vm.updateStoreBio(vm.bio);
+              } else {
+                switch (r.error) {
+                  case ApiResp.User.Validate.Bio.Length:
+                    vm.err.bio = "Invalid Length";
+                    break;
+                  case ApiResp.User.Validate.Invalid:
+                    vm.err.bio = InvalidCharacters;
+                    break;
+                  default:
+                    vm.snackbarErr(SomethingWentWrong);
+                    break;
+                }
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+              vm.snackbarErr(SomethingWentWrong);
+            });
+        }
+      })();
+      
+      if (vm.noErrs()) {
+        vm.visable = false;
+      }
+    },
+    noErrs() {
+      if (
+        this.err.name.length != 0 ||
+        this.err.bio.length != 0 ||
+        this.err.snackbar.msg.length != 0
+      ) {
+        return false;
+      }
+      return true;
+    },
+    snackbarErr(err) {
+      this.err.snackbar.msg = "";
+      if (err.length > 0) {
+        this.err.snackbar.msg = err;
+        this.err.snackbar.show = true;
+      }
+    },
   },
   components: {
     XIcon,
@@ -138,6 +235,7 @@ export default defineComponent({
     UserAvatar,
     ChangeAvatar,
     Overlay,
+    Snackbar,
   },
 });
 </script>

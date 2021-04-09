@@ -60,6 +60,12 @@ export default createStore({
         state.session.user.avatar = false;
         state.session.user.avatarUrl = null
       }
+    },
+    updateBio(state, bio) {
+      state.session.user.bio = bio;
+    },
+    updateName(state, name) {
+      state.session.user.name = name;
     }
   },
   actions: {

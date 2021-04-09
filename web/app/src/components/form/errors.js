@@ -44,3 +44,4 @@ function errMsg(err) {
 }
 
 export const InvalidCharacters = "Invalid Character(s)"
+export const SomethingWentWrong = "Something went wrong, Try again later"

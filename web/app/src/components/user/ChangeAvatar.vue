@@ -68,6 +68,7 @@ import { useStore } from "vuex";
 
 import { GEN_User } from "../../models/go_structs_gen";
 import ApiResp from "../../models/responses";
+import { SomethingWentWrong } from "../form/errors";
 
 import { avatar as UploadAvatar } from "../../api/user/update/avatar";
 
@@ -134,14 +135,14 @@ export default defineComponent({
                   this.onErr("Unsupported Image Type");
                   break;
                 default:
-                  this.onErr("Something went wrong, Try again later");
+                  this.onErr(SomethingWentWrong);
                   break;
               }
             }
           })
           .catch((e) => {
             console.log(e);
-            this.onErr("Something went wrong, Try again later");
+            this.onErr(SomethingWentWrong);
           });
       }
     },
