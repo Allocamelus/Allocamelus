@@ -25,61 +25,19 @@
           >
             {{ canEdit ? "Edit Profile" : "Follow" }}
           </basic-btn>
-          <overlay v-model="followEditOverlay">
-            <box
-              class="w-full xs-max:h-full xs:m-3 rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none overflow-hidden flex flex-col"
-            >
-              <div
-                class="w-full p-3 border-b border-secondary-600 flex items-end"
-              >
-                <div
-                  class="flex-1 flex"
-                  :class="canEdit ? 'justify-start' : 'justify-end'"
-                >
-                  <basic-btn @click="followEditOverlay = false">
-                    <XIcon class="w-5 h-5"></XIcon>
-                  </basic-btn>
-                </div>
-                <div v-if="canEdit" class="flex-1 flex justify-center">
-                  <div class="font-medium text-base leading-4">
-                    Edit Profile
-                  </div>
-                </div>
-                <div v-if="canEdit" class="flex-1 flex justify-end">
-                  <basic-btn>Save</basic-btn>
-                </div>
-              </div>
-              <div
-                class="flex-grow flex"
-                :class="!canEdit ? 'items-center justify-center' : ''"
-              >
-                <sign-up-in-inner v-if="!canEdit">
-                  Sign Up or Login to Follow {{ user.name }}
-                  <div
-                    class="pl-1 font-normal text-gray-700 dark:text-gray-400"
-                  >
-                    @{{ user.userName }}
-                  </div>
-                </sign-up-in-inner>
-                <div v-else class="flex flex-grow flex-col py-6 px-6 xs:px-8">
-                  <div class="flex items-center mt-2">
-                    <user-avatar
-                      class="h-11 w-11"
-                      :user="storeUser"
-                      :isLink="false"
-                    ></user-avatar>
-                    <change-avatar
-                      class="w-full ml-2"
-                      :user="storeUser"
-                      :blockScrool="false"
-                    >
-                      <basic-btn class="link">Change Avatar</basic-btn>
-                    </change-avatar>
-                  </div>
-                </div>
-              </div>
-            </box>
-          </overlay>
+          <edit-overlay
+            v-if="canEdit"
+            :show="overlay"
+            :user="storeUser"
+            @close="overlay = false"
+          ></edit-overlay>
+          <sign-up-overlay
+            v-if="!loggedIn"
+            :show="overlay"
+            :user="user"
+            @close="overlay = false"
+          >
+          </sign-up-overlay>
         </div>
       </div>
       <div></div>
@@ -105,6 +63,7 @@ import { posts as getPosts } from "../api/user/posts";
 import { API_Error } from "../models/api_error";
 import { API_Posts } from "../models/api_posts";
 import { Html404Func, HtmlSomethingWentWrong } from "../components/htmlErrors";
+import { InvalidCharacters } from "../components/form/errors";
 
 import { GEN_User } from "../models/go_structs_gen";
 import ApiResp from "../models/responses";
@@ -121,7 +80,8 @@ import UserAvatar from "../components/user/Avatar.vue";
 import BasicBtn from "../components/button/BasicBtn.vue";
 import Overlay from "../components/overlay/Overlay.vue";
 import ChangeAvatar from "../components/user/ChangeAvatar.vue";
-import SignUpInInner from "../components/overlay/SignUpInInner.vue";
+import EditOverlay from "../components/user/EditOverlay.vue";
+import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
 
 function userErrors(api_error, path) {
   if (api_error instanceof API_Error) {
@@ -132,6 +92,7 @@ function userErrors(api_error, path) {
   }
   return HtmlSomethingWentWrong;
 }
+
 export default defineComponent({
   props: {
     userName: {
@@ -147,7 +108,7 @@ export default defineComponent({
     const data = reactive({
       user: new GEN_User(),
       postsList: new API_Posts(),
-      followEditOverlay: false,
+      overlay: false,
       page: 1,
       err: {
         user: "",
@@ -179,6 +140,7 @@ export default defineComponent({
       TwoLine,
       loggedIn,
       storeUser,
+      InvalidCharacters,
     };
   },
   computed: {
@@ -200,8 +162,9 @@ export default defineComponent({
   },
   methods: {
     clickFollowEdit() {
+      this.overlay = false;
       if (this.canEdit || !this.loggedIn) {
-        this.followEditOverlay = !this.followEditOverlay;
+        this.overlay = true;
       }
     },
   },
@@ -241,7 +204,8 @@ export default defineComponent({
     Overlay,
     XIcon,
     ChangeAvatar,
-    SignUpInInner,
+    EditOverlay,
+    SignUpOverlay,
   },
 });
 </script>
