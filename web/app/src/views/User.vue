@@ -5,12 +5,12 @@
         <div class="flex items-center min-w-0">
           <component
             :is="canEdit ? 'change-avatar' : 'user-avatar'"
-            :user="user"
+            :user="canEdit ? storeUser : user"
             class="flex-shrink-0 w-16 h-16 xs:w-20 xs:h-20"
           ></component>
           <user-name
             class="ml-3"
-            :user="user"
+            :user="canEdit ? storeUser : user"
             :displayType="TwoLine"
           ></user-name>
         </div>
@@ -65,12 +65,12 @@
                   <div class="flex items-center mt-2">
                     <user-avatar
                       class="h-11 w-11"
-                      :user="user"
+                      :user="storeUser"
                       :isLink="false"
                     ></user-avatar>
                     <change-avatar
                       class="w-full ml-2"
-                      :user="user"
+                      :user="storeUser"
                       :blockScrool="false"
                     >
                       <basic-btn class="link">Change Avatar</basic-btn>
