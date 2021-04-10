@@ -62,7 +62,6 @@ func (img *Image) NewMW(mw ...*imagick.MagickWand) {
 		}
 	}
 	img.MW = imagick.NewMagickWand()
-
 }
 
 func (img *Image) setup() *Image {

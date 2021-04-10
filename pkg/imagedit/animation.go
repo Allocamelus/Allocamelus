@@ -24,7 +24,6 @@ func (img *Image) IterateOver(callback AnimationCallback) error {
 	}
 
 	delay := img.MW.GetImageDelay()
-	transformFull := img.TransformAnimation
 	aImg, err := NewFromMW(img.MW.CoalesceImages())
 	if err != nil {
 		return err
@@ -34,9 +33,7 @@ func (img *Image) IterateOver(callback AnimationCallback) error {
 
 	var frameCount int
 	// Only use first frame if TransformAnimation was false
-	if transformFull {
-		img.Animation = true
-		img.TransformAnimation = true
+	if img.TransformAnimation {
 		img.MW.SetImageDelay(delay)
 		frameCount = int(aImg.MW.GetNumberImages())
 	} else {
