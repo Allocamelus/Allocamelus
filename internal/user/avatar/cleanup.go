@@ -3,7 +3,6 @@ package avatar
 import (
 	"database/sql"
 	"os"
-	"path/filepath"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 )
@@ -35,7 +34,7 @@ func CleanupOld(userId int64) error {
 	}
 	if hasOld {
 		if preGetOld == nil {
-			preGetOld = g.Data.Prepare(`SELECT userAvatarId, location FROM UserAvatars WHERE userId = ? AND active = 0`)
+			preGetOld = g.Data.Prepare(`SELECT userAvatarId FROM UserAvatars WHERE userId = ? AND active = 0`)
 		}
 		rows, err := preGetOld.Query(userId)
 		if err != nil {
@@ -44,15 +43,12 @@ func CleanupOld(userId int64) error {
 		defer rows.Close()
 
 		for rows.Next() {
-			var (
-				avatarId int64
-				location string
-			)
-			err := rows.Scan(&avatarId, &location)
+			var avatarId int64
+			err := rows.Scan(&avatarId)
 			if err != nil {
 				return err
 			}
-			remove(avatarId, userId, location)
+			remove(avatarId)
 		}
 
 	}
@@ -60,15 +56,11 @@ func CleanupOld(userId int64) error {
 }
 
 // remove avatar file and db entry
-func remove(avatarId, userId int64, location string) error {
-	match, err := filepath.Match(locationPath(userId, "*"), location)
-	println(err)
-	if match {
-		os.RemoveAll(filePath(location))
-	}
+func remove(avatarId int64) error {
+	os.RemoveAll(filePath(avatarId, ""))
 	if preDelete == nil {
 		preDelete = g.Data.Prepare(`DELETE FROM UserAvatars WHERE userAvatarId=?`)
 	}
-	_, err = preDelete.Exec(avatarId)
+	_, err := preDelete.Exec(avatarId)
 	return err
 }

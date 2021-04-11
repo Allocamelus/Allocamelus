@@ -1,7 +1,6 @@
 package update
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 
@@ -32,7 +31,6 @@ func Avatar(c *fiber.Ctx) error {
 	if err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
-	log.Println(file.Filename, file.Size)
 
 	if err := avatar.ValidateMpFileHeader(file); err != nil {
 		if err == avatar.ErrSomethingWentWrong {
