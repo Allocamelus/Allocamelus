@@ -7,7 +7,10 @@
       >
         <div class="flex">
           <user-name :user="user"></user-name>
-          <div class="dot-before flex items-center whitespace-nowrap">
+          <div
+            v-if="published"
+            class="dot-before flex items-center whitespace-nowrap"
+          >
             <router-link :to="link" class="no-underline group">
               <fmt-time
                 :time="post.published"
@@ -16,8 +19,20 @@
               ></fmt-time>
             </router-link>
           </div>
+          <div v-else class="dot-before flex items-center whitespace-nowrap">
+            <div title="Not Published">
+              <radix-eye-none class="h-4 w-4 dark:text-gray-400" />
+            </div>
+          </div>
+          <div
+            v-if="edited"
+            class="dot-before flex items-center whitespace-nowrap"
+          >
+            <div title="Edited">
+              <PencilAltIcon class="h-4 w-4 dark:text-gray-400"></PencilAltIcon>
+            </div>
+          </div>
         </div>
-        <!-- TODO: license https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
         <!-- TODO: Real options -->
         <circle-bg class="ml-3">
           <DotsVerticalIcon
@@ -40,9 +55,12 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 
+import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
+import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
+import RadixEyeNone from "../icons/RadixEyeNone.vue";
+
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
-import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
 
@@ -77,6 +95,20 @@ export default defineComponent({
     link() {
       return `/post/${this.post.id}`;
     },
+    published() {
+      if (this.post.published != 0) {
+        return true;
+      }
+      return false;
+    },
+    edited() {
+      if (this.published) {
+        if (this.post.updated > this.post.published + 60) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
   methods: {
     textClick() {
@@ -85,6 +117,14 @@ export default defineComponent({
       }
     },
   },
-  components: { FmtTime, UserName, DotsVerticalIcon, CircleBg, UserAvatar },
+  components: {
+    FmtTime,
+    UserName,
+    DotsVerticalIcon,
+    CircleBg,
+    UserAvatar,
+    PencilAltIcon,
+    RadixEyeNone,
+  },
 });
 </script>
