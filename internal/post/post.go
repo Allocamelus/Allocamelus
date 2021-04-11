@@ -4,12 +4,13 @@
 package post
 
 import (
-	"crypto/subtle"
 	"database/sql"
 	"errors"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -39,9 +40,10 @@ func New(userID int64, content string, publish bool) *Post {
 }
 
 var (
-	preInsert  *sql.Stmt
-	preGet     *sql.Stmt
-	prePublish *sql.Stmt
+	preInsert    *sql.Stmt
+	preGet       *sql.Stmt
+	prePublish   *sql.Stmt
+	preGetUserID *sql.Stmt
 )
 
 func initPost(p data.Prepare) {
@@ -91,17 +93,26 @@ func GetForUser(postID int64, u *user.Session) (Post, error) {
 
 	// Check if user can view post
 	if !p.IsPublished() {
-		if !u.LoggedIn || !p.isPoster(u.UserID) {
+		if !u.LoggedIn || !p.IsPoster(u.UserID) {
 			return Post{}, ErrNoPost
 		}
 	}
 
 	// Omit Created if user is not poster
-	if !p.isPoster(u.UserID) {
+	if !p.IsPoster(u.UserID) {
 		p.Created = 0
 	}
 
 	return p, err
+}
+
+func GetUserId(postID int64) (int64, error) {
+	if preGetUserID == nil {
+		preGetUserID = g.Data.Prepare(`SELECT userId FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+	var userId int64
+	err := preGetUserID.QueryRow(postID).Scan(&userId)
+	return userId, err
 }
 
 // Publish post if not already
@@ -125,10 +136,6 @@ func (p *Post) IsPublished() bool {
 	return (p.Published != 0)
 }
 
-func (p *Post) isPoster(userID int64) bool {
-	if subtle.ConstantTimeEq(int32(p.UserID), int32(userID)) == 0 ||
-		subtle.ConstantTimeEq(int32(p.UserID>>32), int32(userID>>32)) == 0 {
-		return false
-	}
-	return true
+func (p *Post) IsPoster(userID int64) bool {
+	return compare.EqualInt64(p.UserID, userID)
 }

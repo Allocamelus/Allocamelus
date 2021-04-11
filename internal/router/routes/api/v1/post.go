@@ -16,5 +16,9 @@ func Post(api fiber.Router) {
 	pID := p.Group("/:id")
 	pID.Get("/", post.Get)
 	// /api/v1/post/:id/publish
-	pID.Post("/publish", middleware.Protected, post.Publish)
+	pID.Post("/publish",
+		middleware.Protected,
+		middleware.ProtectedPostSelfOnly,
+		post.Publish,
+	)
 }
