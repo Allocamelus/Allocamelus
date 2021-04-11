@@ -91,13 +91,23 @@ export default createStore({
     },
     sessionCheck({ commit, state }) {
       if (state.session.loggedIn || state.session.fresh) {
-        status().then(loggedIn => {
-          if (loggedIn == false) {
+        status().then(st => {
+          if (st.loggedIn == false) {
             commit({
               type: 'newSession',
               session: sessionDefault()
             })
           } else {
+            commit({
+              type: 'newSession',
+              session: {
+                loggedIn: true,
+                user: st.user,
+                fresh: state.session.fresh,
+                created: state.session.created,
+                expires: state.session.expires
+              }
+            })
             commit('usedSession')
           }
         }).catch(e => {
