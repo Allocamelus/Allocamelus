@@ -4,6 +4,7 @@
 package post
 
 import (
+	"crypto/subtle"
 	"database/sql"
 	"errors"
 	"time"
@@ -125,5 +126,9 @@ func (p *Post) IsPublished() bool {
 }
 
 func (p *Post) isPoster(userID int64) bool {
-	return (p.UserID == userID)
+	if subtle.ConstantTimeEq(int32(p.UserID), int32(userID)) == 0 ||
+		subtle.ConstantTimeEq(int32(p.UserID>>32), int32(userID>>32)) == 0 {
+		return false
+	}
+	return true
 }
