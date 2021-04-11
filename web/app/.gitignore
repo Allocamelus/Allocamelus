@@ -4,3 +4,10 @@ dist
 dist-ssr
 *.local
 webfonts
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
