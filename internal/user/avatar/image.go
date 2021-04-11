@@ -20,8 +20,7 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	imgPath := locationPath(userId, random.StringBase58(16))
 	fileImagePath := filePath(imgPath)
 
-	w, h := img.AR(imagedit.AR_1x1)
-	img.Crop(w, h, imagedit.Center)
+	img.CropAR(imagedit.AR_1x1, imagedit.Center)
 	img.Resize(MaxHightWidth, MaxHightWidth)
 	img.Optimize()
 

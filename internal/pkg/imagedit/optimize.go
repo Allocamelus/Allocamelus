@@ -11,8 +11,8 @@ func (img *Image) Optimize() error {
 	if err := img.Check(); err != nil {
 		return err
 	}
-	if img.MW.GetImageFormat() == GIF {
-		img.MW = img.MW.OptimizeImageLayers()
+	if img.MW.GetImageFormat() == GIF && img.resized {
+		img.NewMW(img.MW.OptimizeImageLayers())
 	}
 	return nil
 }
