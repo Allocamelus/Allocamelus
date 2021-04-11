@@ -1,8 +1,8 @@
 import { GEN_User, GEN_Post } from "./go_structs_gen";
 
 export class API_Posts {
-  posts: { [key: number]: GEN_User };
-  users: { [key: number]: GEN_Post };
+  posts: { [key: number]: GEN_Post };
+  users: { [key: number]: GEN_User };
   order: { [key: number]: number };
 
 
