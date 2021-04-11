@@ -7,6 +7,7 @@
     <img
       :src="user.avatar ? user.avatarUrl : gray5x5Url"
       loading="auto"
+      :alt="`@${user.userName}'s Profile Image`"
       class="w-full h-full rounded-full mr-2 border-none"
       :class="
         user.avatar
