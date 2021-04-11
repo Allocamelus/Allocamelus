@@ -2,7 +2,7 @@ package avatar
 
 import (
 	"github.com/allocamelus/allocamelus/internal/g"
-	"github.com/allocamelus/allocamelus/pkg/imagedit"
+	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	"github.com/allocamelus/allocamelus/pkg/random"
 )
 
