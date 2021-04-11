@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-grow flex-shrink">
+  <article class="flex flex-grow flex-shrink">
     <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
     <div class="ml-3 flex flex-col flex-grow">
       <div
@@ -34,7 +34,7 @@
         v-html="post.content"
       ></div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script>
