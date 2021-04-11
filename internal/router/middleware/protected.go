@@ -44,8 +44,8 @@ func ProtectedSelfOnly(c *fiber.Ctx) error {
 	return checkIdWithSelf(c, userID)
 }
 
-// ProtectedPostSelfOnly only allow access to post owner
-func ProtectedPostSelfOnly(c *fiber.Ctx) error {
+// ProtectedPosterOnly only allow access to post owner
+func ProtectedPosterOnly(c *fiber.Ctx) error {
 	postID := fiberutil.ParamsInt64(c, "id")
 	if postID == 0 {
 		return apierr.ErrUnauthorized403(c)

@@ -40,10 +40,11 @@ func New(userID int64, content string, publish bool) *Post {
 }
 
 var (
-	preInsert    *sql.Stmt
-	preGet       *sql.Stmt
-	prePublish   *sql.Stmt
-	preGetUserID *sql.Stmt
+	preInsert       *sql.Stmt
+	preGet          *sql.Stmt
+	prePublish      *sql.Stmt
+	preGetPublished *sql.Stmt
+	preGetUserID    *sql.Stmt
 )
 
 func initPost(p data.Prepare) {
@@ -113,6 +114,16 @@ func GetUserId(postID int64) (int64, error) {
 	var userId int64
 	err := preGetUserID.QueryRow(postID).Scan(&userId)
 	return userId, err
+}
+
+func Published(postID int64) (bool, error) {
+	if preGetPublished == nil {
+		preGetPublished = g.Data.Prepare(`SELECT published FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+
+	var published bool
+	err := preGetPublished.QueryRow(postID).Scan(&published)
+	return published, err
 }
 
 // Publish post if not already
