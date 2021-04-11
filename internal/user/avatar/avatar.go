@@ -28,28 +28,31 @@ func HasAvatar(userID int64) (hasAvatar bool, err error) {
 
 func GetUrl(userID int64) (url string, err error) {
 	if preGetAvatarUrl == nil {
-		preGetAvatarUrl = g.Data.Prepare(`SELECT location FROM UserAvatars WHERE userId = ? AND active = 1 ORDER BY userAvatarId DESC LIMIT 1`)
+		preGetAvatarUrl = g.Data.Prepare(`SELECT userAvatarId, selector FROM UserAvatars WHERE userId = ? AND active = 1 ORDER BY userAvatarId DESC LIMIT 1`)
 	}
-	var urlPart string
-	err = preGetAvatarUrl.QueryRow(userID).Scan(&urlPart)
-	url = g.Config.Path.Public.Media + urlPart
+	var (
+		avatarId int64
+		selector string
+	)
+	err = preGetAvatarUrl.QueryRow(userID).Scan(&avatarId, &selector)
+	url = publicPath(avatarId, selector)
 	return
 }
 
-func InsertAvatar(userID int64, location string) error {
+func InsertAvatar(userID int64, selector string) (int64, error) {
 	if preInsertAvatar == nil {
-		preInsertAvatar = g.Data.Prepare(`INSERT INTO UserAvatars (userID, created, location) VALUES (?, ?, ?)`)
+		preInsertAvatar = g.Data.Prepare(`INSERT INTO UserAvatars (userID, created, selector) VALUES (?, ?, ?)`)
 	}
-	r, err := preInsertAvatar.Exec(userID, time.Now().Unix(), location)
+	r, err := preInsertAvatar.Exec(userID, time.Now().Unix(), selector)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	avatarId, err := r.LastInsertId()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return deactivateOld(userID, avatarId)
+	return avatarId, nil
 }
 
 func Remove(userID int64) error {
@@ -64,12 +67,14 @@ func Remove(userID int64) error {
 	return CleanupOld(userID)
 }
 
-const pathPart = "users/avatars/"
-
-func locationPath(userId int64, filename string) string {
-	return pathPart + strconv.Itoa(int(userId)) + "/" + filename
+func selectorPath(avatarId int64, selector string) string {
+	return "users/avatars/" + strconv.Itoa(int(avatarId)) + "/" + selector
 }
 
-func filePath(location string) string {
-	return filepath.Join(g.Config.Path.Media, location)
+func filePath(avatarId int64, selector string) string {
+	return filepath.Join(g.Config.Path.Media, selectorPath(avatarId, selector))
+}
+
+func publicPath(avatarId int64, selector string) string {
+	return filepath.Join(g.Config.Path.Public.Media, selectorPath(avatarId, selector))
 }
