@@ -32,6 +32,22 @@ func (img *Image) Crop(newWidth, newHeight uint, l Location) error {
 	return img.MW.CropImage(newWidth, newHeight, x, y)
 }
 
+func (img *Image) CropAR(ar AspectRatio, l Location) error {
+	if err := img.Check(); err != nil {
+		return err
+	}
+
+	if img.Animation {
+		callback := func(callbackImg *Image) error {
+			return callbackImg.CropAR(ar, l)
+		}
+		return img.IterateOver(callback)
+	}
+
+	newWidth, newHeight := img.AR(ar)
+	return img.Crop(newWidth, newHeight, l)
+}
+
 func fromLocation(w, h, newH, newW int, l Location) (x, y int) {
 	switch l {
 	case Center:

@@ -11,6 +11,8 @@ type Image struct {
 	MW                 *imagick.MagickWand
 	Animation          bool
 	TransformAnimation bool
+	// OptimizeImageLayers panics if images are not all the same size
+	resized bool
 }
 
 const (
@@ -23,16 +25,13 @@ const (
 var ErrNilWand = errors.New("imagedit: Error Nil MagickWand")
 
 func NewFromPath(imagePath string) (*Image, error) {
-	img := new(Image)
-	img.NewMW()
+	mw := imagick.NewMagickWand()
 
-	err := img.MW.ReadImage(imagePath)
+	err := mw.ReadImage(imagePath)
 	if err != nil {
-		img.Close()
 		return nil, err
 	}
-
-	return img.setup(), nil
+	return NewFromMW(mw)
 }
 
 func NewFromMW(mw *imagick.MagickWand) (*Image, error) {
@@ -42,11 +41,15 @@ func NewFromMW(mw *imagick.MagickWand) (*Image, error) {
 
 	img := new(Image)
 	img.MW = mw
+	img.checkAnimation()
 
-	return img.setup(), nil
+	return img, nil
 }
 
 func (img *Image) WriteToPath(imagePath string) error {
+	if err := img.Check(); err != nil {
+		return err
+	}
 	if img.Animation {
 		return img.MW.WriteImages(imagePath, true)
 	}
@@ -62,11 +65,6 @@ func (img *Image) NewMW(mw ...*imagick.MagickWand) {
 		}
 	}
 	img.MW = imagick.NewMagickWand()
-}
-
-func (img *Image) setup() *Image {
-	img.checkAnimation()
-	return img
 }
 
 func (img *Image) Check() error {

@@ -40,7 +40,6 @@ func (img *Image) IterateOver(callback AnimationCallback) error {
 		frameCount = 1
 	}
 
-	// deferred ln:16
 	for i := 0; i < frameCount; i++ {
 		aImg.MW.SetIteratorIndex(i)
 		aImgPart, err := NewFromMW(aImg.MW.GetImage())
@@ -54,6 +53,7 @@ func (img *Image) IterateOver(callback AnimationCallback) error {
 		img.MW.AddImage(aImgPart.MW)
 		aImgPart.Close()
 	}
+	img.MW.ResetIterator()
 
 	return nil
 }
