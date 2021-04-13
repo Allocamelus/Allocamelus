@@ -86,7 +86,6 @@ import { useStore } from "vuex";
 
 import SunIcon from "@heroicons/vue/solid/SunIcon";
 import MoonIcon from "@heroicons/vue/solid/MoonIcon";
-import UserCircleIcon from "@heroicons/vue/outline/UserCircleIcon";
 import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
 import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
 import Dropdown from "./components/menu/Dropdown.vue";
@@ -173,7 +172,6 @@ export default defineComponent({
   components: {
     SunIcon,
     MoonIcon,
-    UserCircleIcon,
     Dropdown,
     DropdownItem,
     ChevronDownIcon,
