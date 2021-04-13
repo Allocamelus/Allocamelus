@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-900 shadow break-words overflow-hidden">
+  <div class="bg-gray-50 dark:bg-gray-900 shadow break-words">
     <slot></slot>
   </div>
 </template>
