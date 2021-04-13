@@ -6,11 +6,12 @@
     >
       <div class="container flex flex-row justify-between h-nav leading-nav">
         <div class="flex">
-          <router-link
+          <to-link
             to="/"
             class="pr-4 py-2 text-white text-lg font-sans truncate no-underline tracking-wide relative"
-            >Allocamelus</router-link
           >
+            Allocamelus
+          </to-link>
         </div>
         <div class="flex">
           <div class="flex justify-start items-center ml-1">
@@ -62,19 +63,19 @@
       </div>
     </nav>
     <div id="bodyContent" class="mt-nav">
-      <router-view />
+      <router-view :key="viewKey" />
     </div>
     <!--TODO: Mobile Menu-->
     <footer id="footer">
       <div>
         <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
-        <router-link to="/about" class="dash">About</router-link>
+        <to-link to="/about" class="dash">About</to-link>
       </div>
       <div></div>
       <div>
         <!-- TODO -->
-        <router-link to="/tos">Terms</router-link>
-        <router-link to="/privacy" class="dash">Privacy</router-link>
+        <to-link to="/tos">Terms</to-link>
+        <to-link to="/privacy" class="dash">Privacy</to-link>
       </div>
     </footer>
   </div>
@@ -93,6 +94,7 @@ import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
 import BasicBtn from "./components/button/BasicBtn.vue";
 import UserAvatar from "./components/user/Avatar.vue";
+import ToLink from "./components/ToLink.vue";
 
 import { MinToSec, SecToMs } from "./pkg/time";
 
@@ -110,6 +112,7 @@ export default defineComponent({
       loggedIn = computed(() => store.getters.loggedIn),
       user = computed(() => store.getters.user),
       theme = computed(() => store.getters.theme),
+      viewKey = computed(() => store.getters.viewKey),
       toggleTheme = () => store.commit("toggleTheme"),
       sessionCheck = () => store.dispatch("sessionCheck"),
       sessionKeepAlive = () => store.dispatch("sessionKeepAlive");
@@ -135,6 +138,7 @@ export default defineComponent({
       loggedIn,
       user,
       theme,
+      viewKey,
       toggleTheme,
       sessionCheck,
     };
@@ -169,6 +173,7 @@ export default defineComponent({
     ChevronUpIcon,
     BasicBtn,
     UserAvatar,
+    ToLink,
   },
 });
 </script>
