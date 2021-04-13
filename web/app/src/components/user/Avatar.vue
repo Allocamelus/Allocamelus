@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="isLink ? 'router-link' : 'div'"
+    :is="isLink ? 'to-link' : 'div'"
     :to="'/u/' + user.userName"
     class="block flex-shrink-0"
   >
@@ -23,6 +23,8 @@ import { defineComponent } from "vue";
 import { GEN_User } from "../../models/go_structs_gen";
 import gray5x5Url from "../../assets/gray5x5.jpg";
 
+import ToLink from "../ToLink.vue";
+
 export default defineComponent({
   props: {
     user: {
@@ -39,5 +41,6 @@ export default defineComponent({
       gray5x5Url,
     };
   },
+  components: { ToLink },
 });
 </script>

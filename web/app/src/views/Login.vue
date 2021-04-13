@@ -52,9 +52,9 @@
             </checkbox>
             <text-small class="mt-2 mr-3">
               Don't have an account?
-              <router-link class="link whitespace-nowrap" to="/signup">
+              <to-link class="link whitespace-nowrap" to="/signup">
                 Sign Up
-              </router-link>
+              </to-link>
             </text-small>
           </div>
           <submit class="mt-3 self-end" title="Login">Login</submit>
@@ -78,6 +78,7 @@ import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
 import TextSmall from "../components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
+import ToLink from "../components/ToLink.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
@@ -204,6 +205,7 @@ export default defineComponent({
     TextSmall,
     ChevronLeftIcon,
     VueHcaptcha,
+    ToLink,
   },
 });
 </script>

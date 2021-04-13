@@ -76,15 +76,15 @@
             <div class="flex flex-col justify-end">
               <text-small class="mr-3">
                 By Signing Up, you agree to the
-                <router-link class="link whitespace-nowrap" to="/tos">
+                <to-link class="link whitespace-nowrap" to="/tos">
                   Terms of Service
-                </router-link>
+                </to-link>
               </text-small>
               <text-small class="mt-1 mr-3">
                 Have an account?
-                <router-link class="link whitespace-nowrap" to="/login">
+                <to-link class="link whitespace-nowrap" to="/login">
                   Login
-                </router-link>
+                </to-link>
               </text-small>
             </div>
             <submit
@@ -148,6 +148,7 @@ import {
   HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
+import ToLink from "../components/ToLink.vue";
 
 export default defineComponent({
   props: {
@@ -344,6 +345,7 @@ export default defineComponent({
     ChevronLeftIcon,
     VueHcaptcha,
     InputCopy,
+    ToLink,
   },
 });
 </script>
