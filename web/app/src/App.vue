@@ -41,7 +41,7 @@
                 <user-avatar
                   :user="user"
                   class="w-6 h-6"
-                  :isLink="true"
+                  :isLink="userMobile"
                 ></user-avatar>
                 <component
                   v-if="!user.avatar"
@@ -118,7 +118,7 @@ export default defineComponent({
     const data = reactive({
       sesKeepAliveInterval: null,
       userMenu: false,
-      userMenuMobile: false,
+      userMobile: window.screen.width < 768,
     });
 
     sessionCheck();
@@ -147,19 +147,27 @@ export default defineComponent({
       setTheme(newTheme);
     },
     $route(to, from) {
-      this.userMenu = false;
-      this.userMenuMobile = false;
+      this.onNavigate();
+    },
+    viewKey(newKey, old) {
+      this.onNavigate();
     },
   },
   methods: {
     toggleUserMenu() {
-      if (screen.width >= 768) {
+      this.checkMenu();
+      if (!this.userMobile) {
         this.userMenu = !this.userMenu;
-        this.userMenuMobile = false;
       } else {
-        this.userMenuMobile = !this.userMenuMobile;
         this.userMenu = false;
       }
+    },
+    checkMenu() {
+      this.userMobile = screen.width < 768;
+    },
+    onNavigate() {
+      this.checkMenu();
+      this.userMenu = false;
     },
   },
   components: {
