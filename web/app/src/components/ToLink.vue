@@ -14,7 +14,6 @@ export default defineComponent({
         this.to == this.$route.path ||
         (this.to.path != undefined && this.to.path == this.$route.path)
       ) {
-        console.log("hit");
         this.$store.commit("updateViewKey");
       }
     },
