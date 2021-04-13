@@ -19,7 +19,7 @@ type createRequest struct {
 	Content string `json:"content" form:"content"`
 }
 
-type createResponce struct {
+type createResponse struct {
 	Success bool   `json:"success"`
 	ID      int64  `json:"id,omitempty"`
 	Error   string `json:"error,omitempty"`
@@ -48,12 +48,12 @@ func Create(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, createResponce{
+	return fiberutil.JSON(c, 200, createResponse{
 		Success: true,
 		ID:      newPost.ID,
 	})
 }
 
 func post403(c *fiber.Ctx, err string) error {
-	return apierr.Err403(c, createResponce{Error: err})
+	return apierr.Err403(c, createResponse{Error: err})
 }
