@@ -37,12 +37,11 @@
               >
                 <span class="sr-only">Open user menu</span>
                 <!--TODO:User Mobile Menu-->
-                <component
-                  :is="user.avatar ? 'user-avatar' : 'UserCircleIcon'"
+                <user-avatar
                   :user="user"
-                  :class="user.avatar ? 'w-6 h-6' : 'w-5.5 h-5.5'"
+                  class="w-6 h-6"
                   :isLink="true"
-                ></component>
+                ></user-avatar>
                 <component
                   v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
@@ -50,9 +49,9 @@
                 ></component>
               </div>
               <dropdown v-model="userMenu" class="w-44">
-                <dropdown-item :to="`/u/${user.userName}`"
-                  >Profile</dropdown-item
-                >
+                <dropdown-item :to="`/u/${user.userName}`">
+                  Profile
+                </dropdown-item>
                 <dropdown-item>Settings (TODO)</dropdown-item>
                 <dropdown-item to="/logout">Logout</dropdown-item>
               </dropdown>
