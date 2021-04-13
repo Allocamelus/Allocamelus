@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="isLink ? 'router-link' : 'div'"
+    :is="isLink ? 'to-link' : 'div'"
     class="text-gray-800 dark:text-gray-200 truncate flex"
     :class="isLink ? 'group no-underline items-center' : 'flex-col'"
     :to="'/u/' + user.userName"
@@ -24,6 +24,8 @@
 import { defineComponent } from "vue";
 import { GEN_User } from "../../models/go_structs_gen";
 
+import ToLink from "../ToLink.vue";
+
 export const OneLineLink = "one-line";
 export const TwoLine = "two-line";
 
@@ -46,5 +48,6 @@ export default defineComponent({
       return false;
     },
   },
+  components: {ToLink},
 });
 </script>

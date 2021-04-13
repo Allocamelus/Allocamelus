@@ -70,9 +70,9 @@ func (e *Email) Send(config Config) error {
 	server.Encryption = mail.EncryptionTLS
 
 	// Timeout for connect to SMTP Server
-	server.ConnectTimeout = 5 * time.Second
+	server.ConnectTimeout = 15 * time.Second
 	// Timeout for send the data and wait respond
-	server.SendTimeout = 5 * time.Second
+	server.SendTimeout = 15 * time.Second
 
 	// Variable to keep alive connection
 	if len(e.To) > 1 {
@@ -88,7 +88,7 @@ func (e *Email) Send(config Config) error {
 	// SMTP client
 	smtpClient, err := server.Connect()
 	if err != nil {
-		klog.Fatal(err)
+		klog.Error(err)
 	}
 
 	for _, to := range e.To {

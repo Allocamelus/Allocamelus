@@ -13,7 +13,9 @@ const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   reducer: (state) => {
     var storage = {
-      theme: state.theme
+      ui: {
+        theme: state.ui.theme
+      }
     }
     if (state.session.expires > UnixTime()) {
       if (state.session.fresh == true) {
@@ -37,7 +39,11 @@ function sessionDefault() {
 
 export default createStore({
   state: {
-    theme: 'dark',
+    ui: {
+      theme: 'dark',
+      // TODO: https://github.com/vuejs/vue-router/issues/974
+      viewKey: 0,
+    },
     session: sessionDefault()
   },
   mutations: {
@@ -50,7 +56,10 @@ export default createStore({
       }
     },
     toggleTheme(state) {
-      state.theme = (state.theme == 'dark') ? 'light' : 'dark'
+      state.ui.theme = (state.ui.theme == 'dark') ? 'light' : 'dark'
+    },
+    updateViewKey(state) {
+      state.ui.viewKey++
     },
     updateAvatar(state, url) {
       if (url?.length > 0) {
@@ -141,7 +150,10 @@ export default createStore({
       return new GEN_User(state.session.user)
     },
     theme(state) {
-      return state.theme
+      return state.ui.theme
+    },
+    viewKey(state) {
+      return state.ui.viewKey
     }
   },
   plugins: [vuexLocal.plugin]

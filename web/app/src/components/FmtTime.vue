@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="isLink ? 'router-link' : 'div'"
+    :is="isLink ? 'to-link' : 'div'"
     class="text-sm font-normal text-gray-700 dark:text-gray-400"
     :to="link"
     :title="MDY_HM"
@@ -14,6 +14,8 @@ import { defineComponent, toRefs, reactive } from "vue";
 import { UnixTime } from "../pkg/time";
 import FmtTime from "../pkg/fmtTime";
 import FmtShort, { MDY_HM } from "../pkg/fmtTime/sort";
+
+import ToLink from "./ToLink.vue";
 
 export const Raw_Time = "raw";
 export const Fmt_Time = "fmt";
@@ -63,5 +65,6 @@ export default defineComponent({
       return MDY_HM(this.timeC);
     },
   },
+  components: { ToLink },
 });
 </script>

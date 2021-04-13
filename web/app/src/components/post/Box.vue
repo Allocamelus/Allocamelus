@@ -11,13 +11,13 @@
             v-if="published"
             class="dot-before flex items-center whitespace-nowrap"
           >
-            <router-link :to="link" class="no-underline group">
+            <to-link :to="link" class="no-underline group">
               <fmt-time
                 :time="post.published"
                 :type="Fmt_Short_Time"
                 class="group-hover:underline"
               ></fmt-time>
-            </router-link>
+            </to-link>
           </div>
           <div v-else class="dot-before flex items-center whitespace-nowrap">
             <div title="Not Published">
@@ -63,6 +63,7 @@ import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
 import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
+import ToLink from "../ToLink.vue";
 
 import { GEN_User, GEN_Post } from "../../models/go_structs_gen";
 
@@ -125,6 +126,7 @@ export default defineComponent({
     UserAvatar,
     PencilAltIcon,
     RadixEyeNone,
+    ToLink,
   },
 });
 </script>
