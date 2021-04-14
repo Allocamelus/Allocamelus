@@ -34,7 +34,7 @@
           </div>
         </div>
         <!-- TODO: Real options -->
-        <circle-bg class="ml-3">
+        <circle-bg class="ml-3 hover:bg-rose-800 ">
           <DotsVerticalIcon
             class="h-4.5 w-4.5 text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
           ></DotsVerticalIcon>
