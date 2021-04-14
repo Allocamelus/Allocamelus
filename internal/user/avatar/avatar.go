@@ -2,11 +2,11 @@ package avatar
 
 import (
 	"database/sql"
-	"path/filepath"
 	"strconv"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 )
 
 var (
@@ -35,7 +35,7 @@ func GetUrl(userID int64) (url string, err error) {
 		selector string
 	)
 	err = preGetAvatarUrl.QueryRow(userID).Scan(&avatarId, &selector)
-	url = publicPath(avatarId, selector)
+	url = fileutil.PublicPath(selectorPath(avatarId, selector))
 	return
 }
 
@@ -69,12 +69,4 @@ func Remove(userID int64) error {
 
 func selectorPath(avatarId int64, selector string) string {
 	return "users/avatars/" + strconv.Itoa(int(avatarId)) + "/" + selector
-}
-
-func filePath(avatarId int64, selector string) string {
-	return filepath.Join(g.Config.Path.Media, selectorPath(avatarId, selector))
-}
-
-func publicPath(avatarId int64, selector string) string {
-	return filepath.Join(g.Config.Path.Public.Media, selectorPath(avatarId, selector))
 }

@@ -2,6 +2,7 @@ package avatar
 
 import (
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/allocamelus/allocamelus/pkg/random"
@@ -21,7 +22,7 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 		return
 	}
 
-	fileImagePath := filePath(avatarId, selector)
+	fileImagePath := fileutil.FilePath(selectorPath(avatarId, selector))
 
 	err = img.Strip()
 	if err != nil {
@@ -43,7 +44,7 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 		return
 	}
 
-	logger.Error(dirutil.MakeDir(filePath(avatarId, "")))
+	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(avatarId, ""))))
 
 	err = img.WriteToPath(fileImagePath)
 	if err != nil {
@@ -51,6 +52,6 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	}
 
 	logger.Error(deactivateOld(userId, avatarId))
-	newUrl = publicPath(avatarId, selector)
+	newUrl = fileutil.PublicPath(selectorPath(avatarId, selector))
 	return
 }
