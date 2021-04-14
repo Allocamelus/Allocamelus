@@ -15,18 +15,28 @@
           class="flex-grow text-lg p-1.5 outline-none"
         ></div>
       </div>
-      <div class="flex mt-1">
+      <div class="flex mt-1 flex-wrap">
         <div
-          v-for="(url, key, index) in imageUrls"
-          :key="index"
-          class="group relative cursor-pointer"
+          v-for="(url, key) in imageUrls"
+          :key="key"
+          class="group relative flex"
+          :class="[
+            images.length == 1 ? 'w-full' : '',
+            images.length == 2 ? [key == 0 || key == 1 ? 'w-1/2' : ''] : '',
+            images.length == 3
+              ? [key == 0 ? 'w-full' : '', key == 1 || key == 2 ? 'w-1/2' : '']
+              : '',
+            images.length == 4 ? 'w-1/2' : '',
+          ]"
         >
           <div
             class="absolute w-full h-full hidden group-hover:flex flex-col p-2 bg-black bg-opacity-50"
           >
-            <XIcon class="text-white w-6 h-6 self-end"></XIcon>
+            <circle-bg class="hover:bg-white w-6 h-6 self-end" @click="removeImage(key)">
+              <XIcon class="text-white"></XIcon>
+            </circle-bg>
           </div>
-          <img :src="url" />
+          <img :src="url" class="w-full object-cover" />
         </div>
       </div>
     </div>
@@ -215,10 +225,7 @@ export default defineComponent({
       for (let i = 0; i < images.length; i++) {
         this.images.push(images[i]);
       }
-      this.imageUrls = [];
-      for (let i = 0; i < this.images.length; i++) {
-        this.imageUrls.push(URL.createObjectURL(this.images[i]));
-      }
+      this.imagesToUrl();
     },
     onErr(err) {
       this.err.msg = "";
@@ -227,12 +234,23 @@ export default defineComponent({
         this.err.show = true;
       }
     },
+    removeImage(key) {
+      this.images.splice(key, 1);
+      this.imagesToUrl()
+    },
+    imagesToUrl() {
+      this.imageUrls = [];
+      for (let i = 0; i < this.images.length; i++) {
+        this.imageUrls.push(URL.createObjectURL(this.images[i]));
+      }
+    },
   },
   mounted() {
     this.editor = new Squire(this.$refs["editor-div"]);
     this.editor.addEventListener("input", this.onInput);
     this.editor.addEventListener("focus", () => (this.focused = true));
     this.editor.addEventListener("blur", () => (this.focused = false));
+    // TODO: finish addEventListener s
   },
   beforeUnmount() {
     this.editor.destroy();
