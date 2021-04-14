@@ -87,18 +87,30 @@ export default defineComponent({
     validate() {
       if (this.check) {
         if (this.multiple) {
-          var filesL = this.files.length
+          var filesL = this.files.length;
+
           if (this.fileCount + filesL > this.maxFiles) {
+            this.files = [];
             return Errs.ErrMsg(Errs.ErrMaxLength, this.maxFiles, "file count");
           }
-          var file, err;
+
+          var file,
+            err = "",
+            lastErr = "",
+            newFiles = [];
+
           for (let i = 0; i < filesL; i++) {
             file = this.files[i];
             err = this.validateFile(file);
             if (err.length > 0) {
-              return err;
+              lastErr = `${file.name}: ${err}`;
+            } else {
+              newFiles.push(file);
             }
           }
+
+          this.files = newFiles;
+          return lastErr;
         } else {
           return this.validateFile(this.files);
         }
@@ -121,11 +133,16 @@ export default defineComponent({
     emiter(event) {
       var filesInput;
       if (this.multiple) {
-        filesInput = event.target.files;
+        filesInput = [];
+        for (let i = 0; i < event.target.files.length; i++) {
+          filesInput.push(event.target.files[i]);
+        }
       } else {
         filesInput = event.target.files[0];
       }
-      if (this.files != filesInput) {
+
+      if (this.files?.length != filesInput.length) {
+        console.log(this.files, filesInput);
         this.files = filesInput;
         if (this.check) {
           this.$emit("error", this.validate());
