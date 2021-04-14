@@ -81,7 +81,7 @@ export default defineComponent({
   },
   methods: {
     onClick() {
-      this.file = this.files = this.$refs.input.value = null;
+      this.files = this.$refs.input.value = null;
       this.$refs.input.click();
     },
     validate() {
@@ -141,8 +141,7 @@ export default defineComponent({
         filesInput = event.target.files[0];
       }
 
-      if (this.files?.length != filesInput.length) {
-        console.log(this.files, filesInput);
+      if (this.files == null && filesInput.length  != 0) {
         this.files = filesInput;
         if (this.check) {
           this.$emit("error", this.validate());
