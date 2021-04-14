@@ -1,21 +1,44 @@
 <template>
   <div class="flex-grow flex flex-col">
-    <div class="flex flex-row">
-      <div
-        v-if="sanitize(richText).length == 0 && !focused"
-        class="absolute select-none cursor-text text-lg opacity-90 p-1.5"
-        @click="editor.focus()"
-      >
-        The Text...
+    <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
+    <div class="flex flex-col">
+      <div class="flex flex-row">
+        <div
+          v-if="sanitize(richText).length == 0 && !focused"
+          class="absolute select-none cursor-text text-lg opacity-90 p-1.5"
+          @click="editor.focus()"
+        >
+          The Text...
+        </div>
+        <div
+          ref="editor-div"
+          class="flex-grow text-lg p-1.5 outline-none"
+        ></div>
       </div>
-      <div ref="editor-div" class="flex-grow text-lg p-1.5 outline-none"></div>
+      <div class="flex mt-1">
+        <div
+          v-for="(url, key, index) in imageUrls"
+          :key="index"
+          class="group relative cursor-pointer"
+        >
+          <div
+            class="absolute w-full h-full hidden group-hover:flex flex-col p-2 bg-black bg-opacity-50"
+          >
+            <XIcon class="text-white w-6 h-6 self-end"></XIcon>
+          </div>
+          <img :src="url" />
+        </div>
+      </div>
     </div>
-    <div class="sticky bottom-3 flex justify-between mt-2 bg-warm-gray-200 dark:bg-black-lighter p-1.5 rounded">
+    <div
+      class="sticky bottom-3 flex justify-between mt-2 bg-warm-gray-200 dark:bg-black-lighter p-1.5 rounded"
+    >
       <div class="flex items-center">
         <circle-bg
           v-for="(isActive, key, index) in active"
           :key="index"
           @click="btnClick(key)"
+          class="hover:bg-rose-800"
           :class="[
             isActive ? 'bg-secondary-700 text-warm-gray-200' : '',
             index != 0 ? 'ml-1.5' : '',
@@ -26,14 +49,25 @@
             class="w-5 h-5"
           />
         </circle-bg>
-        <circle-bg class="ml-1.5">
-          <file-input accept="image/png,image/jpeg,image/gif,image/webp">
+        <circle-bg class="ml-1.5 hover:bg-rose-800">
+          <file-input
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            :check="true"
+            :maxSize="10485760 /* 10MB */"
+            :maxFiles="4"
+            :multiple="true"
+            :fileCount="images.length"
+            @filesChange="imagesUpload"
+            @error="onErr"
+          >
             <radix-image class="w-5 h-5" />
           </file-input>
         </circle-bg>
       </div>
       <div class="flex items-center">
-        <basic-btn class="text-secondary-700 dark:text-rose-600 p-1.5">Post</basic-btn>
+        <basic-btn class="text-secondary-700 dark:text-rose-600 p-1.5">
+          Post
+        </basic-btn>
       </div>
     </div>
   </div>
@@ -52,16 +86,14 @@ import FileInput from "../form/FileInput.vue";
 import RadixImage from "../icons/RadixImage.vue";
 import CircleBg from "../button/CircleBg.vue";
 import BasicBtn from "../button/BasicBtn.vue";
+import Snackbar from "../box/Snackbar.vue";
+import XIcon from "@heroicons/vue/solid/XIcon";
 
 function getValidator(str) {
-  return new RegExp(`>${str}\\b`)
+  return new RegExp(`>${str}\\b`);
 }
 
-Squire.prototype.hasActionSelection = function (
-  name,
-  action,
-  format
-) {
+Squire.prototype.hasActionSelection = function (name, action, format) {
   var path = this.getPath(),
     test = getValidator(format).test(path) | this.hasFormat(format);
   if (name == action && test) {
@@ -85,6 +117,12 @@ export default defineComponent({
         italic: false,
         underline: false,
       },
+      images: [],
+      imageUrls: [],
+      err: {
+        msg: "",
+        show: false,
+      },
     });
     return {
       ...toRefs(data),
@@ -97,19 +135,15 @@ export default defineComponent({
       console.log(vm.editor);
       var test = {
         value: action,
-        testBold: vm.editor.hasActionSelection("bold", action, "B", />B\b/),
-        testItalic: vm.editor.hasActionSelection("italic", action, "I", />I\b/),
-        testUnderline: vm.editor.hasActionSelection(
-          "underline",
-          action,
-          "U"
-        ),
+        testBold: vm.editor.hasActionSelection("bold", action, "B"),
+        testItalic: vm.editor.hasActionSelection("italic", action, "I"),
+        testUnderline: vm.editor.hasActionSelection("underline", action, "U"),
         testOrderedList: vm.editor.hasActionSelection(
           "makeOrderedList",
           action,
           "OL"
         ),
-        testLink: vm.editor.hasActionSelection("makeLink", action, "A", />A\b/),
+        testLink: vm.editor.hasActionSelection("makeLink", action, "A"),
         testQuote: vm.editor.hasActionSelection(
           "increaseQuoteLevel",
           action,
@@ -177,16 +211,30 @@ export default defineComponent({
     onInput() {
       this.richText = this.editor.getHTML();
     },
+    imagesUpload(images) {
+      for (let i = 0; i < images.length; i++) {
+        this.images.push(images[i]);
+      }
+      this.imageUrls = [];
+      for (let i = 0; i < this.images.length; i++) {
+        this.imageUrls.push(URL.createObjectURL(this.images[i]));
+      }
+    },
+    onErr(err) {
+      this.err.msg = "";
+      if (err.length > 0) {
+        this.err.msg = err;
+        this.err.show = true;
+      }
+    },
   },
   mounted() {
-    console.log("mount");
     this.editor = new Squire(this.$refs["editor-div"]);
     this.editor.addEventListener("input", this.onInput);
     this.editor.addEventListener("focus", () => (this.focused = true));
     this.editor.addEventListener("blur", () => (this.focused = false));
   },
   beforeUnmount() {
-    console.log("unmount");
     this.editor.destroy();
   },
   components: {
@@ -197,6 +245,8 @@ export default defineComponent({
     RadixImage,
     CircleBg,
     BasicBtn,
+    Snackbar,
+    XIcon,
   },
 });
 </script>
