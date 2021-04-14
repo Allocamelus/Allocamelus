@@ -4,7 +4,7 @@
     <div class="flex flex-col">
       <div class="flex flex-row">
         <div
-          v-if="sanitize(richText).length == 0 && !focused"
+          v-if="hasNoText && !focused"
           class="absolute select-none cursor-text text-lg opacity-90 p-1.5"
           @click="editor.focus()"
         >
@@ -19,20 +19,43 @@
         <div
           v-for="(url, key) in imageUrls"
           :key="key"
-          class="group relative flex"
+          class="group relative flex overflow-hidden"
           :class="[
-            images.length == 1 ? 'w-full' : '',
-            images.length == 2 ? [key == 0 || key == 1 ? 'w-1/2' : ''] : '',
-            images.length == 3
-              ? [key == 0 ? 'w-full' : '', key == 1 || key == 2 ? 'w-1/2' : '']
+            images.length == 1 ? 'w-full rounded-lg' : '',
+            images.length == 2
+              ? [
+                  key == 0 || key == 1 ? 'w-1/2' : '',
+                  key == 0 ? 'rounded-l-lg' : 'rounded-r-lg',
+                ]
               : '',
-            images.length == 4 ? 'w-1/2' : '',
+            images.length == 3
+              ? [
+                  key == 0
+                    ? 'w-full rounded-t-lg'
+                    : ['w-1/2', key == 1 ? 'rounded-bl-lg' : ' rounded-br-lg'],
+                ]
+              : '',
+            images.length == 4
+              ? [
+                  'w-1/2',
+                  key == 0
+                    ? 'rounded-tl-lg'
+                    : [
+                        key == 1
+                          ? 'rounded-tr-lg'
+                          : [key == 2 ? 'rounded-bl-lg' : 'rounded-br-lg'],
+                      ],
+                ]
+              : '',
           ]"
         >
           <div
             class="absolute w-full h-full hidden group-hover:flex flex-col p-2 bg-black bg-opacity-50"
           >
-            <circle-bg class="hover:bg-white w-6 h-6 self-end" @click="removeImage(key)">
+            <circle-bg
+              class="hover:bg-white w-6 h-6 self-end"
+              @click="removeImage(key)"
+            >
               <XIcon class="text-white"></XIcon>
             </circle-bg>
           </div>
@@ -75,7 +98,10 @@
         </circle-bg>
       </div>
       <div class="flex items-center">
-        <basic-btn class="text-secondary-700 dark:text-rose-600 p-1.5">
+        <basic-btn
+          class="text-secondary-700 dark:text-rose-600 p-1.5"
+          @click="onPost"
+        >
           Post
         </basic-btn>
       </div>
@@ -84,7 +110,11 @@
 </template>
 
 <script>
+// TODO: Drag and drop & reorder images
 import { defineComponent, toRefs, reactive } from "vue";
+import Turndown from "turndown";
+
+import { CreatePost } from "../../api/post/create";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -116,6 +146,8 @@ Squire.prototype.thePath = function () {
   return this.getPath();
 };
 
+const turndownService = new Turndown().keep("u");
+
 export default defineComponent({
   setup() {
     const data = reactive({
@@ -136,13 +168,17 @@ export default defineComponent({
     });
     return {
       ...toRefs(data),
-      sanitize,
     };
+  },
+  computed: {
+    hasNoText() {
+      var sanitized = sanitize(this.richText);
+      return sanitized.length == 0;
+    },
   },
   methods: {
     btnClick(action) {
       var vm = this;
-      console.log(vm.editor);
       var test = {
         value: action,
         testBold: vm.editor.hasActionSelection("bold", action, "B"),
@@ -215,8 +251,6 @@ export default defineComponent({
         vm.editor[action]();
         vm.editor.focus();
       }
-      console.log(vm.editor.thePath());
-      console.log(vm.editor);
     },
     onInput() {
       this.richText = this.editor.getHTML();
@@ -236,13 +270,19 @@ export default defineComponent({
     },
     removeImage(key) {
       this.images.splice(key, 1);
-      this.imagesToUrl()
+      this.imagesToUrl();
     },
     imagesToUrl() {
       this.imageUrls = [];
       for (let i = 0; i < this.images.length; i++) {
         this.imageUrls.push(URL.createObjectURL(this.images[i]));
       }
+    },
+    onPost() {
+      if (this.hasNoText && this.images.length == 0) {
+        return this.onErr("Text or Image(s) Required");
+      }
+      CreatePost(turndownService.turndown(this.richText), this.images);
     },
   },
   mounted() {

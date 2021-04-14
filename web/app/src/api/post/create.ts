@@ -30,3 +30,9 @@ export async function create(content: string, publish: boolean) {
       return CreateResponse.createFrom(r.data)
     })
 }
+
+export async function CreatePost(content: string, images: Array<File>) {
+  console.log(content);
+  console.log(images);
+  
+}

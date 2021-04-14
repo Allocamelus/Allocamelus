@@ -398,6 +398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/turndown@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@types/turndown@npm:5.0.0"
+  checksum: 0be9cdffa306864b2121a18d186bfa417b5eea8c7c875f224846e47656483bb71158c22fb75c50433493ebe2a3ab8e95cd44faa7701af85784f0557e3c78d26c
+  languageName: node
+  linkType: hard
+
 "@types/zxcvbn@npm:^4.4.0":
   version: 4.4.1
   resolution: "@types/zxcvbn@npm:4.4.1"
@@ -750,6 +757,7 @@ __metadata:
     "@heroicons/vue": ^1.0.0
     "@jdinabox/vue-3-hcaptcha": ^0.1.1
     "@types/node": ^14.14.37
+    "@types/turndown": ^5.0.0
     "@types/zxcvbn": ^4.4.0
     "@vitejs/plugin-vue": ^1.2.1
     "@vue/compiler-sfc": ^3.0.11
