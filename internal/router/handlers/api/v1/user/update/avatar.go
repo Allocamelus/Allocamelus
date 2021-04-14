@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/avatar"
@@ -33,7 +34,7 @@ func Avatar(c *fiber.Ctx) error {
 	}
 
 	if err := avatar.ValidateMpFileHeader(file); err != nil {
-		if err == avatar.ErrSomethingWentWrong {
+		if err == fileutil.ErrSomethingWentWrong {
 			return apierr.ErrSomethingWentWrong(c)
 		}
 		return apierr.Err422(c, AvatarResp{Error: err.Error()})
