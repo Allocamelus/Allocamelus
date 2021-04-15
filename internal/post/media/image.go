@@ -1,4 +1,4 @@
-package avatar
+package media
 
 import (
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
@@ -8,7 +8,9 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/random"
 )
 
-func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err error) {
+const MaxHightWidth uint = 7680
+
+func TransformAndSave(postID int64, tmpImagePath string, alt string) (err error) {
 	img, err := imagedit.NewFromPath(tmpImagePath)
 	if err != nil {
 		return
@@ -21,14 +23,13 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	}
 	// Allow Animations
 	img.TransformAnimation = true
-
-	err = img.CropAR(imagedit.AR_1x1, imagedit.Center)
-	if err != nil {
-		return
-	}
-	err = img.Resize(MaxHightWidth, MaxHightWidth)
-	if err != nil {
-		return
+	width, height := img.WH()
+	if width > MaxHightWidth || height > MaxHightWidth || img.Animation {
+		newWidth, newHeight := img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
+		err = img.Resize(newWidth, newHeight)
+		if err != nil {
+			return
+		}
 	}
 	err = img.Optimize()
 	if err != nil {
@@ -37,21 +38,20 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 
 	selector := random.StringBase58(16)
 
-	avatarId, err := InsertAvatar(userId, selector)
+	mediaId, err := Insert(postID, Media{MediaType: Image, Alt: alt, Width: int64(width), Height: int64(height)}, selector)
 	if err != nil {
 		return
 	}
 
-	fileImagePath := fileutil.FilePath(selectorPath(avatarId, selector))
+	fileImagePath := fileutil.FilePath(selectorPath(mediaId, selector, Image))
 
-	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(avatarId, ""))))
+	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(mediaId, "", Image))))
 
 	err = img.WriteToPath(fileImagePath)
+
 	if err != nil {
 		return
 	}
 
-	logger.Error(deactivateOld(userId, avatarId))
-	newUrl = fileutil.PublicPath(selectorPath(avatarId, selector))
 	return
 }

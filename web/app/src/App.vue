@@ -37,12 +37,12 @@
                 @click="toggleUserMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <component
-                  :is="user.avatar ? 'user-avatar' : 'UserCircleIcon'"
+                <!--TODO:User Mobile Menu-->
+                <user-avatar
                   :user="user"
-                  :class="user.avatar ? 'w-6 h-6' : 'w-5.5 h-5.5'"
+                  class="w-6 h-6"
                   :isLink="userMobile"
-                ></component>
+                ></user-avatar>
                 <component
                   v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
@@ -50,9 +50,9 @@
                 ></component>
               </div>
               <dropdown v-model="userMenu" class="w-44">
-                <dropdown-item :to="`/u/${user.userName}`"
-                  >Profile</dropdown-item
-                >
+                <dropdown-item :to="`/u/${user.userName}`">
+                  Profile
+                </dropdown-item>
                 <dropdown-item>Settings (TODO)</dropdown-item>
                 <dropdown-item to="/logout">Logout</dropdown-item>
               </dropdown>
@@ -86,7 +86,6 @@ import { useStore } from "vuex";
 
 import SunIcon from "@heroicons/vue/solid/SunIcon";
 import MoonIcon from "@heroicons/vue/solid/MoonIcon";
-import UserCircleIcon from "@heroicons/vue/outline/UserCircleIcon";
 import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
 import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
 import Dropdown from "./components/menu/Dropdown.vue";
@@ -173,7 +172,6 @@ export default defineComponent({
   components: {
     SunIcon,
     MoonIcon,
-    UserCircleIcon,
     Dropdown,
     DropdownItem,
     ChevronDownIcon,

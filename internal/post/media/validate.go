@@ -1,4 +1,4 @@
-package avatar
+package media
 
 import (
 	"mime/multipart"
@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	MaxAvatarSize int64 = 1024 * 1024 * 5 // 5Mb
+	MaxImageSize int64 = 10 * 1024 * 1024 // 10Mb
 )
 
 var (
 	ContentTypes  = []string{"image/png", "image/jpeg", "image/gif", "image/webp"}
-	fileValidator = fileutil.NewVaidateConfig(MaxAvatarSize, ContentTypes...)
+	fileValidator = fileutil.NewVaidateConfig(MaxImageSize, ContentTypes...)
 )
 
 // ValidateMpFileHeader multipart.FileHeader
