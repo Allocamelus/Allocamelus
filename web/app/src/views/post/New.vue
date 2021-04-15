@@ -5,7 +5,7 @@
         <div class="flex-shrink-0">
           <user-avatar
             :user="user"
-            class="w-12 h-12 xs:w-16 xs:h-16"
+            class="w-11 h-11 xs:w-14 xs:h-14 sm:w-16 sm:h-16"
           ></user-avatar>
         </div>
         <div class="ml-3 flex-grow flex flex-col">
