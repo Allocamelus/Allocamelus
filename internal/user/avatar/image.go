@@ -15,15 +15,6 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	}
 	defer img.Close()
 
-	selector := random.StringBase58(16)
-
-	avatarId, err := InsertAvatar(userId, selector)
-	if err != nil {
-		return
-	}
-
-	fileImagePath := fileutil.FilePath(selectorPath(avatarId, selector))
-
 	err = img.Strip()
 	if err != nil {
 		return
@@ -43,6 +34,15 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	if err != nil {
 		return
 	}
+
+	selector := random.StringBase58(16)
+
+	avatarId, err := InsertAvatar(userId, selector)
+	if err != nil {
+		return
+	}
+
+	fileImagePath := fileutil.FilePath(selectorPath(avatarId, selector))
 
 	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(avatarId, ""))))
 
