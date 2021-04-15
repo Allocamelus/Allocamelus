@@ -16,38 +16,12 @@
         ></div>
       </div>
       <div class="flex mt-1 flex-wrap">
-        <div
+        <image-box
           v-for="(url, key) in imageUrls"
           :key="key"
-          class="group relative flex overflow-hidden"
-          :class="[
-            images.length == 1 ? 'w-full rounded-lg' : '',
-            images.length == 2
-              ? [
-                  key == 0 || key == 1 ? 'w-1/2' : '',
-                  key == 0 ? 'rounded-l-lg' : 'rounded-r-lg',
-                ]
-              : '',
-            images.length == 3
-              ? [
-                  key == 0
-                    ? 'w-full rounded-t-lg'
-                    : ['w-1/2', key == 1 ? 'rounded-bl-lg' : ' rounded-br-lg'],
-                ]
-              : '',
-            images.length == 4
-              ? [
-                  'w-1/2',
-                  key == 0
-                    ? 'rounded-tl-lg'
-                    : [
-                        key == 1
-                          ? 'rounded-tr-lg'
-                          : [key == 2 ? 'rounded-bl-lg' : 'rounded-br-lg'],
-                      ],
-                ]
-              : '',
-          ]"
+          :index="key"
+          :url="url"
+          :totalNumber="images.length"
         >
           <div
             class="absolute w-full h-full hidden group-hover:flex flex-col p-2 bg-black bg-opacity-50"
@@ -59,8 +33,7 @@
               <XIcon class="text-white"></XIcon>
             </circle-bg>
           </div>
-          <img :src="url" class="w-full object-cover" />
-        </div>
+        </image-box>
       </div>
     </div>
     <div
@@ -128,6 +101,7 @@ import CircleBg from "../button/CircleBg.vue";
 import BasicBtn from "../button/BasicBtn.vue";
 import Snackbar from "../box/Snackbar.vue";
 import XIcon from "@heroicons/vue/solid/XIcon";
+import ImageBox from "../box/ImageBox.vue";
 
 function getValidator(str) {
   return new RegExp(`>${str}\\b`);
@@ -277,6 +251,7 @@ export default defineComponent({
       for (let i = 0; i < this.images.length; i++) {
         this.imageUrls.push(URL.createObjectURL(this.images[i]));
       }
+      console.log(this.imageUrls);
     },
     onPost() {
       if (this.hasNoText && this.images.length == 0) {
@@ -305,6 +280,7 @@ export default defineComponent({
     BasicBtn,
     Snackbar,
     XIcon,
+    ImageBox,
   },
 });
 </script>
