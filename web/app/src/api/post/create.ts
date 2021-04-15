@@ -1,5 +1,5 @@
 import v1 from "../v1";
-import { API_Success_Error } from "../../models/api_error";
+import { API_Error, API_Success_Error } from "../../models/api_error";
 
 
 export class CreateResponse extends API_Success_Error {
@@ -16,14 +16,18 @@ export class CreateResponse extends API_Success_Error {
   }
 }
 
-export async function create(content: string, publish: boolean) {
-  return v1.post("/post",
-    JSON.stringify({
-      publish: publish,
-      content: content
-    }), {
+export async function create(content: string, images: Array<File>, publish: boolean) {
+  var formData = new FormData();
+  formData.append("publish", JSON.stringify(publish))
+  formData.append("content", content)
+  var image;
+  for (let i = 0; i < images.length; i++) {
+    formData.append("images[]", images[i])
+  }
+
+  return v1.post("/post", formData, {
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'multipart/form-data'
     }
   })
     .then(r => {
@@ -32,7 +36,10 @@ export async function create(content: string, publish: boolean) {
 }
 
 export async function CreatePost(content: string, images: Array<File>) {
-  console.log(content);
-  console.log(images);
-  
+  return create(content, images, true).then(r => {
+    if (!r.success) {
+      throw new API_Error(r);
+    }
+  })
+
 }

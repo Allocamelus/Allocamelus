@@ -11,6 +11,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -18,13 +19,14 @@ import (
 
 // Post struct
 type Post struct {
-	ID        int64  `msg:"id" json:"id"`
-	UserID    int64  `msg:"userId" json:"userId"`
-	Created   int64  `msg:"created" json:"created,omitempty"`
-	Published int64  `msg:"published" json:"published"`
-	Updated   int64  `msg:"updated" json:"updated"`
-	Content   string `msg:"content" json:"content"`
-	Media     bool   `msg:"media" json:"media"`
+	ID        int64          `msg:"id" json:"id"`
+	UserID    int64          `msg:"userId" json:"userId"`
+	Created   int64          `msg:"created" json:"created,omitempty"`
+	Published int64          `msg:"published" json:"published"`
+	Updated   int64          `msg:"updated" json:"updated"`
+	Content   string         `msg:"content" json:"content"`
+	Media     bool           `msg:"media" json:"media"`
+	MediaList []*media.Media `msg:"mediaList" json:"mediaList,omitempty"`
 }
 
 // New Post
@@ -50,7 +52,7 @@ var (
 func initPost(p data.Prepare) {
 	preInsert = p(`INSERT INTO Posts (userId, created, published, content)
 	VALUES (?, ?, ?, ?)`)
-	preGet = p(`SELECT userId, created, published, updated, content, media FROM Posts WHERE postId = ? LIMIT 1`)
+	preGet = p(`SELECT userId, created, published, updated, content FROM Posts WHERE postId = ? LIMIT 1`)
 	prePublish = p(`UPDATE Posts SET published = ? WHERE postId = ?`)
 }
 
@@ -70,10 +72,23 @@ func (p *Post) Insert() error {
 
 // Get Post
 // TODO: Likes, Views & Cache
-func Get(postID int64) (Post, error) {
-	var p Post
+func Get(postID int64) (*Post, error) {
+	p := new(Post)
 	p.ID = postID
-	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content, &p.Media)
+	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get Media
+	p.MediaList, err = media.Get(postID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+	}
+	p.Media = len(p.MediaList) > 0
+
 	return p, err
 }
 
@@ -83,11 +98,11 @@ var (
 )
 
 // GetForUser returns post if user can view it
-func GetForUser(postID int64, u *user.Session) (Post, error) {
+func GetForUser(postID int64, u *user.Session) (*Post, error) {
 	p, err := Get(postID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return Post{}, ErrNoPost
+			return nil, ErrNoPost
 		}
 		return p, err
 	}
@@ -95,7 +110,7 @@ func GetForUser(postID int64, u *user.Session) (Post, error) {
 	// Check if user can view post
 	if !p.IsPublished() {
 		if !u.LoggedIn || !p.IsPoster(u.UserID) {
-			return Post{}, ErrNoPost
+			return nil, ErrNoPost
 		}
 	}
 

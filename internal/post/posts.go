@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/post/media"
 )
 
 var (
@@ -22,7 +23,7 @@ func initPosts(p data.Prepare) {
 	preGetPublicPosts.Latest = p(`
 	SELECT
 		postId, userId, published,
-		updated, content, media
+		updated, content
 	FROM Posts 
 	WHERE published != 0 
 	ORDER BY published DESC
@@ -31,7 +32,7 @@ func initPosts(p data.Prepare) {
 	preGetPublicPosts.ByUser.Latest = p(`
 	SELECT
 		postId, published,
-		updated, content, media
+		updated, content
 	FROM Posts 
 	WHERE published != 0 AND userId = ?
 	ORDER BY published DESC
@@ -60,10 +61,19 @@ func GetPublicPosts(startNum, perPage int64) (*List, error) {
 	for rows.Next() {
 		p := new(Post)
 
-		err := rows.Scan(&p.ID, &p.UserID, &p.Published, &p.Updated, &p.Content, &p.Media)
+		err := rows.Scan(&p.ID, &p.UserID, &p.Published, &p.Updated, &p.Content)
 		if err != nil {
 			return nil, err
 		}
+
+		// Get Media
+		p.MediaList, err = media.Get(p.ID)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				return nil, err
+			}
+		}
+		p.Media = len(p.MediaList) > 0
 
 		posts.Posts[p.ID] = p
 		posts.Order[index] = p.ID
@@ -93,11 +103,20 @@ func GetPublicUserPosts(userID, startNum, perPage int64) (*List, error) {
 	for rows.Next() {
 		p := new(Post)
 
-		err := rows.Scan(&p.ID, &p.Published, &p.Updated, &p.Content, &p.Media)
+		err := rows.Scan(&p.ID, &p.Published, &p.Updated, &p.Content)
 		if err != nil {
 			return nil, err
 		}
 		p.UserID = userID
+
+		// Get Media
+		p.MediaList, err = media.Get(p.ID)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				return nil, err
+			}
+		}
+		p.Media = len(p.MediaList) > 0
 
 		posts.Posts[p.ID] = p
 		posts.Order[index] = p.ID

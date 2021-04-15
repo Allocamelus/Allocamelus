@@ -19,6 +19,10 @@ func Media(c *fiber.Ctx) error {
 	if !user.ContextSession(c).Perms.CanUploadMedia() {
 		return apierr.ErrUnauthorized403(c)
 	}
+	/*form, err := c.MultipartForm()
+	if err != nil {
+		return apierr.Err422(c, MediaResp{Error: apierr.UnprocessableEntity.String()})
+	}*/
 	return fiberutil.JSON(c, 200, MediaResp{Success: true})
 }
 
