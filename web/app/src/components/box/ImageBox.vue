@@ -1,37 +1,15 @@
 <template>
   <div
-    class="group relative flex overflow-hidden"
+    class="group relative flex"
     :class="[
-      totalNumber == 1 ? 'w-full rounded-lg' : '',
-      totalNumber == 2
-        ? [
-            index == 0 || index == 1 ? 'w-1/2' : '',
-            index == 0 ? 'rounded-l-lg' : 'rounded-r-lg',
-          ]
-        : '',
-      totalNumber == 3
-        ? [
-            index == 0
-              ? 'w-full rounded-t-lg'
-              : ['w-1/2', index == 1 ? 'rounded-bl-lg' : ' rounded-br-lg'],
-          ]
-        : '',
-      totalNumber == 4
-        ? [
-            'w-1/2',
-            index == 0
-              ? 'rounded-tl-lg'
-              : [
-                  index == 1
-                    ? 'rounded-tr-lg'
-                    : [index == 2 ? 'rounded-bl-lg' : 'rounded-br-lg'],
-                ],
-          ]
-        : '',
+      totalNumber == 1 ? 'w-full' : '',
+      totalNumber == 2 ? [index == 0 || index == 1 ? 'w-1/2' : ''] : '',
+      totalNumber == 3 ? [index == 0 ? 'w-full' : 'w-1/2'] : '',
+      totalNumber == 4 ? 'w-1/2' : '',
     ]"
   >
     <slot></slot>
-    <img :src="url" class="w-full h-full object-cover"/>
+    <img :src="url" class="w-full h-full object-cover" />
   </div>
 </template>
 
@@ -45,8 +23,8 @@ export default defineComponent({
     totalNumber: Number, // How many other images are there
     loading: {
       type: String,
-      default: "auto"
-    }
+      default: "auto",
+    },
   },
 });
 </script>

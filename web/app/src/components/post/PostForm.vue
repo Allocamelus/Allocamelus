@@ -15,7 +15,7 @@
           class="flex-grow text-lg p-1.5 outline-none"
         ></div>
       </div>
-      <div class="flex mt-1 flex-wrap">
+      <div class="flex mt-1 flex-wrap rounded-lg overflow-hidden">
         <image-box
           v-for="(url, key) in imageUrls"
           :key="key"

@@ -2,16 +2,16 @@
   <article
     class="flex flex-col flex-grow flex-shrink"
     :class="isLink ? 'cursor-pointer' : ''"
-    @click.self="toPost"
   >
-    <div class="flex flex-grow flex-shrink">
+    <div class="flex flex-grow flex-shrink py-3 px-4" @click.self="toPost">
       <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
       <div
         class="ml-3 flex flex-col flex-grow"
-        :class="post.content.length == 0 ? 'justify-center' : ''"
+        :class="post.content?.length == 0 ? 'justify-center' : ''"
       >
         <div
           class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
+          @click.self="toPost"
         >
           <div class="flex">
             <user-name :user="user"></user-name>
@@ -60,13 +60,14 @@
         ></div>
       </div>
     </div>
-    <div v-if="post.media" class="flex mt-3 flex-wrap">
+    <div v-if="post.media" class="flex flex-wrap rounded-b-xl overflow-hidden">
       <image-box
         v-for="(media, key) in post.mediaList"
         :key="key"
         :index="key"
         :url="media.url"
         :totalNumber="post.mediaList.length"
+        :rounded="false"
       >
       </image-box>
     </div>
