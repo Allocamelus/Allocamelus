@@ -7,7 +7,7 @@
     ref="input"
   >
     <div class="flex items-center mr-0.5">
-      <circle-bg class="p-1.5" title="Copy" @click="doCopy">
+      <circle-bg class="p-1.5 hover:bg-rose-800 " title="Copy" @click="doCopy">
         <ClipboardListIcon
           class="w-5 h-5 text-current group-hover:text-rose-700"
         ></ClipboardListIcon>

@@ -12,6 +12,8 @@ var (
 	NotFound = New("not-found")
 	// Unauthorized403 because not using www-Authenticate headers
 	Unauthorized403 = New("unauthorized")
+	// UnprocessableEntity 422
+	UnprocessableEntity = New("unprocessable-entity")
 )
 
 // Err400 400 Bad Request
@@ -53,4 +55,9 @@ func ErrNotFound(c *fiber.Ctx) error {
 // Err422 Unprocessable Entity
 func Err422(c *fiber.Ctx, data interface{}) error {
 	return fiberutil.JSON(c, 422, data)
+}
+
+// ErrUnprocessableEntity 422
+func ErrUnprocessableEntity(c *fiber.Ctx) error {
+	return Err422(c, UnprocessableEntity)
 }

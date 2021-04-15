@@ -20,12 +20,5 @@
 import { defineComponent } from "vue";
 
 // Mixed box.svg & check.svg paths
-export default defineComponent({
-  props: {
-    sizeClass: {
-      type: String,
-      default: "w-4 h-4",
-    },
-  },
-});
+export default defineComponent({});
 </script>

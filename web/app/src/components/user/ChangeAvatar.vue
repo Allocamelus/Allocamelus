@@ -38,7 +38,7 @@
               :check="true"
               :maxSize="maxImageSize"
               :required="true"
-              @fileChange="avatarUpload"
+              @filesChange="avatarUpload"
               @error="onErr"
             >
               Upload Image

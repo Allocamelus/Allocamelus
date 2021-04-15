@@ -16,4 +16,4 @@ import TextInput from "../form/TextInput.vue";
 export default defineComponent({
   components: { Box, TextInput },
 });
-</script>Box
+</script>

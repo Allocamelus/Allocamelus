@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden ml-6 w-64 items-stretch md:flex flex-col">
+  <div class="hidden ml-6 w-64 items-stretch md:flex flex-col flex-shrink-0">
     <box v-if="loggedIn" class="py-3 px-4 rounded-xl">
       <div class="w-max mx-auto">
         <basic-btn

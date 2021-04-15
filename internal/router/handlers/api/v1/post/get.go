@@ -43,5 +43,5 @@ func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
 		}
 		return nil, apierr.ErrNotFound
 	}
-	return &p, nil
+	return p, nil
 }

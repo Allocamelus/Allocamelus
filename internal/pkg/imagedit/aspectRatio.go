@@ -34,3 +34,28 @@ func (img *Image) AR(ar AspectRatio) (width, height uint) {
 	}
 	return
 }
+
+func (img *Image) ARMaxSize(ar AspectRatio, maxPx uint) (width, height uint) {
+	width, height = img.AR(ar)
+
+	wf := float64(width)
+	hf := float64(height)
+	mpf := float64(maxPx)
+
+	if width > maxPx {
+		resizeFloat := mpf / wf
+		wf = resizeFloat * wf
+		hf = resizeFloat * hf
+	}
+
+	height = uint(hf)
+	if height > maxPx {
+		resizeFloat := mpf / hf
+		hf = resizeFloat * hf
+		wf = resizeFloat * wf
+	}
+
+	width = uint(wf)
+	height = uint(hf)
+	return
+}

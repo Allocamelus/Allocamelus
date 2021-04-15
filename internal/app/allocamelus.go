@@ -40,6 +40,7 @@ func New(configPath string) *Allocamelus {
 	app := fiber.New(fiber.Config{
 		Prefork:     g.Data.Config.Site.Prefork,
 		JSONEncoder: json.Marshal,
+		BodyLimit:   50 * 1024 * 2024, // 50MB
 	})
 
 	if g.Data.Config.Dev {

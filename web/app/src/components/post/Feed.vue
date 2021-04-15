@@ -8,7 +8,6 @@
       :post="list.post(postId)"
       :user="list.user(list.post(postId).userId)"
       :isLink="true"
-      class="py-3 px-4"
     ></post-box>
   </box>
 </template>

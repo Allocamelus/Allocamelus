@@ -9,6 +9,9 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -16,13 +19,14 @@ import (
 
 // Post struct
 type Post struct {
-	ID        int64  `msg:"id" json:"id"`
-	UserID    int64  `msg:"userId" json:"userId"`
-	Created   int64  `msg:"created" json:"created,omitempty"`
-	Published int64  `msg:"published" json:"published"`
-	Updated   int64  `msg:"updated" json:"updated"`
-	Content   string `msg:"content" json:"content"`
-	Media     bool   `msg:"media" json:"media"`
+	ID        int64          `msg:"id" json:"id"`
+	UserID    int64          `msg:"userId" json:"userId"`
+	Created   int64          `msg:"created" json:"created,omitempty"`
+	Published int64          `msg:"published" json:"published"`
+	Updated   int64          `msg:"updated" json:"updated"`
+	Content   string         `msg:"content" json:"content"`
+	Media     bool           `msg:"media" json:"media"`
+	MediaList []*media.Media `msg:"mediaList" json:"mediaList,omitempty"`
 }
 
 // New Post
@@ -38,15 +42,17 @@ func New(userID int64, content string, publish bool) *Post {
 }
 
 var (
-	preInsert  *sql.Stmt
-	preGet     *sql.Stmt
-	prePublish *sql.Stmt
+	preInsert       *sql.Stmt
+	preGet          *sql.Stmt
+	prePublish      *sql.Stmt
+	preGetPublished *sql.Stmt
+	preGetUserID    *sql.Stmt
 )
 
 func initPost(p data.Prepare) {
 	preInsert = p(`INSERT INTO Posts (userId, created, published, content)
 	VALUES (?, ?, ?, ?)`)
-	preGet = p(`SELECT userId, created, published, updated, content, media FROM Posts WHERE postId = ? LIMIT 1`)
+	preGet = p(`SELECT userId, created, published, updated, content FROM Posts WHERE postId = ? LIMIT 1`)
 	prePublish = p(`UPDATE Posts SET published = ? WHERE postId = ?`)
 }
 
@@ -66,10 +72,23 @@ func (p *Post) Insert() error {
 
 // Get Post
 // TODO: Likes, Views & Cache
-func Get(postID int64) (Post, error) {
-	var p Post
+func Get(postID int64) (*Post, error) {
+	p := new(Post)
 	p.ID = postID
-	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content, &p.Media)
+	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get Media
+	p.MediaList, err = media.Get(postID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+	}
+	p.Media = len(p.MediaList) > 0
+
 	return p, err
 }
 
@@ -79,28 +98,47 @@ var (
 )
 
 // GetForUser returns post if user can view it
-func GetForUser(postID int64, u *user.Session) (Post, error) {
+func GetForUser(postID int64, u *user.Session) (*Post, error) {
 	p, err := Get(postID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return Post{}, ErrNoPost
+			return nil, ErrNoPost
 		}
 		return p, err
 	}
 
 	// Check if user can view post
 	if !p.IsPublished() {
-		if !u.LoggedIn || !p.isPoster(u.UserID) {
-			return Post{}, ErrNoPost
+		if !u.LoggedIn || !p.IsPoster(u.UserID) {
+			return nil, ErrNoPost
 		}
 	}
 
 	// Omit Created if user is not poster
-	if !p.isPoster(u.UserID) {
+	if !p.IsPoster(u.UserID) {
 		p.Created = 0
 	}
 
 	return p, err
+}
+
+func GetUserId(postID int64) (int64, error) {
+	if preGetUserID == nil {
+		preGetUserID = g.Data.Prepare(`SELECT userId FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+	var userId int64
+	err := preGetUserID.QueryRow(postID).Scan(&userId)
+	return userId, err
+}
+
+func Published(postID int64) (bool, error) {
+	if preGetPublished == nil {
+		preGetPublished = g.Data.Prepare(`SELECT published FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+
+	var published bool
+	err := preGetPublished.QueryRow(postID).Scan(&published)
+	return published, err
 }
 
 // Publish post if not already
@@ -124,6 +162,6 @@ func (p *Post) IsPublished() bool {
 	return (p.Published != 0)
 }
 
-func (p *Post) isPoster(userID int64) bool {
-	return (p.UserID == userID)
+func (p *Post) IsPoster(userID int64) bool {
+	return compare.EqualInt64(p.UserID, userID)
 }

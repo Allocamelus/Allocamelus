@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 )
 
 var (
@@ -57,7 +58,7 @@ func CleanupOld(userId int64) error {
 
 // remove avatar file and db entry
 func remove(avatarId int64) error {
-	os.RemoveAll(filePath(avatarId, ""))
+	os.RemoveAll(fileutil.FilePath(selectorPath(avatarId, "")))
 	if preDelete == nil {
 		preDelete = g.Data.Prepare(`DELETE FROM UserAvatars WHERE userAvatarId=?`)
 	}

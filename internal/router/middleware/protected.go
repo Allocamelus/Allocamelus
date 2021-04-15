@@ -1,11 +1,15 @@
 package middleware
 
 import (
-	"crypto/subtle"
+	"database/sql"
 
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/pkg/fiberutil"
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -33,13 +37,35 @@ func ProtectedSelfOnly(c *fiber.Ctx) error {
 	_, userID, errApi := shared.GetUserNameAndID(c)
 	if errApi == apierr.SomethingWentWrong {
 		return apierr.ErrSomethingWentWrong(c)
-	}
-
-	currentUserID := user.ContextSession(c).UserID
-	if subtle.ConstantTimeEq(int32(userID), int32(currentUserID)) == 0 ||
-		subtle.ConstantTimeEq(int32(userID>>32), int32(currentUserID>>32)) == 0 {
+	} else if errApi == apierr.NotFound {
 		return apierr.ErrUnauthorized403(c)
 	}
 
-	return c.Next()
+	return checkIdWithSelf(c, userID)
+}
+
+// ProtectedPosterOnly only allow access to post owner
+func ProtectedPosterOnly(c *fiber.Ctx) error {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	ownerId, err := post.GetUserId(postID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			logger.Error(err)
+			return apierr.ErrSomethingWentWrong(c)
+		}
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	return checkIdWithSelf(c, ownerId)
+}
+
+func checkIdWithSelf(c *fiber.Ctx, userId int64) error {
+	if compare.EqualInt64(userId, user.ContextSession(c).UserID) {
+		return c.Next()
+	}
+	return apierr.ErrUnauthorized403(c)
 }
