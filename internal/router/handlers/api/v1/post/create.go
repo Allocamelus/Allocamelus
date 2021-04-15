@@ -4,6 +4,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
@@ -23,9 +24,10 @@ const (
 )
 
 type createRequest struct {
-	Publish bool                    `json:"publish" form:"publish"`
-	Content string                  `json:"content" form:"content"`
-	Images  []*multipart.FileHeader `form:"images[]"`
+	Publish   bool                    `json:"publish" form:"publish"`
+	Content   string                  `json:"content" form:"content"`
+	Images    []*multipart.FileHeader `form:"images[]"`
+	ImageAlts []string                `form:"imageAlts[]"`
 }
 
 type createResponse struct {
@@ -62,7 +64,9 @@ func Create(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	for _, v := range request.Images {
+	imageAltLen := len(request.ImageAlts)
+
+	for k, v := range request.Images {
 		if err := media.ValidateMpFileHeader(v); err != nil {
 			if err == fileutil.ErrSomethingWentWrong {
 				return apierr.ErrSomethingWentWrong(c)
@@ -77,7 +81,18 @@ func Create(c *fiber.Ctx) error {
 		if err := c.SaveFile(v, imgPath); logger.Error(err) {
 			return apierr.ErrSomethingWentWrong(c)
 		}
-		err := media.TransformAndSave(newPost.ID, imgPath)
+		var alt string
+		if imageAltLen > k {
+			// Truncate alt to 512
+			altLen := len(request.ImageAlts[k])
+			if altLen > 512 {
+				altLen = 512
+			}
+			alt = request.ImageAlts[k][:altLen]
+		} else {
+			alt = "Image #" + strconv.Itoa(k+1) + " For Post:" + strconv.Itoa(int(newPost.ID))
+		}
+		err := media.TransformAndSave(newPost.ID, imgPath, alt)
 		if logger.Error(err) {
 			return apierr.ErrSomethingWentWrong(c)
 		}

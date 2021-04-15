@@ -24,14 +24,28 @@
           :totalNumber="images.length"
         >
           <div
-            class="absolute w-full h-full hidden group-hover:flex flex-col p-2 bg-black bg-opacity-50"
+            class="absolute w-full h-full hidden group-hover:flex flex-col justify-between p-2 bg-black bg-opacity-50 text-white"
           >
             <circle-bg
               class="hover:bg-white w-6 h-6 self-end"
               @click="removeImage(key)"
             >
-              <XIcon class="text-white"></XIcon>
+              <XIcon></XIcon>
             </circle-bg>
+            <div class="flex flex-col">
+              <input-label :label="`imageAlt${key}`" :err="imageAltErrs[key]">
+                Alt/Description
+              </input-label>
+              <text-input
+                v-model="images[key].alt"
+                :name="`imageAlt${key}`"
+                :check="true"
+                :maxLen="512"
+                :regex="altRegex"
+                regexMsg="Some Characters will be escaped"
+                @error="imageAltErrs[key] = $event"
+              ></text-input>
+            </div>
           </div>
         </image-box>
       </div>
@@ -87,7 +101,8 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import Turndown from "turndown";
 
-import { CreatePost } from "../../api/post/create";
+import { CreatePost, MediaFile } from "../../api/post/create";
+import { InvalidCharacters } from "../form/errors";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -102,6 +117,8 @@ import BasicBtn from "../button/BasicBtn.vue";
 import Snackbar from "../box/Snackbar.vue";
 import XIcon from "@heroicons/vue/solid/XIcon";
 import ImageBox from "../box/ImageBox.vue";
+import TextInput from "../form/TextInput.vue";
+import InputLabel from "../form/InputLabel.vue";
 
 function getValidator(str) {
   return new RegExp(`>${str}\\b`);
@@ -124,6 +141,7 @@ const turndownService = new Turndown().keep("u");
 
 export default defineComponent({
   setup() {
+    const altRegex = /^[^<>\[\]"&]*$/
     const data = reactive({
       editor: null,
       richText: "",
@@ -134,6 +152,7 @@ export default defineComponent({
         underline: false,
       },
       images: [],
+      imageAltErrs: [],
       imageUrls: [],
       err: {
         msg: "",
@@ -142,6 +161,7 @@ export default defineComponent({
     });
     return {
       ...toRefs(data),
+      altRegex,
     };
   },
   computed: {
@@ -231,7 +251,7 @@ export default defineComponent({
     },
     imagesUpload(images) {
       for (let i = 0; i < images.length; i++) {
-        this.images.push(images[i]);
+        this.images.push(MediaFile.createFrom({ media: images[i], alt: "" }));
       }
       this.imagesToUrl();
     },
@@ -249,9 +269,8 @@ export default defineComponent({
     imagesToUrl() {
       this.imageUrls = [];
       for (let i = 0; i < this.images.length; i++) {
-        this.imageUrls.push(URL.createObjectURL(this.images[i]));
+        this.imageUrls.push(URL.createObjectURL(this.images[i].media));
       }
-      console.log(this.imageUrls);
     },
     onPost() {
       if (this.hasNoText && this.images.length == 0) {
@@ -281,6 +300,8 @@ export default defineComponent({
     Snackbar,
     XIcon,
     ImageBox,
+    TextInput,
+    InputLabel,
   },
 });
 </script>

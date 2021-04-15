@@ -3,6 +3,9 @@
 
 export class GEN_Media {
     mediaType: number;
+    alt: string;
+    width: number;
+    height: number;
     url: string;
 
     static createFrom(source: any = {}) {
@@ -12,6 +15,9 @@ export class GEN_Media {
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
         this.mediaType = source["mediaType"];
+        this.alt = source["alt"];
+        this.width = source["width"];
+        this.height = source["height"];
         this.url = source["url"];
     }
 }

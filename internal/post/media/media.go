@@ -4,6 +4,7 @@ package media
 
 import (
 	"database/sql"
+	"html"
 	"strconv"
 	"strings"
 	"time"
@@ -21,6 +22,9 @@ const (
 
 type Media struct {
 	MediaType MediaType `msg:"mediaType" json:"mediaType"`
+	Alt       string    `msg:"alt" json:"alt"`
+	Width     int64     `msg:"width" json:"width"`
+	Height    int64     `msg:"height" json:"height"`
 	Url       string    `msg:"url" json:"url"`
 }
 
@@ -31,7 +35,7 @@ var (
 
 func Get(postID int64) ([]*Media, error) {
 	if preGet == nil {
-		preGet = g.Data.Prepare(`SELECT postMediaId, mediaType, selector FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
+		preGet = g.Data.Prepare(`SELECT postMediaId, mediaType, alt, width, height, selector FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
 	}
 	rows, err := preGet.Query(postID)
 	if err != nil {
@@ -42,17 +46,16 @@ func Get(postID int64) ([]*Media, error) {
 	mediaList := []*Media{}
 
 	for rows.Next() {
+		media := new(Media)
 		var (
-			mediaId   int64
-			mediaType int8
-			selector  string
+			mediaId  int64
+			selector string
 		)
-		err := rows.Scan(&mediaId, &mediaType, &selector)
+		err := rows.Scan(&mediaId, &media.MediaType, &media.Alt, &media.Width, &media.Height, &selector)
 		if err != nil {
 			return nil, err
 		}
-		media := new(Media)
-		media.MediaType = MediaType(mediaType)
+		media.Alt = html.EscapeString(media.Alt)
 		media.Url = fileutil.PublicPath(selectorPath(mediaId, selector, media.MediaType))
 		mediaList = append(mediaList, media)
 	}
@@ -60,11 +63,11 @@ func Get(postID int64) ([]*Media, error) {
 	return mediaList, nil
 }
 
-func Insert(postID int64, mediaType MediaType, selector string) (int64, error) {
+func Insert(postID int64, media Media, selector string) (int64, error) {
 	if preInsert == nil {
-		preInsert = g.Data.Prepare(`INSERT INTO PostMedia (postId, created, active, mediaType, selector) VALUES (?, ?, 1, ?, ?)`)
+		preInsert = g.Data.Prepare(`INSERT INTO PostMedia (postId, created, active, mediaType, alt, width, height, selector) VALUES (?, ?, 1, ?, ?, ?, ?, ?)`)
 	}
-	r, err := preInsert.Exec(postID, time.Now().Unix(), mediaType, selector)
+	r, err := preInsert.Exec(postID, time.Now().Unix(), media.MediaType, media.Alt, media.Width, media.Height, selector)
 	if err != nil {
 		return 0, err
 	}

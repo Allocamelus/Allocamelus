@@ -66,8 +66,12 @@
         :key="key"
         :index="key"
         :url="media.url"
+        :alt="media.alt"
+        :width="media.width"
+        :height="media.height"
         :totalNumber="post.mediaList.length"
         :rounded="false"
+        :loading="lazy"
       >
       </image-box>
     </div>

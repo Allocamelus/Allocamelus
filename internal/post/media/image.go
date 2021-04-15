@@ -10,7 +10,7 @@ import (
 
 const MaxHightWidth uint = 7680
 
-func TransformAndSave(postID int64, tmpImagePath string) (err error) {
+func TransformAndSave(postID int64, tmpImagePath string, alt string) (err error) {
 	img, err := imagedit.NewFromPath(tmpImagePath)
 	if err != nil {
 		return
@@ -38,7 +38,7 @@ func TransformAndSave(postID int64, tmpImagePath string) (err error) {
 
 	selector := random.StringBase58(16)
 
-	mediaId, err := Insert(postID, Image, selector)
+	mediaId, err := Insert(postID, Media{MediaType: Image, Alt: alt, Width: int64(width), Height: int64(height)}, selector)
 	if err != nil {
 		return
 	}
