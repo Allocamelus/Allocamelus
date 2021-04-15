@@ -31,7 +31,7 @@
     ]"
   >
     <slot></slot>
-    <img :src="url" class="w-full object-cover"/>
+    <img :src="url" class="w-full h-full object-cover"/>
   </div>
 </template>
 
