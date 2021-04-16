@@ -25,24 +25,20 @@ func (z *Media) DecodeMsg(dc *msgp.Reader) (err error) {
 		}
 		switch msgp.UnsafeString(field) {
 		case "mediaType":
-			{
-				var zb0002 int
-				zb0002, err = dc.ReadInt()
-				if err != nil {
-					err = msgp.WrapError(err, "MediaType")
-					return
-				}
-				z.MediaType = MediaType(zb0002)
+			err = z.MediaType.DecodeMsg(dc)
+			if err != nil {
+				err = msgp.WrapError(err, "MediaType")
+				return
 			}
 		case "meta":
-			var zb0003 uint32
-			zb0003, err = dc.ReadMapHeader()
+			var zb0002 uint32
+			zb0002, err = dc.ReadMapHeader()
 			if err != nil {
 				err = msgp.WrapError(err, "Meta")
 				return
 			}
-			for zb0003 > 0 {
-				zb0003--
+			for zb0002 > 0 {
+				zb0002--
 				field, err = dc.ReadMapKeyPtr()
 				if err != nil {
 					err = msgp.WrapError(err, "Meta")
@@ -100,7 +96,7 @@ func (z *Media) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	err = en.WriteInt(int(z.MediaType))
+	err = z.MediaType.EncodeMsg(en)
 	if err != nil {
 		err = msgp.WrapError(err, "MediaType")
 		return
@@ -160,7 +156,11 @@ func (z *Media) MarshalMsg(b []byte) (o []byte, err error) {
 	// map header, size 3
 	// string "mediaType"
 	o = append(o, 0x83, 0xa9, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x54, 0x79, 0x70, 0x65)
-	o = msgp.AppendInt(o, int(z.MediaType))
+	o, err = z.MediaType.MarshalMsg(o)
+	if err != nil {
+		err = msgp.WrapError(err, "MediaType")
+		return
+	}
 	// string "meta"
 	o = append(o, 0xa4, 0x6d, 0x65, 0x74, 0x61)
 	// map header, size 3
@@ -198,24 +198,20 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 		}
 		switch msgp.UnsafeString(field) {
 		case "mediaType":
-			{
-				var zb0002 int
-				zb0002, bts, err = msgp.ReadIntBytes(bts)
-				if err != nil {
-					err = msgp.WrapError(err, "MediaType")
-					return
-				}
-				z.MediaType = MediaType(zb0002)
+			bts, err = z.MediaType.UnmarshalMsg(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "MediaType")
+				return
 			}
 		case "meta":
-			var zb0003 uint32
-			zb0003, bts, err = msgp.ReadMapHeaderBytes(bts)
+			var zb0002 uint32
+			zb0002, bts, err = msgp.ReadMapHeaderBytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "Meta")
 				return
 			}
-			for zb0003 > 0 {
-				zb0003--
+			for zb0002 > 0 {
+				zb0002--
 				field, bts, err = msgp.ReadMapKeyZC(bts)
 				if err != nil {
 					err = msgp.WrapError(err, "Meta")
@@ -268,59 +264,7 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Media) Msgsize() (s int) {
-	s = 1 + 10 + msgp.IntSize + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
-	return
-}
-
-// DecodeMsg implements msgp.Decodable
-func (z *MediaType) DecodeMsg(dc *msgp.Reader) (err error) {
-	{
-		var zb0001 int
-		zb0001, err = dc.ReadInt()
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		(*z) = MediaType(zb0001)
-	}
-	return
-}
-
-// EncodeMsg implements msgp.Encodable
-func (z MediaType) EncodeMsg(en *msgp.Writer) (err error) {
-	err = en.WriteInt(int(z))
-	if err != nil {
-		err = msgp.WrapError(err)
-		return
-	}
-	return
-}
-
-// MarshalMsg implements msgp.Marshaler
-func (z MediaType) MarshalMsg(b []byte) (o []byte, err error) {
-	o = msgp.Require(b, z.Msgsize())
-	o = msgp.AppendInt(o, int(z))
-	return
-}
-
-// UnmarshalMsg implements msgp.Unmarshaler
-func (z *MediaType) UnmarshalMsg(bts []byte) (o []byte, err error) {
-	{
-		var zb0001 int
-		zb0001, bts, err = msgp.ReadIntBytes(bts)
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		(*z) = MediaType(zb0001)
-	}
-	o = bts
-	return
-}
-
-// Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
-func (z MediaType) Msgsize() (s int) {
-	s = msgp.IntSize
+	s = 1 + 10 + z.MediaType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
 	return
 }
 
