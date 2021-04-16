@@ -2,11 +2,8 @@ package post
 
 import (
 	"mime/multipart"
-	"os"
-	"path/filepath"
 	"strconv"
 
-	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/media"
@@ -14,7 +11,6 @@ import (
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
-	"github.com/allocamelus/allocamelus/pkg/random"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -73,14 +69,6 @@ func Create(c *fiber.Ctx) error {
 			}
 			return apierr.Err422(c, createResponse{Error: err.Error()})
 		}
-		imgDir := dirutil.RandomTmpDir()
-		// Remove image tmp dir and all it's children
-		defer os.RemoveAll(imgDir)
-		imgPath := filepath.Join(imgDir, random.StringBase64(8))
-		// Save file to tmp dir
-		if err := c.SaveFile(v, imgPath); logger.Error(err) {
-			return apierr.ErrSomethingWentWrong(c)
-		}
 		var alt string
 		if imageAltLen > k {
 			// Truncate alt to 512
@@ -92,7 +80,7 @@ func Create(c *fiber.Ctx) error {
 		} else {
 			alt = "Image #" + strconv.Itoa(k+1) + " For Post:" + strconv.Itoa(int(newPost.ID))
 		}
-		err := media.TransformAndSave(newPost.ID, imgPath, alt)
+		err := media.TransformAndSave(newPost.ID, v, alt)
 		if logger.Error(err) {
 			return apierr.ErrSomethingWentWrong(c)
 		}
