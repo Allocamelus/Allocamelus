@@ -13,14 +13,8 @@ type Image struct {
 	TransformAnimation bool
 	// OptimizeImageLayers panics if images are not all the same size
 	resized bool
+	Format  Format
 }
-
-const (
-	WEBP = "WEBP"
-	PNG  = "PNG"
-	JPG  = "JPEG"
-	GIF  = "GIF"
-)
 
 var ErrNilWand = errors.New("imagedit: Error Nil MagickWand")
 
@@ -28,6 +22,15 @@ func NewFromPath(imagePath string) (*Image, error) {
 	mw := imagick.NewMagickWand()
 
 	err := mw.ReadImage(imagePath)
+	if err != nil {
+		return nil, err
+	}
+	return NewFromMW(mw)
+}
+
+func NewFromBlob(blob []byte) (*Image, error) {
+	mw := imagick.NewMagickWand()
+	err := mw.ReadImageBlob(blob)
 	if err != nil {
 		return nil, err
 	}
