@@ -5,29 +5,17 @@ package media
 import (
 	"database/sql"
 	"html"
-	"strings"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
-	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	jsoniter "github.com/json-iterator/go"
 )
 
-type MediaType int
-
-const (
-	None MediaType = iota
-	IMG_PNG
-	IMG_JPG
-	IMG_WEBP
-	IMG_GIF
-)
-
 type Media struct {
-	MediaType MediaType `msg:"mediaType" json:"mediaType"`
-	Meta      Meta      `msg:"meta" json:"meta"`
-	Url       string    `msg:"url" json:"url"`
+	MediaType fileutil.Format `msg:"mediaType" json:"mediaType"`
+	Meta      Meta            `msg:"meta" json:"meta"`
+	Url       string          `msg:"url" json:"url"`
 }
 
 type Meta struct {
@@ -90,39 +78,6 @@ func Insert(postID int64, media Media, hash string) error {
 	return nil
 }
 
-func ImageditFmtToType(f imagedit.Format) MediaType {
-	switch f {
-	case imagedit.GIF:
-		return IMG_GIF
-	case imagedit.JPG:
-		return IMG_JPG
-	case imagedit.PNG:
-		return IMG_PNG
-	case imagedit.WEBP:
-		return IMG_WEBP
-	}
-	return None
-}
-
-func (mt MediaType) FileExt() string {
-	switch mt {
-	case IMG_GIF:
-		return ".gif"
-	case IMG_JPG:
-		return ".jpg"
-	case IMG_PNG:
-		return ".png"
-	case IMG_WEBP:
-		return ".web"
-	}
-	return ""
-}
-
-func selectorPath(encodedHash string, mediaType MediaType, includeFile bool) string {
-	var path strings.Builder
-	path.WriteString("posts/" + encodedHash[:3] + "/" + encodedHash[3:6])
-	if includeFile {
-		path.WriteString("/" + encodedHash + mediaType.FileExt())
-	}
-	return path.String()
+func selectorPath(b58hash string, mediaType fileutil.Format, includeFile bool) string {
+	return fileutil.RelativePath("posts", b58hash, mediaType, includeFile)
 }

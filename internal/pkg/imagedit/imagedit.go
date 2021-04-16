@@ -3,6 +3,7 @@ package imagedit
 import (
 	"errors"
 
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"gopkg.in/gographics/imagick.v3/imagick"
 )
 
@@ -13,7 +14,7 @@ type Image struct {
 	TransformAnimation bool
 	// OptimizeImageLayers panics if images are not all the same size
 	resized bool
-	Format  Format
+	Format  fileutil.Format
 }
 
 var ErrNilWand = errors.New("imagedit: Error Nil MagickWand")

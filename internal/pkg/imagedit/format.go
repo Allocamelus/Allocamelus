@@ -1,14 +1,21 @@
 package imagedit
 
-type Format string
+import "github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 
-const (
-	WEBP Format = "WEBP"
-	PNG  Format = "PNG"
-	JPG  Format = "JPEG"
-	GIF  Format = "GIF"
-)
+func mwToFmt(f string) fileutil.Format {
+	switch f {
+	case "GIF":
+		return fileutil.GIF
+	case "JPEG":
+		return fileutil.JPG
+	case "PNG":
+		return fileutil.PNG
+	case "WEBP":
+		return fileutil.WEBP
+	}
+	return fileutil.NONE
+}
 
-func (img *Image) GetFormat() Format {
-	return Format(img.MW.GetImageFormat())
+func (img *Image) GetFormat() fileutil.Format {
+	return mwToFmt(img.MW.GetImageFormat())
 }
