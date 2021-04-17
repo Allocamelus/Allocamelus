@@ -1,7 +1,14 @@
 <template>
   <div class="container py-5">
-    <error-box :error="err" class="max-w-prose mx-auto">
-      <post-box :post="apiPost.post" :user="apiPost.user" :dynamicContent="true"></post-box>
+    <error-box
+      :error="err"
+      class="max-w-full xs:mx-2 sm:mx-4 md:mx-8 lg:mx-12 xl:mx-16"
+    >
+      <post-box
+        :post="apiPost.post"
+        :user="apiPost.user"
+        :dynamicContent="true"
+      ></post-box>
     </error-box>
   </div>
 </template>
