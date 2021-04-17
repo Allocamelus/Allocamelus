@@ -18,7 +18,7 @@ export class GEN_Meta {
     }
 }
 export class GEN_Media {
-    mediaType: number;
+    fileType: number;
     meta: GEN_Meta;
     url: string;
 
@@ -28,7 +28,7 @@ export class GEN_Media {
 
     constructor(source: any = {}) {
         if ('string' === typeof source) source = JSON.parse(source);
-        this.mediaType = source["mediaType"];
+        this.fileType = source["fileType"];
         this.meta = this.convertValues(source["meta"], GEN_Meta);
         this.url = source["url"];
     }
