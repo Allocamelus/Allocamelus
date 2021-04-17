@@ -2,7 +2,6 @@ package avatar
 
 import (
 	"database/sql"
-	"strconv"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -28,31 +27,30 @@ func HasAvatar(userID int64) (hasAvatar bool, err error) {
 
 func GetUrl(userID int64) (url string, err error) {
 	if preGetAvatarUrl == nil {
-		preGetAvatarUrl = g.Data.Prepare(`SELECT userAvatarId, selector FROM UserAvatars WHERE userId = ? AND active = 1 ORDER BY userAvatarId DESC LIMIT 1`)
+		preGetAvatarUrl = g.Data.Prepare(`SELECT fileType, hash FROM UserAvatars WHERE userId = ? AND active = 1 ORDER BY userAvatarId DESC LIMIT 1`)
 	}
 	var (
-		avatarId int64
-		selector string
+		fileType fileutil.Format
+		b58hash  string
 	)
-	err = preGetAvatarUrl.QueryRow(userID).Scan(&avatarId, &selector)
-	url = fileutil.PublicPath(selectorPath(avatarId, selector))
+	err = preGetAvatarUrl.QueryRow(userID).Scan(&fileType, &b58hash)
+	if err != nil {
+		return
+	}
+	url = fileutil.PublicPath(selectorPath(b58hash, fileType, true))
 	return
 }
 
-func InsertAvatar(userID int64, selector string) (int64, error) {
+func InsertAvatar(userID int64, fileType fileutil.Format, b58hash string) error {
 	if preInsertAvatar == nil {
-		preInsertAvatar = g.Data.Prepare(`INSERT INTO UserAvatars (userID, created, selector) VALUES (?, ?, ?)`)
+		preInsertAvatar = g.Data.Prepare(`INSERT INTO UserAvatars (userID, created, fileType, hash) VALUES (?, ?, ?, ?)`)
 	}
-	r, err := preInsertAvatar.Exec(userID, time.Now().Unix(), selector)
+	_, err := preInsertAvatar.Exec(userID, time.Now().Unix(), fileType, b58hash)
 	if err != nil {
-		return 0, err
-	}
-	avatarId, err := r.LastInsertId()
-	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return avatarId, nil
+	return nil
 }
 
 func Remove(userID int64) error {
@@ -67,6 +65,6 @@ func Remove(userID int64) error {
 	return CleanupOld(userID)
 }
 
-func selectorPath(avatarId int64, selector string) string {
-	return "users/avatars/" + strconv.Itoa(int(avatarId)) + "/" + selector
+func selectorPath(b58hash string, fileType fileutil.Format, includeFile bool) string {
+	return fileutil.RelativePath("users/avatars", b58hash, fileType, includeFile)
 }

@@ -1,19 +1,26 @@
 package avatar
 
 import (
+	"mime/multipart"
+
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	"github.com/allocamelus/allocamelus/pkg/logger"
-	"github.com/allocamelus/allocamelus/pkg/random"
 )
 
-func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err error) {
-	img, err := imagedit.NewFromPath(tmpImagePath)
+func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl string, err error) {
+	img, b58hash, err := imagedit.MPHtoImg(imageMPH)
 	if err != nil {
 		return
 	}
 	defer img.Close()
+
+	imgType := img.GetFormat()
+	if !imgType.IsImage() {
+		err = fileutil.ErrContentType
+		return
+	}
 
 	err = img.Strip()
 	if err != nil {
@@ -26,32 +33,29 @@ func TransformAndSave(userId int64, tmpImagePath string) (newUrl string, err err
 	if err != nil {
 		return
 	}
-	err = img.Resize(MaxHightWidth, MaxHightWidth)
-	if err != nil {
-		return
-	}
-	err = img.Optimize()
-	if err != nil {
+
+	if err = img.Resize(MaxHightWidth, MaxHightWidth); err != nil {
 		return
 	}
 
-	selector := random.StringBase58(16)
-
-	avatarId, err := InsertAvatar(userId, selector)
-	if err != nil {
+	if err = img.Optimize(); err != nil {
 		return
 	}
 
-	fileImagePath := fileutil.FilePath(selectorPath(avatarId, selector))
+	if err = InsertAvatar(userId, imgType, b58hash); err != nil {
+		return
+	}
+	imgPath := selectorPath(b58hash, imgType, true)
+	fileImagePath := fileutil.FilePath(imgPath)
 
-	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(avatarId, ""))))
+	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
 
 	err = img.WriteToPath(fileImagePath)
 	if err != nil {
 		return
 	}
 
-	logger.Error(deactivateOld(userId, avatarId))
-	newUrl = fileutil.PublicPath(selectorPath(avatarId, selector))
+	logger.Error(deactivateOld(userId))
+	newUrl = fileutil.PublicPath(imgPath)
 	return
 }

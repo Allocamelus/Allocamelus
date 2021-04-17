@@ -1,17 +1,12 @@
 package update
 
 import (
-	"os"
-	"path/filepath"
-
-	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/avatar"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
-	"github.com/allocamelus/allocamelus/pkg/random"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -40,16 +35,7 @@ func Avatar(c *fiber.Ctx) error {
 		return apierr.Err422(c, AvatarResp{Error: err.Error()})
 	}
 
-	imgDir := dirutil.RandomTmpDir()
-	// Remove image tmp dir and all it's children
-	defer os.RemoveAll(imgDir)
-	imgPath := filepath.Join(imgDir, random.StringBase64(8))
-	// Save file to tmp dir
-	if err := c.SaveFile(file, imgPath); logger.Error(err) {
-		return apierr.ErrSomethingWentWrong(c)
-	}
-
-	newUrl, err := avatar.TransformAndSave(user.ContextSession(c).UserID, imgPath)
+	newUrl, err := avatar.TransformAndSave(user.ContextSession(c).UserID, file)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
