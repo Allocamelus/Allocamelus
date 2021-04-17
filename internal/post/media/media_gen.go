@@ -24,10 +24,10 @@ func (z *Media) DecodeMsg(dc *msgp.Reader) (err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
-		case "mediaType":
-			err = z.MediaType.DecodeMsg(dc)
+		case "fileType":
+			err = z.FileType.DecodeMsg(dc)
 			if err != nil {
-				err = msgp.WrapError(err, "MediaType")
+				err = msgp.WrapError(err, "FileType")
 				return
 			}
 		case "meta":
@@ -91,14 +91,14 @@ func (z *Media) DecodeMsg(dc *msgp.Reader) (err error) {
 // EncodeMsg implements msgp.Encodable
 func (z *Media) EncodeMsg(en *msgp.Writer) (err error) {
 	// map header, size 3
-	// write "mediaType"
+	// write "fileType"
 	err = en.Append(0x83, 0xa9, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x54, 0x79, 0x70, 0x65)
 	if err != nil {
 		return
 	}
-	err = z.MediaType.EncodeMsg(en)
+	err = z.FileType.EncodeMsg(en)
 	if err != nil {
-		err = msgp.WrapError(err, "MediaType")
+		err = msgp.WrapError(err, "FileType")
 		return
 	}
 	// write "meta"
@@ -154,11 +154,11 @@ func (z *Media) EncodeMsg(en *msgp.Writer) (err error) {
 func (z *Media) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// map header, size 3
-	// string "mediaType"
+	// string "fileType"
 	o = append(o, 0x83, 0xa9, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x54, 0x79, 0x70, 0x65)
-	o, err = z.MediaType.MarshalMsg(o)
+	o, err = z.FileType.MarshalMsg(o)
 	if err != nil {
-		err = msgp.WrapError(err, "MediaType")
+		err = msgp.WrapError(err, "FileType")
 		return
 	}
 	// string "meta"
@@ -197,10 +197,10 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
-		case "mediaType":
-			bts, err = z.MediaType.UnmarshalMsg(bts)
+		case "fileType":
+			bts, err = z.FileType.UnmarshalMsg(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "MediaType")
+				err = msgp.WrapError(err, "FileType")
 				return
 			}
 		case "meta":
@@ -264,7 +264,7 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Media) Msgsize() (s int) {
-	s = 1 + 10 + z.MediaType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
+	s = 1 + 10 + z.FileType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
 	return
 }
 

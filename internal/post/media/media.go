@@ -13,9 +13,9 @@ import (
 )
 
 type Media struct {
-	MediaType fileutil.Format `msg:"mediaType" json:"mediaType"`
-	Meta      Meta            `msg:"meta" json:"meta"`
-	Url       string          `msg:"url" json:"url"`
+	FileType fileutil.Format `msg:"fileType" json:"fileType"`
+	Meta     Meta            `msg:"meta" json:"meta"`
+	Url      string          `msg:"url" json:"url"`
 }
 
 type Meta struct {
@@ -33,7 +33,7 @@ var (
 
 func Get(postID int64) ([]*Media, error) {
 	if preGet == nil {
-		preGet = g.Data.Prepare(`SELECT mediaType, meta, hash FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
+		preGet = g.Data.Prepare(`SELECT fileType, meta, hash FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
 	}
 	rows, err := preGet.Query(postID)
 	if err != nil {
@@ -49,14 +49,14 @@ func Get(postID int64) ([]*Media, error) {
 			meta string
 			hash string
 		)
-		if err := rows.Scan(&media.MediaType, &meta, &hash); err != nil {
+		if err := rows.Scan(&media.FileType, &meta, &hash); err != nil {
 			return nil, err
 		}
 		if err := json.UnmarshalFromString(meta, &media.Meta); err != nil {
 			return nil, err
 		}
 		media.Meta.Alt = html.EscapeString(media.Meta.Alt)
-		media.Url = fileutil.PublicPath(selectorPath(hash, media.MediaType, true))
+		media.Url = fileutil.PublicPath(selectorPath(hash, media.FileType, true))
 		mediaList = append(mediaList, media)
 	}
 
@@ -65,19 +65,19 @@ func Get(postID int64) ([]*Media, error) {
 
 func Insert(postID int64, media Media, hash string) error {
 	if preInsert == nil {
-		preInsert = g.Data.Prepare(`INSERT INTO PostMedia (postId, created, active, mediaType, meta, hash) VALUES (?, ?, 1, ?, ?, ?)`)
+		preInsert = g.Data.Prepare(`INSERT INTO PostMedia (postId, created, active, fileType, meta, hash) VALUES (?, ?, 1, ?, ?, ?)`)
 	}
 	meta, err := json.MarshalToString(media.Meta)
 	if err != nil {
 		return err
 	}
-	_, err = preInsert.Exec(postID, time.Now().Unix(), media.MediaType, meta, hash)
+	_, err = preInsert.Exec(postID, time.Now().Unix(), media.FileType, meta, hash)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func selectorPath(b58hash string, mediaType fileutil.Format, includeFile bool) string {
-	return fileutil.RelativePath("posts", b58hash, mediaType, includeFile)
+func selectorPath(b58hash string, fileType fileutil.Format, includeFile bool) string {
+	return fileutil.RelativePath("posts", b58hash, fileType, includeFile)
 }
