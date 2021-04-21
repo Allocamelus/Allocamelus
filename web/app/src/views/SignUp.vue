@@ -142,7 +142,7 @@ import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
 import { GEN_CreateA10Token } from "../models/go_structs_gen";
 import { createA9s } from "../api/user/create";
-import ApiResp from "../models/responses";
+import ApiResp, { RespToError } from "../models/responses";
 import { siteKeys } from "../api/meta/captcha/siteKeys";
 import {
   HtmlSomethingWentWrong,
@@ -260,58 +260,24 @@ export default defineComponent({
                 for (const key in r.errors) {
                   if (Object.hasOwnProperty.call(r.errors, key)) {
                     var err = r.errors[key];
-                    switch (key) {
-                      case "userName":
-                        switch (err) {
-                          case ApiResp.User.Validate.UserName.Taken:
-                            vm.err.userName = "Username Taken";
-                            break;
-                          case ApiResp.User.Validate.UserName.Length:
-                            vm.err.userName = "Invalid Length";
-                            break;
-                          case ApiResp.User.Validate.Invalid: {
-                            vm.err.userName = vm.errMsg.userName;
-                            break;
-                          }
-
-                          default:
-                            vm.err.signUp = HtmlSomethingWentWrong;
-                            break;
-                        }
-                        break;
-                      case "email":
-                        switch (err) {
-                          case ApiResp.User.Validate.Email.Invalid:
-                            vm.err.email = "Invalid Email";
-                            break;
-                          case ApiResp.User.Validate.Invalid: {
-                            vm.err.email = vm.errMsg.email;
-                            break;
-                          }
-
-                          default:
-                            vm.err.signUp = HtmlSomethingWentWrong;
-                            break;
-                        }
-                        break;
-                      case "password":
-                        switch (err) {
-                          case ApiResp.User.Validate.Password.Length:
-                            vm.err.password = "Invalid Length";
-                            break;
-                          case ApiResp.User.Validate.Password.Strength:
-                            vm.err.password = "Weak Password";
-                            break;
-
-                          default:
-                            vm.err.signUp = HtmlSomethingWentWrong;
-                            break;
-                        }
-                        break;
-
-                      default:
-                        vm.err.signUp = HtmlSomethingWentWrong;
-                        break;
+                    var errText = RespToError(err);
+                    if (errText.length > 0) {
+                      switch (key) {
+                        case "userName":
+                            vm.err.userName = errText;
+                          break;
+                        case "email":
+                            vm.err.email = errText;
+                          break;
+                        case "password":
+                          vm.err.password = errText
+                          break;
+                        default:
+                          vm.err.signUp = HtmlSomethingWentWrong;
+                          break;
+                      }
+                    } else {
+                      vm.err.signUp = HtmlSomethingWentWrong;
                     }
                   }
                 }
@@ -329,9 +295,6 @@ export default defineComponent({
           vm.captcha.show = false;
           vm.err.signUp = HtmlSomethingWentWrong;
         });
-    },
-    bk() {
-      this.backupKey = "babcbc";
     },
   },
   components: {
