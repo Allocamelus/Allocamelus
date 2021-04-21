@@ -75,7 +75,7 @@
 import { defineComponent, reactive, toRefs } from "vue";
 
 import { GEN_User } from "../../models/go_structs_gen";
-import ApiResp from "../../models/responses";
+import { RespToError } from "../../models/responses";
 import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
 
 import { bio as UpdateBio } from "../../api/user/update/bio";
@@ -160,16 +160,11 @@ export default defineComponent({
               if (r.success) {
                 vm.updateStoreName(vm.name);
               } else {
-                switch (r.error) {
-                  case ApiResp.User.Validate.Name.Length:
-                    vm.err.name = "Invalid Length";
-                    break;
-                  case ApiResp.User.Validate.Invalid:
-                    vm.err.name = InvalidCharacters;
-                    break;
-                  default:
-                    vm.snackbarErr(SomethingWentWrong);
-                    break;
+                var errText = RespToError(r.error);
+                if (errText.length > 0) {
+                  vm.err.name = errText;
+                } else {
+                  vm.snackbarErr(SomethingWentWrong);
                 }
               }
             })
@@ -183,16 +178,11 @@ export default defineComponent({
               if (r.success) {
                 vm.updateStoreBio(vm.bio);
               } else {
-                switch (r.error) {
-                  case ApiResp.User.Validate.Bio.Length:
-                    vm.err.bio = "Invalid Length";
-                    break;
-                  case ApiResp.User.Validate.Invalid:
-                    vm.err.bio = InvalidCharacters;
-                    break;
-                  default:
-                    vm.snackbarErr(SomethingWentWrong);
-                    break;
+                var errText = RespToError(r.error);
+                if (errText.length > 0) {
+                  vm.err.bio = errText;
+                } else {
+                  vm.snackbarErr(SomethingWentWrong);
                 }
               }
             })
@@ -202,7 +192,7 @@ export default defineComponent({
             });
         }
       })();
-      
+
       if (vm.noErrs()) {
         vm.visable = false;
       }

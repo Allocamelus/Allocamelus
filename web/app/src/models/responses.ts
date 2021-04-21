@@ -2,13 +2,17 @@ const invalidLength = "invalid-length",
   invalidChars = "invalid-characters",
   taken = "taken"
 
-export default {
+export const Responses = {
   Shared: {
     A10: "allocamelus",
     InvalidAuthToken: "invalid-auth-token",
     InvalidWith: "invalid-with-value",
     InvalidCaptcha: "invalid-captcha",
     NotFound: "not-found",
+    File: {
+      ContentType: "invalid-content-type",
+      Size: "invalid-file-size"
+    },
   },
   Account: {
     Auth: {
@@ -23,16 +27,17 @@ export default {
     Create: {
       Unauthorized: "unauthorized",
       InsufficientPerms: "insufficient-permissions"
+    },
+    Validate: {
+      Content: {
+        Length: invalidLength + "-min0-max65500"
+      },
     }
   },
   User: {
     Create: {
       InvalidCreateToken: "invalid-create-token",
       LoggedIn: "logged-in",
-    },
-    Avatar: {
-      ContentType: "invalid-content-type",
-      FileSize: "invalid-file-size"
     },
     Validate: {
       UserName: {
@@ -56,4 +61,29 @@ export default {
     }
   }
   // TODO: Add rest of the api codes
+}
+
+export default Responses
+
+// RespToError response to a more human readable error
+export function RespToError(resp: string) {
+  switch (resp) {
+    case Responses.User.Validate.Bio.Length:
+      return "Invalid Length 0-255 Characters"
+    case Responses.User.Validate.Email.Invalid:
+      return "Invalid Email"
+    case Responses.User.Validate.Invalid:
+      return "Invalid Characters"
+    case Responses.User.Validate.Name.Length:
+      return "Invalid Length 1-128 Characters"
+    case Responses.User.Validate.Password.Length:
+      return "Invalid Length 8-1024 Characters"
+    case Responses.User.Validate.Password.Strength:
+      return "Weak Password"
+    case Responses.User.Validate.UserName.Length:
+      return "Invalid Length 5-64 Characters"
+    case Responses.User.Validate.UserName.Taken:
+      return "Username Taken"
+  }
+  return ""
 }
