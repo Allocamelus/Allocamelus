@@ -88,6 +88,7 @@
         <basic-btn
           class="text-secondary-700 dark:text-rose-600 p-1.5"
           @click="onPost"
+          :disabled="submited"
         >
           Post
         </basic-btn>
@@ -101,8 +102,7 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import Turndown from "turndown";
 
-import { CreatePost, MediaFile } from "../../api/post/create";
-import { InvalidCharacters } from "../form/errors";
+import { create as CreatePost, MediaFile } from "../../api/post/create";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -141,7 +141,7 @@ const turndownService = new Turndown().keep("u");
 
 export default defineComponent({
   setup() {
-    const altRegex = /^[^<>\[\]"&]*$/
+    const altRegex = /^[^<>\[\]"&]*$/;
     const data = reactive({
       editor: null,
       richText: "",
@@ -154,6 +154,7 @@ export default defineComponent({
       images: [],
       imageAltErrs: [],
       imageUrls: [],
+      submited: false,
       err: {
         msg: "",
         show: false,
@@ -273,10 +274,32 @@ export default defineComponent({
       }
     },
     onPost() {
+      if (this.submited) {
+        return this.onErr("Loading...");
+      }
       if (this.hasNoText && this.images.length == 0) {
         return this.onErr("Text or Image(s) Required");
       }
-      CreatePost(turndownService.turndown(this.richText), this.images);
+      this.submited = true;
+      CreatePost(turndownService.turndown(this.richText), this.images, true)
+        .then((r) => {
+          if (r.success) {
+            return this.$router.push(`/post/${r.id}`);
+          }
+          this.onPostErr(r.error);
+        })
+        .catch((e) => {
+          this.onPostErr(e);
+        });
+    },
+    onPostErr(e) {
+      this.submited = false;
+      var errText = RespToError(e);
+      if (errText.length > 0) {
+        this.onErr(errText);
+      } else {
+        this.onErr(SomethingWentWrong);
+      }
     },
   },
   mounted() {

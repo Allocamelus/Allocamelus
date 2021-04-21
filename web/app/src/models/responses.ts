@@ -66,6 +66,7 @@ export const Responses = {
 export default Responses
 
 // RespToError response to a more human readable error
+// TODO: Add All error text
 export function RespToError(resp: string) {
   switch (resp) {
     case Responses.User.Validate.Bio.Length:
@@ -84,6 +85,10 @@ export function RespToError(resp: string) {
       return "Invalid Length 5-64 Characters"
     case Responses.User.Validate.UserName.Taken:
       return "Username Taken"
+    case Responses.Shared.File.ContentType:
+      return "Unsupported Image Type"
+    case Responses.Shared.File.Size:
+      return "Image size to large"
   }
   return ""
 }
