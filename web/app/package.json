@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@heroicons/vue": "^1.0.0",
+    "@heroicons/vue": "^1.0.1",
     "@jdinabox/vue-3-hcaptcha": "^0.1.1",
     "axios": "^0.21.1",
     "croppie": "^2.6.5",
@@ -22,19 +22,19 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@types/node": "^14.14.37",
+    "@types/node": "^14.14.41",
     "@types/turndown": "^5.0.0",
-    "@types/zxcvbn": "^4.4.0",
+    "@types/zxcvbn": "^4.4.1",
     "@vitejs/plugin-vue": "^1.2.1",
     "@vue/compiler-sfc": "^3.0.11",
     "@vuedx/typescript-plugin-vue": "^0.6.3",
     "autoprefixer": "^10.2.5",
-    "postcss": "^8.2.9",
+    "postcss": "^8.2.10",
     "postcss-csso": "^5.0.1",
-    "sass": "^1.32.8",
+    "sass": "^1.32.11",
     "tailwindcss": "^2.1.1",
-    "typescript": "^4.2.3",
-    "vite": "^2.1.5"
+    "typescript": "^4.2.4",
+    "vite": "^2.2.1"
   },
   "workspaces": [
     "client"

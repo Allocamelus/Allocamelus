@@ -149,12 +149,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@heroicons/vue@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@heroicons/vue@npm:1.0.0"
+"@heroicons/vue@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@heroicons/vue@npm:1.0.1"
   peerDependencies:
     vue: ">= 3"
-  checksum: 20416dbf83ac4ae24d2ae9352b0f94cf17a1971afb297dcaf10f08ca86c5112026193105eb85fd193775a9568da33eb876b125186d826d5073c511def9223eee
+  checksum: b4cdf185c63da610a124064a6c1a6cf09e0861ea6bef9a5a2fcb2bef42a944af9686bd38c88593b897e922ef1d387d84dcabcec3bfab087b2d846d0a19077367
   languageName: node
   linkType: hard
 
@@ -391,10 +391,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.37":
-  version: 14.14.37
-  resolution: "@types/node@npm:14.14.37"
-  checksum: 5e2d9baf7594ebacaf016716515f30de0765169412787f981481c2fb8b468923149bb9e2e3219ee672399811672ceddc339a7372a61cf15bc656836a5494d991
+"@types/node@npm:^14.14.41":
+  version: 14.14.41
+  resolution: "@types/node@npm:14.14.41"
+  checksum: 37dfb639644c8ee9b9846106834983f590d494b855e74645a4f169ea24199f7559366d25f6e72e83ba940b59eb6370e002bd53963d098d6d9fdf935a37011417
   languageName: node
   linkType: hard
 
@@ -405,7 +405,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/zxcvbn@npm:^4.4.0":
+"@types/zxcvbn@npm:^4.4.1":
   version: 4.4.1
   resolution: "@types/zxcvbn@npm:4.4.1"
   checksum: cf045fcc840d404cff48cd8aced686bd227e48b4174a0a538e6f2b3f338f9c3671665fa0cd440599f7b9e3be264b3476bbda29932af47558f92b2e23dacdf63e
@@ -754,11 +754,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:."
   dependencies:
-    "@heroicons/vue": ^1.0.0
+    "@heroicons/vue": ^1.0.1
     "@jdinabox/vue-3-hcaptcha": ^0.1.1
-    "@types/node": ^14.14.37
+    "@types/node": ^14.14.41
     "@types/turndown": ^5.0.0
-    "@types/zxcvbn": ^4.4.0
+    "@types/zxcvbn": ^4.4.1
     "@vitejs/plugin-vue": ^1.2.1
     "@vue/compiler-sfc": ^3.0.11
     "@vuedx/typescript-plugin-vue": ^0.6.3
@@ -766,15 +766,15 @@ __metadata:
     axios: ^0.21.1
     croppie: ^2.6.5
     pell: ^1.0.6
-    postcss: ^8.2.9
+    postcss: ^8.2.10
     postcss-csso: ^5.0.1
-    sass: ^1.32.8
+    sass: ^1.32.11
     squire-rte: ^1.11.1
     tailwindcss: ^2.1.1
     throttle-debounce: ^3.0.1
     turndown: ^7.0.0
-    typescript: ^4.2.3
-    vite: ^2.1.5
+    typescript: ^4.2.4
+    vite: ^2.2.1
     vue: ^3.0.5
     vue-router: ^4.0.4
     vuex: ^4
@@ -963,7 +963,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:>=2.0.0 <4.0.0, chokidar@npm:^3.5.1":
+"chokidar@npm:>=3.0.0 <4.0.0, chokidar@npm:^3.5.1":
   version: 3.5.1
   resolution: "chokidar@npm:3.5.1"
   dependencies:
@@ -2464,7 +2464,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.1.6, postcss@npm:^8.2.1, postcss@npm:^8.2.9":
+"postcss@npm:^8.1.10, postcss@npm:^8.1.6, postcss@npm:^8.2.1, postcss@npm:^8.2.10":
   version: 8.2.10
   resolution: "postcss@npm:8.2.10"
   dependencies:
@@ -2657,14 +2657,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.32.8":
-  version: 1.32.8
-  resolution: "sass@npm:1.32.8"
+"sass@npm:^1.32.11":
+  version: 1.32.11
+  resolution: "sass@npm:1.32.11"
   dependencies:
-    chokidar: ">=2.0.0 <4.0.0"
+    chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: d319b3d7459451b6532b492984e3cbb37381e6c6379622f668900b196c0d545f5a2c32819cf02b5405fb2ef79720fe1f8f16b7614a2fef3fb7af8dfec83a6597
+  checksum: a56ca780febc1f4c5c015f2fbd5dacd780297371456197424bce7e48d54cef8ae564fb8927076ef61e6fcd34f69556d0a3dd8e157ff06081729066ad595e97bf
   languageName: node
   linkType: hard
 
@@ -2972,7 +2972,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-typescript@^4.2.3:
+typescript@^4.2.4:
   version: 4.2.4
   resolution: "typescript@npm:4.2.4"
   bin:
@@ -2982,7 +2982,7 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.3#builtin<compat/typescript>":
+"typescript@patch:typescript@^4.2.4#builtin<compat/typescript>":
   version: 4.2.4
   resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
   bin:
@@ -3049,9 +3049,9 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.1.5":
-  version: 2.1.5
-  resolution: "vite@npm:2.1.5"
+"vite@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "vite@npm:2.2.1"
   dependencies:
     esbuild: ^0.9.3
     fsevents: ~2.3.1
@@ -3063,7 +3063,7 @@ typescript@^4.2.3:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 6e56aa6654e776d9561195a8b8b5abeacd7d06d74ec3cdd58fdcac4cadd1f5c01664d782667eaec0dc1d49d88ec91d0f71d45d50c02ff5e22559760bff75ab5a
+  checksum: 0c297aabe47ad9aab5ac02478db2bb765e7fb67bb36eeba2a6c41ddea24c98799815005423c5ca8d1648ab2ecd5b7246c9364f867709b2dd53b5b476450ce3c3
   languageName: node
   linkType: hard
 
