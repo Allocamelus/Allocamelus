@@ -68,7 +68,7 @@ import { defineComponent, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
 
 import { GEN_User } from "../../models/go_structs_gen";
-import ApiResp from "../../models/responses";
+import { RespToError } from "../../models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
 import {
@@ -131,16 +131,11 @@ export default defineComponent({
               this.updateStoreAvatar(r.avatarUrl);
               this.toggleShow();
             } else {
-              switch (r.error) {
-                case ApiResp.User.Avatar.FileSize:
-                  this.onErr("Image size to large");
-                  break;
-                case ApiResp.User.Avatar.ContentType:
-                  this.onErr("Unsupported Image Type");
-                  break;
-                default:
-                  this.onErr(SomethingWentWrong);
-                  break;
+              var errText = RespToError(r.error);
+              if (errText.length > 0) {
+                this.onErr(errText);
+              } else {
+                this.onErr(SomethingWentWrong);
               }
             }
           })

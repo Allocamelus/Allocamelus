@@ -49,13 +49,7 @@ export async function create(content: string, images: Array<MediaFile>, publish:
     .then(r => {
       return CreateResponse.createFrom(r.data)
     })
-}
-
-export async function CreatePost(content: string, images: Array<MediaFile>) {
-  return create(content, images, true).then(r => {
-    if (!r.success) {
-      throw new API_Error(r);
-    }
-  })
-
+    .catch(e => {
+      return API_Success_Error.createFrom(e)
+    })
 }
