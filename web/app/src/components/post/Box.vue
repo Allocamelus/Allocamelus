@@ -60,7 +60,11 @@
         ></div>
       </div>
     </div>
-    <div v-if="post.media" class="flex flex-wrap rounded-b-xl overflow-hidden">
+    <div
+      v-if="post.media"
+      @click="toPost"
+      class="flex flex-wrap rounded-b-xl overflow-hidden"
+    >
       <image-box
         v-for="(media, key) in post.mediaList"
         :key="key"
@@ -71,7 +75,7 @@
         :height="media.meta.height"
         :totalNumber="post.mediaList.length"
         :rounded="false"
-        :loading="lazy"
+        loading="lazy"
       >
       </image-box>
     </div>
@@ -139,7 +143,14 @@ export default defineComponent({
     },
   },
   methods: {
-    toPost() {
+    toPost(e) {
+      if (e.srcElement.tagName == "A") {
+        if (e.srcElement.href.length > 0) {
+          window.open(e.srcElement.href, "_blank");
+          e.preventDefault();
+          return;
+        }
+      }
       if (this.isLink) {
         this.$router.push(this.link);
       }
