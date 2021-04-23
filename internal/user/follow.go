@@ -1,11 +1,10 @@
-package follow
+package user
 
 import (
 	"database/sql"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
-	"github.com/allocamelus/allocamelus/internal/user"
 )
 
 var preFollowing *sql.Stmt
@@ -65,7 +64,7 @@ func FollowExt(userId int64, followUserId int64, accepted bool) error {
 
 // Follow userId follow followUserId
 func Follow(userId int64, followUserId int64) error {
-	t, err := user.GetType(followUserId)
+	t, err := GetType(followUserId)
 	if err != nil {
 		return err
 	}
@@ -96,7 +95,7 @@ func Accept(userId, followerUserId int64) error {
 		return err
 	}
 
-	t, err := user.GetType(userId)
+	t, err := GetType(userId)
 	if err != nil {
 		return err
 	}
