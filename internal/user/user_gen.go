@@ -429,10 +429,10 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Bio")
 				return
 			}
-		case "likes":
-			z.Likes, err = dc.ReadInt64()
+		case "followers":
+			z.Followers, err = dc.ReadInt64()
 			if err != nil {
-				err = msgp.WrapError(err, "Likes")
+				err = msgp.WrapError(err, "Followers")
 				return
 			}
 		case "type":
@@ -535,14 +535,14 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "Bio")
 		return
 	}
-	// write "likes"
-	err = en.Append(0xa5, 0x6c, 0x69, 0x6b, 0x65, 0x73)
+	// write "followers"
+	err = en.Append(0xa9, 0x66, 0x6f, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x72, 0x73)
 	if err != nil {
 		return
 	}
-	err = en.WriteInt64(z.Likes)
+	err = en.WriteInt64(z.Followers)
 	if err != nil {
-		err = msgp.WrapError(err, "Likes")
+		err = msgp.WrapError(err, "Followers")
 		return
 	}
 	// write "type"
@@ -600,9 +600,9 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "bio"
 	o = append(o, 0xa3, 0x62, 0x69, 0x6f)
 	o = msgp.AppendString(o, z.Bio)
-	// string "likes"
-	o = append(o, 0xa5, 0x6c, 0x69, 0x6b, 0x65, 0x73)
-	o = msgp.AppendInt64(o, z.Likes)
+	// string "followers"
+	o = append(o, 0xa9, 0x66, 0x6f, 0x6c, 0x6c, 0x6f, 0x77, 0x65, 0x72, 0x73)
+	o = msgp.AppendInt64(o, z.Followers)
 	// string "type"
 	o = append(o, 0xa4, 0x74, 0x79, 0x70, 0x65)
 	o = msgp.AppendInt8(o, int8(z.Type))
@@ -669,10 +669,10 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Bio")
 				return
 			}
-		case "likes":
-			z.Likes, bts, err = msgp.ReadInt64Bytes(bts)
+		case "followers":
+			z.Followers, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "Likes")
+				err = msgp.WrapError(err, "Followers")
 				return
 			}
 		case "type":
@@ -715,6 +715,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 10 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
 	return
 }

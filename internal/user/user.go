@@ -38,7 +38,7 @@ type User struct {
 	Avatar      bool   `msg:"avatar" json:"avatar"`
 	AvatarUrl   string `msg:"-" json:"avatarUrl,omitempty"`
 	Bio         string `msg:"bio" json:"bio,omitempty"`
-	Likes       int64  `msg:"likes" json:"likes"`
+	Followers   int64  `msg:"followers" json:"followers"`
 	Type        Types  `msg:"type" json:"type"`
 	Permissions Perms  `msg:"permissions" json:"-"`
 	Created     int64  `msg:"created" json:"created,omitempty"`
@@ -63,7 +63,7 @@ var (
 func initUser(p data.Prepare) {
 	preInsert = p(`INSERT INTO Users (userName, name, email, bio, type, permissions, created)
 		VALUES (?, '', ?, '', ?, ?, ?)`)
-	preGetPublic = p(`SELECT userName, name, bio, created FROM Users WHERE userId = ? LIMIT 1`)
+	preGetPublic = p(`SELECT userName, name, bio, type, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
 // Insert new user into database
@@ -87,11 +87,10 @@ func (u *User) Insert() error {
 }
 
 // GetPublic user info
-// TODO: Likes
 // TODO: Cache
 func GetPublic(userID int64) (user User, err error) {
 	user.ID = userID
-	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Created)
+	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Type, &user.Created)
 	if err != nil {
 		return
 	}
@@ -106,6 +105,7 @@ func GetPublic(userID int64) (user User, err error) {
 		user.Avatar = true
 	}
 
+	user.Followers, err = Followers(userID)
 	return
 }
 
