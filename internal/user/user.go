@@ -15,6 +15,9 @@ import (
 // Perms permissions
 type Perms int64
 
+// User Types
+type Types int8
+
 // Session user session struct
 type Session struct {
 	LoggedIn   bool           `msg:"loggedIn" json:"loggedIn"`
@@ -36,6 +39,7 @@ type User struct {
 	AvatarUrl   string `msg:"-" json:"avatarUrl,omitempty"`
 	Bio         string `msg:"bio" json:"bio,omitempty"`
 	Likes       int64  `msg:"likes" json:"likes"`
+	Type        Types  `msg:"type" json:"type"`
 	Permissions Perms  `msg:"permissions" json:"-"`
 	Created     int64  `msg:"created" json:"created,omitempty"`
 }
@@ -46,6 +50,7 @@ func New(userName, name, email string) *User {
 	user.UserName = userName
 	user.Name = name
 	user.Email = email
+	user.Permissions = DefaultPerms
 	user.Created = time.Now().Unix()
 	return user
 }
@@ -56,8 +61,8 @@ var (
 )
 
 func initUser(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (userName, name, email, bio, permissions, created)
-		VALUES (?, '', ?, '', ?, ?)`)
+	preInsert = p(`INSERT INTO Users (userName, name, email, bio, type, permissions, created)
+		VALUES (?, '', ?, '', ?, ?, ?)`)
 	preGetPublic = p(`SELECT userName, name, bio, created FROM Users WHERE userId = ? LIMIT 1`)
 }
 
@@ -66,7 +71,7 @@ func initUser(p data.Prepare) {
 func (u *User) Insert() error {
 	// Insert user into database
 	r, err := preInsert.Exec(
-		u.UserName, u.Email,
+		u.UserName, u.Email, u.Type,
 		u.Permissions, u.Created,
 	)
 	if err != nil {
