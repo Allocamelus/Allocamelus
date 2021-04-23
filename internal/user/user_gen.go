@@ -324,6 +324,58 @@ func (z *Session) Msgsize() (s int) {
 }
 
 // DecodeMsg implements msgp.Decodable
+func (z *Types) DecodeMsg(dc *msgp.Reader) (err error) {
+	{
+		var zb0001 int8
+		zb0001, err = dc.ReadInt8()
+		if err != nil {
+			err = msgp.WrapError(err)
+			return
+		}
+		(*z) = Types(zb0001)
+	}
+	return
+}
+
+// EncodeMsg implements msgp.Encodable
+func (z Types) EncodeMsg(en *msgp.Writer) (err error) {
+	err = en.WriteInt8(int8(z))
+	if err != nil {
+		err = msgp.WrapError(err)
+		return
+	}
+	return
+}
+
+// MarshalMsg implements msgp.Marshaler
+func (z Types) MarshalMsg(b []byte) (o []byte, err error) {
+	o = msgp.Require(b, z.Msgsize())
+	o = msgp.AppendInt8(o, int8(z))
+	return
+}
+
+// UnmarshalMsg implements msgp.Unmarshaler
+func (z *Types) UnmarshalMsg(bts []byte) (o []byte, err error) {
+	{
+		var zb0001 int8
+		zb0001, bts, err = msgp.ReadInt8Bytes(bts)
+		if err != nil {
+			err = msgp.WrapError(err)
+			return
+		}
+		(*z) = Types(zb0001)
+	}
+	o = bts
+	return
+}
+
+// Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
+func (z Types) Msgsize() (s int) {
+	s = msgp.Int8Size
+	return
+}
+
+// DecodeMsg implements msgp.Decodable
 func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 	var field []byte
 	_ = field
@@ -383,15 +435,25 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Likes")
 				return
 			}
+		case "type":
+			{
+				var zb0002 int8
+				zb0002, err = dc.ReadInt8()
+				if err != nil {
+					err = msgp.WrapError(err, "Type")
+					return
+				}
+				z.Type = Types(zb0002)
+			}
 		case "permissions":
 			{
-				var zb0002 int64
-				zb0002, err = dc.ReadInt64()
+				var zb0003 int64
+				zb0003, err = dc.ReadInt64()
 				if err != nil {
 					err = msgp.WrapError(err, "Permissions")
 					return
 				}
-				z.Permissions = Perms(zb0002)
+				z.Permissions = Perms(zb0003)
 			}
 		case "created":
 			z.Created, err = dc.ReadInt64()
@@ -412,9 +474,9 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 9
+	// map header, size 10
 	// write "id"
-	err = en.Append(0x89, 0xa2, 0x69, 0x64)
+	err = en.Append(0x8a, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
@@ -483,6 +545,16 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "Likes")
 		return
 	}
+	// write "type"
+	err = en.Append(0xa4, 0x74, 0x79, 0x70, 0x65)
+	if err != nil {
+		return
+	}
+	err = en.WriteInt8(int8(z.Type))
+	if err != nil {
+		err = msgp.WrapError(err, "Type")
+		return
+	}
 	// write "permissions"
 	err = en.Append(0xab, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73)
 	if err != nil {
@@ -509,9 +581,9 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 9
+	// map header, size 10
 	// string "id"
-	o = append(o, 0x89, 0xa2, 0x69, 0x64)
+	o = append(o, 0x8a, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userName"
 	o = append(o, 0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
@@ -531,6 +603,9 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "likes"
 	o = append(o, 0xa5, 0x6c, 0x69, 0x6b, 0x65, 0x73)
 	o = msgp.AppendInt64(o, z.Likes)
+	// string "type"
+	o = append(o, 0xa4, 0x74, 0x79, 0x70, 0x65)
+	o = msgp.AppendInt8(o, int8(z.Type))
 	// string "permissions"
 	o = append(o, 0xab, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73)
 	o = msgp.AppendInt64(o, int64(z.Permissions))
@@ -600,15 +675,25 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Likes")
 				return
 			}
+		case "type":
+			{
+				var zb0002 int8
+				zb0002, bts, err = msgp.ReadInt8Bytes(bts)
+				if err != nil {
+					err = msgp.WrapError(err, "Type")
+					return
+				}
+				z.Type = Types(zb0002)
+			}
 		case "permissions":
 			{
-				var zb0002 int64
-				zb0002, bts, err = msgp.ReadInt64Bytes(bts)
+				var zb0003 int64
+				zb0003, bts, err = msgp.ReadInt64Bytes(bts)
 				if err != nil {
 					err = msgp.WrapError(err, "Permissions")
 					return
 				}
-				z.Permissions = Perms(zb0002)
+				z.Permissions = Perms(zb0003)
 			}
 		case "created":
 			z.Created, bts, err = msgp.ReadInt64Bytes(bts)
@@ -630,6 +715,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 6 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
 	return
 }
