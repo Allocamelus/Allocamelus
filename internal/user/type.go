@@ -47,3 +47,13 @@ func IsVerified(userID int64) (bool, error) {
 func (t Types) Unverified() bool {
 	return (t == Unverified)
 }
+
+// Private is type == Private
+func (t Types) Private() bool {
+	return (t == Private)
+}
+
+// Public is type == Public
+func (t Types) Public() bool {
+	return (t == Public)
+}
