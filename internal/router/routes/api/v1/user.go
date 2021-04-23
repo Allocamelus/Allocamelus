@@ -67,4 +67,8 @@ func userUpdate(un fiber.Router) {
 	unGroup.Post("/name",
 		userupdate.Name,
 	)
+	// /api/v1/user/:userName/update/type
+	unGroup.Post("/type",
+		userupdate.Type,
+	)
 }
