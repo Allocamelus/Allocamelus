@@ -14,7 +14,7 @@ func Following(userId, followUserId int64) (following bool, err error) {
 	if preFollowing == nil {
 		preFollowing = g.Data.Prepare(`SELECT EXISTS(SELECT * FROM UserFollows WHERE userId = ? AND followUserId = ? AND accepted = 1)`)
 	}
-	err = preFollowing.QueryRow(userId, followUserId).Scan(following)
+	err = preFollowing.QueryRow(userId, followUserId).Scan(&following)
 	return
 }
 
@@ -144,7 +144,7 @@ func Followers(userId int64) (followers int64, err error) {
 	if preFollowers == nil {
 		preFollowers = g.Data.Prepare(`SELECT COUNT(userFollowId) FROM UserFollows WHERE followUserId = ? AND accepted = 1`)
 	}
-	err = preFollowers.QueryRow(userId).Scan(followers)
+	err = preFollowers.QueryRow(userId).Scan(&followers)
 	return
 }
 
