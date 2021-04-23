@@ -12,7 +12,6 @@ import (
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post/media"
-	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 )
@@ -98,7 +97,7 @@ var (
 )
 
 // GetForUser returns post if user can view it
-func GetForUser(postID int64, u *user.Session) (*Post, error) {
+func GetForUser(postID int64, userId int64) (*Post, error) {
 	p, err := Get(postID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -109,13 +108,13 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 
 	// Check if user can view post
 	if !p.IsPublished() {
-		if !u.LoggedIn || !p.IsPoster(u.UserID) {
+		if userId == 0 || !p.IsPoster(userId) {
 			return nil, ErrNoPost
 		}
 	}
 
 	// Omit Created if user is not poster
-	if !p.IsPoster(u.UserID) {
+	if !p.IsPoster(userId) {
 		p.Created = 0
 	}
 
