@@ -2,7 +2,7 @@
   <div class="container py-5">
     <error-box
       :error="err"
-      class="max-w-full xs:mx-2 sm:mx-4 md:mx-8 lg:mx-12 xl:mx-16"
+      class="max-w-full sm:mx-2 md:mx-4 lg:mx-8 xl:mx-12"
     >
       <post-box
         :post="apiPost.post"
