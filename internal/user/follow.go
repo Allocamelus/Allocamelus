@@ -102,14 +102,22 @@ func Accept(userId, followerUserId int64) error {
 
 	// Auto Follow back is like fb friends
 	if t.Private() {
-		return FollowExt(userId, followerUserId, true)
+		t, err = GetType(followerUserId)
+		if err != nil {
+			return err
+		}
+		// Is follower Private? Follow if so
+		if t.Private() {
+			return FollowExt(userId, followerUserId, true)
+		}
 	}
 	return nil
 }
 
 var preAcceptAll *sql.Stmt
 
-// AcceptAll userId Accept follow request
+// AcceptAll userId Accept all follow request
+// Called when accounts goes from private to public
 func AcceptAll(userId int64) error {
 	if preAcceptAll == nil {
 		preAcceptAll = g.Data.Prepare(`UPDATE UserFollows SET accepted = 1 WHERE followUserId = ? AND accepted = 0`)

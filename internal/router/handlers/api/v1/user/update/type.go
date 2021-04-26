@@ -32,8 +32,15 @@ func Type(c *fiber.Ctx) error {
 		newType = user.Private
 	}
 
-	if err := user.UpdateType(user.ContextSession(c).UserID, newType); logger.Error(err) {
+	ctxUser := user.ContextSession(c)
+	if err := user.UpdateType(ctxUser.UserID, newType); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	if newType.Public() {
+		if err := user.AcceptAll(ctxUser.UserID); logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
+		}
 	}
 
 	return fiberutil.JSON(c, 200, TypeResp{Success: true})
