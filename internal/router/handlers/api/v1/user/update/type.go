@@ -24,7 +24,15 @@ func Type(c *fiber.Ctx) error {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 
-	if err := user.UpdateType(user.ContextSession(c).UserID, request.Type); logger.Error(err) {
+	var newType user.Types
+	switch request.Type {
+	case user.Public:
+		newType = user.Public
+	default:
+		newType = user.Private
+	}
+
+	if err := user.UpdateType(user.ContextSession(c).UserID, newType); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
