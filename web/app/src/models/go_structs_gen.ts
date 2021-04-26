@@ -103,7 +103,8 @@ export class GEN_User {
     avatar: boolean;
     avatarUrl?: string;
     bio?: string;
-    likes: number;
+    followers: number;
+    type: number;
     created?: number;
 
     static createFrom(source: any = {}) {
@@ -119,7 +120,8 @@ export class GEN_User {
         this.avatar = source["avatar"];
         this.avatarUrl = source["avatarUrl"];
         this.bio = source["bio"];
-        this.likes = source["likes"];
+        this.followers = source["followers"];
+        this.type = source["type"];
         this.created = source["created"];
     }
 }
