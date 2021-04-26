@@ -49,7 +49,7 @@
     <div class="flex">
       <feed>
         <div v-if="err.posts.length > 0" v-html="err.posts"></div>
-        <new-post-text-input v-if="loggedIn"></new-post-text-input>
+        <new-post-text-input v-if="canEdit"></new-post-text-input>
         <post-feed :list="postsList"></post-feed>
       </feed>
       <sidebar></sidebar>
