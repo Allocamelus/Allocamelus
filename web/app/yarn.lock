@@ -770,11 +770,11 @@ __metadata:
     postcss-csso: ^5.0.1
     sass: ^1.32.11
     squire-rte: ^1.11.1
-    tailwindcss: ^2.1.1
+    tailwindcss: ^2.1.2
     throttle-debounce: ^3.0.1
     turndown: ^7.0.0
     typescript: ^4.2.4
-    vite: ^2.2.1
+    vite: ^2.2.3
     vue: ^3.0.5
     vue-router: ^4.0.4
     vuex: ^4
@@ -2860,9 +2860,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "tailwindcss@npm:2.1.1"
+"tailwindcss@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "tailwindcss@npm:2.1.2"
   dependencies:
     "@fullhuman/postcss-purgecss": ^3.1.3
     bytes: ^3.0.0
@@ -2897,7 +2897,7 @@ fsevents@~2.3.1:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: 34df2256582a50aa503838fc35255de38631875aa93fde4df66096c9c70eeb43ce49c40fbde32b5961d055a5f14a715d744488cda7f84fccc0271b47f41a5455
+  checksum: 0e1c12073ab3a86016ac417b06aee014e868cf93f7d9c71cf11cd725d1cb3ab576cd0d776f5a3eaab179e427a35575f9bc39ae5a912a81040f35a61ad2008e45
   languageName: node
   linkType: hard
 
@@ -3049,9 +3049,9 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "vite@npm:2.2.1"
+"vite@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "vite@npm:2.2.3"
   dependencies:
     esbuild: ^0.9.3
     fsevents: ~2.3.1
@@ -3063,7 +3063,7 @@ typescript@^4.2.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 0c297aabe47ad9aab5ac02478db2bb765e7fb67bb36eeba2a6c41ddea24c98799815005423c5ca8d1648ab2ecd5b7246c9364f867709b2dd53b5b476450ce3c3
+  checksum: c621b561fe8ddc8b1c417bc140fd48591d483de1b890109e16793f0dbb04d262dd855e0fa5922e7370e9086225492a4202ec7f9f3336b68288618a58721e0988
   languageName: node
   linkType: hard
 
