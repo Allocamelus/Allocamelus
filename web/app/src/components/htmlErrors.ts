@@ -15,17 +15,31 @@ export const HtmlSomethingWentWrong = htmlErrBuilder(
   `Try again later`
 )
 
+function getPath(path: string = "") {
+  if (path.length == 0) {
+    path = window.location.pathname
+  }
+  return sanitizeHtml(path) + " "
+}
+
+export const Html403Func = (path: string = "") => {
+  path = getPath(path)
+  return htmlErrBuilder(
+    `Error: 403`,
+    path + `Forbidden`
+  )
+}
 
 export const Html404Func = (path: string = "") => {
-  if (path.length > 0) {
-    path = sanitizeHtml(path) + " "
-  }
+  path = getPath(path)
   return htmlErrBuilder(
     `Error: 404`,
     path + `Not Found`
   )
 }
 
+
+export const Html403 = Html403Func()
 export const Html404 = Html404Func()
 
 export const HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");

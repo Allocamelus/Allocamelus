@@ -11,7 +11,7 @@ var (
 	// NotFound 404
 	NotFound = New("not-found")
 	// Unauthorized403 because not using www-Authenticate headers
-	Unauthorized403 = New("unauthorized")
+	Unauthorized403 = New("unauthorized-403")
 	// UnprocessableEntity 422
 	UnprocessableEntity = New("unprocessable-entity")
 )

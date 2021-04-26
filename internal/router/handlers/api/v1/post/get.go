@@ -38,6 +38,9 @@ func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
 	p, err := post.GetForUser(int64(postID), user.ContextSession(c))
 	if err != nil {
 		if err != post.ErrNoPost {
+			if err == user.ErrViewMeNot {
+				return nil, apierr.ErrUnauthorized403
+			}
 			logger.Error(err)
 			return nil, apierr.ErrSomethingWentWrong
 		}

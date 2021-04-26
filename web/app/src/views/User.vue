@@ -60,17 +60,14 @@
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 
 import { get as getUser } from "../api/user/get";
 import { posts as getPosts } from "../api/user/posts";
 import { API_Error } from "../models/api_error";
 import { API_Posts } from "../models/api_posts";
-import { Html404Func, HtmlSomethingWentWrong } from "../components/htmlErrors";
 import { InvalidCharacters } from "../components/form/errors";
 
 import { GEN_User } from "../models/go_structs_gen";
-import ApiResp from "../models/responses";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
@@ -88,15 +85,6 @@ import EditOverlay from "../components/user/EditOverlay.vue";
 import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 
-function userErrors(api_error, path) {
-  if (api_error instanceof API_Error) {
-    switch (api_error.error) {
-      case ApiResp.Shared.NotFound:
-        return Html404Func(path);
-    }
-  }
-  return HtmlSomethingWentWrong;
-}
 
 export default defineComponent({
   props: {
@@ -106,7 +94,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const route = useRouter();
     const store = useStore();
     const loggedIn = computed(() => store.getters.loggedIn),
       storeUser = computed(() => store.getters.user);
@@ -116,8 +103,8 @@ export default defineComponent({
       overlay: false,
       page: 1,
       err: {
-        user: "",
-        posts: "",
+        user: new API_Error(),
+        posts: new API_Error(),
       },
     });
 
@@ -126,7 +113,7 @@ export default defineComponent({
         data.user = r;
       })
       .catch((e) => {
-        data.err.user = userErrors(e, route.currentRoute.value.fullPath);
+        data.err.user = e;
       });
 
     getPosts(props.userName[0], data.page)
@@ -137,7 +124,7 @@ export default defineComponent({
         }
       })
       .catch((e) => {
-        data.err.posts = userErrors(e, route.currentRoute.value.fullPath);
+        data.err.posts = e;
       });
 
     return {
@@ -183,7 +170,7 @@ export default defineComponent({
         this.user = r;
       })
       .catch((e) => {
-        this.err.user = userErrors(e, this.$route.currentRoute.value.fullPath);
+        this.err.user = e;
       });
 
     getPosts(to.params.userName[0], this.page)
@@ -194,7 +181,7 @@ export default defineComponent({
         }
       })
       .catch((e) => {
-        this.err.posts = userErrors(e, this.$route.currentRoute.value.fullPath);
+        this.err.posts = e;
       });
   },
   components: {

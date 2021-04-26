@@ -18,23 +18,11 @@ import { defineComponent, toRefs, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { get as getPost } from "../api/post/get";
 import { API_Post } from "../models/api_post";
+import { API_Error } from "../models/api_error";
 import ErrorBox from "../components/box/Error.vue";
 import UserName from "../components/user/Name.vue";
-import ApiResp from "../models/responses";
-import { Html404Func, HtmlSomethingWentWrong } from "../components/htmlErrors";
-import { API_Error } from "../models/api_error";
 import sanitize from "../pkg/sanitize";
 import PostBox from "../components/post/Box.vue";
-
-function postErrors(api_error, path) {
-  if (api_error instanceof API_Error) {
-    switch (api_error.error) {
-      case ApiResp.Shared.NotFound:
-        return Html404Func(path);
-    }
-  }
-  return HtmlSomethingWentWrong;
-}
 
 export default defineComponent({
   props: {
@@ -47,7 +35,7 @@ export default defineComponent({
     const route = useRouter();
     const data = reactive({
       apiPost: new API_Post(),
-      err: "",
+      err: new API_Error(),
     });
 
     getPost(props.id)
@@ -55,7 +43,7 @@ export default defineComponent({
         data.apiPost = r;
       })
       .catch((e) => {
-        data.err = postErrors(e, route.currentRoute.value.fullPath);
+        data.err = e;
       });
 
     return {
@@ -85,7 +73,7 @@ export default defineComponent({
         this.apiPost = r;
       })
       .catch((e) => {
-        this.err = postErrors(e, route.currentRoute.value.fullPath);
+        this.err = e;
       });
   },
   components: {
