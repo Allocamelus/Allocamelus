@@ -35,7 +35,7 @@ func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
 		return nil, apierr.ErrNotFound
 	}
 
-	p, err := post.GetForUser(int64(postID), user.ContextSession(c).UserID)
+	p, err := post.GetForUser(int64(postID), user.ContextSession(c))
 	if err != nil {
 		if err != post.ErrNoPost {
 			logger.Error(err)
