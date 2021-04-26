@@ -36,6 +36,11 @@
             </change-avatar>
           </div>
           <div class="mt-3">
+            <checkbox v-model="privateUser" name="private">
+              Private Account
+            </checkbox>
+          </div>
+          <div class="mt-3">
             <input-label for="name" :err="err.name"> Name </input-label>
             <text-input
               v-model="name"
@@ -80,6 +85,11 @@ import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
 
 import { bio as UpdateBio } from "../../api/user/update/bio";
 import { name as UpdateName } from "../../api/user/update/name";
+import {
+  type as UpdateType,
+  TYPE_PRIVATE,
+  TYPE_PUBLIC,
+} from "../../api/user/update/type";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
@@ -93,6 +103,7 @@ import UserAvatar from "./Avatar.vue";
 import ChangeAvatar from "./ChangeAvatar.vue";
 import { useStore } from "vuex";
 import Snackbar from "../box/Snackbar.vue";
+import Checkbox from "../form/Checkbox.vue";
 
 export default defineComponent({
   props: {
@@ -114,6 +125,7 @@ export default defineComponent({
       visable: props.show,
       name: props.user.name,
       bio: props.user.bio,
+      privateUser: props.user.type == TYPE_PRIVATE,
       err: {
         name: "",
         bio: "",
@@ -191,6 +203,22 @@ export default defineComponent({
               vm.snackbarErr(SomethingWentWrong);
             });
         }
+        console.log(vm.privateUser);
+        if (vm.privateUser != (vm.user.type == TYPE_PRIVATE)) {
+          UpdateType(
+            vm.user.userName,
+            vm.privateUser ? TYPE_PRIVATE : TYPE_PUBLIC
+          )
+            .then((r) => {
+              if (!r.success) {
+                vm.snackbarErr(SomethingWentWrong);
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+              vm.snackbarErr(SomethingWentWrong);
+            });
+        }
       })();
 
       if (vm.noErrs()) {
@@ -226,6 +254,7 @@ export default defineComponent({
     ChangeAvatar,
     Overlay,
     Snackbar,
+    Checkbox,
   },
 });
 </script>
