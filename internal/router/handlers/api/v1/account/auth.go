@@ -109,6 +109,9 @@ func Auth(c *fiber.Ctx) error {
 
 		// Get user's login difficulty
 		diff, err := user.LoginDiff(userID)
+		if logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
+		}
 		// TODO: add timeout if HCaptcha disabled
 		if g.Config.HCaptcha.Enabled {
 			var siteKey string
@@ -153,7 +156,7 @@ func Auth(c *fiber.Ctx) error {
 		}
 
 		// Get db username
-		currentUser, err := user.GetPublic(userID)
+		currentUser, err := user.GetPublic(user.ContextSession(c), userID)
 		if logger.Error(err) {
 			return apierr.ErrSomethingWentWrong(c)
 		}
