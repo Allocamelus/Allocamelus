@@ -29,19 +29,25 @@ type Session struct {
 	NotNew     bool           `msg:"notNew"  json:"notNew"`
 }
 
+type FollowStruct struct {
+	Following bool `msg:"-" json:"following"`
+	Requested bool `msg:"-" json:"requested"`
+}
+
 // User Struct
 type User struct {
-	ID          int64  `msg:"id" json:"id"`
-	UserName    string `msg:"userName" json:"userName"`
-	Name        string `msg:"name" json:"name"`
-	Email       string `msg:"email" json:"email,omitempty"`
-	Avatar      bool   `msg:"avatar" json:"avatar"`
-	AvatarUrl   string `msg:"-" json:"avatarUrl,omitempty"`
-	Bio         string `msg:"bio" json:"bio,omitempty"`
-	Followers   int64  `msg:"followers" json:"followers"`
-	Type        Types  `msg:"type" json:"type"`
-	Permissions Perms  `msg:"permissions" json:"-"`
-	Created     int64  `msg:"created" json:"created,omitempty"`
+	ID          int64        `msg:"id" json:"id"`
+	UserName    string       `msg:"userName" json:"userName"`
+	Name        string       `msg:"name" json:"name"`
+	Email       string       `msg:"email" json:"email,omitempty"`
+	Avatar      bool         `msg:"avatar" json:"avatar"`
+	AvatarUrl   string       `msg:"-" json:"avatarUrl,omitempty"`
+	Bio         string       `msg:"bio" json:"bio,omitempty"`
+	Follow      FollowStruct `msg:"-" json:"follow"`
+	Followers   int64        `msg:"followers" json:"followers"`
+	Type        Types        `msg:"type" json:"type"`
+	Permissions Perms        `msg:"permissions" json:"-"`
+	Created     int64        `msg:"created" json:"created,omitempty"`
 }
 
 // New user

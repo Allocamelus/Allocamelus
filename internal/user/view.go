@@ -21,11 +21,11 @@ func CanView(userId int64, sUser *Session) error {
 		return ErrViewMeNot
 	}
 
-	following, err := Following(sUser.UserID, userId)
+	follow, err := Following(sUser.UserID, userId)
 	if err != nil {
 		return err
 	}
-	if !following {
+	if !follow.Following {
 		return ErrViewMeNot
 	}
 	return nil

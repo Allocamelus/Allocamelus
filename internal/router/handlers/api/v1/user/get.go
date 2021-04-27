@@ -1,6 +1,8 @@
 package user
 
 import (
+	"database/sql"
+
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -23,6 +25,16 @@ func Get(c *fiber.Ctx) error {
 	u, err := user.GetPublic(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	if user.LoggedIn(c) {
+		u.Follow, err = user.Following(user.ContextSession(c).UserID, userID)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				logger.Error(err)
+				return apierr.ErrSomethingWentWrong(c)
+			}
+		}
 	}
 
 	return fiberutil.JSON(c, 200, getResponse{u})

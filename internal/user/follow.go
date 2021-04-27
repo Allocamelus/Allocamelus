@@ -11,15 +11,25 @@ import (
 var preFollowing *sql.Stmt
 
 // Following is userId following followUserId
-func Following(userId, followUserId int64) (following bool, err error) {
-	if compare.EqualInt64(userId, followUserId) {
-		return true, nil
-	}
+func Following(userId, followUserId int64) (follow FollowStruct, err error) {
 	if preFollowing == nil {
-		preFollowing = g.Data.Prepare(`SELECT EXISTS(SELECT * FROM UserFollows WHERE userId = ? AND followUserId = ? AND accepted = 1)`)
+		preFollowing = g.Data.Prepare(`SELECT accepted FROM UserFollows WHERE userId = ? AND followUserId = ?`)
 	}
-	err = preFollowing.QueryRow(userId, followUserId).Scan(&following)
-	return
+
+	if compare.EqualInt64(userId, followUserId) {
+		follow.Following = true
+		return
+	}
+
+	err = preFollowing.QueryRow(userId, followUserId).Scan(&follow.Following)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return follow, err
+		}
+		follow.Requested = true
+	}
+
+	return follow, nil
 }
 
 var preListFollowing *sql.Stmt
@@ -57,7 +67,7 @@ func FollowExt(userId int64, followUserId int64, accepted bool) error {
 	}
 
 	following, err := Following(userId, followUserId)
-	if err != nil || following {
+	if err != nil || following.Following {
 		// return if following silently
 		return err
 	}
@@ -88,8 +98,8 @@ func Accept(userId, followerUserId int64) error {
 	}
 
 	// Is follower following already
-	following, err := Following(followerUserId, userId)
-	if err != nil || following {
+	follow, err := Following(followerUserId, userId)
+	if err != nil || follow.Following {
 		// return if following silently
 		return err
 	}
@@ -139,8 +149,8 @@ func Unfollow(userId, followUserId int64) error {
 		preUnfollow = g.Data.Prepare(`DELETE FROM UserFollows WHERE userId = ? AND followUserId = ?`)
 	}
 
-	following, err := Following(userId, followUserId)
-	if err != nil || !following {
+	follow, err := Following(userId, followUserId)
+	if err != nil || (!follow.Following && !follow.Requested) {
 		// return if !following silently
 		return err
 	}
