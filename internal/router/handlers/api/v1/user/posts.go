@@ -6,6 +6,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	postsApi "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/posts"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
@@ -19,7 +20,7 @@ const perPage int64 = 15
 
 // Posts posts handler
 func Posts(c *fiber.Ctx) error {
-	_, userID, hasErr, errApi := getUserNameID(c)
+	_, userID, hasErr, errApi := shared.GetUserNameIDResp(c)
 	if hasErr {
 		return errApi
 	}

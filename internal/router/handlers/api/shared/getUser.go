@@ -28,3 +28,16 @@ func GetUserNameAndID(c *fiber.Ctx) (userName string, userID int64, errApi apier
 	}
 	return
 }
+
+func GetUserNameIDResp(c *fiber.Ctx) (string, int64, bool, error) {
+	userName, userId, errApi := GetUserNameAndID(c)
+	if !errApi.Empty() {
+		switch errApi {
+		case apierr.NotFound:
+			return "", 0, true, apierr.ErrNotFound(c)
+		default:
+			return "", 0, true, apierr.ErrSomethingWentWrong(c)
+		}
+	}
+	return userName, userId, false, nil
+}
