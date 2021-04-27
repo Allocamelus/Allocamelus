@@ -12,8 +12,8 @@
       </div>
       <div class="flex-grow flex items-center justify-center">
         <div class="text-center flex flex-col py-8 px-6 xs:px-8">
-          <div class="text-xl font-medium flex">
-            Sign Up or Login to Follow {{ user.name }}
+          <div class="text-xl font-medium flex flex-wrap items-center justify-evenly">
+            <div>Sign Up or Login to Follow {{ user.name }}</div>
             <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
               @{{ user.userName }}
             </div>
