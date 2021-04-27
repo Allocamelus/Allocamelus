@@ -85,8 +85,8 @@ func Accept(userId, followerUserId int64) error {
 
 	// Is follower following already
 	following, err := Following(followerUserId, userId)
-	if err != nil || !following {
-		// return if !following silently
+	if err != nil || following {
+		// return if following silently
 		return err
 	}
 
@@ -145,6 +145,30 @@ func Unfollow(userId, followUserId int64) error {
 	return err
 }
 
+func Unfriend(userId, friendId int64) error {
+	t, err := GetType(friendId)
+	if err != nil {
+		return err
+	}
+
+	if t.Private() {
+		if err := Unfollow(userId, friendId); err != nil {
+			return err
+		}
+	}
+
+	t, err = GetType(userId)
+	if err != nil {
+		return err
+	}
+	if !t.Private() {
+		return nil
+	}
+
+	err = Unfollow(friendId, userId)
+	return err
+}
+
 var preFollowers *sql.Stmt
 
 // Followers count userId followers
@@ -158,7 +182,7 @@ func Followers(userId int64) (followers int64, err error) {
 
 var preListFollowers *sql.Stmt
 
-// ListFollowing return a slice of userId(s) that follow userId
+// ListFollows return a slice of userId(s) that follow userId
 func ListFollowers(userId int64) ([]int64, error) {
 	if preListFollowers == nil {
 		preListFollowers = g.Data.Prepare(`SELECT userId FROM UserFollows WHERE followUserId = ? AND accepted = 1`)
