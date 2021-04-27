@@ -2,8 +2,6 @@ package user
 
 import (
 	"errors"
-
-	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 )
 
 var ErrViewMeNot = errors.New("user/view: Error can't view user")
@@ -21,10 +19,6 @@ func CanView(userId int64, sUser *Session) error {
 
 	if !sUser.LoggedIn {
 		return ErrViewMeNot
-	}
-
-	if compare.EqualInt64(userId, sUser.UserID) {
-		return nil
 	}
 
 	following, err := Following(sUser.UserID, userId)

@@ -5,12 +5,16 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 )
 
 var preFollowing *sql.Stmt
 
 // Following is userId following followUserId
 func Following(userId, followUserId int64) (following bool, err error) {
+	if compare.EqualInt64(userId, followUserId) {
+		return true, nil
+	}
 	if preFollowing == nil {
 		preFollowing = g.Data.Prepare(`SELECT EXISTS(SELECT * FROM UserFollows WHERE userId = ? AND followUserId = ? AND accepted = 1)`)
 	}
