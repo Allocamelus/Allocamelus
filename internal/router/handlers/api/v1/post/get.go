@@ -22,7 +22,7 @@ func Get(c *fiber.Ctx) error {
 	}
 
 	p.MDtoHTMLContent()
-	u, err := user.GetPublic(p.UserID)
+	u, err := user.GetPublic(user.ContextSession(c), p.UserID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}

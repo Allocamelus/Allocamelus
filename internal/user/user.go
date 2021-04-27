@@ -92,9 +92,9 @@ func (u *User) Insert() error {
 	return nil
 }
 
-// GetPublic user info
+// GetPublic user info for session user
 // TODO: Cache
-func GetPublic(userID int64) (user User, err error) {
+func GetPublic(s *Session, userID int64) (user User, err error) {
 	user.ID = userID
 	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Type, &user.Created)
 	if err != nil {
@@ -109,6 +109,13 @@ func GetPublic(userID int64) (user User, err error) {
 		err = nil
 	} else {
 		user.Avatar = true
+	}
+
+	if s.LoggedIn {
+		user.Follow, err = Following(s.UserID, userID)
+		if err != nil {
+			return
+		}
 	}
 
 	user.Followers, err = Followers(userID)

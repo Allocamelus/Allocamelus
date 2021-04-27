@@ -22,13 +22,14 @@ func Following(userId, followUserId int64) (follow FollowStruct, err error) {
 	}
 
 	err = preFollowing.QueryRow(userId, followUserId).Scan(&follow.Following)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			return follow, err
+	if err != sql.ErrNoRows {
+		if err != nil {
+			return
 		}
-		follow.Requested = true
+		if !follow.Following {
+			follow.Requested = true
+		}
 	}
-
 	return follow, nil
 }
 
