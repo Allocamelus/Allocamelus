@@ -12,7 +12,7 @@
       v-show="modelValue"
       class="w-full fixed z-auto right-0 left-0 bottom-0 xs:bottom-4"
     >
-      <div class="m-auto w-full xs:w-80">
+      <div class="m-auto w-full xs:w-max">
         <box
           class="rounded-t-lg xs:rounded-md flex items-center justify-between"
           :class="closeBtn ? 'px-3 py-2' : 'py-1.5 px2.5 xs:py-3 xs:px-4'"
