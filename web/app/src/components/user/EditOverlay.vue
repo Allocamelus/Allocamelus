@@ -1,12 +1,12 @@
 <template>
   <overlay v-model="visable">
     <box
-      class="w-full xs-max:h-full xs:m-3 rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none overflow-hidden flex flex-col"
+      class="w-full xs-max:h-full xs:m-3 max-h-screen rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none flex flex-col"
     >
       <snackbar v-model="err.snackbar.show" :closeBtn="true">
         {{ err.snackbar.msg }}
       </snackbar>
-      <div class="w-full p-3 border-b border-secondary-600 flex items-end">
+      <div class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0">
         <div class="flex-1 flex justify-start">
           <basic-btn @click="visable = false">
             <XIcon class="w-5 h-5"></XIcon>
@@ -19,8 +19,8 @@
           <basic-btn @click="submit">Save</basic-btn>
         </div>
       </div>
-      <div class="flex-grow flex">
-        <div class="flex flex-grow flex-col py-6 px-6 xs:px-8">
+      <div class="flex-grow flex flex-col overflow-y-auto">
+        <div class="flex flex-grow flex-shrink-0 flex-col py-6 px-6 xs:px-8">
           <div class="flex items-center">
             <user-avatar
               class="h-11 w-11"
@@ -35,7 +35,7 @@
               <basic-btn class="link">Change Avatar</basic-btn>
             </change-avatar>
           </div>
-          <div class="mt-3">
+          <div class="mt-3.5">
             <checkbox v-model="privateUser" name="private">
               Private Account
             </checkbox>
