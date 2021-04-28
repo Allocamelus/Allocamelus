@@ -15,7 +15,9 @@
               :displayType="TwoLine"
             ></user-name>
           </div>
-          <div class="mt-3 text-lg">{{ canEdit ? storeUser.bio : user.bio }}</div>
+          <div class="mt-3 text-lg">
+            {{ canEdit ? storeUser.bio : user.bio }}
+          </div>
         </div>
         <div
           class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0 flex justify-end items-start"
@@ -28,7 +30,7 @@
             ]"
             @click="clickFollowEdit"
           >
-            {{ canEdit ? "Edit Profile" : "Follow" }}
+            {{ followEditBtnTxt }}
           </basic-btn>
         </div>
         <edit-overlay
@@ -51,6 +53,9 @@
         <div v-if="err.posts.length > 0" v-html="err.posts"></div>
         <new-post-text-input v-if="canEdit"></new-post-text-input>
         <post-feed :list="postsList"></post-feed>
+        <snackbar v-model="err.snackbar.show" :closeBtn="true">
+          {{ err.snackbar.msg }}
+        </snackbar>
       </feed>
       <sidebar></sidebar>
     </div>
@@ -63,9 +68,14 @@ import { useStore } from "vuex";
 
 import { get as getUser } from "../api/user/get";
 import { posts as getPosts } from "../api/user/posts";
+import { post as userFollow, remove as userUnfollow } from "../api/user/follow";
 import { API_Error } from "../models/api_error";
 import { API_Posts } from "../models/api_posts";
-import { InvalidCharacters } from "../components/form/errors";
+import { Private as PRIVATE_USER } from "../models/user_types";
+import {
+  InvalidCharacters,
+  SomethingWentWrong,
+} from "../components/form/errors";
 
 import { GEN_User } from "../models/go_structs_gen";
 
@@ -84,7 +94,7 @@ import ChangeAvatar from "../components/user/ChangeAvatar.vue";
 import EditOverlay from "../components/user/EditOverlay.vue";
 import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
-
+import Snackbar from "../components/box/Snackbar.vue";
 
 export default defineComponent({
   props: {
@@ -105,6 +115,10 @@ export default defineComponent({
       err: {
         user: new API_Error(),
         posts: new API_Error(),
+        snackbar: {
+          show: false,
+          msg: "",
+        },
       },
     });
 
@@ -144,6 +158,23 @@ export default defineComponent({
       }
       return false;
     },
+    followEditBtnTxt() {
+      if (this.canEdit) {
+        return "Edit Profile";
+      }
+      if (this.user.type == PRIVATE_USER) {
+        if (this.user.follow?.following) {
+          return "Unfriend";
+        } else if (this.user.follow?.requested) {
+          return "Requested";
+        }
+        return "Friend";
+      }
+      if (this.user.follow?.following) {
+        return "Unfollow";
+      }
+      return "Follow";
+    },
   },
   watch: {
     user(newUser, old) {
@@ -157,6 +188,35 @@ export default defineComponent({
       this.overlay = false;
       if (this.canEdit || !this.loggedIn) {
         this.overlay = true;
+      } else {
+        (() => {
+          if (this.user.follow.following || this.user.follow.requested) {
+            return userUnfollow(this.user.userName);
+          }
+          return userFollow(this.user.userName);
+        })()
+          .then((r) => {
+            if (!r.success) {
+              this.snackbarErr(SomethingWentWrong);
+            } else {
+              if (this.user.type == PRIVATE_USER) {
+                this.user.follow.requested = true;
+              } else {
+                this.user.follow.following = true;
+              }
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            this.snackbarErr(SomethingWentWrong);
+          });
+      }
+    },
+    snackbarErr(err) {
+      this.err.snackbar.msg = "";
+      if (err.length > 0) {
+        this.err.snackbar.msg = err;
+        this.err.snackbar.show = true;
       }
     },
   },
@@ -199,6 +259,7 @@ export default defineComponent({
     EditOverlay,
     SignUpOverlay,
     NewPostTextInput,
+    Snackbar,
   },
 });
 </script>
