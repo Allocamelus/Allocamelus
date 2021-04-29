@@ -191,19 +191,27 @@ export default defineComponent({
       } else {
         (() => {
           if (this.user.follow.following || this.user.follow.requested) {
-            return userUnfollow(this.user.userName);
+            return userUnfollow(this.user.userName).then((r) => {
+              if (r.success) {
+                this.user.follow.requested = this.user.follow.following = false;
+              }
+              return r;
+            });
           }
-          return userFollow(this.user.userName);
-        })()
-          .then((r) => {
-            if (!r.success) {
-              this.snackbarErr(SomethingWentWrong);
-            } else {
+          return userFollow(this.user.userName).then((r) => {
+            if (r.success) {
               if (this.user.type == PRIVATE_USER) {
                 this.user.follow.requested = true;
               } else {
                 this.user.follow.following = true;
               }
+            }
+            return r;
+          });
+        })()
+          .then((r) => {
+            if (!r.success) {
+              this.snackbarErr(SomethingWentWrong);
             }
           })
           .catch((e) => {

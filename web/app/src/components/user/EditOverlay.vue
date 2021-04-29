@@ -6,7 +6,9 @@
       <snackbar v-model="err.snackbar.show" :closeBtn="true">
         {{ err.snackbar.msg }}
       </snackbar>
-      <div class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0">
+      <div
+        class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0"
+      >
         <div class="flex-1 flex justify-start">
           <basic-btn @click="visable = false">
             <XIcon class="w-5 h-5"></XIcon>
@@ -120,7 +122,8 @@ export default defineComponent({
   setup(props) {
     const store = useStore(),
       updateStoreBio = (bio) => store.commit("updateBio", bio),
-      updateStoreName = (name) => store.commit("updateName", name);
+      updateStoreName = (name) => store.commit("updateName", name),
+      updateStoreType = (type) => store.commit("updateType", type);
     const data = reactive({
       visable: props.show,
       name: props.user.name,
@@ -141,6 +144,7 @@ export default defineComponent({
       InvalidCharacters,
       updateStoreBio,
       updateStoreName,
+      updateStoreType,
     };
   },
   watch: {
@@ -166,7 +170,6 @@ export default defineComponent({
 
       (async () => {
         if (vm.name != vm.user.name) {
-          console.log(1);
           UpdateName(vm.user.userName, vm.name)
             .then((r) => {
               if (r.success) {
@@ -203,14 +206,13 @@ export default defineComponent({
               vm.snackbarErr(SomethingWentWrong);
             });
         }
-        console.log(vm.privateUser);
         if (vm.privateUser != (vm.user.type == TYPE_PRIVATE)) {
-          UpdateType(
-            vm.user.userName,
-            vm.privateUser ? TYPE_PRIVATE : TYPE_PUBLIC
-          )
+          var newType = vm.privateUser ? TYPE_PRIVATE : TYPE_PUBLIC;
+          UpdateType(vm.user.userName, newType)
             .then((r) => {
-              if (!r.success) {
+              if (r.success) {
+                vm.updateStoreType(newType);
+              } else {
                 vm.snackbarErr(SomethingWentWrong);
               }
             })
