@@ -23,6 +23,10 @@ func User(api fiber.Router) {
 	// /api/v1/user/email-token/validate
 	uET.Post("/validate", emailtoken.Validate)
 
+	// /api/v1/user/follow
+	uF := u.Group("/follow", middleware.Protected)
+	uF.Get("/requests", follow.Requests)
+
 	// /api/v1/user/password-reset
 	uPR := u.Group("/password-reset")
 	// /api/v1/user/password-reset/token

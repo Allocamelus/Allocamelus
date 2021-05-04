@@ -221,3 +221,33 @@ func ListFollowers(userId int64) ([]int64, error) {
 	}
 	return followers, nil
 }
+
+var preListRequests *sql.Stmt
+
+// ListRequests return a ordered map of userId(s) that request to follow userId
+// TODO limit
+func ListRequests(userId int64) (map[int64]int64, error) {
+	if preListRequests == nil {
+		preListRequests = g.Data.Prepare(`SELECT userId FROM UserFollows WHERE followUserId = ? AND accepted = 0`)
+	}
+
+	rows, err := preListRequests.Query(userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	requests := map[int64]int64{}
+	var (
+		i         int64
+		requester int64
+	)
+	for rows.Next() {
+		if err = rows.Scan(&requester); err != nil {
+			return nil, err
+		}
+		requests[i] = requester
+		i++
+	}
+	return requests, nil
+}
