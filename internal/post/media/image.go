@@ -1,9 +1,7 @@
 package media
 
 import (
-	"errors"
 	"mime/multipart"
-	"os"
 
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
@@ -27,9 +25,8 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 
 	fileImagePath := fileutil.FilePath(selectorPath(b58hash, imgType, true))
 
-	_, err = os.Stat(fileImagePath)
 	// Check for image for deduplication
-	if errors.Is(err, os.ErrNotExist) {
+	if !fileutil.Exist(fileImagePath) {
 		err = img.Strip()
 		if err != nil {
 			return err

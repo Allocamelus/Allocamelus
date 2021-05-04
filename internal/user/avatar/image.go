@@ -22,38 +22,42 @@ func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl stri
 		return
 	}
 
-	err = img.Strip()
-	if err != nil {
-		return
-	}
-	// Allow Animations
-	img.TransformAnimation = true
+	imgPath := selectorPath(b58hash, imgType, true)
+	fileImagePath := fileutil.FilePath(imgPath)
 
-	err = img.CropAR(imagedit.AR_1x1, imagedit.Center)
-	if err != nil {
-		return
-	}
+	// Check for image for deduplication
+	if !fileutil.Exist(fileImagePath) {
+		err = img.Strip()
+		if err != nil {
+			return
+		}
+		// Allow Animations
+		img.TransformAnimation = true
 
-	if err = img.Resize(MaxHightWidth, MaxHightWidth); err != nil {
-		return
-	}
+		err = img.CropAR(imagedit.AR_1x1, imagedit.Center)
+		if err != nil {
+			return
+		}
 
-	if err = img.Optimize(); err != nil {
-		return
+		if err = img.Resize(MaxHightWidth, MaxHightWidth); err != nil {
+			return
+		}
+
+		if err = img.Optimize(); err != nil {
+			return
+		}
+
+		err = img.WriteToPath(fileImagePath)
+		if err != nil {
+			return
+		}
 	}
 
 	if err = InsertAvatar(userId, imgType, b58hash); err != nil {
 		return
 	}
-	imgPath := selectorPath(b58hash, imgType, true)
-	fileImagePath := fileutil.FilePath(imgPath)
 
 	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
-
-	err = img.WriteToPath(fileImagePath)
-	if err != nil {
-		return
-	}
 
 	logger.Error(deactivateOld(userId))
 	newUrl = fileutil.PublicPath(imgPath)
