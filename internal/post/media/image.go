@@ -49,6 +49,13 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		if err = img.Optimize(); err != nil {
 			return err
 		}
+
+		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
+
+		err = img.WriteToPath(fileImagePath)
+		if err != nil {
+			return err
+		}
 	} else {
 		logger.Error(err)
 	}
@@ -56,13 +63,6 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 	width, height := img.WH()
 
 	err = Insert(postID, Media{FileType: imgType, Meta: Meta{Alt: alt, Width: int64(width), Height: int64(height)}}, b58hash)
-	if err != nil {
-		return err
-	}
-
-	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
-
-	err = img.WriteToPath(fileImagePath)
 	if err != nil {
 		return err
 	}

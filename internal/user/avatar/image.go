@@ -47,6 +47,8 @@ func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl stri
 			return
 		}
 
+		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
+
 		err = img.WriteToPath(fileImagePath)
 		if err != nil {
 			return
@@ -56,8 +58,6 @@ func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl stri
 	if err = InsertAvatar(userId, imgType, b58hash); err != nil {
 		return
 	}
-
-	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
 
 	logger.Error(deactivateOld(userId))
 	newUrl = fileutil.PublicPath(imgPath)
