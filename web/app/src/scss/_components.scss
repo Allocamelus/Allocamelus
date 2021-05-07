@@ -31,11 +31,11 @@
       width: 12px;
     }
     &::-webkit-scrollbar-track {
-      @apply bg-gray-300 dark:bg-gray-900;
+      @apply bg-warm-gray-300 dark:bg-warm-gray-900;
     }
     &::-webkit-scrollbar-thumb {
-      @apply border-solid rounded-3xl border-gray-300 bg-gray-600 hover:bg-gray-700 opacity-25;
-      @apply dark:bg-gray-400 dark:border-gray-900 dark:hover:bg-gray-300;
+      @apply border-solid rounded-3xl border-warm-gray-300 bg-warm-gray-600 hover:bg-warm-gray-700 opacity-25;
+      @apply dark:bg-warm-gray-400 dark:border-warm-gray-900 dark:hover:bg-warm-gray-300;
       border-width: 3px;
     }
   }

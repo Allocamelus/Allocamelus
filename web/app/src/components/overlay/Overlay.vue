@@ -59,6 +59,7 @@ export default defineComponent({
     if (this.blockScrool) {
       // Creating invisible container
       const outer = document.createElement("div");
+      outer.classList.add("scrollbar")
       outer.style.visibility = "hidden";
       outer.style.overflow = "scroll"; // forcing scrollbar to appear
       outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
