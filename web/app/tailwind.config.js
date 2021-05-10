@@ -23,7 +23,16 @@ module.exports = {
       },
       transitionDelay: {
         '25': '25ms'
-      }
+      },
+      keyframes: {
+        slide: {
+          '0%': { 'margin-left': '-25%' },
+          '100%': { 'margin-left': '125%' },
+        }
+      },
+      animation: {
+        slide: 'slide 1.7s cubic-bezier(0, 0, 0.26, 0.74) infinite',
+       }
     },
     screens: {
       'xs': '430px',
