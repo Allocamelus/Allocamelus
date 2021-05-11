@@ -22,8 +22,8 @@
     }
   }
   .link {
-    @apply text-rose-800 dark:text-rose-500;
-    @apply hover:text-rose-900 dark:hover:text-rose-600;
+    @apply text-secondary-700 dark:text-rose-600;
+    @apply hover:text-secondary-900 dark:hover:text-rose-500;
     @apply cursor-pointer;
   }
   .scrollbar {
