@@ -28,7 +28,7 @@ export default (time: number) => {
   }
 }
 
-export function fmtTime(t: number, tDuration: number, postFix: string, short: boolean = false) {
+export function fmtTime(t: number, tDuration: number, postFix: string, short = false) {
   // time from now divided by the provide duration
   // Example: t=600 so tD...=60 (1 Minute) so t/tD... = 10 (minutes)
   var sinceIn = Math.round(t / tDuration)
