@@ -172,6 +172,7 @@ import UserAvatar from "./components/user/Avatar.vue";
 import UserName from "./components/user/Name.vue";
 import ToLink from "./components/ToLink.vue";
 import BarLoader from "./components/overlay/BarLoader.vue";
+import Snackbar from "./components/box/Snackbar.vue";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -320,6 +321,7 @@ export default defineComponent({
     UserName,
     ToLink,
     BarLoader,
+    Snackbar,
   },
 });
 </script>
