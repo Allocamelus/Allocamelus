@@ -117,7 +117,8 @@ export class GEN_User {
     avatar: boolean;
     avatarUrl?: string;
     bio?: string;
-    follow: GEN_FollowStruct;
+    selfFollow?: GEN_FollowStruct;
+    userFollow?: GEN_FollowStruct;
     followers: number;
     type: number;
     created?: number;
@@ -135,7 +136,8 @@ export class GEN_User {
         this.avatar = source["avatar"];
         this.avatarUrl = source["avatarUrl"];
         this.bio = source["bio"];
-        this.follow = this.convertValues(source["follow"], GEN_FollowStruct);
+        this.selfFollow = this.convertValues(source["selfFollow"], GEN_FollowStruct);
+        this.userFollow = this.convertValues(source["userFollow"], GEN_FollowStruct);
         this.followers = source["followers"];
         this.type = source["type"];
         this.created = source["created"];

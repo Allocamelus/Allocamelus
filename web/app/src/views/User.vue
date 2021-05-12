@@ -163,14 +163,14 @@ export default defineComponent({
         return "Edit Profile";
       }
       if (this.user.type == PRIVATE_USER) {
-        if (this.user.follow?.following) {
+        if (this.user.selfFollow?.following) {
           return "Unfriend";
-        } else if (this.user.follow?.requested) {
+        } else if (this.user.selfFollow?.requested) {
           return "Requested";
         }
         return "Friend";
       }
-      if (this.user.follow?.following) {
+      if (this.user.selfFollow?.following) {
         return "Unfollow";
       }
       return "Follow";
@@ -190,10 +190,10 @@ export default defineComponent({
         this.overlay = true;
       } else {
         (() => {
-          if (this.user.follow.following || this.user.follow.requested) {
+          if (this.user.selfFollow.following || this.user.selfFollow.requested) {
             return userUnfollow(this.user.userName).then((r) => {
               if (r.success) {
-                this.user.follow.requested = this.user.follow.following = false;
+                this.user.selfFollow.requested = this.user.selfFollow.following = false;
               }
               return r;
             });
@@ -201,9 +201,9 @@ export default defineComponent({
           return userFollow(this.user.userName).then((r) => {
             if (r.success) {
               if (this.user.type == PRIVATE_USER) {
-                this.user.follow.requested = true;
+                this.user.selfFollow.requested = true;
               } else {
-                this.user.follow.following = true;
+                this.user.selfFollow.following = true;
               }
             }
             return r;

@@ -85,9 +85,20 @@ func Follow(userId int64, followUserId int64) error {
 	}
 
 	// Only Public Users are auto followed
-	accepted := t.Public()
-
-	return FollowExt(userId, followUserId, accepted)
+	if t.Public() {
+		return FollowExt(userId, followUserId, true)
+	}
+	// Has the user being followed requested to follow user
+	follow, err := Following(followUserId, userId)
+	if err != nil {
+		return err
+	}
+	// if so Accept request
+	if follow.Requested {
+		return Accept(followUserId, userId)
+	}
+	// else request to follow
+	return FollowExt(userId, followUserId, false)
 }
 
 var preAccept *sql.Stmt
@@ -220,6 +231,36 @@ func ListFollowers(userId int64) ([]int64, error) {
 		followers = append(followers, follower)
 	}
 	return followers, nil
+}
+
+var preRequested *sql.Stmt
+
+// Requested has userId requested to follow userId
+// TODO limit
+func Requested(userId int64) (map[int64]int64, error) {
+	if preListRequests == nil {
+		preListRequests = g.Data.Prepare(`SELECT userId FROM UserFollows WHERE followUserId = ? AND accepted = 0`)
+	}
+
+	rows, err := preListRequests.Query(userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	requests := map[int64]int64{}
+	var (
+		i         int64
+		requester int64
+	)
+	for rows.Next() {
+		if err = rows.Scan(&requester); err != nil {
+			return nil, err
+		}
+		requests[i] = requester
+		i++
+	}
+	return requests, nil
 }
 
 var preListRequests *sql.Stmt

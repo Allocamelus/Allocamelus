@@ -43,7 +43,8 @@ type User struct {
 	Avatar      bool         `msg:"avatar" json:"avatar"`
 	AvatarUrl   string       `msg:"-" json:"avatarUrl,omitempty"`
 	Bio         string       `msg:"bio" json:"bio,omitempty"`
-	Follow      FollowStruct `msg:"-" json:"follow"`
+	SelfFollow  FollowStruct `msg:"-" json:"selfFollow,omitempty"`
+	UserFollow  FollowStruct `msg:"-" json:"userFollow,omitempty"`
 	Followers   int64        `msg:"followers" json:"followers"`
 	Type        Types        `msg:"type" json:"type"`
 	Permissions Perms        `msg:"permissions" json:"-"`
@@ -112,7 +113,11 @@ func GetPublic(s *Session, userID int64) (user User, err error) {
 	}
 
 	if s.LoggedIn {
-		user.Follow, err = Following(s.UserID, userID)
+		user.SelfFollow, err = Following(s.UserID, userID)
+		if err != nil {
+			return
+		}
+		user.UserFollow, err = Following(userID, s.UserID)
 		if err != nil {
 			return
 		}
