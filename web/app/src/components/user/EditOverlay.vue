@@ -11,14 +11,20 @@
       >
         <div class="flex-1 flex justify-start">
           <basic-btn @click="visable = false">
-            <XIcon class="w-5 h-5"></XIcon>
+            <XIcon
+              class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
+            ></XIcon>
           </basic-btn>
         </div>
         <div class="flex-1 flex justify-center">
-          <div class="font-medium text-base leading-4">Edit Profile</div>
+          <div
+            class="font-medium text-base leading-4 text-gray-900 dark:text-gray-100"
+          >
+            Edit Profile
+          </div>
         </div>
         <div class="flex-1 flex justify-end">
-          <basic-btn @click="submit">Save</basic-btn>
+          <basic-btn @click="submit" class="link">Save</basic-btn>
         </div>
       </div>
       <div class="flex-grow flex flex-col overflow-y-auto">

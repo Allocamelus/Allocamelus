@@ -1,7 +1,7 @@
 <template>
   <basic-btn
     type="submit"
-    class="text-white bg-secondary-600 py-2.5 px-3.5 transition duration-75 hover:bg-secondary-800"
+    class="text-white bg-secondary-600 py-2.5 px-3.5 transition duration-75 hover:bg-secondary-800 flex-shrink-0"
     :title="title"
     @click="$emit('submit', true)"
   >
