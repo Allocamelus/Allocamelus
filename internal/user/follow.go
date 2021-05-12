@@ -95,7 +95,7 @@ func Follow(userId int64, followUserId int64) error {
 	}
 	// if so Accept request
 	if follow.Requested {
-		return Accept(followUserId, userId)
+		return Accept(userId, followUserId)
 	}
 	// else request to follow
 	return FollowExt(userId, followUserId, false)
@@ -155,8 +155,8 @@ func AcceptAll(userId int64) error {
 
 var preUnfollow *sql.Stmt
 
-// Unfollow userId unfollow followUserId
-func Unfollow(userId, followUserId int64) error {
+// unfollow userId unfollow followUserId
+func unfollow(userId, followUserId int64) error {
 	if preUnfollow == nil {
 		preUnfollow = g.Data.Prepare(`DELETE FROM UserFollows WHERE userId = ? AND followUserId = ?`)
 	}
@@ -171,28 +171,21 @@ func Unfollow(userId, followUserId int64) error {
 	return err
 }
 
-func Unfriend(userId, friendId int64) error {
-	t, err := GetType(friendId)
-	if err != nil {
+func Unfollow(userId, unfollowId int64) error {
+
+	if err := unfollow(userId, unfollowId); err != nil {
 		return err
 	}
 
-	if t.Private() {
-		if err := Unfollow(userId, friendId); err != nil {
-			return err
-		}
-	}
-
-	t, err = GetType(userId)
-	if err != nil {
+	// Unfriend if unfollowId and userId are private
+	if t, err := GetType(unfollowId); err != nil || !t.Private() {
 		return err
 	}
-	if !t.Private() {
-		return nil
+	if t, err := GetType(userId); err != nil || !t.Private() {
+		return err
 	}
 
-	err = Unfollow(friendId, userId)
-	return err
+	return unfollow(unfollowId, userId)
 }
 
 var preFollowers *sql.Stmt
