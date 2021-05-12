@@ -1,6 +1,6 @@
 import sanitizeHtml from '../pkg/sanitize'
 
-export function htmlErrBuilder(first: string, second: string = "") {
+export function htmlErrBuilder(first: string, second = "") {
   var err = `<strong>`;
   err += first;
   err += `</strong>`;
@@ -15,14 +15,14 @@ export const HtmlSomethingWentWrong = htmlErrBuilder(
   `Try again later`
 )
 
-function getPath(path: string = "") {
+function getPath(path = "") {
   if (path.length == 0) {
     path = window.location.pathname
   }
   return sanitizeHtml(path) + " "
 }
 
-export const Html403Func = (path: string = "") => {
+export const Html403Func = (path = "") => {
   path = getPath(path)
   return htmlErrBuilder(
     `Error: 403`,
@@ -30,7 +30,7 @@ export const Html403Func = (path: string = "") => {
   )
 }
 
-export const Html404Func = (path: string = "") => {
+export const Html404Func = (path = "") => {
   path = getPath(path)
   return htmlErrBuilder(
     `Error: 404`,
