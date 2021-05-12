@@ -44,8 +44,9 @@ func Get(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 	users := new(user.List)
+	sessionUser := user.ContextSession(c)
 	for _, p := range posts.Posts {
-		users.AddUser(p.UserID)
+		users.AddUser(sessionUser, p.UserID)
 		p.MDtoHTMLContent()
 	}
 

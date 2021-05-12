@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user"
 	emailtoken "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/email-token"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/follow"
 	passreset "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset"
 	passresetval "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/password-reset/validate"
 	userupdate "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user/update"
@@ -21,6 +22,10 @@ func User(api fiber.Router) {
 	uET.Post("/", emailtoken.Create)
 	// /api/v1/user/email-token/validate
 	uET.Post("/validate", emailtoken.Validate)
+
+	// /api/v1/user/follow
+	uF := u.Group("/follow", middleware.Protected)
+	uF.Get("/requests", follow.Requests)
 
 	// /api/v1/user/password-reset
 	uPR := u.Group("/password-reset")
@@ -44,6 +49,7 @@ func User(api fiber.Router) {
 		user.Delete,
 	)
 	userUpdate(uUN)
+	userFollow(uUN)
 }
 
 func userUpdate(un fiber.Router) {
@@ -67,4 +73,16 @@ func userUpdate(un fiber.Router) {
 	unGroup.Post("/name",
 		userupdate.Name,
 	)
+	// /api/v1/user/:userName/update/type
+	unGroup.Post("/type",
+		userupdate.Type,
+	)
+}
+
+func userFollow(un fiber.Router) {
+	// /api/v1/user/:userName/follow
+	unFollow := un.Group("/follow", middleware.Protected)
+	// Friend & Followers
+	unFollow.Post("/", follow.Post)
+	unFollow.Delete("/", follow.Delete)
 }

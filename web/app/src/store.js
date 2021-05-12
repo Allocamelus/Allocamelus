@@ -75,6 +75,9 @@ export default createStore({
     },
     updateName(state, name) {
       state.session.user.name = name;
+    },
+    updateType(state, type) {
+      state.session.user.type = type;
     }
   },
   actions: {

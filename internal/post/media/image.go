@@ -1,9 +1,7 @@
 package media
 
 import (
-	"errors"
 	"mime/multipart"
-	"os"
 
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
@@ -27,9 +25,8 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 
 	fileImagePath := fileutil.FilePath(selectorPath(b58hash, imgType, true))
 
-	_, err = os.Stat(fileImagePath)
 	// Check for image for deduplication
-	if errors.Is(err, os.ErrNotExist) {
+	if !fileutil.Exist(fileImagePath) {
 		err = img.Strip()
 		if err != nil {
 			return err
@@ -52,6 +49,13 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		if err = img.Optimize(); err != nil {
 			return err
 		}
+
+		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
+
+		err = img.WriteToPath(fileImagePath)
+		if err != nil {
+			return err
+		}
 	} else {
 		logger.Error(err)
 	}
@@ -59,13 +63,6 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 	width, height := img.WH()
 
 	err = Insert(postID, Media{FileType: imgType, Meta: Meta{Alt: alt, Width: int64(width), Height: int64(height)}}, b58hash)
-	if err != nil {
-		return err
-	}
-
-	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
-
-	err = img.WriteToPath(fileImagePath)
 	if err != nil {
 		return err
 	}

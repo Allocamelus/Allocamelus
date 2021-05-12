@@ -4,7 +4,9 @@
       class="w-full xs-max:h-full xs:m-3 rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none overflow-hidden flex flex-col"
     >
       <div class="w-full p-3 border-b border-secondary-600 flex items-end">
-        <div class="flex-1 flex justify-end">
+        <div
+          class="flex-1 flex justify-end text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
+        >
           <basic-btn @click="visable = false">
             <XIcon class="w-5 h-5"></XIcon>
           </basic-btn>
@@ -12,8 +14,10 @@
       </div>
       <div class="flex-grow flex items-center justify-center">
         <div class="text-center flex flex-col py-8 px-6 xs:px-8">
-          <div class="text-xl font-medium flex">
-            Sign Up or Login to Follow {{ user.name }}
+          <div
+            class="text-xl font-medium flex flex-wrap items-center justify-evenly"
+          >
+            <div>Sign Up or Login to Follow {{ user.name }}</div>
             <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
               @{{ user.userName }}
             </div>

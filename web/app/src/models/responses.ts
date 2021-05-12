@@ -1,3 +1,4 @@
+import { Html404Func, Html403Func, HtmlSomethingWentWrong } from '../components/htmlErrors'
 const invalidLength = "invalid-length",
   invalidChars = "invalid-characters",
   taken = "taken"
@@ -9,6 +10,7 @@ export const Responses = {
     InvalidWith: "invalid-with-value",
     InvalidCaptcha: "invalid-captcha",
     NotFound: "not-found",
+    Unauthorized403: "unauthorized-403",
     File: {
       ContentType: "invalid-content-type",
       Size: "invalid-file-size"
@@ -91,4 +93,16 @@ export function RespToError(resp: string) {
       return "Image size to large"
   }
   return ""
+}
+
+// RespToHtml response to a html readable error
+// TODO: Add All error text
+export function RespToHtml(resp: string) {
+  switch (resp) {
+    case Responses.Shared.NotFound:
+      return Html404Func()
+    case Responses.Shared.Unauthorized403:
+      return Html403Func()
+  }
+  return HtmlSomethingWentWrong
 }

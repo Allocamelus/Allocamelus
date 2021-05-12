@@ -23,6 +23,60 @@
               ></component>
             </div>
 
+            <div v-if="loggedIn" class="ml-1.5 relative">
+              <div class="p-1 rounded-full cursor-pointer" @click="clickAlerts">
+                <span class="sr-only">Open User Alerts</span>
+                <BellIcon class="w-5.5 h-5.5"></BellIcon>
+              </div>
+              <dropdown v-model="alerts.menu" class="max-w-sm w-80">
+                <bar-loader v-if="alerts.loading" />
+                <div
+                  class="dark:bg-gray-800 dark:text-white bg-gray-100 text-black max-h-48 h-48 overflow-x-hidden overflow-y-auto scrollbar px-3 py-2.5"
+                >
+                  <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
+                  <div v-else>
+                    <div
+                      class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Follow/Friend Request:
+                    </div>
+                    <div
+                      v-for="(userId, index) in alerts.requests.requests"
+                      :key="index"
+                      class="pb-3 flex flex-grow flex-shrink items-center"
+                    >
+                      <user-avatar
+                        :user="alerts.requests.user(userId)"
+                        :isLink="true"
+                        class="w-8 h-8"
+                      ></user-avatar>
+                      <div class="flex flex-grow items-center justify-between">
+                        <div class="ml-2 flex">
+                          <user-name
+                            :user="alerts.requests.user(userId)"
+                          ></user-name>
+                        </div>
+                        <div class="ml-2 flex items-center">
+                          <div
+                            class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5 text-white bg-secondary-700 hover:bg-secondary-800"
+                            @click="followRequest(userId, true)"
+                          >
+                            Accept
+                          </div>
+                          <div
+                            class="text-sm font-semibold leading-4 rounded cursor-pointer ml-1.5 p-1 link"
+                            @click="followRequest(userId, false)"
+                          >
+                            Decline
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </dropdown>
+            </div>
+
             <div v-if="!loggedIn" class="flex justify-start items-center mx-2">
               <basic-btn to="/signup" class="border border-white py-2 px-3">
                 Sign Up
@@ -50,11 +104,20 @@
                 ></component>
               </div>
               <dropdown v-model="userMenu" class="w-44">
-                <dropdown-item :to="`/u/${user.userName}`">
-                  Profile
-                </dropdown-item>
-                <dropdown-item>Settings (TODO)</dropdown-item>
-                <dropdown-item to="/logout">Logout</dropdown-item>
+                <div class="bg-secondary-800">
+                  <dropdown-item
+                    :to="`/u/${user.userName}`"
+                    class="hover:bg-secondary-700"
+                  >
+                    Profile
+                  </dropdown-item>
+                  <dropdown-item class="hover:bg-secondary-700"
+                    >Settings (TODO)</dropdown-item
+                  >
+                  <dropdown-item to="/logout" class="hover:bg-secondary-700"
+                    >Logout</dropdown-item
+                  >
+                </div>
               </dropdown>
             </div>
           </div>
@@ -63,6 +126,9 @@
     </nav>
     <div id="bodyContent" class="mt-nav">
       <router-view :key="viewKey" />
+      <snackbar v-model="snackbar.show" :closeBtn="true">
+        {{ snackbar.msg }}
+      </snackbar>
     </div>
     <!--TODO: Mobile Menu-->
     <footer id="footer">
@@ -84,17 +150,28 @@
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
 
+import { MinToSec, SecToMs } from "./pkg/time";
+
+import {
+  post as userFollow,
+  remove as userUnfollow,
+  requests,
+  API_Requests,
+} from "./api/user/follow";
+import { SomethingWentWrong } from "./components/form/errors";
+
 import SunIcon from "@heroicons/vue/solid/SunIcon";
 import MoonIcon from "@heroicons/vue/solid/MoonIcon";
 import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
 import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
+import BellIcon from "@heroicons/vue/outline/BellIcon";
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
 import BasicBtn from "./components/button/BasicBtn.vue";
 import UserAvatar from "./components/user/Avatar.vue";
+import UserName from "./components/user/Name.vue";
 import ToLink from "./components/ToLink.vue";
-
-import { MinToSec, SecToMs } from "./pkg/time";
+import BarLoader from "./components/overlay/BarLoader.vue";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -117,6 +194,17 @@ export default defineComponent({
     const data = reactive({
       sesKeepAliveInterval: null,
       userMenu: false,
+      alerts: {
+        err: "",
+        menu: false,
+        loading: false,
+        lastFetched: 0,
+        requests: new API_Requests(),
+      },
+      snackbar: {
+        show: false,
+        msg: "",
+      },
       userMobile: window.screen.width < 768,
     });
 
@@ -161,12 +249,64 @@ export default defineComponent({
         this.userMenu = false;
       }
     },
+    async clickAlerts() {
+      var vm = this;
+      vm.alerts.menu = !vm.alerts.menu;
+      vm.alerts.loading = true;
+      vm.alerts.err = "Loading...";
+      requests()
+        .then((r) => {
+          vm.alerts.err = "";
+          if (Object.keys(r.requests).length != 0) {
+            vm.alerts.requests = r;
+          } else {
+            vm.alerts.err = "No Notifications";
+          }
+        })
+        .catch((e) => {
+          vm.alerts.err = SomethingWentWrong;
+        })
+        .finally(() => {
+          vm.alerts.loading = false;
+        });
+    },
+    followRequest(userId, accept) {
+      (() => {
+        var uN = this.alerts.requests.user(userId).userName;
+        if (accept) {
+          return userFollow(uN);
+        }
+        return userUnfollow(uN);
+      })()
+        .then((r) => {
+          if (!r.success) {
+            this.snackbarMsg(SomethingWentWrong);
+            return;
+          }
+          var requests = this.alerts.requests.requests;
+          delete requests[
+            Object.keys(requests).find((k) => requests[k] === userId)
+          ];
+        })
+        .catch((e) => {
+          console.log(e);
+          this.snackbarMsg(SomethingWentWrong);
+        });
+    },
+    snackbarMsg(msg) {
+      this.snackbar.msg = "";
+      if (msg.length > 0) {
+        this.snackbar.msg = msg;
+        this.snackbar.show = true;
+      }
+    },
     checkMenu() {
       this.userMobile = screen.width < 768;
     },
     onNavigate() {
       this.checkMenu();
       this.userMenu = false;
+      this.alerts.menu = false;
     },
   },
   components: {
@@ -174,11 +314,14 @@ export default defineComponent({
     MoonIcon,
     Dropdown,
     DropdownItem,
+    BellIcon,
     ChevronDownIcon,
     ChevronUpIcon,
     BasicBtn,
     UserAvatar,
+    UserName,
     ToLink,
+    BarLoader,
   },
 });
 </script>

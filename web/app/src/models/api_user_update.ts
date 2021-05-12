@@ -17,3 +17,5 @@ export class API_Avatar_Resp extends API_Success_Error {
 export class API_Bio_Resp extends API_Success_Error { }
 
 export class API_Name_Resp extends API_Success_Error { }
+
+export class API_Type_Resp extends API_Success_Error { }
