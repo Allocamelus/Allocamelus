@@ -131,7 +131,6 @@ import { redirectUrl } from "../router";
 import CenterFormBox from "../components/form/CenterFormBox.vue";
 import TextInput from "../components/form/TextInput.vue";
 import PasswordInput from "../components/form/PasswordInput.vue";
-import Checkbox from "../components/form/Checkbox.vue";
 import Submit from "../components/form/Submit.vue";
 import InputLabel from "../components/form/InputLabel.vue";
 import TextSmall from "../components/text/Small.vue";
@@ -301,7 +300,6 @@ export default defineComponent({
     CenterFormBox,
     TextInput,
     PasswordInput,
-    Checkbox,
     Submit,
     InputLabel,
     TextSmall,

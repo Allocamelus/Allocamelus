@@ -3,7 +3,7 @@ import { GEN_User } from "../../../models/go_structs_gen";
 
 
 export class Status {
-  loggedIn: Boolean;
+  loggedIn: boolean;
   user?: GEN_User;
 
 

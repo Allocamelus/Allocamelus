@@ -3,7 +3,7 @@ import { API_Error, API_Success_Error } from "../../models/api_error";
 
 
 export class CreateResponse extends API_Success_Error {
-  id?: Number;
+  id?: number;
 
   static createFrom(source: any = {}) {
     return new CreateResponse(source);
@@ -18,7 +18,7 @@ export class CreateResponse extends API_Success_Error {
 
 export class MediaFile {
   media: File;
-  alt: String;
+  alt: string;
 
   static createFrom(source: any = {}) {
     return new MediaFile(source);

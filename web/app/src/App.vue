@@ -289,7 +289,6 @@ export default defineComponent({
           ];
         })
         .catch((e) => {
-          console.log(e);
           this.snackbarMsg(SomethingWentWrong);
         });
     },

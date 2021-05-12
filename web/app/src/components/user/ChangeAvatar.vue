@@ -140,7 +140,6 @@ export default defineComponent({
             }
           })
           .catch((e) => {
-            console.log(e);
             this.onErr(SomethingWentWrong);
           });
       }
@@ -153,7 +152,6 @@ export default defineComponent({
         })
         .catch((e) => {
           hasErr = true;
-          console.log(e);
           this.onErr(SomethingWentWrong);
         });
     },

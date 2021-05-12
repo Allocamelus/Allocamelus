@@ -127,11 +127,7 @@ function getValidator(str) {
 Squire.prototype.hasActionSelection = function (name, action, format) {
   var path = this.getPath(),
     test = getValidator(format).test(path) | this.hasFormat(format);
-  if (name == action && test) {
-    return true;
-  } else {
-    return false;
-  }
+  return name == action && test ? true : false;
 };
 Squire.prototype.thePath = function () {
   return this.getPath();

@@ -131,7 +131,7 @@ func sessionFromStore(c *fiber.Ctx) *Session {
 
 // CanDecrypt can session decrypt
 func (s *Session) CanDecrypt() bool {
-	return !(len(s.PrivateKey.Armored) == 0)
+	return s.PrivateKey.Armored != ""
 }
 
 var (

@@ -12,7 +12,7 @@ import (
 // GetUserNameAndID from :userName
 func GetUserNameAndID(c *fiber.Ctx) (userName string, userID int64, errApi apierr.APIErr) {
 	userName = c.Params("userName")
-	if len(userName) == 0 {
+	if userName == "" {
 		errApi = apierr.NotFound
 		return
 	}

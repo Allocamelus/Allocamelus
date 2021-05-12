@@ -74,6 +74,9 @@ func (pk *PrivateKey) DecryptArmored(armored string) ([]byte, error) {
 	}
 
 	message, err := privateKeyRing.Decrypt(pgpMessage, nil, crypto.GetUnixTime())
+	if err != nil {
+		return nil, err
+	}
 
 	privateKeyRing.ClearPrivateParams()
 

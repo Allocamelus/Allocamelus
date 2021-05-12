@@ -215,7 +215,6 @@ export default defineComponent({
             }
           })
           .catch((e) => {
-            console.log(e);
             this.snackbarErr(SomethingWentWrong);
           });
       }

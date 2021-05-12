@@ -10,7 +10,7 @@ import (
 // 	returns 0 or defaultValue int64 on empty parameter
 func ParamsInt64(c *fiber.Ctx, key string, defaultValue ...int64) int64 {
 	intStr := c.Params("id")
-	if len(intStr) == 0 {
+	if intStr == "" {
 		return defInt64(defaultValue)
 	}
 	paramInt, err := strconv.Atoi(intStr)
