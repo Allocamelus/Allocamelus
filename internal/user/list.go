@@ -7,7 +7,7 @@ type List struct {
 }
 
 // AddTo add user to list if not already
-func (l *List) AddUser(userID int64, userStruct ...*User) error {
+func (l *List) AddUser(s *Session, userID int64, userStruct ...*User) error {
 	if l == nil {
 		l = new(List)
 	}
@@ -20,7 +20,7 @@ func (l *List) AddUser(userID int64, userStruct ...*User) error {
 	if len(userStruct) == 1 {
 		l.Users[userID] = userStruct[0]
 	} else {
-		user, err := GetPublic(userID)
+		user, err := GetPublic(s, userID)
 		if err != nil {
 			return err
 		}

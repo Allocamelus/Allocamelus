@@ -42,7 +42,7 @@ func Validate(c *fiber.Ctx) error {
 		}
 		return apierr.Err422(c, validateResp{Error: errInvalidToken})
 	}
-	if err := user.UpdatePerms(tkn.UserID, user.DefaultPerms); logger.Error(err) {
+	if err := user.UpdateType(tkn.UserID, user.Private); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 	userID := tkn.UserID

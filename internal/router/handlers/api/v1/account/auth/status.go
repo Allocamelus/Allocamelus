@@ -20,7 +20,8 @@ func Status(c *fiber.Ctx) error {
 	resp.LoggedIn = user.LoggedIn(c)
 	if resp.LoggedIn {
 		var err error
-		resp.User, err = user.GetPublic(user.ContextSession(c).UserID)
+		sessionUser := user.ContextSession(c)
+		resp.User, err = user.GetPublic(sessionUser, sessionUser.UserID)
 		if logger.Error(err) {
 			return apierr.ErrSomethingWentWrong(c)
 		}

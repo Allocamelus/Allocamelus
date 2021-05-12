@@ -94,7 +94,8 @@ func Get(postID int64) (*Post, error) {
 
 // Viewing post errors
 var (
-	ErrNoPost = errors.New("post/post: Error No Post Found OR Insufficient permission to view this post")
+	ErrNoPost    = errors.New("post/post: Error No Post Found OR Insufficient permission to view this post")
+	ErrViewMeNot = errors.New("post/post: Error user can't view post")
 )
 
 // GetForUser returns post if user can view it
@@ -112,6 +113,13 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 		if !u.LoggedIn || !p.IsPoster(u.UserID) {
 			return nil, ErrNoPost
 		}
+	}
+
+	if err := user.CanView(p.UserID, u); err != nil {
+		if err != user.ErrViewMeNot {
+			return nil, err
+		}
+		return nil, err
 	}
 
 	// Omit Created if user is not poster
