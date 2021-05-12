@@ -6,11 +6,11 @@ export class API_Posts {
   order: { [key: number]: number };
 
 
-  static createFrom(source: any = {}) {
+  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_Posts(source);
   }
 
-  constructor(source: any = {}) {
+  constructor(source: any = {}) { // skipcq: JS-0323
     if ('string' === typeof source) source = JSON.parse(source);
     this.posts = source["posts"];
     this.users = source["users"];

@@ -230,13 +230,13 @@ export default defineComponent({
     };
   },
   watch: {
-    theme(newTheme, old) {
+    theme(newTheme, _old) {
       setTheme(newTheme);
     },
-    $route(to, from) {
+    $route(_to, _from) {
       this.onNavigate();
     },
-    viewKey(newKey, old) {
+    viewKey(_newKey, _old) {
       this.onNavigate();
     },
   },
@@ -250,24 +250,23 @@ export default defineComponent({
       }
     },
     async clickAlerts() {
-      var vm = this;
-      vm.alerts.menu = !vm.alerts.menu;
-      vm.alerts.loading = true;
-      vm.alerts.err = "Loading...";
+      this.alerts.menu = !this.alerts.menu;
+      this.alerts.loading = true;
+      this.alerts.err = "Loading...";
       requests()
         .then((r) => {
-          vm.alerts.err = "";
+          this.alerts.err = "";
           if (Object.keys(r.requests).length != 0) {
-            vm.alerts.requests = r;
+            this.alerts.requests = r;
           } else {
-            vm.alerts.err = "No Notifications";
+            this.alerts.err = "No Notifications";
           }
         })
-        .catch((e) => {
-          vm.alerts.err = SomethingWentWrong;
+        .catch((_e) => {
+          this.alerts.err = SomethingWentWrong;
         })
         .finally(() => {
-          vm.alerts.loading = false;
+          this.alerts.loading = false;
         });
     },
     followRequest(userId, accept) {
@@ -288,7 +287,7 @@ export default defineComponent({
             Object.keys(requests).find((k) => requests[k] === userId)
           ];
         })
-        .catch((e) => {
+        .catch((_e) => {
           this.snackbarMsg(SomethingWentWrong);
         });
     },

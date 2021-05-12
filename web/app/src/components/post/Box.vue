@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, reactive } from "vue";
+import { defineComponent } from "vue";
 
 import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";

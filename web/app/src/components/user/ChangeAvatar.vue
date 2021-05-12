@@ -115,7 +115,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, old) {
+    modelValue(newValue, _old) {
       this.show = newValue;
     },
   },
@@ -139,7 +139,7 @@ export default defineComponent({
               }
             }
           })
-          .catch((e) => {
+          .catch((_e) => {
             this.onErr(SomethingWentWrong);
           });
       }
@@ -150,7 +150,7 @@ export default defineComponent({
           this.updateStoreAvatar("");
           this.toggleShow();
         })
-        .catch((e) => {
+        .catch((_e) => {
           hasErr = true;
           this.onErr(SomethingWentWrong);
         });

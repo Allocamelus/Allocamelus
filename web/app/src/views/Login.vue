@@ -66,7 +66,6 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import { useRouter } from "vue-router";
 import { redirectUrl } from "../router";
 import { useStore } from "vuex";
 
@@ -106,9 +105,8 @@ export default defineComponent({
       type: String,
     },
   },
-  setup(props) {
+  setup() {
     const store = useStore();
-    const router = useRouter();
     const data = reactive({
       err: {
         login: "",
@@ -142,56 +140,55 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(e) {
-      var vm = this;
-      if (vm.err.username.length != 0 || vm.err.password.length != 0) {
+    onSubmit(_e) {
+      if (this.err.username.length != 0 || this.err.password.length != 0) {
         return;
       }
       try {
-        vm.captcha.token = document.getElementsByName(
+        this.captcha.token = document.getElementsByName(
           "h-captcha-response"
         )[0].value;
-      } catch (e) {
-        vm.captcha.token = "";
+      } catch (_e) {
+        this.captcha.token = "";
       }
       authA10(
         GEN_AuthA10Token.createFrom({
-          userName: vm.username,
-          password: vm.password,
-          remember: vm.remember,
-          captcha: vm.captcha.token,
+          userName: this.username,
+          password: this.password,
+          remember: this.remember,
+          captcha: this.captcha.token,
         })
       )
         .then((r) => {
-          vm.captcha.show = false;
+          this.captcha.show = false;
           if (!r.success) {
             switch (r.error) {
               case ApiResp.Account.Auth.InvalidUsernamePassword:
-                vm.err.login = HtmlInvalidUsernamePassword;
+                this.err.login = HtmlInvalidUsernamePassword;
                 return;
               case ApiResp.Account.Auth.UnverifiedEmail:
-                vm.err.login = HtmlUnverifiedEmail;
+                this.err.login = HtmlUnverifiedEmail;
                 return;
               case ApiResp.Shared.InvalidCaptcha:
-                vm.captcha.show = true;
-                vm.captcha.siteKey = r.captcha;
-                vm.err.login = HtmlLoadingCaptcha;
+                this.captcha.show = true;
+                this.captcha.siteKey = r.captcha;
+                this.err.login = HtmlLoadingCaptcha;
                 return;
               default:
-                vm.err.login = HtmlSomethingWentWrong;
+                this.err.login = HtmlSomethingWentWrong;
                 return;
             }
           } else {
-            vm.$store.dispatch("newLoginSession", {
+            this.$store.dispatch("newLoginSession", {
               user: r.user,
-              authToken: vm.remember,
+              authToken: this.remember,
             });
-            this.$router.push(redirectUrl(vm.redirect));
+            this.$router.push(redirectUrl(this.redirect));
           }
         })
-        .catch((e) => {
-          vm.captcha.show = false;
-          vm.err.login = HtmlSomethingWentWrong;
+        .catch((_e) => {
+          this.captcha.show = false;
+          this.err.login = HtmlSomethingWentWrong;
         });
     },
   },

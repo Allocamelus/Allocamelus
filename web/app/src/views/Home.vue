@@ -20,7 +20,7 @@ import Sidebar from "../components/Sidebar.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 
 export default defineComponent({
-  setup(props) {
+  setup() {
     const store = useStore();
     const data = reactive({
       list: new API_Posts(),
@@ -43,7 +43,7 @@ export default defineComponent({
       loggedIn: computed(() => store.getters.loggedIn),
     };
   },
-  async beforeRouteUpdate(to, from) {
+  async beforeRouteUpdate(to, _from) {
     this.list = new API_Posts();
 
     getPosts(this.page)

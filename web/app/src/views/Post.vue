@@ -15,7 +15,6 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import { useRouter } from "vue-router";
 import { get as getPost } from "../api/post/get";
 import { API_Post } from "../models/api_post";
 import { API_Error } from "../models/api_error";
@@ -31,7 +30,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const route = useRouter();
     const data = reactive({
       apiPost: new API_Post(),
       err: new API_Error(),
@@ -50,7 +48,7 @@ export default defineComponent({
     };
   },
   watch: {
-    apiPost(newPost, old) {
+    apiPost(newPost, _old) {
       var sanitizedContent = sanitize(newPost.post.content).trim(),
         truncatedContent = sanitizedContent.substring(0, 256).trim();
 
@@ -64,7 +62,7 @@ export default defineComponent({
         `${import.meta.env.VITE_SITE_NAME}`;
     },
   },
-  async beforeRouteUpdate(to, from) {
+  async beforeRouteUpdate(to, _from) {
     this.apiPost = new API_Post();
 
     getPost(to.params.id)

@@ -11,7 +11,7 @@
       'py-1.5 px-2.5 my-1',
       'bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus:border-secondary-600 text-black-lighter',
       'dark:bg-gray-800 dark:border-warm-gray-500 dark:focus:border-secondary-600 dark:text-white',
-      'placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80'
+      'placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80',
     ]"
     :required="requiredC"
     :placeholder="placeholder"
@@ -81,7 +81,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, old) {
+    modelValue(newValue, _old) {
       if (this.watchModel) {
         this.text = newValue;
       }
@@ -109,24 +109,23 @@ export default defineComponent({
   },
   methods: {
     validate() {
-      var vm = this,
-        l = vm.text.length;
+      var l = this.text.length;
 
-      if (vm.required && l <= 0) {
+      if (this.required && l <= 0) {
         return Errs.ErrMsg(Errs.ErrRequired);
       }
 
-      if (l < vm.minLenC) {
-        return Errs.ErrMsg(Errs.ErrMinLength, vm.minLenC);
+      if (l < this.minLenC) {
+        return Errs.ErrMsg(Errs.ErrMinLength, this.minLenC);
       }
 
-      if (l > vm.maxLenC) {
-        return Errs.ErrMsg(Errs.ErrMaxLength, vm.maxLenC);
+      if (l > this.maxLenC) {
+        return Errs.ErrMsg(Errs.ErrMaxLength, this.maxLenC);
       }
 
-      if (vm.regex != undefined) {
-        if (!vm.regex.test(String(vm.text))) {
-          return Errs.ErrMsg(Errs.ErrRegex, vm.regexMsg);
+      if (this.regex != undefined) {
+        if (!this.regex.test(String(this.text))) {
+          return Errs.ErrMsg(Errs.ErrRegex, this.regexMsg);
         }
       }
       return "";

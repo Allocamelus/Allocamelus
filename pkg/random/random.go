@@ -34,9 +34,9 @@ func Bytes(n int64) []byte {
 // FastBytes returns a fast pseudorandom byte array
 func FastBytes(n int64) []byte {
 	b := make([]byte, n)
-	_, err := rand.Read(b)
+	_, err := rand.Read(b) // skipcq: GSC-G404
 
-	logger.Fatal(err) // skipcq: GSC-G404
+	logger.Fatal(err)
 	return b
 }
 
@@ -108,7 +108,7 @@ func FastString(n int) string {
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; { // skipcq: GSC-G404
 		if remain == 0 {
-			cache, remain = rand.Int63(), letterIdxMax
+			cache, remain = rand.Int63(), letterIdxMax // skipcq: GSC-G404
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
 			sb.WriteByte(letterBytes[idx])

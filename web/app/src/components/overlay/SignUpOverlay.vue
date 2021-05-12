@@ -75,10 +75,10 @@ export default defineComponent({
     };
   },
   watch: {
-    show(newValue, old) {
+    show(newValue, _old) {
       this.visable = newValue;
     },
-    visable(newValue, old) {
+    visable(newValue, _old) {
       if (!newValue) {
         this.close();
       }

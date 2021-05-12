@@ -18,7 +18,7 @@ export default defineComponent({
       default: "py-4 px-5",
     },
   },
-  setup(props) {
+  setup() {
     const data = reactive({});
     return {
       ...toRefs(data),

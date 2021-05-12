@@ -154,10 +154,10 @@ export default defineComponent({
     };
   },
   watch: {
-    show(newValue, old) {
+    show(newValue, _old) {
       this.visable = newValue;
     },
-    visable(newValue, old) {
+    visable(newValue, _old) {
       if (!newValue) {
         this.close();
       }
@@ -168,67 +168,66 @@ export default defineComponent({
       this.$emit("close");
     },
     submit() {
-      var vm = this;
-      vm.err.snackbar.msg = "";
-      if (!vm.noErrs()) {
+      this.err.snackbar.msg = "";
+      if (!this.noErrs()) {
         return;
       }
 
       (async () => {
-        if (vm.name != vm.user.name) {
-          UpdateName(vm.user.userName, vm.name)
+        if (this.name != this.user.name) {
+          UpdateName(this.user.userName, this.name)
             .then((r) => {
               if (r.success) {
-                vm.updateStoreName(vm.name);
+                this.updateStoreName(this.name);
               } else {
                 var errText = RespToError(r.error);
                 if (errText.length > 0) {
-                  vm.err.name = errText;
+                  this.err.name = errText;
                 } else {
-                  vm.snackbarErr(SomethingWentWrong);
+                  this.snackbarErr(SomethingWentWrong);
                 }
               }
             })
-            .catch((e) => {
-              vm.snackbarErr(SomethingWentWrong);
+            .catch((_e) => {
+              this.snackbarErr(SomethingWentWrong);
             });
         }
-        if (vm.bio != vm.user.bio) {
-          UpdateBio(vm.user.userName, vm.bio)
+        if (this.bio != this.user.bio) {
+          UpdateBio(this.user.userName, this.bio)
             .then((r) => {
               if (r.success) {
-                vm.updateStoreBio(vm.bio);
+                this.updateStoreBio(this.bio);
               } else {
                 var errText = RespToError(r.error);
                 if (errText.length > 0) {
-                  vm.err.bio = errText;
+                  this.err.bio = errText;
                 } else {
-                  vm.snackbarErr(SomethingWentWrong);
+                  this.snackbarErr(SomethingWentWrong);
                 }
               }
             })
-            .catch((e) => {
-              vm.snackbarErr(SomethingWentWrong);
+            .catch((_e) => {
+              this.snackbarErr(SomethingWentWrong);
             });
         }
-        if (vm.privateUser != (vm.user.type == TYPE_PRIVATE)) {
-          var newType = vm.privateUser ? TYPE_PRIVATE : TYPE_PUBLIC;
-          UpdateType(vm.user.userName, newType)
+        if (this.privateUser != (this.user.type == TYPE_PRIVATE)) {
+          var newType = this.privateUser ? TYPE_PRIVATE : TYPE_PUBLIC;
+          UpdateType(this.user.userName, newType)
             .then((r) => {
               if (r.success) {
-                vm.updateStoreType(newType);
+                this.updateStoreType(newType);
               } else {
-                vm.snackbarErr(SomethingWentWrong);
+                this.snackbarErr(SomethingWentWrong);
               }
             })
-            .catch((e) => {
-              vm.snackbarErr(SomethingWentWrong);
+            .catch((_e) => {
+              this.snackbarErr(SomethingWentWrong);
             });
         }
       })();
 
-      if (vm.noErrs()) {
-        vm.visable = false;
+      if (this.noErrs()) {
+        this.visable = false;
       }
     },
     noErrs() {

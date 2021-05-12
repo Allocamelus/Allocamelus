@@ -11,11 +11,11 @@ export class API_MetaCaptchaSiteKeys {
     }
   }
 
-  static createFrom(source: any = {}) {
+  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_MetaCaptchaSiteKeys(source);
   }
 
-  constructor(source: any = {}) {
+  constructor(source: any = {}) { // skipcq: JS-0323
     if ('string' === typeof source) source = JSON.parse(source);
     this.siteKeys = source["site-keys"]
     this.difficulties = source["difficulties"]
