@@ -2,7 +2,7 @@
   <component
     :is="to.length > 0 ? 'to-link' : 'div'"
     :to="to"
-    class="block px-4 py-2.5 text-sm leading-4 font-medium hover:bg-secondary-700"
+    class="block px-4 py-2.5 text-sm leading-4 font-medium"
   >
     <slot></slot>
   </component>
