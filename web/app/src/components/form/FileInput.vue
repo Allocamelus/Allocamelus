@@ -74,11 +74,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  watch: {
-    "$refs.input": (newInput, _old) => {
-      console.log(newInput);
-    },
-  },
   methods: {
     onClick() {
       this.files = this.$refs.input.value = null;

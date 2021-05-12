@@ -114,8 +114,8 @@ export default createStore({
             })
             commit('usedSession')
           }
-        }).catch(e => {
-          console.error(e);
+        }).catch(() => {
+          // TODO
         })
       }
     },
