@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import { defineComponent, computed, toRefs, reactive } from "vue";
+import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";
 
 export default defineComponent({
-  setup(props) {
+  setup() {
     const store = useStore();
     return {
       loggedIn: computed(() => store.getters.loggedIn),

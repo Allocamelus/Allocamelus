@@ -129,7 +129,7 @@ Squire.prototype.hasActionSelection = function (name, action, format) {
     test = getValidator(format).test(path) | this.hasFormat(format);
   return name == action && test ? true : false;
 };
-Squire.prototype.thePath = function () {
+Squire.prototype.thePath = () => {
   return this.getPath();
 };
 
@@ -169,43 +169,42 @@ export default defineComponent({
   },
   methods: {
     btnClick(action) {
-      var vm = this;
       var test = {
         value: action,
-        testBold: vm.editor.hasActionSelection("bold", action, "B"),
-        testItalic: vm.editor.hasActionSelection("italic", action, "I"),
-        testUnderline: vm.editor.hasActionSelection("underline", action, "U"),
-        testOrderedList: vm.editor.hasActionSelection(
+        testBold: this.editor.hasActionSelection("bold", action, "B"),
+        testItalic: this.editor.hasActionSelection("italic", action, "I"),
+        testUnderline: this.editor.hasActionSelection("underline", action, "U"),
+        testOrderedList: this.editor.hasActionSelection(
           "makeOrderedList",
           action,
           "OL"
         ),
-        testLink: vm.editor.hasActionSelection("makeLink", action, "A"),
-        testQuote: vm.editor.hasActionSelection(
+        testLink: this.editor.hasActionSelection("makeLink", action, "A"),
+        testQuote: this.editor.hasActionSelection(
           "increaseQuoteLevel",
           action,
           "blockquote"
         ),
-        isNotValue: function (a) {
+        isNotValue: (a) => {
           return a == action && this.value !== "";
         },
       };
 
-      vm.editor.alignRight = function () {
-        vm.editor.setTextAlignment("right");
+      this.editor.alignRight = () => {
+        this.editor.setTextAlignment("right");
       };
-      vm.editor.alignCenter = function () {
-        vm.editor.setTextAlignment("center");
+      this.editor.alignCenter = () => {
+        this.editor.setTextAlignment("center");
       };
-      vm.editor.alignLeft = function () {
-        vm.editor.setTextAlignment("left");
+      this.editor.alignLeft = () => {
+        this.editor.setTextAlignment("left");
       };
-      vm.editor.alignJustify = function () {
-        vm.editor.setTextAlignment("justify");
+      this.editor.alignJustify = () => {
+        this.editor.setTextAlignment("justify");
       };
-      vm.editor.makeHeading = function () {
-        vm.editor.setFontSize("2em");
-        vm.editor.bold();
+      this.editor.makeHeading = () => {
+        this.editor.setFontSize("2em");
+        this.editor.bold();
       };
 
       if (
@@ -217,20 +216,20 @@ export default defineComponent({
         test.testQuote
       ) {
         if (test.testBold) {
-          vm.editor.removeBold();
-          vm.active.bold = false;
+          this.editor.removeBold();
+          this.active.bold = false;
         }
         if (test.testItalic) {
-          vm.editor.removeItalic();
-          vm.active.italic = false;
+          this.editor.removeItalic();
+          this.active.italic = false;
         }
         if (test.testUnderline) {
-          vm.editor.removeUnderline();
-          vm.active.underline = false;
+          this.editor.removeUnderline();
+          this.active.underline = false;
         }
-        if (test.testLink) vm.editor.removeLink();
-        if (test.testOrderedList) vm.editor.removeList();
-        if (test.testQuote) vm.editor.decreaseQuoteLevel();
+        if (test.testLink) this.editor.removeLink();
+        if (test.testOrderedList) this.editor.removeList();
+        if (test.testQuote) this.editor.decreaseQuoteLevel();
       } else if (
         test.isNotValue("makeLink") |
         test.isNotValue("insertImage") |
@@ -238,9 +237,9 @@ export default defineComponent({
       ) {
         // do nothing these are dropdowns.
       } else {
-        vm.active[action] = true;
-        vm.editor[action]();
-        vm.editor.focus();
+        this.active[action] = true;
+        this.editor[action]();
+        this.editor.focus();
       }
     },
     onInput() {

@@ -80,26 +80,25 @@ export default defineComponent({
     };
   },
   watch: {
-    password(newPass, oldPass) {
+    password(newPass, _oldPass) {
       if (this.check) {
         this.debouncedCheck();
       }
     },
-    modelValue(newValue, old) {
+    modelValue(newValue, _old) {
       if (this.watchModel) {
         this.text = newValue;
       }
     },
   },
   created() {
-    var vm = this;
-    vm.password = vm.modelValue;
-    if (vm.check) {
+    this.password = this.modelValue;
+    if (this.check) {
       import("zxcvbn").then((zxcvbn) => {
-        vm.zxcvbn = zxcvbn.default;
+        this.zxcvbn = zxcvbn.default;
       });
 
-      vm.debouncedCheck = debounce(200, true, vm.scoreDeb);
+      this.debouncedCheck = debounce(200, true, this.scoreDeb);
     }
   },
   computed: {

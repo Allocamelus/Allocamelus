@@ -1,5 +1,5 @@
 import v1 from "../../v1";
-import { API_Error, API_Success_Error } from "../../../models/api_error";
+import { API_Success_Error } from "../../../models/api_error";
 import { GEN_User } from "../../../models/go_structs_gen";
 
 export async function remove(userName: string) {
@@ -20,11 +20,11 @@ export class API_Requests {
   users: { [key: number]: GEN_User };
 
 
-  static createFrom(source: any = {}) {
+  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_Requests(source);
   }
 
-  constructor(source: any = {}) {
+  constructor(source: any = {}) { // skipcq: JS-0323
     if ('string' === typeof source) source = JSON.parse(source);
     this.requests = source["requests"];
     this.users = source["users"];

@@ -124,7 +124,6 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { redirectUrl } from "../router";
 
@@ -155,9 +154,8 @@ export default defineComponent({
       type: String,
     },
   },
-  setup(props) {
+  setup() {
     const store = useStore();
-    const router = useRouter();
     const data = reactive({
       err: {
         signUp: "",
@@ -206,52 +204,51 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(e) {
-      var vm = this;
+    onSubmit(_e) {
       if (
-        vm.err.userName.length != 0 ||
-        vm.err.email.length != 0 ||
-        vm.err.password.length != 0
+        this.err.userName.length != 0 ||
+        this.err.email.length != 0 ||
+        this.err.password.length != 0
       ) {
         return;
       }
 
-      if (vm.captcha.token.length <= 0) {
-        vm.captcha.show = true;
+      if (this.captcha.token.length <= 0) {
+        this.captcha.show = true;
         return;
       }
 
       createA9s(
         GEN_CreateA10Token.createFrom({
-          userName: vm.userName,
-          email: vm.email,
-          password: vm.password,
-          captcha: vm.captcha.token,
+          userName: this.userName,
+          email: this.email,
+          password: this.password,
+          captcha: this.captcha.token,
         })
       )
         .then((r) => {
-          vm.captcha.show = false;
+          this.captcha.show = false;
           if (!r.success) {
             if (typeof r.errors === "object") {
               if (Array.isArray(r.errors)) {
                 r.errors.forEach((err) => {
                   switch (err) {
                     case ApiResp.User.Create.LoggedIn:
-                      this.$router.push(redirectUrl(vm.redirect));
+                      this.$router.push(redirectUrl(this.redirect));
                       return;
                     case ApiResp.Shared.InvalidCaptcha:
-                      vm.captcha.siteKey = "";
-                      vm.err.signUp = HtmlLoadingCaptcha;
+                      this.captcha.siteKey = "";
+                      this.err.signUp = HtmlLoadingCaptcha;
                       siteKeys().then((sk) => {
-                        vm.captcha.siteKey = sk.siteKey(
+                        this.captcha.siteKey = sk.siteKey(
                           sk.difficulties.user.create
                         );
                       });
-                      vm.captcha.show = true;
-                      vm.err.signUp = "";
+                      this.captcha.show = true;
+                      this.err.signUp = "";
                       return;
                     default:
-                      vm.err.signUp = HtmlSomethingWentWrong;
+                      this.err.signUp = HtmlSomethingWentWrong;
                       return;
                   }
                 });
@@ -263,36 +260,36 @@ export default defineComponent({
                     if (errText.length > 0) {
                       switch (key) {
                         case "userName":
-                            vm.err.userName = errText;
+                            this.err.userName = errText;
                           break;
                         case "email":
-                            vm.err.email = errText;
+                            this.err.email = errText;
                           break;
                         case "password":
-                          vm.err.password = errText
+                          this.err.password = errText
                           break;
                         default:
-                          vm.err.signUp = HtmlSomethingWentWrong;
+                          this.err.signUp = HtmlSomethingWentWrong;
                           break;
                       }
                     } else {
-                      vm.err.signUp = HtmlSomethingWentWrong;
+                      this.err.signUp = HtmlSomethingWentWrong;
                     }
                   }
                 }
               }
             } else {
-              vm.err.signUp = HtmlSomethingWentWrong;
+              this.err.signUp = HtmlSomethingWentWrong;
             }
           } else {
-            vm.backupKey = r.backupKey;
-            vm.captcha.show = false;
-            vm.showForm = false;
+            this.backupKey = r.backupKey;
+            this.captcha.show = false;
+            this.showForm = false;
           }
         })
-        .catch((e) => {
-          vm.captcha.show = false;
-          vm.err.signUp = HtmlSomethingWentWrong;
+        .catch((_e) => {
+          this.captcha.show = false;
+          this.err.signUp = HtmlSomethingWentWrong;
         });
     },
   },

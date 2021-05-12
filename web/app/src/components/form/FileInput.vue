@@ -66,7 +66,7 @@ export default defineComponent({
     fileCount: Number,
   },
   emits: ["filesChange", "error"],
-  setup(props) {
+  setup() {
     const data = reactive({
       files: null,
     });
@@ -75,7 +75,7 @@ export default defineComponent({
     };
   },
   watch: {
-    "$refs.input": (newInput, old) => {
+    "$refs.input": (newInput, _old) => {
       console.log(newInput);
     },
   },

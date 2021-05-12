@@ -7,11 +7,11 @@ export class Status {
   user?: GEN_User;
 
 
-  static createFrom(source: any = {}) {
+  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new Status(source);
   }
 
-  constructor(source: any = {}) {
+  constructor(source: any = {}) { // skipcq: JS-0323
     if ('string' === typeof source) source = JSON.parse(source);
     this.loggedIn = source["loggedIn"];
     this.user = source["user"];

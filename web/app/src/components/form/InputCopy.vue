@@ -42,7 +42,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, old) {
+    modelValue(newValue, _old) {
       if (this.watchModel) {
         this.value = newValue;
       }
