@@ -29,10 +29,10 @@
                 <BellIcon class="w-5.5 h-5.5"></BellIcon>
               </div>
               <dropdown v-model="alerts.menu" class="max-w-sm w-80">
+                <bar-loader v-if="alerts.loading" />
                 <div
                   class="dark:bg-gray-800 dark:text-white bg-gray-100 text-black max-h-48 h-48 overflow-x-hidden overflow-y-auto scrollbar px-3 py-2.5"
                 >
-                  <bar-loader v-if="alerts.loading" />
                   <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
                   <div v-else>
                     <div
@@ -59,11 +59,13 @@
                         <div class="ml-2 flex items-center">
                           <div
                             class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5 text-white bg-secondary-700 hover:bg-secondary-800"
+                            @click="followRequest(userId, true)"
                           >
                             Accept
                           </div>
                           <div
-                            class="text-sm font-semibold leading-4 rounded cursor-pointer ml-1.5 p-1.5 link"
+                            class="text-sm font-semibold leading-4 rounded cursor-pointer ml-1.5 p-1 link"
+                            @click="followRequest(userId, false)"
                           >
                             Decline
                           </div>
@@ -124,6 +126,9 @@
     </nav>
     <div id="bodyContent" class="mt-nav">
       <router-view :key="viewKey" />
+      <snackbar v-model="snackbar.show" :closeBtn="true">
+        {{ snackbar.msg }}
+      </snackbar>
     </div>
     <!--TODO: Mobile Menu-->
     <footer id="footer">
@@ -147,7 +152,12 @@ import { useStore } from "vuex";
 
 import { MinToSec, SecToMs } from "./pkg/time";
 
-import { requests, API_Requests } from "./api/user/follow";
+import {
+  post as userFollow,
+  remove as userUnfollow,
+  requests,
+  API_Requests,
+} from "./api/user/follow";
 import { SomethingWentWrong } from "./components/form/errors";
 
 import SunIcon from "@heroicons/vue/solid/SunIcon";
@@ -190,6 +200,10 @@ export default defineComponent({
         loading: false,
         lastFetched: 0,
         requests: new API_Requests(),
+      },
+      snackbar: {
+        show: false,
+        msg: "",
       },
       userMobile: window.screen.width < 768,
     });
@@ -255,6 +269,36 @@ export default defineComponent({
         .finally(() => {
           vm.alerts.loading = false;
         });
+    },
+    followRequest(userId, accept) {
+      (() => {
+        var uN = this.alerts.requests.user(userId).userName;
+        if (accept) {
+          return userFollow(uN);
+        }
+        return userUnfollow(uN);
+      })()
+        .then((r) => {
+          if (!r.success) {
+            this.snackbarMsg(SomethingWentWrong);
+            return;
+          }
+          var requests = this.alerts.requests.requests;
+          delete requests[
+            Object.keys(requests).find((k) => requests[k] === userId)
+          ];
+        })
+        .catch((e) => {
+          console.log(e);
+          this.snackbarMsg(SomethingWentWrong);
+        });
+    },
+    snackbarMsg(msg) {
+      this.snackbar.msg = "";
+      if (msg.length > 0) {
+        this.snackbar.msg = msg;
+        this.snackbar.show = true;
+      }
     },
     checkMenu() {
       this.userMobile = screen.width < 768;
