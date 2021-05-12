@@ -73,7 +73,7 @@ func Auth(c *fiber.Ctx) error {
 			return apierr.Err422(c, errInvalidAuthToken)
 		}
 		authToken.trimSpace()
-		if len(authToken.UserName) == 0 || len(authToken.Password) == 0 {
+		if authToken.UserName == "" || authToken.Password == "" {
 			return authErr(c, errInvalidUsernamePassword)
 		}
 
@@ -128,7 +128,7 @@ func Auth(c *fiber.Ctx) error {
 				siteKey = g.Data.Config.HCaptcha.All
 			}
 
-			if len(siteKey) != 0 {
+			if siteKey != "" {
 				if err := hcaptcha.Verify(hcaptcha.Values{
 					Secret:  g.Data.Config.HCaptcha.Secret,
 					Token:   authToken.Captcha,

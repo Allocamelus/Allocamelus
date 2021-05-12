@@ -29,10 +29,10 @@ var (
 
 // Verify verifies a hcaptcha token
 func Verify(v Values) error {
-	if len(v.Secret) == 0 {
+	if v.Secret == "" {
 		klog.Fatal(errNilSecret)
 	}
-	if len(v.Token) == 0 {
+	if v.Token == "" {
 		return ErrInvalidToken
 	}
 

@@ -82,14 +82,6 @@ export default createStore({
   },
   actions: {
     newLoginSession({ commit }, payload) {
-      var expires
-      if (payload.authToken) {
-        expires = DaysToSec(30)
-      } else {
-        expires = MinToSec(15)
-      }
-      expires = UnixTime(expires)
-
       commit({
         type: 'newSession',
         session: {
@@ -97,7 +89,7 @@ export default createStore({
           user: payload.user,
           fresh: true,
           created: UnixTime(),
-          expires: expires
+          expires: UnixTime(payload.authToken ? DaysToSec(30) : MinToSec(15))
         }
       })
     },

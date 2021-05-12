@@ -39,7 +39,7 @@ func CreateToken(c *fiber.Ctx) error {
 	}
 
 	request.Identifier = strings.TrimSpace(request.Identifier)
-	if len(request.Identifier) == 0 {
+	if request.Identifier == "" {
 		return err422Invalid(c)
 	}
 

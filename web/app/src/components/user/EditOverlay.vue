@@ -208,7 +208,6 @@ export default defineComponent({
               }
             })
             .catch((e) => {
-              console.log(e);
               vm.snackbarErr(SomethingWentWrong);
             });
         }
@@ -223,7 +222,6 @@ export default defineComponent({
               }
             })
             .catch((e) => {
-              console.log(e);
               vm.snackbarErr(SomethingWentWrong);
             });
         }

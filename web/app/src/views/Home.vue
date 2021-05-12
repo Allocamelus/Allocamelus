@@ -14,7 +14,6 @@ import { defineComponent, toRefs, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_posts";
-import Box from "../components/box/Box.vue";
 import PostFeed from "../components/post/Feed.vue";
 import Feed from "../components/Feed.vue";
 import Sidebar from "../components/Sidebar.vue";
@@ -56,7 +55,6 @@ export default defineComponent({
       });
   },
   components: {
-    Box,
     PostFeed,
     Feed,
     Sidebar,

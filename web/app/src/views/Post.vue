@@ -20,7 +20,6 @@ import { get as getPost } from "../api/post/get";
 import { API_Post } from "../models/api_post";
 import { API_Error } from "../models/api_error";
 import ErrorBox from "../components/box/Error.vue";
-import UserName from "../components/user/Name.vue";
 import sanitize from "../pkg/sanitize";
 import PostBox from "../components/post/Box.vue";
 
@@ -77,7 +76,6 @@ export default defineComponent({
       });
   },
   components: {
-    UserName,
     ErrorBox,
     PostBox,
   },

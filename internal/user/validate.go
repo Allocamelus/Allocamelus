@@ -132,7 +132,7 @@ func ValidEmail(email string) error {
 
 // IsEmailUnique check if Email Exists
 func (u *User) IsEmailUnique() error {
-	if len(u.Email) == 0 {
+	if u.Email == "" {
 		return ErrEmailInvalid
 	}
 	// Check Database for userName
@@ -160,7 +160,7 @@ func (u *User) ValidBio() error {
 }
 
 func ValidBio(bio string) error {
-	if len(bio) != 0 {
+	if bio != "" {
 		// Check length
 		if err := validation.Validate(bio, validation.Length(0, 255)); err != nil {
 			return ErrBioLength

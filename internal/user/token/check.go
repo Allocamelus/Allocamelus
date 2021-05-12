@@ -64,7 +64,7 @@ func CheckWithID(selector, token string, userID int64, t Types) (*Token, error) 
 
 // Get Token
 func Get(selector string) (*Token, error) {
-	if len(selector) == 0 {
+	if selector == "" {
 		return nil, ErrInvalidSelector
 	}
 	token := new(Token)
@@ -99,7 +99,7 @@ func (t *Token) Check(token string, userID int64, ty Types) error {
 		return ErrExpiredToken
 	}
 
-	if len(t.TokenHash) == 0 || len(token) == 0 {
+	if t.TokenHash == "" || token == "" {
 		return ErrInvalidToken
 	}
 

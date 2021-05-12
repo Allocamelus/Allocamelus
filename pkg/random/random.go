@@ -31,11 +31,12 @@ func Bytes(n int64) []byte {
 	return b
 }
 
-// FastBytes returns a fast random byte array
+// FastBytes returns a fast pseudorandom byte array
 func FastBytes(n int64) []byte {
 	b := make([]byte, n)
 	_, err := rand.Read(b)
-	logger.Fatal(err)
+
+	logger.Fatal(err) // skipcq: GSC-G404
 	return b
 }
 
@@ -50,13 +51,13 @@ func Int(max int64) int64 {
 	return n.Int64()
 }
 
-// FastInt returns a fast random int between 0 and max
+// FastInt returns a fast pseudorandom int between 0 and max
 // if max <= 0 them max is 64
 func FastInt(max int64) int64 {
 	if max <= 0 {
 		max = 64
 	}
-	return rand.Int63n(max)
+	return rand.Int63n(max) // skipcq: GSC-G404
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
@@ -100,12 +101,12 @@ func StringBase58(n int) string {
 	return base58.Encode(Bytes(int64(n)))
 }
 
-// FastString returns a fast random string
+// FastString returns a fast pseudorandom string
 func FastString(n int) string {
 	sb := strings.Builder{}
 	sb.Grow(n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := n-1, rand.Int63(), letterIdxMax; i >= 0; { // skipcq: GSC-G404
 		if remain == 0 {
 			cache, remain = rand.Int63(), letterIdxMax
 		}

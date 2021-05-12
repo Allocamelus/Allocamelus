@@ -25,9 +25,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import Box from "../box/Box.vue";
 export default defineComponent({
-  components: { Box },
   name: "overlay",
   props: {
     modelValue: Boolean,
