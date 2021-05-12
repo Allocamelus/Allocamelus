@@ -121,7 +121,7 @@ import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
 
 function getValidator(str) {
-  return new RegExp(`>${str}\\b`);
+  return new RegExp(`>${str}\\b`, 'u');
 }
 
 Squire.prototype.hasActionSelection = function (name, action, format) {
@@ -137,7 +137,7 @@ const turndownService = new Turndown().keep("u");
 
 export default defineComponent({
   setup() {
-    const altRegex = /^[^<>\[\]"&]*$/;
+    const altRegex = /^[^<>\[\]"&]*$/u;
     const data = reactive({
       editor: null,
       richText: "",
