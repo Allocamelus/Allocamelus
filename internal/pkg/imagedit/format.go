@@ -1,21 +1,26 @@
 package imagedit
 
-import "github.com/allocamelus/allocamelus/internal/pkg/fileutil"
+import (
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
+)
 
 func mwToFmt(f string) fileutil.Format {
 	switch f {
-	case "GIF":
+	case "GIF", "gif":
 		return fileutil.GIF
-	case "JPEG":
+	case "JPEG", "jpeg":
 		return fileutil.JPG
-	case "PNG":
+	case "PNG", "png":
 		return fileutil.PNG
-	case "WEBP":
+	case "WEBP", "webp":
 		return fileutil.WEBP
 	}
 	return fileutil.NONE
 }
 
 func (img *Image) GetFormat() fileutil.Format {
-	return mwToFmt(img.MW.GetImageFormat())
+	if img.UseMW {
+		return mwToFmt(img.MW.GetImageFormat())
+	}
+	return mwToFmt(img.Img.Type())
 }

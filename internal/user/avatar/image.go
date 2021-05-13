@@ -27,23 +27,12 @@ func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl stri
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
-		err = img.Strip()
-		if err != nil {
-			return
-		}
-		// Allow Animations
-		img.TransformAnimation = true
-
-		err = img.CropAR(imagedit.AR_1x1, imagedit.Center)
+		err = img.CropAR(imagedit.AR_1x1, imagedit.Smart)
 		if err != nil {
 			return
 		}
 
 		if err = img.Resize(MaxHightWidth, MaxHightWidth); err != nil {
-			return
-		}
-
-		if err = img.Optimize(); err != nil {
 			return
 		}
 

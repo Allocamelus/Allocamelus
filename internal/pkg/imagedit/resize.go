@@ -2,29 +2,28 @@ package imagedit
 
 import "gopkg.in/gographics/imagick.v3/imagick"
 
-func (img *Image) Resize(width, height uint) error {
-	return img.ResizeFilter(width, height, imagick.FILTER_LANCZOS2)
-}
-
-func (img *Image) ResizeFilter(width, height uint, filter imagick.FilterType) (err error) {
+func (img *Image) Resize(width, height int) (err error) {
 	if err := img.Check(); err != nil {
 		return err
 	}
+	if img.UseMW {
+		defer func(err error) {
+			if err == nil {
+				img.resized = true
+			}
+		}(err)
 
-	defer func(err error) {
-		if err == nil {
-			img.resized = true
-		}
-	}(err)
-
-	if img.Animation {
 		callback := func(callbackImg *Image) error {
-			return callbackImg.ResizeFilter(width, height, filter)
+			return callbackImg.ResizeFilter(width, height, imagick.FILTER_LANCZOS2)
 		}
-		err = img.IterateOver(callback)
-		return
+		return img.IterateOver(callback)
 	}
 
-	err = img.MW.ResizeImage(width, height, filter)
-	return
+	return img.BlobToImg(img.Img.ForceResize(width, height))
+}
+func (img *Image) ResizeFilter(width, height int, filter imagick.FilterType) error {
+	if err := img.Check(); err != nil {
+		return err
+	}
+	return img.MW.ResizeImage(uint(width), uint(height), filter)
 }
