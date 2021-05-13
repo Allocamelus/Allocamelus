@@ -50,9 +50,10 @@
     </error-box>
     <div class="flex">
       <feed>
-        <div v-if="err.posts.length > 0" v-html="err.posts"></div>
         <new-post-text-input v-if="canEdit"></new-post-text-input>
-        <post-feed :list="postsList"></post-feed>
+        <error-box :error="err.posts">
+          <post-feed :list="postsList"></post-feed>
+        </error-box>
         <snackbar v-model="err.snackbar.show" :closeBtn="true">
           {{ err.snackbar.msg }}
         </snackbar>
@@ -190,7 +191,10 @@ export default defineComponent({
         this.overlay = true;
       } else {
         (() => {
-          if (this.user.selfFollow.following || this.user.selfFollow.requested) {
+          if (
+            this.user.selfFollow.following ||
+            this.user.selfFollow.requested
+          ) {
             return userUnfollow(this.user.userName).then((r) => {
               if (r.success) {
                 this.user.selfFollow.requested = this.user.selfFollow.following = false;

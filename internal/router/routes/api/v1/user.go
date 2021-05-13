@@ -40,7 +40,7 @@ func User(api fiber.Router) {
 	uUN := u.Group("/:userName")
 	uUN.Get("/", user.Get)
 	// /api/v1/user/:userName/posts
-	uUN.Get("/posts", user.Posts)
+	uUN.Get("/posts", middleware.ProtectedPubOrFollow, user.Posts)
 	// /api/v1/user/:userName/delete
 	uUN.Delete("/delete",
 		middleware.Protected,

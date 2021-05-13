@@ -44,6 +44,39 @@ func ProtectedSelfOnly(c *fiber.Ctx) error {
 	return checkIdWithSelf(c, userID)
 }
 
+// ProtectedPubOrFollow only allow access to user if public or is being followed
+// or is self
+//
+// Checks id's of :userName & user session
+func ProtectedPubOrFollow(c *fiber.Ctx) error {
+	_, userID, errApi := shared.GetUserNameAndID(c)
+	if errApi == apierr.SomethingWentWrong {
+		return apierr.ErrSomethingWentWrong(c)
+	} else if errApi == apierr.NotFound {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	userType, err := user.GetType(userID)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	if userType.Public() {
+		return c.Next()
+	}
+
+	following, err := user.Following(user.ContextSession(c).UserID, userID)
+	if logger.Error(err) {
+		// return if following silently
+		return apierr.ErrSomethingWentWrong(c)
+	}
+	if !following.Following {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	return c.Next()
+}
+
 // ProtectedPosterOnly only allow access to post owner
 func ProtectedPosterOnly(c *fiber.Ctx) error {
 	postID := fiberutil.ParamsInt64(c, "id")
