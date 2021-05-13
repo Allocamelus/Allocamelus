@@ -87,7 +87,7 @@ func userFollow(un fiber.Router) {
 	unFollow.Delete("/", follow.Delete)
 	// Friends
 	// /api/v1/user/:userName/follow/accept
-	unFollow.Post("/accept", follow.Post)
+	unFollow.Post("/accept", follow.Accept)
 	// /api/v1/user/:userName/follow/decline
 	unFollow.Delete("/decline", follow.Delete)
 }
