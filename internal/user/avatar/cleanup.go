@@ -22,7 +22,7 @@ func deactivateOld(userId int64) error {
 				SELECT userAvatarId FROM (
 					SELECT userAvatarId FROM UserAvatars 
 					ORDER BY userAvatarId DESC
-					LIMIT 0, 18446744073709551615
+					LIMIT 1, 18446744073709551615
 				) tmp
 			) AND userId = ? AND active = 1
 			`) // Deactivate all but the latest

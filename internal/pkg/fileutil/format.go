@@ -21,7 +21,7 @@ func (f Format) FileExt() string {
 	case PNG:
 		return ".png"
 	case WEBP:
-		return ".web"
+		return ".webp"
 	}
 	return ""
 }

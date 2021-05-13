@@ -9,7 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
-const MaxHightWidth uint = 7680
+const MaxHightWidth int = 7680
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
 	img, b58hash, err := imagedit.MPHtoImg(imageMPH)
@@ -27,26 +27,22 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
-		err = img.Strip()
+		width, height, err := img.WH()
 		if err != nil {
 			return err
 		}
-		// Allow Animations
-		img.TransformAnimation = true
-		width, height := img.WH()
-		var newWidth, newHeight uint
-		if width > MaxHightWidth || height > MaxHightWidth || img.Animation {
-			newWidth, newHeight = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
+		var newWidth, newHeight int
+		if width > MaxHightWidth || height > MaxHightWidth {
+			newWidth, newHeight, err = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
+			if err != nil {
+				return err
+			}
 		} else {
 			newWidth = width
 			newHeight = height
 		}
 		// Resize to prevent non images
 		if err = img.Resize(newWidth, newHeight); err != nil {
-			return err
-		}
-
-		if err = img.Optimize(); err != nil {
 			return err
 		}
 
@@ -60,7 +56,10 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		logger.Error(err)
 	}
 
-	width, height := img.WH()
+	width, height, err := img.WH()
+	if err != nil {
+		return err
+	}
 
 	err = Insert(postID, Media{FileType: imgType, Meta: Meta{Alt: alt, Width: int64(width), Height: int64(height)}}, b58hash)
 	if err != nil {

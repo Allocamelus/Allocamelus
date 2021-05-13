@@ -15,7 +15,7 @@ var (
 	preRemove       *sql.Stmt
 )
 
-const MaxHightWidth uint = 500
+const MaxHightWidth int = 500
 
 func HasAvatar(userID int64) (hasAvatar bool, err error) {
 	if preHasAvatar == nil {

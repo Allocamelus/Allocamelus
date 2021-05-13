@@ -1,26 +1,18 @@
 package imagedit
 
 import (
-	"errors"
+	"gopkg.in/gographics/imagick.v3/imagick"
 )
 
-func (img *Image) checkAnimation() {
-	if err := img.Check(); err != nil {
-		return
-	}
-	img.Animation = (img.MW.GetNumberImages() > 1)
+func isAnimation(mw *imagick.MagickWand) bool {
+	return (mw.GetNumberImages() > 1)
 }
 
 type AnimationCallback func(img *Image) error
 
-var ErrNotAnimation = errors.New("imagedit/animation: Error image not an animation")
-
 func (img *Image) IterateOver(callback AnimationCallback) error {
 	if err := img.Check(); err != nil {
 		return err
-	}
-	if !img.Animation {
-		return ErrNotAnimation
 	}
 
 	delay := img.MW.GetImageDelay()
@@ -31,14 +23,8 @@ func (img *Image) IterateOver(callback AnimationCallback) error {
 	defer aImg.Close()
 	img.NewMW()
 
-	var frameCount int
-	// Only use first frame if TransformAnimation was false
-	if img.TransformAnimation {
-		img.MW.SetImageDelay(delay)
-		frameCount = int(aImg.MW.GetNumberImages())
-	} else {
-		frameCount = 1
-	}
+	img.MW.SetImageDelay(delay)
+	frameCount := int(aImg.MW.GetNumberImages())
 
 	for i := 0; i < frameCount; i++ {
 		aImg.MW.SetIteratorIndex(i)

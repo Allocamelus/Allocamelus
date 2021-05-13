@@ -21,8 +21,11 @@ const (
 	AR_3x1
 )
 
-func (img *Image) AR(ar AspectRatio) (width, height uint) {
-	width, height = img.WH()
+func (img *Image) AR(ar AspectRatio) (width, height int, err error) {
+	width, height, err = img.WH()
+	if err != nil {
+		return
+	}
 	// TODO
 	switch ar {
 	case AR_1x1:
@@ -35,9 +38,11 @@ func (img *Image) AR(ar AspectRatio) (width, height uint) {
 	return
 }
 
-func (img *Image) ARMaxSize(ar AspectRatio, maxPx uint) (width, height uint) {
-	width, height = img.AR(ar)
-
+func (img *Image) ARMaxSize(ar AspectRatio, maxPx int) (width, height int, err error) {
+	width, height, err = img.AR(ar)
+	if err != nil {
+		return
+	}
 	wf := float64(width)
 	hf := float64(height)
 	mpf := float64(maxPx)
@@ -48,14 +53,14 @@ func (img *Image) ARMaxSize(ar AspectRatio, maxPx uint) (width, height uint) {
 		hf = resizeFloat * hf
 	}
 
-	height = uint(hf)
+	height = int(hf)
 	if height > maxPx {
 		resizeFloat := mpf / hf
 		hf = resizeFloat * hf
 		wf = resizeFloat * wf
 	}
 
-	width = uint(wf)
-	height = uint(hf)
+	width = int(wf)
+	height = int(hf)
 	return
 }
