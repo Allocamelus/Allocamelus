@@ -5,6 +5,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/post/media"
+	"github.com/allocamelus/allocamelus/internal/user"
 )
 
 var (
@@ -15,19 +16,68 @@ var (
 			Total  *sql.Stmt
 			Latest *sql.Stmt
 		}
+		ForUser struct {
+			Total  *sql.Stmt
+			Latest *sql.Stmt
+		}
 	}
 )
 
 func initPosts(p data.Prepare) {
-	preGetPublicPosts.Total = p(`SELECT COUNT(postId) FROM Posts WHERE published != 0`)
+	preGetPublicPosts.Total = p(`
+	SELECT COUNT(postId)
+	FROM Posts
+	WHERE userId IN (
+		SELECT userId FROM (
+			SELECT userId FROM Users 
+			WHERE type = 2
+			LIMIT 0, 18446744073709551615
+		) tmp
+	) AND published != 0`)
 	preGetPublicPosts.Latest = p(`
 	SELECT
 		postId, userId, published,
 		updated, content
 	FROM Posts 
-	WHERE published != 0 
+	WHERE userId IN (
+		SELECT userId FROM (
+			SELECT userId FROM Users 
+			WHERE type = 2
+			LIMIT 0, 18446744073709551615
+		) tmp
+	) AND published != 0
 	ORDER BY published DESC
 	LIMIT ?,?`)
+
+	preGetPublicPosts.ForUser.Total = p(`
+	SELECT COUNT(postId)
+	FROM Posts
+	WHERE userId IN (
+		SELECT followUserId FROM (
+			SELECT followUserId FROM UserFollows 
+			WHERE userId = ? AND accepted = 1
+			LIMIT 0, 18446744073709551615
+		) tmp
+	)
+	AND published != 0
+	OR userId = ?`)
+	preGetPublicPosts.ForUser.Latest = p(`
+	SELECT
+		postId, userId, published,
+		updated, content
+	FROM Posts
+	WHERE userId IN (
+		SELECT followUserId FROM (
+			SELECT followUserId FROM UserFollows 
+			WHERE userId = ? AND accepted = 1
+			LIMIT 0, 18446744073709551615
+		) tmp
+	)
+	AND published != 0
+	OR userId = ?
+	ORDER BY published DESC
+	LIMIT ?,?`)
+
 	preGetPublicPosts.ByUser.Total = p(`SELECT COUNT(postId) FROM Posts WHERE published != 0 AND userId = ?`)
 	preGetPublicPosts.ByUser.Latest = p(`
 	SELECT
@@ -41,17 +91,29 @@ func initPosts(p data.Prepare) {
 
 // GetPublicTotal Posts
 // TODO: Cache!!!
-func GetPublicTotal() (total int64, err error) {
-	err = preGetPublicPosts.Total.QueryRow().Scan(&total)
+func GetPublicTotal(u *user.Session) (total int64, err error) {
+	if !u.LoggedIn {
+		err = preGetPublicPosts.Total.QueryRow().Scan(&total)
+	} else {
+		err = preGetPublicPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
+	}
 	return
 }
 
 // GetPublicPosts
 // TODO: Likes, Views & Cache
-func GetPublicPosts(startNum, perPage int64) (*List, error) {
+func GetPublicPosts(startNum, perPage int64, u *user.Session) (*List, error) {
 	posts := NewList()
+	var (
+		rows *sql.Rows
+		err  error
+	)
 
-	rows, err := preGetPublicPosts.Latest.Query(startNum, perPage)
+	if !u.LoggedIn {
+		rows, err = preGetPublicPosts.Latest.Query(startNum, perPage)
+	} else {
+		rows, err = preGetPublicPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
+	}
 	if err != nil {
 		return nil, err
 	}

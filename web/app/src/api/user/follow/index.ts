@@ -15,6 +15,19 @@ export async function post(userName: string) {
     })
 }
 
+export async function decline(userName: string) {
+  return v1.delete(`/user/${userName}/follow/decline`)
+    .then(r => {
+      return API_Success_Error.createFrom(r.data)
+    })
+}
+export async function accept(userName: string) {
+  return v1.post(`/user/${userName}/follow/accept`)
+    .then(r => {
+      return API_Success_Error.createFrom(r.data)
+    })
+}
+
 export class API_Requests {
   requests: { [key: number]: number };
   users: { [key: number]: GEN_User };

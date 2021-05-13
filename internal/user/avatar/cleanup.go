@@ -22,9 +22,9 @@ func deactivateOld(userId int64) error {
 				SELECT userAvatarId FROM (
 					SELECT userAvatarId FROM UserAvatars 
 					ORDER BY userAvatarId DESC
-					LIMIT 1, 18446744073709551615
+					LIMIT 0, 18446744073709551615
 				) tmp
-			) AND userID = ? AND active = 1
+			) AND userId = ? AND active = 1
 			`) // Deactivate all but the latest
 	}
 	_, err := preDeactivateOld.Exec(userId)

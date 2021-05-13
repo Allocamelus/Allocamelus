@@ -3,6 +3,9 @@
     <feed>
       <div v-if="err.length > 0" v-html="err"></div>
       <new-post-text-input v-if="loggedIn"></new-post-text-input>
+      <box v-if="list.total() == 0" class="rounded-xl py-3 px-4">
+        Follow someone to see their post here
+      </box>
       <post-feed :list="list"></post-feed>
     </feed>
     <sidebar></sidebar>
@@ -18,6 +21,7 @@ import PostFeed from "../components/post/Feed.vue";
 import Feed from "../components/Feed.vue";
 import Sidebar from "../components/Sidebar.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
+import Box from "../components/box/Box.vue";
 
 export default defineComponent({
   setup() {
@@ -59,6 +63,7 @@ export default defineComponent({
     Feed,
     Sidebar,
     NewPostTextInput,
+    Box,
   },
 });
 </script>
