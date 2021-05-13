@@ -25,7 +25,10 @@ import PostBox from "./Box.vue";
 
 export default defineComponent({
   props: {
-    list: API_Posts,
+    list: {
+      type: API_Posts,
+      default: new API_Posts(),
+    },
   },
   components: { Box, PostBox, Feed },
 });

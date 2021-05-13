@@ -52,6 +52,9 @@
       <feed>
         <new-post-text-input v-if="canEdit"></new-post-text-input>
         <error-box :error="err.posts">
+          <box v-if="postsList.total() == 0" class="rounded-xl py-3 px-4">
+            No Post Here
+          </box>
           <post-feed :list="postsList"></post-feed>
         </error-box>
         <snackbar v-model="err.snackbar.show" :closeBtn="true">

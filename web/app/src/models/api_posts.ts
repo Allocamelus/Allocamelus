@@ -18,10 +18,16 @@ export class API_Posts {
   }
 
   // Method
-  user(userId: number) {
+  user(userId: number): GEN_User {
     return GEN_User.createFrom(this.users[userId]);
   }
-  post(postId: number) {
+  post(postId: number): GEN_Post {
     return GEN_Post.createFrom(this.posts[postId]);
+  }
+  total(): number {
+    if (this.order == undefined || this.order === null) {
+      return 0
+    }
+    return Object.keys(this.order).length
   }
 }

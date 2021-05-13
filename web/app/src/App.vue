@@ -150,7 +150,7 @@
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "vuex";
 
-import { MinToSec, SecToMs } from "./pkg/time";
+import { MinToSec, SecToMs, UnixTime } from "./pkg/time";
 
 import {
   accept as userAccept,
@@ -252,23 +252,27 @@ export default defineComponent({
     },
     async clickAlerts() {
       this.alerts.menu = !this.alerts.menu;
-      this.alerts.loading = true;
-      this.alerts.err = "Loading...";
-      requests()
-        .then((r) => {
-          this.alerts.err = "";
-          if (Object.keys(r.requests).length != 0) {
-            this.alerts.requests = r;
-          } else {
-            this.alerts.err = "No Notifications";
-          }
-        })
-        .catch((_e) => {
-          this.alerts.err = SomethingWentWrong;
-        })
-        .finally(() => {
-          this.alerts.loading = false;
-        });
+      // limit alerts fetch to every 2 seconds
+      if (this.alerts.lastFetched < UnixTime(-2)) {
+        this.alerts.loading = true;
+        this.alerts.err = "Loading...";
+        requests()
+          .then((r) => {
+            this.alerts.err = "";
+            if (Object.keys(r.requests).length != 0) {
+              this.alerts.requests = r;
+            } else {
+              this.alerts.err = "No Notifications";
+            }
+            this.alerts.lastFetched = UnixTime();
+          })
+          .catch((_e) => {
+            this.alerts.err = SomethingWentWrong;
+          })
+          .finally(() => {
+            this.alerts.loading = false;
+          });
+      }
     },
     followRequest(userId, accept) {
       (() => {
