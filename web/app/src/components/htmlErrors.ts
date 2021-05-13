@@ -25,8 +25,8 @@ function getPath(path = "") {
 export const Html403Func = (path = "") => {
   path = getPath(path)
   return htmlErrBuilder(
-    `Error: 403`,
-    path + `Forbidden`
+    `Error: 403 Forbidden`,
+    `This page is Private ${path}`
   )
 }
 

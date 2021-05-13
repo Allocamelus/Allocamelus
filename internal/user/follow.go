@@ -140,6 +140,11 @@ func Accept(userId, followerUserId int64) error {
 	return nil
 }
 
+// Decline userId Decline followerUserId request
+func Decline(userId, followerUserId int64) error {
+	return unfollow(followerUserId, userId)
+}
+
 var preAcceptAll *sql.Stmt
 
 // AcceptAll userId Accept all follow request
