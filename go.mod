@@ -3,6 +3,7 @@ module github.com/allocamelus/allocamelus
 go 1.16
 
 require (
+	github.com/ProtonMail/go-crypto v0.0.0-20210512092938-c05353c2d58c // indirect
 	github.com/ProtonMail/gopenpgp/v2 v2.1.9
 	github.com/andybalholm/brotli v1.0.2 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
@@ -11,6 +12,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.9.0
 	github.com/gofiber/helmet/v2 v2.1.2
+	github.com/h2non/bimg v1.1.5
 	github.com/json-iterator/go v1.1.11
 	github.com/klauspost/compress v1.12.2 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.9
