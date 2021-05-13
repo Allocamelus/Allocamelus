@@ -82,7 +82,12 @@ func userUpdate(un fiber.Router) {
 func userFollow(un fiber.Router) {
 	// /api/v1/user/:userName/follow
 	unFollow := un.Group("/follow", middleware.Protected)
-	// Friend & Followers
+	// Followers
 	unFollow.Post("/", follow.Post)
 	unFollow.Delete("/", follow.Delete)
+	// Friends
+	// /api/v1/user/:userName/follow/accept
+	unFollow.Post("/accept", follow.Post)
+	// /api/v1/user/:userName/follow/decline
+	unFollow.Delete("/decline", follow.Delete)
 }

@@ -27,3 +27,18 @@ func Delete(c *fiber.Ctx) error {
 
 	return fiberutil.JSON(c, 200, deleteResp{Success: true})
 }
+
+// Decline follow
+func Decline(c *fiber.Ctx) error {
+	_, userID, hasErr, err := shared.GetUserNameIDResp(c)
+	if hasErr {
+		return err
+	}
+
+	err = user.Decline(user.ContextSession(c).UserID, userID)
+	if err != nil {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	return fiberutil.JSON(c, 200, deleteResp{Success: true})
+}

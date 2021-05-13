@@ -153,8 +153,8 @@ import { useStore } from "vuex";
 import { MinToSec, SecToMs } from "./pkg/time";
 
 import {
-  post as userFollow,
-  remove as userUnfollow,
+  accept as userAccept,
+  decline as userDecline,
   requests,
   API_Requests,
 } from "./api/user/follow";
@@ -274,9 +274,9 @@ export default defineComponent({
       (() => {
         var uN = this.alerts.requests.user(userId).userName;
         if (accept) {
-          return userFollow(uN);
+          return userAccept(uN);
         }
-        return userUnfollow(uN);
+        return userDecline(uN);
       })()
         .then((r) => {
           if (!r.success) {
