@@ -31,7 +31,6 @@ func initPosts(p data.Prepare) {
 		SELECT userId FROM (
 			SELECT userId FROM Users 
 			WHERE type = 2
-			LIMIT 0, 18446744073709551615
 		) tmp
 	) AND published != 0`)
 	preGetPublicPosts.Latest = p(`
@@ -43,7 +42,6 @@ func initPosts(p data.Prepare) {
 		SELECT userId FROM (
 			SELECT userId FROM Users 
 			WHERE type = 2
-			LIMIT 0, 18446744073709551615
 		) tmp
 	) AND published != 0
 	ORDER BY published DESC
@@ -56,7 +54,6 @@ func initPosts(p data.Prepare) {
 		SELECT followUserId FROM (
 			SELECT followUserId FROM UserFollows 
 			WHERE userId = ? AND accepted = 1
-			LIMIT 0, 18446744073709551615
 		) tmp
 	)
 	AND published != 0
@@ -70,7 +67,6 @@ func initPosts(p data.Prepare) {
 		SELECT followUserId FROM (
 			SELECT followUserId FROM UserFollows 
 			WHERE userId = ? AND accepted = 1
-			LIMIT 0, 18446744073709551615
 		) tmp
 	)
 	AND published != 0
