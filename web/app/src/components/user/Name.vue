@@ -11,12 +11,9 @@
     >
       {{ user.name }}
     </div>
-    <div
-      class="text-gray-700 dark:text-gray-400 text-sm font-normal flex-none"
-      :class="isLink ? 'ml-1' : ''"
-    >
+    <text-small class="font-normal flex-none" :class="isLink ? 'ml-1' : ''">
       @{{ user.userName }}
-    </div>
+    </text-small>
   </component>
 </template>
 
@@ -25,6 +22,7 @@ import { defineComponent } from "vue";
 import { GEN_User } from "../../models/go_structs_gen";
 
 import ToLink from "../ToLink.vue";
+import TextSmall from "../text/Small.vue";
 
 export const OneLineLink = "one-line";
 export const TwoLine = "two-line";
@@ -48,6 +46,6 @@ export default defineComponent({
       return false;
     },
   },
-  components: {ToLink},
+  components: { ToLink, TextSmall },
 });
 </script>
