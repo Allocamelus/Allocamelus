@@ -34,6 +34,12 @@ const routes = [
     },
   },
   {
+    path: "/account/verify-email",
+    name: "Account Verify Email",
+    component: () => import('./views/account/VerifyEmail.vue'),
+    props: route => ({ selector: route.query.key, token: route.query.token }),
+  },
+  {
     path: "/post/:id(\\d+)",
     component: () => import('./views/Post.vue'),
     props: true,
@@ -76,6 +82,7 @@ router.beforeEach(async (to, _from) => {
     switch (to.name) {
       case "Login":
       case "Signup":
+      case "Account Verify Email":
         return redirectUrl(to.query.r)
     }
   } else {
