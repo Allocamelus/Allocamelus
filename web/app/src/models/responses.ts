@@ -3,65 +3,77 @@ const invalidLength = "invalid-length",
   invalidChars = "invalid-characters",
   taken = "taken"
 
-export const Responses = {
-  Shared: {
-    A10: "allocamelus",
-    InvalidAuthToken: "invalid-auth-token",
-    InvalidWith: "invalid-with-value",
-    InvalidCaptcha: "invalid-captcha",
-    NotFound: "not-found",
-    Unauthorized403: "unauthorized-403",
-    File: {
-      ContentType: "invalid-content-type",
-      Size: "invalid-file-size"
-    },
+export const Shared = {
+  A10: "allocamelus",
+  InvalidAuthToken: "invalid-auth-token",
+  InvalidWith: "invalid-with-value",
+  InvalidCaptcha: "invalid-captcha",
+  NotFound: "not-found",
+  Unauthorized403: "unauthorized-403",
+  File: {
+    ContentType: "invalid-content-type",
+    Size: "invalid-file-size"
   },
-  Account: {
-    Auth: {
-      InvalidUsernamePassword: "invalid-username-password",
-      UnverifiedEmail: "unverified-email",
-      Authenticated: "already-authenticated",
-      // Persistent Auth Failed
-      AuthToken: "persistent-auth-failed",
-    }
-  },
-  Post: {
-    Create: {
-      Unauthorized: "unauthorized",
-      InsufficientPerms: "insufficient-permissions"
-    },
-    Validate: {
-      Content: {
-        Length: invalidLength + "-min0-max65500"
-      },
-    }
-  },
-  User: {
-    Create: {
-      InvalidCreateToken: "invalid-create-token",
-      LoggedIn: "logged-in",
-    },
-    Validate: {
-      UserName: {
-        Length: invalidLength + "-min5-max64",
-        Taken: taken,
-      },
-      Name: {
-        Length: invalidLength + "-min1-max128",
-      },
-      Email: {
-        Invalid: "invalid-email"
-      },
-      Bio: {
-        Length: invalidLength + "-min0-max255",
-      },
-      Password: {
-        Length: invalidLength + "-min8-max1024",
-        Strength: "weak-password",
-      },
-      Invalid: invalidChars,
-    }
+}
+
+export const Account = {
+  Auth: {
+    InvalidUsernamePassword: "invalid-username-password",
+    UnverifiedEmail: "unverified-email",
+    Authenticated: "already-authenticated",
+    // Persistent Auth Failed
+    AuthToken: "persistent-auth-failed",
   }
+}
+export const Post = {
+  Create: {
+    Unauthorized: "unauthorized",
+    InsufficientPerms: "insufficient-permissions"
+  },
+  Validate: {
+    Content: {
+      Length: invalidLength + "-min0-max65500"
+    },
+  }
+}
+export const User = {
+  Create: {
+    InvalidCreateToken: "invalid-create-token",
+    LoggedIn: "logged-in",
+  },
+  EmailToken: {
+    Validate: {
+      Invalid: "invalid-token",
+      Expired: "expired-token"
+    }
+  },
+  Validate: {
+    UserName: {
+      Length: invalidLength + "-min5-max64",
+      Taken: taken,
+    },
+    Name: {
+      Length: invalidLength + "-min1-max128",
+    },
+    Email: {
+      Invalid: "invalid-email"
+    },
+    Bio: {
+      Length: invalidLength + "-min0-max255",
+    },
+    Password: {
+      Length: invalidLength + "-min8-max1024",
+      Strength: "weak-password",
+    },
+    Invalid: invalidChars,
+  }
+}
+
+export const Responses = {
+  Shared,
+  Account,
+  Post,
+  User
   // TODO: Add rest of the api codes
 }
 

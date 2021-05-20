@@ -2,6 +2,7 @@ package emailtoken
 
 import (
 	"database/sql"
+	"log"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -37,6 +38,7 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	request.Email = strings.TrimSpace(request.Email)
+	log.Println(request.Email)
 	if err := user.ValidEmail(request.Email); err != nil {
 		return apierr.Err422(c, createResp{Error: errInvalidEmail})
 	}
