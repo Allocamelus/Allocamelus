@@ -53,7 +53,6 @@
             <text-input
               v-model="name"
               name="name"
-              :watchModel="true"
               :check="true"
               :minLen="0"
               :maxLen="128"
@@ -68,7 +67,6 @@
             <text-area
               v-model="bio"
               name="bio"
-              :watchModel="true"
               :check="true"
               :minLen="0"
               :maxLen="255"

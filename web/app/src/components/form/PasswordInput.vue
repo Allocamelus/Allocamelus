@@ -46,7 +46,7 @@ export default defineComponent({
     modelValue: String,
     watchModel: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     check: {
       type: Boolean,
@@ -80,7 +80,7 @@ export default defineComponent({
     };
   },
   watch: {
-    password(newPass, _oldPass) {
+    password() {
       if (this.check) {
         this.debouncedCheck();
       }

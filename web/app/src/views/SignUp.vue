@@ -114,7 +114,6 @@
         </text-small>
         <input-copy
           v-model="backupKey"
-          :watchModel="true"
           class="my-2"
         ></input-copy>
       </div>

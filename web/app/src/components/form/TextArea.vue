@@ -30,7 +30,7 @@ export default defineComponent({
     modelValue: String,
     watchModel: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     name: {
       type: String,
