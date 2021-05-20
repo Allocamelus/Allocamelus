@@ -37,7 +37,7 @@ const routes = [
     path: "/account/verify-email",
     name: "Account Verify Email",
     component: () => import('./views/account/VerifyEmail.vue'),
-    props: route => ({ selector: route.query.key, token: route.query.token }),
+    props: route => ({ selector: route.query.selector, token: route.query.token }),
   },
   {
     path: "/post/:id(\\d+)",
