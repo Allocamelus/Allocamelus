@@ -87,7 +87,7 @@ export default defineComponent({
     },
     modelValue(newValue, _old) {
       if (this.watchModel) {
-        this.text = newValue;
+        this.password = newValue;
       }
     },
   },
