@@ -6,7 +6,7 @@
     @input="emiter"
     @error="$emit('error', $event)"
     :type="show ? 'text' : 'password'"
-    :name="password"
+    name="password"
     :minLen="minLenC"
     :maxLen="maxLenC"
     :required="required"
