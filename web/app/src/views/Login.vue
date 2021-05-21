@@ -96,7 +96,7 @@ const HtmlInvalidUsernamePassword = htmlErrBuilder(
   ),
   HtmlUnverifiedEmail = htmlErrBuilder(
     `Please verify your email to login`,
-    `Don't see the verification email? <a class="link" href="/account/verify_email">Resend It</a>`
+    `Don't see the verification email? <a class="link" href="/account/verify-email">Resend It</a>`
   );
 
 export default defineComponent({
