@@ -9,7 +9,8 @@
         <div v-if="success">
           <div class="text-lg font-semibold">Success</div>
           <div>
-            You can now <to-link to="/login" class="link font-medium">login</to-link>
+            You can now
+            <to-link to="/login" class="link font-medium">login</to-link>
           </div>
         </div>
         <div v-else>
@@ -69,7 +70,7 @@
           <div
             v-if="err.create.length > 0"
             class="mt-3"
-            v-html="err.create"
+            v-html="err.create /* skipcq: JS-0693 */"
           ></div>
           <form @submit.prevent="onSubmit" ref="form" class="mt-3">
             <input-label for="email" :err="err.email">Email</input-label>
@@ -118,7 +119,6 @@ import {
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
-import Box from "../../components/box/Box.vue";
 import SpinLoader from "../../components/icons/SpinLoader.vue";
 import ToLink from "../../components/ToLink.vue";
 import TextSmall from "../../components/text/Small.vue";
@@ -140,11 +140,11 @@ export default defineComponent({
   props: {
     selector: {
       type: String,
-      defualt: "",
+      default: "",
     },
     token: {
       type: String,
-      defualt: "",
+      default: "",
     },
   },
   setup(props) {
@@ -205,7 +205,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(e) {
+    onSubmit() {
       if (this.err.email.length != 0) {
         return;
       }
@@ -242,13 +242,13 @@ export default defineComponent({
             }
           }
         })
-        .catch((_e) => {
+        .catch(() => {
           this.captcha.show = false;
           this.err.create = HtmlSomethingWentWrong;
         });
     },
   },
-  async beforeRouteUpdate(to, _from) {
+  async beforeRouteUpdate(to) {
     this.loading = true;
     this.success = false;
     this.err = "";
@@ -266,7 +266,6 @@ export default defineComponent({
     }
   },
   components: {
-    Box,
     SpinLoader,
     ToLink,
     TextSmall,

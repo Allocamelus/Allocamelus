@@ -197,7 +197,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(_e) {
+    onSubmit() {
       if (
         this.err.userName.length != 0 ||
         this.err.email.length != 0 ||
@@ -280,7 +280,7 @@ export default defineComponent({
             this.showForm = false;
           }
         })
-        .catch((_e) => {
+        .catch(() => {
           this.captcha.show = false;
           this.err.signUp = HtmlSomethingWentWrong;
         });

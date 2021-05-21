@@ -24,7 +24,10 @@ import TextInput from "./TextInput.vue";
 export default defineComponent({
   name: "email-input",
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: "",
+    },
     watchModel: {
       type: Boolean,
       default: true,
@@ -49,7 +52,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       if (this.watchModel) {
         this.email = newValue;
       }

@@ -232,13 +232,13 @@ export default defineComponent({
     };
   },
   watch: {
-    theme(newTheme, _old) {
+    theme(newTheme) {
       setTheme(newTheme);
     },
-    $route(_to, _from) {
+    $route(_to) {
       this.onNavigate();
     },
-    viewKey(_newKey, _old) {
+    viewKey(_newKey) {
       this.onNavigate();
     },
   },
@@ -267,7 +267,7 @@ export default defineComponent({
             }
             this.alerts.lastFetched = UnixTime();
           })
-          .catch((_e) => {
+          .catch(() => {
             this.alerts.err = SomethingWentWrong;
           })
           .finally(() => {
@@ -293,7 +293,7 @@ export default defineComponent({
             Object.keys(requests).find((k) => requests[k] === userId)
           ];
         })
-        .catch((_e) => {
+        .catch(() => {
           this.snackbarMsg(SomethingWentWrong);
         });
     },

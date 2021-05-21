@@ -8,8 +8,8 @@ export class CaptchaSiteKeys {
   };
   difficulties: {
     user: {
-      create: string
-      emailToken: string
+      create: string,
+      emailToken: string,
     }
   }
 
@@ -23,12 +23,10 @@ export class CaptchaSiteKeys {
     this.difficulties = source["difficulties"]
   }
 
-  siteKey(key: "easy" | "moderate" | "hard" | "all" | string) {
-    var siteKey: string
-    try {
+  siteKey(key: "easy" | "moderate" | "hard" | "all" | string): string {
+    let siteKey = this.siteKeys.all
+    if (this.siteKeys[key] != undefined) {
       siteKey = this.siteKeys[key]
-    } catch {
-      siteKey = this.siteKeys.all
     }
     return siteKey
   }

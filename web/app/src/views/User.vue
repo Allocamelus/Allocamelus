@@ -181,7 +181,7 @@ export default defineComponent({
     },
   },
   watch: {
-    user(newUser, _old) {
+    user(newUser) {
       document.title = `${newUser.name} (@${newUser.userName}) - ${
         import.meta.env.VITE_SITE_NAME
       }`;
@@ -221,7 +221,7 @@ export default defineComponent({
               this.snackbarErr(SomethingWentWrong);
             }
           })
-          .catch((_e) => {
+          .catch(() => {
             this.snackbarErr(SomethingWentWrong);
           });
       }
@@ -234,7 +234,7 @@ export default defineComponent({
       }
     },
   },
-  async beforeRouteUpdate(to, _from) {
+  async beforeRouteUpdate(to) {
     this.user = new GEN_User();
     this.postsList = new API_Posts();
     this.page = 1;

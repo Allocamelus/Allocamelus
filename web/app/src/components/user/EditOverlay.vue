@@ -152,10 +152,10 @@ export default defineComponent({
     };
   },
   watch: {
-    show(newValue, _old) {
+    show(newValue) {
       this.visable = newValue;
     },
-    visable(newValue, _old) {
+    visable(newValue) {
       if (!newValue) {
         this.close();
       }
@@ -186,7 +186,7 @@ export default defineComponent({
                 }
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }
@@ -204,7 +204,7 @@ export default defineComponent({
                 }
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }
@@ -218,7 +218,7 @@ export default defineComponent({
                 this.snackbarErr(SomethingWentWrong);
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }

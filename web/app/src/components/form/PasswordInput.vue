@@ -43,7 +43,10 @@ import EyeOffIcon from "@heroicons/vue/solid/EyeOffIcon";
 export default defineComponent({
   name: "password-input",
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: "",
+    },
     watchModel: {
       type: Boolean,
       default: true,
@@ -85,7 +88,7 @@ export default defineComponent({
         this.debouncedCheck();
       }
     },
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       if (this.watchModel) {
         this.password = newValue;
       }

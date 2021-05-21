@@ -71,12 +71,12 @@ const router = createRouter({
   // Provide the history implementation to use. We are using the hash history for simplicity here.
   history: createWebHistory(),
   routes, // short for `routes: routes`
-  scrollBehavior(_to, _from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) { // skipcq: JS-0356
     return savedPosition ? savedPosition : { top: 0 }
   },
 })
 
-router.beforeEach(async (to, _from) => {
+router.beforeEach(async (to) => {
   // canUserAccess() returns `true` or `false`
   if (store.getters.loggedIn) {
     switch (to.name) {

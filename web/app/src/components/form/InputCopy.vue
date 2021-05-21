@@ -26,7 +26,10 @@ import CircleBg from "../button/CircleBg.vue";
 export default defineComponent({
   name: "button-copy",
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: "",
+    },
     watchModel: {
       type: Boolean,
       default: false,
@@ -42,7 +45,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       if (this.watchModel) {
         this.value = newValue;
       }
