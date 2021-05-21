@@ -56,7 +56,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       this.show = newValue;
       if (this.show) {
         setTimeout(() => {

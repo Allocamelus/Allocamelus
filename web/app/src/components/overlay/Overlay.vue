@@ -75,7 +75,7 @@ export default defineComponent({
     }
   },
   watch: {
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       this.show = newValue;
       var h = document.querySelector("html"),
         navS = document.querySelector("#nav").style;

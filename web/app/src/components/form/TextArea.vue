@@ -27,10 +27,13 @@ import * as Errs from "./errors";
 
 export default defineComponent({
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: "",
+    },
     watchModel: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     name: {
       type: String,
@@ -81,7 +84,7 @@ export default defineComponent({
     };
   },
   watch: {
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       if (this.watchModel) {
         this.text = newValue;
       }

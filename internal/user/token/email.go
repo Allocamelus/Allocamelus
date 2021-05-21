@@ -23,7 +23,7 @@ func (t *Token) SendEmail(emailAddress string) error {
 	case Email:
 		subject = "Verification Email for " + g.Data.Config.Site.Name
 
-		link.WriteString(g.Config.Path.Public.VerifyEmail + "?key=" + t.Selector + "&token=" + t.token)
+		link.WriteString(g.Config.Path.Public.VerifyEmail + "?selector=" + t.Selector + "&token=" + t.token)
 		linkStr = link.String()
 
 		mailBody = email.Body{
@@ -37,7 +37,7 @@ func (t *Token) SendEmail(emailAddress string) error {
 	case Reset:
 		subject = "Password Reset Email for " + g.Data.Config.Site.Name
 
-		link.WriteString(g.Config.Path.Public.ResetPassword + "?key=" + t.Selector + "&token=" + t.token)
+		link.WriteString(g.Config.Path.Public.ResetPassword + "?selector=" + t.Selector + "&token=" + t.token)
 		linkStr = link.String()
 
 		mailBody = email.Body{

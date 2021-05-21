@@ -48,7 +48,7 @@ export default defineComponent({
     };
   },
   watch: {
-    apiPost(newPost, _old) {
+    apiPost(newPost) {
       var sanitizedContent = sanitize(newPost.post.content).trim(),
         truncatedContent = sanitizedContent.substring(0, 256).trim();
 
@@ -62,7 +62,7 @@ export default defineComponent({
         `${import.meta.env.VITE_SITE_NAME}`;
     },
   },
-  async beforeRouteUpdate(to, _from) {
+  async beforeRouteUpdate(to) {
     this.apiPost = new API_Post();
 
     getPost(to.params.id)

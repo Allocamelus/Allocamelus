@@ -43,22 +43,18 @@
               :maxLen="64"
               placeholder="mary-smith"
               :regex="/^[a-zA-Z0-9_-]*$/"
-              :regexMsg="errMsg.userName"
+              :regexMsg="errMsgUserName"
               @error="err.userName = $event"
             ></text-input>
           </div>
           <div class="mt-3">
             <input-label for="email" :err="err.email">Email</input-label>
-            <text-input
+            <email-input
               v-model="email"
               :check="true"
               :required="true"
-              type="email"
-              :regex="/.+@.+\..+/"
-              :regexMsg="errMsg.email"
-              placeholder="mary@example.com"
               @error="err.email = $event"
-            ></text-input>
+            ></email-input>
           </div>
           <div class="mt-3">
             <input-label for="password" :err="err.password"
@@ -114,7 +110,6 @@
         </text-small>
         <input-copy
           v-model="backupKey"
-          :watchModel="true"
           class="my-2"
         ></input-copy>
       </div>
@@ -135,6 +130,7 @@ import InputLabel from "../components/form/InputLabel.vue";
 import TextSmall from "../components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import InputCopy from "../components/form/InputCopy.vue";
+import EmailInput from "../components/form/EmailInput.vue";
 
 import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
 
@@ -189,10 +185,7 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      errMsg: {
-        userName: "Alphanumeric characters, Underscores and Dashes Only",
-        email: "Invalid Email",
-      },
+      errMsgUserName: "Alphanumeric characters, Underscores and Dashes Only",
     };
   },
   computed: {
@@ -204,7 +197,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(_e) {
+    onSubmit() {
       if (
         this.err.userName.length != 0 ||
         this.err.email.length != 0 ||
@@ -287,7 +280,7 @@ export default defineComponent({
             this.showForm = false;
           }
         })
-        .catch((_e) => {
+        .catch(() => {
           this.captcha.show = false;
           this.err.signUp = HtmlSomethingWentWrong;
         });
@@ -304,6 +297,7 @@ export default defineComponent({
     VueHcaptcha,
     InputCopy,
     ToLink,
+    EmailInput,
   },
 });
 </script>

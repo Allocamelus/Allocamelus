@@ -35,11 +35,11 @@
                 >
                   <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
                   <div v-else>
-                    <div
+                    <text-small>
                       class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
                       Follow/Friend Request:
-                    </div>
+                    </text-small>
                     <div
                       v-for="(userId, index) in alerts.requests.requests"
                       :key="index"
@@ -173,6 +173,7 @@ import UserName from "./components/user/Name.vue";
 import ToLink from "./components/ToLink.vue";
 import BarLoader from "./components/overlay/BarLoader.vue";
 import Snackbar from "./components/box/Snackbar.vue";
+import TextSmall from "./components/text/Small.vue";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -231,13 +232,13 @@ export default defineComponent({
     };
   },
   watch: {
-    theme(newTheme, _old) {
+    theme(newTheme) {
       setTheme(newTheme);
     },
-    $route(_to, _from) {
+    $route(_to) {
       this.onNavigate();
     },
-    viewKey(_newKey, _old) {
+    viewKey(_newKey) {
       this.onNavigate();
     },
   },
@@ -266,7 +267,7 @@ export default defineComponent({
             }
             this.alerts.lastFetched = UnixTime();
           })
-          .catch((_e) => {
+          .catch(() => {
             this.alerts.err = SomethingWentWrong;
           })
           .finally(() => {
@@ -292,7 +293,7 @@ export default defineComponent({
             Object.keys(requests).find((k) => requests[k] === userId)
           ];
         })
-        .catch((_e) => {
+        .catch(() => {
           this.snackbarMsg(SomethingWentWrong);
         });
     },
@@ -326,6 +327,7 @@ export default defineComponent({
     ToLink,
     BarLoader,
     Snackbar,
+    TextSmall,
   },
 });
 </script>
