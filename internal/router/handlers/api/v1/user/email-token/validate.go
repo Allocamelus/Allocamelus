@@ -23,7 +23,6 @@ type validateRequest struct {
 
 type validateResp struct {
 	Success bool   `json:"success"`
-	UserID  int64  `json:"userId,omitempty"`
 	Error   string `json:"error,omitempty"`
 }
 
@@ -35,6 +34,8 @@ func Validate(c *fiber.Ctx) error {
 	}
 	request.Selector = strings.TrimSpace(request.Selector)
 	request.Token = strings.TrimSpace(request.Token)
+
+	// Check for email token
 	tkn, err := token.Check(request.Selector, request.Token, token.Email)
 	if err != nil {
 		if err == token.ErrExpiredToken {
@@ -42,12 +43,15 @@ func Validate(c *fiber.Ctx) error {
 		}
 		return apierr.Err422(c, validateResp{Error: errInvalidToken})
 	}
+
+	// Update type from Unverified to Private
 	if err := user.UpdateType(tkn.UserID, user.Private); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
-	userID := tkn.UserID
+
+	// Remove Token
 	if err := tkn.Delete(); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
-	return fiberutil.JSON(c, 200, validateResp{Success: true, UserID: userID})
+	return fiberutil.JSON(c, 200, validateResp{Success: true})
 }

@@ -1,12 +1,12 @@
 <template>
-  <component
+  <text-small
     :is="isLink ? 'to-link' : 'div'"
-    class="text-sm font-normal text-gray-700 dark:text-gray-400"
+    class="font-normal"
     :to="link"
     :title="MDY_HM"
   >
     {{ timeFmt }}
-  </component>
+  </text-small>
 </template>
 
 <script>
@@ -16,6 +16,7 @@ import FmtTime from "../pkg/fmtTime";
 import FmtShort, { MDY_HM } from "../pkg/fmtTime/sort";
 
 import ToLink from "./ToLink.vue";
+import TextSmall from "./text/Small.vue";
 
 export const Raw_Time = "raw";
 export const Fmt_Time = "fmt";
@@ -65,6 +66,6 @@ export default defineComponent({
       return MDY_HM(this.timeC);
     },
   },
-  components: { ToLink },
+  components: { ToLink, TextSmall },
 });
 </script>

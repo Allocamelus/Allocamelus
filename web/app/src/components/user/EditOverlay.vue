@@ -53,7 +53,6 @@
             <text-input
               v-model="name"
               name="name"
-              :watchModel="true"
               :check="true"
               :minLen="0"
               :maxLen="128"
@@ -68,7 +67,6 @@
             <text-area
               v-model="bio"
               name="bio"
-              :watchModel="true"
               :check="true"
               :minLen="0"
               :maxLen="255"
@@ -154,10 +152,10 @@ export default defineComponent({
     };
   },
   watch: {
-    show(newValue, _old) {
+    show(newValue) {
       this.visable = newValue;
     },
-    visable(newValue, _old) {
+    visable(newValue) {
       if (!newValue) {
         this.close();
       }
@@ -188,7 +186,7 @@ export default defineComponent({
                 }
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }
@@ -206,7 +204,7 @@ export default defineComponent({
                 }
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }
@@ -220,7 +218,7 @@ export default defineComponent({
                 this.snackbarErr(SomethingWentWrong);
               }
             })
-            .catch((_e) => {
+            .catch(() => {
               this.snackbarErr(SomethingWentWrong);
             });
         }

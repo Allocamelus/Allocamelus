@@ -140,7 +140,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit(_e) {
+    onSubmit() {
       if (this.err.username.length != 0 || this.err.password.length != 0) {
         return;
       }
@@ -148,7 +148,7 @@ export default defineComponent({
         this.captcha.token = document.getElementsByName(
           "h-captcha-response"
         )[0].value;
-      } catch (_e) {
+      } catch {
         this.captcha.token = "";
       }
       authA10(
@@ -186,7 +186,7 @@ export default defineComponent({
             this.$router.push(redirectUrl(this.redirect));
           }
         })
-        .catch((_e) => {
+        .catch(() => {
           this.captcha.show = false;
           this.err.login = HtmlSomethingWentWrong;
         });

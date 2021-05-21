@@ -29,7 +29,8 @@ func SiteKeys(c *fiber.Ctx) error {
 		},
 		Difficulties: map[string]interface{}{
 			"user": map[string]string{
-				"create": "moderate",
+				"create":     "moderate",
+				"emailToken": "moderate",
 			},
 		},
 	})

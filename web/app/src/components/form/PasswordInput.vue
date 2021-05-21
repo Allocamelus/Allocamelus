@@ -6,7 +6,7 @@
     @input="emiter"
     @error="$emit('error', $event)"
     :type="show ? 'text' : 'password'"
-    :name="password"
+    name="password"
     :minLen="minLenC"
     :maxLen="maxLenC"
     :required="required"
@@ -43,10 +43,13 @@ import EyeOffIcon from "@heroicons/vue/solid/EyeOffIcon";
 export default defineComponent({
   name: "password-input",
   props: {
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: "",
+    },
     watchModel: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     check: {
       type: Boolean,
@@ -80,14 +83,14 @@ export default defineComponent({
     };
   },
   watch: {
-    password(newPass, _oldPass) {
+    password() {
       if (this.check) {
         this.debouncedCheck();
       }
     },
-    modelValue(newValue, _old) {
+    modelValue(newValue) {
       if (this.watchModel) {
-        this.text = newValue;
+        this.password = newValue;
       }
     },
   },
