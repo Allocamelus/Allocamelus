@@ -9,8 +9,28 @@ export const times = {
   Year: 31557600,
 }
 
+export function fmtTime(t: number, tDuration: number, postFix: string, short = false): string {
+  // time from now divided by the provide duration
+  // Example: t=600 so tD...=60 (1 Minute) so t/tD... = 10 (minutes)
+  let sinceIn = Math.round(t / tDuration)
+
+  // If >= 5 seconds ago
+  if (tDuration == 1 && 5 >= sinceIn) {
+    return "Just Now"
+  }
+
+  let fmtTime = `${sinceIn}${postFix}`
+  if (!short) {
+    if (sinceIn > 1) {
+      fmtTime += "s"
+    }
+    fmtTime += " Ago"
+  }
+  return fmtTime
+}
+
 export default (time: number) => {
-  var since = UnixTime(-time)
+  let since = UnixTime(-time)
   if (since >= times.Year) {
     return fmtTime(since, times.Year, " Year")
   } else if (since >= times.Month) {
@@ -26,24 +46,4 @@ export default (time: number) => {
   } else {
     return "Just Now"
   }
-}
-
-export function fmtTime(t: number, tDuration: number, postFix: string, short = false) {
-  // time from now divided by the provide duration
-  // Example: t=600 so tD...=60 (1 Minute) so t/tD... = 10 (minutes)
-  var sinceIn = Math.round(t / tDuration)
-
-  // If >= 5 seconds ago
-  if (tDuration == 1 && 5 >= sinceIn) {
-    return "Just Now"
-  }
-
-  var fmtTime = `${sinceIn}${postFix}`
-  if (!short) {
-    if (sinceIn > 1) {
-      fmtTime += "s"
-    }
-    fmtTime += " Ago"
-  }
-  return fmtTime
 }

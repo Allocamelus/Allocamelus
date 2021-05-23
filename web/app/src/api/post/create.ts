@@ -31,8 +31,8 @@ export class MediaFile {
   }
 }
 
-export async function create(content: string, images: Array<MediaFile>, publish: boolean) {
-  var formData = new FormData();
+export async function create(content: string, images: Array<MediaFile>, publish: boolean): Promise<CreateResponse | API_Success_Error> {
+  let formData = new FormData();
   formData.append("publish", JSON.stringify(publish))
   formData.append("content", content)
   for (let i = 0; i < images.length; i++) {

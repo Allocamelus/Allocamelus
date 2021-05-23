@@ -72,7 +72,10 @@ export default defineComponent({
       default: false,
     },
     regex: RegExp,
-    regexMsg: String,
+    regexMsg: {
+      type: String,
+      default: "",
+    },
   },
   emits: ["update:modelValue", "error"],
   setup(props) {

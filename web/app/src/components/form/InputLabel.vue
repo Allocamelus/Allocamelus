@@ -10,8 +10,14 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "input-label",
   props: {
-    label: String,
-    err: String
+    label: {
+      type: String,
+      default: "",
+    },
+    err: {
+      type: String,
+      default: "",
+    },
   },
 });
 </script>

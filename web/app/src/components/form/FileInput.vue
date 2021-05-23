@@ -63,7 +63,10 @@ export default defineComponent({
       type: Number,
       default: 5,
     },
-    fileCount: Number,
+    fileCount: {
+      type: Number,
+      default: 0,
+    },
   },
   emits: ["filesChange", "error"],
   setup() {
@@ -136,7 +139,7 @@ export default defineComponent({
         filesInput = event.target.files[0];
       }
 
-      if (this.files == null && filesInput.length  != 0) {
+      if (this.files === null && filesInput.length != 0) {
         this.files = filesInput;
         if (this.check) {
           this.$emit("error", this.validate());

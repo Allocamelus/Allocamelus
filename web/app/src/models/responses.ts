@@ -81,7 +81,7 @@ export default Responses
 
 // RespToError response to a more human readable error
 // TODO: Add All error text
-export function RespToError(resp: string) {
+export function RespToError(resp: string): string {
   switch (resp) {
     case Responses.User.Validate.Bio.Length:
       return "Invalid Length 0-255 Characters"
@@ -109,7 +109,7 @@ export function RespToError(resp: string) {
 
 // RespToHtml response to a html readable error
 // TODO: Add All error text
-export function RespToHtml(resp: string) {
+export function RespToHtml(resp: string): string {
   switch (resp) {
     case Responses.Shared.NotFound:
       return Html404Func()

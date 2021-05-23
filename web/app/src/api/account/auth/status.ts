@@ -18,7 +18,7 @@ export class Status {
   }
 }
 
-export async function status() {
+export async function status(): Promise<Status> {
   return v1.get("account/auth/status").then(r => {
     return Status.createFrom(r.data)
   })

@@ -1,7 +1,7 @@
 import sanitizeHtml from '../pkg/sanitize'
 
-export function htmlErrBuilder(first: string, second = "") {
-  var err = `<strong>`;
+export function htmlErrBuilder(first: string, second = ""): string {
+  let err = `<strong>`;
   err += first;
   err += `</strong>`;
   if (second.length > 0) {

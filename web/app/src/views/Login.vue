@@ -103,6 +103,7 @@ export default defineComponent({
   props: {
     redirect: {
       type: String,
+      default: "",
     },
   },
   setup() {
