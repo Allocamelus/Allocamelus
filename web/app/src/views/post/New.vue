@@ -40,9 +40,6 @@ export default defineComponent({
       user,
     };
   },
-  methods: {
-    onSubmit() {},
-  },
   components: { Box, UserAvatar, PostForm },
 });
 </script>

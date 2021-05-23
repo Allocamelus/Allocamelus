@@ -27,6 +27,7 @@ export default defineComponent({
   props: {
     time: {
       type: Number,
+      default: 0,
     },
     type: {
       type: String,

@@ -33,7 +33,7 @@ export class CaptchaSiteKeys {
 }
 
 
-export async function siteKeys() {
+export async function siteKeys(): Promise<CaptchaSiteKeys> {
   return v1.get("meta/captcha/site-keys").then(r => {
     return CaptchaSiteKeys.createFrom(r.data)
   })

@@ -25,9 +25,18 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
-    url: String,
-    index: Number, // Index
-    totalNumber: Number, // How many other images are there
+    url: {
+      type: String,
+      default: "",
+    },
+    index: {
+      type: Number,
+      default: 0,
+    }, // Index
+    totalNumber: {
+      type: Number,
+      default: 1,
+    }, // How many other images are there
     loading: {
       type: String,
       default: "auto",
@@ -36,8 +45,14 @@ export default defineComponent({
       type: String,
       default: "Image",
     },
-    width: Number,
-    height: Number,
+    width: {
+      type: Number,
+      default: 0,
+    },
+    height: {
+      type: Number,
+      default: 0,
+    },
   },
 });
 </script>

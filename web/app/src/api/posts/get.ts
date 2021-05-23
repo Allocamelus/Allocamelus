@@ -2,7 +2,7 @@ import v1 from "../v1";
 import { API_Posts } from '../../models/api_posts'
 import { API_Error } from "../../models/api_error";
 
-export async function get(pageNum: number) {
+export async function get(pageNum: number): Promise<API_Posts> {
   if (pageNum == undefined) {
     pageNum = 1
   }

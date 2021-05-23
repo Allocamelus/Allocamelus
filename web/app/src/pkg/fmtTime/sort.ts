@@ -3,9 +3,39 @@ import { times, fmtTime } from "./index";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+function convertToDate(time: number | Date): Date {
+  if (typeof time == 'number') {
+    time = UnixToDate(time)
+  }
+  return time
+}
+
+function paddedTime(date: Date): string {
+  let min = String(date.getUTCMinutes())
+  if (min.length == 1) {
+    min = `0${min}`
+  }
+  return `${date.getUTCHours()}:${min}`
+}
+
+export function MD(time: number | Date): string {
+  time = convertToDate(time)
+  return `${months[time.getUTCMonth()]} ${time.getUTCDate()}`
+}
+
+export function MDY(time: number | Date): string {
+  time = convertToDate(time)
+  return `${MD(time)}, ${time.getUTCFullYear()}`
+}
+
+export function MDY_HM(time: number | Date): string {
+  time = convertToDate(time)
+  return `${MDY(time)} UTC ${paddedTime(time)}`
+}
+
 // as sort as possible
 export default (time: number) => {
-  var since = UnixTime(-time)
+  let since = UnixTime(-time)
   if (since >= times.Year) {
     return MDY(time)
   } else if (since >= times.Month) {
@@ -21,34 +51,4 @@ export default (time: number) => {
   } else {
     return "Just Now"
   }
-}
-
-function convertToDate(time: number | Date) {
-  if (typeof time == 'number') {
-    time = UnixToDate(time)
-  }
-  return time
-}
-
-function paddedTime(date: Date) {
-   var min = String(date.getUTCMinutes())
-   if (min.length == 1) {
-     min = `0${min}`
-   }
-   return `${date.getUTCHours()}:${min}`
-}
-
-export function MDY_HM(time: number | Date) {
-  time = convertToDate(time)
-  return `${MDY(time)} UTC ${paddedTime(time)}`
-}
-
-export function MDY(time: number | Date) {
-  time = convertToDate(time)
-  return `${MD(time)}, ${time.getUTCFullYear()}`
-}
-
-export function MD(time: number | Date) {
-  time = convertToDate(time)
-  return `${months[time.getUTCMonth()]} ${time.getUTCDate()}`
 }

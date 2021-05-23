@@ -1,5 +1,5 @@
 // From https://stackoverflow.com/a/18650828
-export function FormatBytes(bytes, decimals = 2) {
+export function FormatBytes(bytes, decimals = 2): string {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
