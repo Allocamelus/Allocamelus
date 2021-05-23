@@ -13,6 +13,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"k8s.io/klog/v2"
 )
 
 const storeName = "session"
@@ -93,7 +94,11 @@ func GetSession(c *fiber.Ctx) *Session {
 		var err error
 		session, err = authTokenLogin(c)
 		if err != nil {
-			if err != sql.ErrNoRows && err != token.ErrAuthCookie {
+			if err != sql.ErrNoRows &&
+				err != token.ErrAuthCookie &&
+				err != token.ErrInvalid {
+				logger.Error(err)
+			} else if klog.V(5).Enabled() {
 				logger.Error(err)
 			}
 			// empty session
