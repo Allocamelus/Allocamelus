@@ -2,7 +2,6 @@ package fileutil
 
 import (
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -16,11 +15,11 @@ func PublicPath(relativePath string) string {
 	return filepath.Join(g.Config.Path.Public.Media, relativePath)
 }
 
-func RelativePath(prePath, b58hash string, fileType Format, includeFile bool) string {
+func RelativePath(prePath, b58hash string, includeFile bool) string {
 	var path strings.Builder
 	path.WriteString(prePath + "/" + b58hash[:3] + "/" + b58hash[3:6])
 	if includeFile {
-		path.WriteString("/" + b58hash + "-" + strconv.Itoa(int(fileType)))
+		path.WriteString("/" + b58hash)
 	}
 	return path.String()
 }

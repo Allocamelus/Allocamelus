@@ -65,7 +65,7 @@ func CleanupOld(userId int64) error {
 
 // remove avatar file and db entry
 func remove(b58hash string, fileType fileutil.Format) error {
-	os.RemoveAll(fileutil.FilePath(selectorPath(b58hash, fileType, true)))
+	os.RemoveAll(fileutil.FilePath(selectorPath(b58hash, true)))
 	if preDelete == nil {
 		preDelete = g.Data.Prepare(`DELETE FROM UserAvatars WHERE fileType=? AND hash=?`)
 	}
