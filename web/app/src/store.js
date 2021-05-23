@@ -94,14 +94,16 @@ export default createStore({
       })
     },
     sessionCheck({ commit, state }) {
-      if (state.session.loggedIn || state.session.fresh) {
-        status().then(st => {
-          if (st.loggedIn == false) {
+      status().then(st => {
+        if (st.loggedIn == false) {
+          if (state.session.loggedIn) {
             commit({
               type: 'newSession',
               session: sessionDefault()
             })
-          } else {
+          }
+        } else {
+          if (!state.session.loggedIn) {
             commit({
               type: 'newSession',
               session: {
@@ -112,12 +114,12 @@ export default createStore({
                 expires: state.session.expires
               }
             })
-            commit('usedSession')
           }
-        }).catch(() => {
-          // TODO
-        })
-      }
+        }
+        commit('usedSession')
+      }).catch(() => {
+        // TODO
+      })
     },
     sessionKeepAlive({ commit }) {
       keepAlive().then(() => {
