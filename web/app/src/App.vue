@@ -35,7 +35,7 @@
                 >
                   <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
                   <div v-else>
-                    <text-small>
+                    <text-small
                       class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
                       Follow/Friend Request:
@@ -210,7 +210,7 @@ export default defineComponent({
       userMobile: window.screen.width < 768,
     });
 
-    sessionCheck();
+    (async () => sessionCheck())();
     var keepAliveDelay = async () => {
       const interval = SecToMs(MinToSec(5));
       setTimeout(
