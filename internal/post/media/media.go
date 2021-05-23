@@ -79,5 +79,5 @@ func Insert(postID int64, media Media, hash string) error {
 }
 
 func selectorPath(b58hash string, includeFile bool) string {
-	return fileutil.RelativePath("posts", b58hash, includeFile)
+	return fileutil.RelativePath("posts/images", b58hash, includeFile)
 }
