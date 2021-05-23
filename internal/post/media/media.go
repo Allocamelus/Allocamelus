@@ -13,7 +13,7 @@ import (
 )
 
 type Media struct {
-	FileType fileutil.Format `msg:"fileType" json:"fileType"`
+	FileType fileutil.Format `msg:"fileType" json:"fileType,omitempty"`
 	Meta     Meta            `msg:"meta" json:"meta"`
 	Url      string          `msg:"url" json:"url"`
 }
@@ -33,7 +33,7 @@ var (
 
 func Get(postID int64) ([]*Media, error) {
 	if preGet == nil {
-		preGet = g.Data.Prepare(`SELECT fileType, meta, hash FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
+		preGet = g.Data.Prepare(`SELECT meta, hash FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
 	}
 	rows, err := preGet.Query(postID)
 	if err != nil {
@@ -49,14 +49,14 @@ func Get(postID int64) ([]*Media, error) {
 			meta string
 			hash string
 		)
-		if err := rows.Scan(&media.FileType, &meta, &hash); err != nil {
+		if err := rows.Scan(&meta, &hash); err != nil {
 			return nil, err
 		}
 		if err := json.UnmarshalFromString(meta, &media.Meta); err != nil {
 			return nil, err
 		}
 		media.Meta.Alt = html.EscapeString(media.Meta.Alt)
-		media.Url = fileutil.PublicPath(selectorPath(hash, media.FileType, true))
+		media.Url = fileutil.PublicPath(selectorPath(hash, true))
 		mediaList = append(mediaList, media)
 	}
 
@@ -78,6 +78,6 @@ func Insert(postID int64, media Media, hash string) error {
 	return nil
 }
 
-func selectorPath(b58hash string, fileType fileutil.Format, includeFile bool) string {
-	return fileutil.RelativePath("posts", b58hash, fileType, includeFile)
+func selectorPath(b58hash string, includeFile bool) string {
+	return fileutil.RelativePath("posts", b58hash, includeFile)
 }

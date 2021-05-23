@@ -23,7 +23,7 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		return fileutil.ErrContentType
 	}
 
-	fileImagePath := fileutil.FilePath(selectorPath(b58hash, imgType, true))
+	fileImagePath := fileutil.FilePath(selectorPath(b58hash, true))
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
@@ -46,7 +46,7 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 			return err
 		}
 
-		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, imgType, false))))
+		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, false))))
 
 		err = img.WriteToPath(fileImagePath)
 		if err != nil {
