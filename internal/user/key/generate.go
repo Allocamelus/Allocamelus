@@ -1,7 +1,6 @@
 package key
 
 import (
-	"crypto/sha512"
 	"encoding/base64"
 	"errors"
 	"strconv"
@@ -12,7 +11,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/aesgcm"
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
 	"github.com/allocamelus/allocamelus/pkg/logger"
-	"golang.org/x/crypto/sha3"
+	"golang.org/x/crypto/blake2b"
 )
 
 // Generate Keys from User
@@ -64,7 +63,6 @@ func (k *Key) generateKeys(password string) error {
 }
 
 func hashRecoveryKey(rk []byte) string {
-	s2 := sha512.Sum512(rk)
-	s3 := sha3.Sum512(s2[:])
-	return base64.RawStdEncoding.EncodeToString(s3[:])
+	hash := blake2b.Sum512(rk)
+	return base64.RawStdEncoding.EncodeToString(hash[:])
 }
