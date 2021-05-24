@@ -12,7 +12,7 @@ export const times = {
 export function fmtTime(t: number, tDuration: number, postFix: string, short = false): string {
   // time from now divided by the provide duration
   // Example: t=600 so tD...=60 (1 Minute) so t/tD... = 10 (minutes)
-  let sinceIn = Math.round(t / tDuration)
+  const sinceIn = Math.round(t / tDuration)
 
   // If >= 5 seconds ago
   if (tDuration == 1 && 5 >= sinceIn) {
@@ -29,8 +29,8 @@ export function fmtTime(t: number, tDuration: number, postFix: string, short = f
   return fmtTime
 }
 
-export default (time: number) => {
-  let since = UnixTime(-time)
+export default (time: number): string => {
+  const since = UnixTime(-time)
   if (since >= times.Year) {
     return fmtTime(since, times.Year, " Year")
   } else if (since >= times.Month) {

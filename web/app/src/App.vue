@@ -235,10 +235,10 @@ export default defineComponent({
     theme(newTheme) {
       setTheme(newTheme);
     },
-    $route(_to) {
+    $route() {
       this.onNavigate();
     },
-    viewKey(_newKey) {
+    viewKey() {
       this.onNavigate();
     },
   },

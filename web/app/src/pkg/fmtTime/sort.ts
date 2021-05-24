@@ -34,8 +34,8 @@ export function MDY_HM(time: number | Date): string {
 }
 
 // as sort as possible
-export default (time: number) => {
-  let since = UnixTime(-time)
+export default (time: number): string => {
+  const since = UnixTime(-time)
   if (since >= times.Year) {
     return MDY(time)
   } else if (since >= times.Month) {
