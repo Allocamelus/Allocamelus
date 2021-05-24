@@ -15,14 +15,14 @@ export const HtmlSomethingWentWrong = htmlErrBuilder(
   `Try again later`
 )
 
-function getPath(path = "") {
+function getPath(path = ""): string {
   if (path.length == 0) {
     path = window.location.pathname
   }
   return sanitizeHtml(path) + " "
 }
 
-export const Html403Func = (path = "") => {
+export function Html403Func(path = ""): string {
   path = getPath(path)
   return htmlErrBuilder(
     `Error: 403 Forbidden`,
@@ -30,7 +30,7 @@ export const Html403Func = (path = "") => {
   )
 }
 
-export const Html404Func = (path = "") => {
+export function Html404Func(path = ""): string {
   path = getPath(path)
   return htmlErrBuilder(
     `Error: 404`,

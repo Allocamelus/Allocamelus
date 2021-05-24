@@ -47,7 +47,7 @@ export default defineComponent({
       loggedIn: computed(() => store.getters.loggedIn),
     };
   },
-  async beforeRouteUpdate(to) {
+  async beforeRouteUpdate() {
     this.list = new API_Posts();
 
     getPosts(this.page)

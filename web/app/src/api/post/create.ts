@@ -1,5 +1,5 @@
 import v1 from "../v1";
-import { API_Error, API_Success_Error } from "../../models/api_error";
+import { API_Success_Error } from "../../models/api_error";
 
 
 export class CreateResponse extends API_Success_Error {
@@ -32,7 +32,7 @@ export class MediaFile {
 }
 
 export async function create(content: string, images: Array<MediaFile>, publish: boolean): Promise<CreateResponse | API_Success_Error> {
-  let formData = new FormData();
+  const formData = new FormData();
   formData.append("publish", JSON.stringify(publish))
   formData.append("content", content)
   for (let i = 0; i < images.length; i++) {

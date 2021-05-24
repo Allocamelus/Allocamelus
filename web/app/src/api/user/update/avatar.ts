@@ -1,9 +1,8 @@
 import v1 from "../../v1";
 import { API_Avatar_Resp } from "../../../models/api_user_update";
-import { AxiosResponse } from "axios";
 
 export async function avatar(userName: string, file: File): Promise<API_Avatar_Resp> {
-  let formData = new FormData();
+  const formData = new FormData();
   formData.append("avatar", file)
   return v1.post(`/user/${userName}/update/avatar`, formData, {
     headers: {
@@ -15,6 +14,6 @@ export async function avatar(userName: string, file: File): Promise<API_Avatar_R
     })
 }
 
-export async function removeAvatar(userName: string): Promise<AxiosResponse<any>> {
-  return v1.delete(`/user/${userName}/update/avatar`)
+export async function removeAvatar(userName: string) {
+  v1.delete(`/user/${userName}/update/avatar`)
 }
