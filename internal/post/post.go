@@ -1,5 +1,4 @@
 //go:generate msgp
-// TODO: Media
 
 package post
 
