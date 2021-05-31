@@ -80,6 +80,17 @@ func GetCommentForUser(commentId int64, u *user.Session) (*Comment, error) {
 	return c, nil
 }
 
+var preGetCommentUserID *sql.Stmt
+
+func GetCommentUserId(commentID int64) (int64, error) {
+	if preGetCommentUserID == nil {
+		preGetCommentUserID = g.Data.Prepare(`SELECT userId FROM PostComments WHERE postCommentId = ? LIMIT 1`)
+	}
+	var userId int64
+	err := preGetCommentUserID.QueryRow(commentID).Scan(&userId)
+	return userId, err
+}
+
 var preInsertComment *sql.Stmt
 
 func (c *Comment) Insert() error {

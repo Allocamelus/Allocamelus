@@ -85,6 +85,20 @@ func ProtectedPosterOnly(c *fiber.Ctx) error {
 	}
 
 	ownerId, err := post.GetUserId(postID)
+	return sessionIdCheck(c, ownerId, err)
+}
+
+func ProtectedCommenterOnly(c *fiber.Ctx) error {
+	commentID := fiberutil.ParamsInt64(c, "commentID")
+	if commentID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	ownerId, err := post.GetCommentUserId(commentID)
+	return sessionIdCheck(c, ownerId, err)
+}
+
+func sessionIdCheck(c *fiber.Ctx, userId int64, err error) error {
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
@@ -93,7 +107,7 @@ func ProtectedPosterOnly(c *fiber.Ctx) error {
 		return apierr.ErrUnauthorized403(c)
 	}
 
-	return checkIdWithSelf(c, ownerId)
+	return checkIdWithSelf(c, userId)
 }
 
 func checkIdWithSelf(c *fiber.Ctx, userId int64) error {
