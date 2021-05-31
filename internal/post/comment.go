@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/user"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -51,6 +53,31 @@ func GetComment(commentId int64) (*Comment, error) {
 	c.ID = commentId
 	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Content)
 	return c, err
+}
+
+var ErrNoComment = errors.New("post/comment: Error No Comment Found OR Insufficient permission to view this Comment")
+
+// GetCommentForUser
+func GetCommentForUser(commentId int64, u *user.Session) (*Comment, error) {
+	c, err := GetComment(commentId)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return c, err
+		}
+		return nil, ErrNoComment
+	}
+
+	// Is user the commenter
+	if compare.EqualInt64(c.UserID, u.UserID) {
+		return c, nil
+	}
+
+	// Check if user can view post
+	if err = CanView(c.PostID, u); err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 var preInsertComment *sql.Stmt

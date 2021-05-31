@@ -106,18 +106,8 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 		return p, err
 	}
 
-	// Check if user can view post
-	if !p.IsPublished() {
-		if !u.LoggedIn || !p.IsPoster(u.UserID) {
-			return nil, ErrNoPost
-		}
-	}
-
-	if err := user.CanView(p.UserID, u); err != nil {
-		if err != user.ErrViewMeNot {
-			return nil, err
-		}
-		return nil, ErrNoPost
+	if err = CanView(postID, u, p); err != nil {
+		return nil, err
 	}
 
 	// Omit Created if user is not poster
@@ -126,6 +116,44 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 	}
 
 	return p, err
+}
+
+var preGetCanView *sql.Stmt
+
+func CanView(postID int64, u *user.Session, postCache ...*Post) error {
+	if preGetCanView == nil {
+		preGetCanView = g.Data.Prepare(`SELECT userId, published FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+
+	var p *Post
+	if len(postCache) != 0 && postCache[0] != nil {
+		p = postCache[0]
+	} else {
+		p.ID = postID
+		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return err
+			}
+			return ErrNoPost
+		}
+	}
+
+	// Check if user can view post
+	if !p.IsPublished() {
+		if !u.LoggedIn || !p.IsPoster(u.UserID) {
+			return ErrNoPost
+		}
+	}
+
+	if err := user.CanView(p.UserID, u); err != nil {
+		if err != user.ErrViewMeNot {
+			return err
+		}
+		return ErrNoPost
+	}
+
+	return nil
 }
 
 func GetUserId(postID int64) (int64, error) {
