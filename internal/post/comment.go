@@ -118,8 +118,10 @@ func (c *Comment) Insert() error {
 	return err
 }
 
-// ErrCommentContentLength max 4096
-var ErrCommentContentLength = errors.New("invalid-length-min0-max4096")
+var (
+	// ErrCommentContentLength max 4096
+	ErrCommentContentLength = errors.New("invalid-length-min0-max4096")
+)
 
 // Validate is content valid
 func (c *Comment) Validate() error {
@@ -131,7 +133,12 @@ func CommentContentValid(content string) error {
 	if err := validation.Validate(content,
 		validation.Length(0, 4096),
 	); err != nil {
-		return ErrContentLength
+		return ErrCommentContentLength
 	}
+
+	if !g.ContentInvalidChars.MatchString(content) {
+		return g.ErrInvalidChars
+	}
+
 	return nil
 }
