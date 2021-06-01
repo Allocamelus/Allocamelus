@@ -98,6 +98,43 @@ func (z *Post) DecodeMsg(dc *msgp.Reader) (err error) {
 					}
 				}
 			}
+		case "comments":
+			z.Comments, err = dc.ReadInt64()
+			if err != nil {
+				err = msgp.WrapError(err, "Comments")
+				return
+			}
+		case "commentsList":
+			var zb0003 uint32
+			zb0003, err = dc.ReadArrayHeader()
+			if err != nil {
+				err = msgp.WrapError(err, "CommentsList")
+				return
+			}
+			if cap(z.CommentsList) >= int(zb0003) {
+				z.CommentsList = (z.CommentsList)[:zb0003]
+			} else {
+				z.CommentsList = make([]*Comment, zb0003)
+			}
+			for za0002 := range z.CommentsList {
+				if dc.IsNil() {
+					err = dc.ReadNil()
+					if err != nil {
+						err = msgp.WrapError(err, "CommentsList", za0002)
+						return
+					}
+					z.CommentsList[za0002] = nil
+				} else {
+					if z.CommentsList[za0002] == nil {
+						z.CommentsList[za0002] = new(Comment)
+					}
+					err = z.CommentsList[za0002].DecodeMsg(dc)
+					if err != nil {
+						err = msgp.WrapError(err, "CommentsList", za0002)
+						return
+					}
+				}
+			}
 		default:
 			err = dc.Skip()
 			if err != nil {
@@ -111,9 +148,9 @@ func (z *Post) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Post) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 8
+	// map header, size 10
 	// write "id"
-	err = en.Append(0x88, 0xa2, 0x69, 0x64)
+	err = en.Append(0x8a, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
@@ -206,15 +243,49 @@ func (z *Post) EncodeMsg(en *msgp.Writer) (err error) {
 			}
 		}
 	}
+	// write "comments"
+	err = en.Append(0xa8, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73)
+	if err != nil {
+		return
+	}
+	err = en.WriteInt64(z.Comments)
+	if err != nil {
+		err = msgp.WrapError(err, "Comments")
+		return
+	}
+	// write "commentsList"
+	err = en.Append(0xac, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x4c, 0x69, 0x73, 0x74)
+	if err != nil {
+		return
+	}
+	err = en.WriteArrayHeader(uint32(len(z.CommentsList)))
+	if err != nil {
+		err = msgp.WrapError(err, "CommentsList")
+		return
+	}
+	for za0002 := range z.CommentsList {
+		if z.CommentsList[za0002] == nil {
+			err = en.WriteNil()
+			if err != nil {
+				return
+			}
+		} else {
+			err = z.CommentsList[za0002].EncodeMsg(en)
+			if err != nil {
+				err = msgp.WrapError(err, "CommentsList", za0002)
+				return
+			}
+		}
+	}
 	return
 }
 
 // MarshalMsg implements msgp.Marshaler
 func (z *Post) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 8
+	// map header, size 10
 	// string "id"
-	o = append(o, 0x88, 0xa2, 0x69, 0x64)
+	o = append(o, 0x8a, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userId"
 	o = append(o, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
@@ -244,6 +315,23 @@ func (z *Post) MarshalMsg(b []byte) (o []byte, err error) {
 			o, err = z.MediaList[za0001].MarshalMsg(o)
 			if err != nil {
 				err = msgp.WrapError(err, "MediaList", za0001)
+				return
+			}
+		}
+	}
+	// string "comments"
+	o = append(o, 0xa8, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73)
+	o = msgp.AppendInt64(o, z.Comments)
+	// string "commentsList"
+	o = append(o, 0xac, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x4c, 0x69, 0x73, 0x74)
+	o = msgp.AppendArrayHeader(o, uint32(len(z.CommentsList)))
+	for za0002 := range z.CommentsList {
+		if z.CommentsList[za0002] == nil {
+			o = msgp.AppendNil(o)
+		} else {
+			o, err = z.CommentsList[za0002].MarshalMsg(o)
+			if err != nil {
+				err = msgp.WrapError(err, "CommentsList", za0002)
 				return
 			}
 		}
@@ -341,6 +429,42 @@ func (z *Post) UnmarshalMsg(bts []byte) (o []byte, err error) {
 					}
 				}
 			}
+		case "comments":
+			z.Comments, bts, err = msgp.ReadInt64Bytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "Comments")
+				return
+			}
+		case "commentsList":
+			var zb0003 uint32
+			zb0003, bts, err = msgp.ReadArrayHeaderBytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "CommentsList")
+				return
+			}
+			if cap(z.CommentsList) >= int(zb0003) {
+				z.CommentsList = (z.CommentsList)[:zb0003]
+			} else {
+				z.CommentsList = make([]*Comment, zb0003)
+			}
+			for za0002 := range z.CommentsList {
+				if msgp.IsNil(bts) {
+					bts, err = msgp.ReadNilBytes(bts)
+					if err != nil {
+						return
+					}
+					z.CommentsList[za0002] = nil
+				} else {
+					if z.CommentsList[za0002] == nil {
+						z.CommentsList[za0002] = new(Comment)
+					}
+					bts, err = z.CommentsList[za0002].UnmarshalMsg(bts)
+					if err != nil {
+						err = msgp.WrapError(err, "CommentsList", za0002)
+						return
+					}
+				}
+			}
 		default:
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -361,6 +485,14 @@ func (z *Post) Msgsize() (s int) {
 			s += msgp.NilSize
 		} else {
 			s += z.MediaList[za0001].Msgsize()
+		}
+	}
+	s += 9 + msgp.Int64Size + 13 + msgp.ArrayHeaderSize
+	for za0002 := range z.CommentsList {
+		if z.CommentsList[za0002] == nil {
+			s += msgp.NilSize
+		} else {
+			s += z.CommentsList[za0002].Msgsize()
 		}
 	}
 	return

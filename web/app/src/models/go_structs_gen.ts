@@ -1,6 +1,30 @@
 /* Do not change, this code is generated from Golang structs */
 
 
+export class GEN_Comment {
+    id: number;
+    userId: number;
+    postId: number;
+    replyToId: number;
+    created: number;
+    updated: number;
+    content: string;
+
+    static createFrom(source: any = {}) {
+        return new GEN_Comment(source);
+    }
+
+    constructor(source: any = {}) {
+        if ('string' === typeof source) source = JSON.parse(source);
+        this.id = source["id"];
+        this.userId = source["userId"];
+        this.postId = source["postId"];
+        this.replyToId = source["replyToId"];
+        this.created = source["created"];
+        this.updated = source["updated"];
+        this.content = source["content"];
+    }
+}
 export class GEN_Meta {
     alt: string;
     width: number;
@@ -18,7 +42,7 @@ export class GEN_Meta {
     }
 }
 export class GEN_Media {
-    fileType: number;
+    fileType?: number;
     meta: GEN_Meta;
     url: string;
 
@@ -33,7 +57,7 @@ export class GEN_Media {
         this.url = source["url"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -60,6 +84,8 @@ export class GEN_Post {
     content: string;
     media: boolean;
     mediaList?: GEN_Media[];
+    comments: number;
+    commentsList?: GEN_Comment[];
 
     static createFrom(source: any = {}) {
         return new GEN_Post(source);
@@ -75,9 +101,11 @@ export class GEN_Post {
         this.content = source["content"];
         this.media = source["media"];
         this.mediaList = this.convertValues(source["mediaList"], GEN_Media);
+        this.comments = source["comments"];
+        this.commentsList = this.convertValues(source["commentsList"], GEN_Comment);
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -143,7 +171,7 @@ export class GEN_User {
         this.created = source["created"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -199,7 +227,7 @@ export class GEN_AuthResp {
         this.captcha = source["captcha"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
