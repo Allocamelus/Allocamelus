@@ -131,6 +131,7 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 	if len(postCache) != 0 && postCache[0] != nil {
 		p = postCache[0]
 	} else {
+		p = new(Post)
 		p.ID = postID
 		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
 		if err != nil {
@@ -144,15 +145,12 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 	// Check if user can view post
 	if !p.IsPublished() {
 		if !u.LoggedIn || !p.IsPoster(u.UserID) {
-			return ErrNoPost
+			return user.ErrViewMeNot
 		}
 	}
 
 	if err := user.CanView(p.UserID, u); err != nil {
-		if err != user.ErrViewMeNot {
-			return err
-		}
-		return ErrNoPost
+		return err
 	}
 
 	return nil

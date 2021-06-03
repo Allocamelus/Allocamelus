@@ -88,6 +88,28 @@ func ProtectedPosterOnly(c *fiber.Ctx) error {
 	return sessionIdCheck(c, ownerId, err)
 }
 
+// ProtectedCanViewPost only allow access to user who can view post
+func ProtectedCanViewPost(c *fiber.Ctx) error {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	err := post.CanView(postID, user.ContextSession(c))
+	if err != nil {
+		if err == post.ErrNoPost {
+			return apierr.ErrNotFound(c)
+		}
+		if err == user.ErrViewMeNot {
+			return apierr.ErrUnauthorized403(c)
+		}
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	return c.Next()
+}
+
 func ProtectedCommenterOnly(c *fiber.Ctx) error {
 	commentID := fiberutil.ParamsInt64(c, "commentID")
 	if commentID == 0 {
