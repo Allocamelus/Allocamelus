@@ -134,7 +134,7 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 		p.ID = postID
 		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
 		if err != nil {
-			if err == sql.ErrNoRows {
+			if err != sql.ErrNoRows {
 				return err
 			}
 			return ErrNoPost
