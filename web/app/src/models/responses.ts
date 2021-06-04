@@ -8,6 +8,7 @@ export const Shared = {
   InvalidAuthToken: "invalid-auth-token",
   InvalidWith: "invalid-with-value",
   InvalidCaptcha: "invalid-captcha",
+  InsufficientPerms: "insufficient-permissions",
   NotFound: "not-found",
   Unauthorized403: "unauthorized-403",
   File: {
@@ -27,8 +28,7 @@ export const Account = {
 }
 export const Post = {
   Create: {
-    Unauthorized: "unauthorized",
-    InsufficientPerms: "insufficient-permissions"
+    Unauthorized: "unauthorized"
   },
   Validate: {
     Content: {

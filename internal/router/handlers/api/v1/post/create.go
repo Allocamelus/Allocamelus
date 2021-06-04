@@ -4,6 +4,7 @@ import (
 	"mime/multipart"
 	"strconv"
 
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/media"
@@ -12,11 +13,6 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
-)
-
-const (
-	errUnauthorized      = "unauthorized"
-	errInsufficientPerms = "insufficient-permissions"
 )
 
 type createRequest struct {
@@ -38,7 +34,7 @@ type createResponse struct {
 func Create(c *fiber.Ctx) error {
 	sUser := user.ContextSession(c)
 	if !sUser.Perms.CanPost() {
-		return post403(c, errInsufficientPerms)
+		return post403(c, g.ErrInsufficientPerms.Error())
 	}
 
 	request := new(createRequest)
