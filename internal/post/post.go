@@ -128,9 +128,12 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 	}
 
 	var p *Post
+	// Check postCache
 	if len(postCache) != 0 && postCache[0] != nil {
+		// Use postCache if valid
 		p = postCache[0]
 	} else {
+		// Get post from store
 		p = new(Post)
 		p.ID = postID
 		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
