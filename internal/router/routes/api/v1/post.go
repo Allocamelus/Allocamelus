@@ -44,11 +44,12 @@ func postComment(pID fiber.Router) {
 
 	// /api/v1/post/:id/comment/:commentID
 	cID := c.Group("/:commentID")
+	cID.Get("/", comment.Get)
 	// /api/v1/post/:id/comment/:commentID/update
 	cID.Post("/update",
 		middleware.Protected,
 		middleware.ProtectedCommenterOnly,
-		comment.Create,
+		comment.Update,
 	)
 	// /api/v1/post/:id/comment/:commentID/delete
 	cID.Delete("/delete",

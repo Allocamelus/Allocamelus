@@ -18,16 +18,14 @@ import (
 
 // Post struct
 type Post struct {
-	ID           int64          `msg:"id" json:"id"`
-	UserID       int64          `msg:"userId" json:"userId"`
-	Created      int64          `msg:"created" json:"created,omitempty"`
-	Published    int64          `msg:"published" json:"published"`
-	Updated      int64          `msg:"updated" json:"updated"`
-	Content      string         `msg:"content" json:"content"`
-	Media        bool           `msg:"media" json:"media"`
-	MediaList    []*media.Media `msg:"mediaList" json:"mediaList,omitempty"`
-	Comments     int64          `msg:"comments" json:"comments"`
-	CommentsList []*Comment     `msg:"commentsList" json:"commentsList,omitempty"`
+	ID        int64          `msg:"id" json:"id"`
+	UserID    int64          `msg:"userId" json:"userId"`
+	Created   int64          `msg:"created" json:"created,omitempty"`
+	Published int64          `msg:"published" json:"published"`
+	Updated   int64          `msg:"updated" json:"updated"`
+	Content   string         `msg:"content" json:"content"`
+	Media     bool           `msg:"media" json:"media"`
+	MediaList []*media.Media `msg:"mediaList" json:"mediaList,omitempty"`
 }
 
 // New Post

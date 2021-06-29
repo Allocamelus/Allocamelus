@@ -5,6 +5,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post"
+	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -116,7 +117,7 @@ func ProtectedCommenterOnly(c *fiber.Ctx) error {
 		return apierr.ErrUnauthorized403(c)
 	}
 
-	ownerId, err := post.GetCommentUserId(commentID)
+	ownerId, err := comment.GetUserId(commentID)
 	return sessionIdCheck(c, ownerId, err)
 }
 
