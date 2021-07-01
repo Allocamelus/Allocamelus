@@ -158,6 +158,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@tailwind components;
+
 @layer components {
   .ps-1,
   .ps-2,
