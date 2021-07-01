@@ -154,7 +154,7 @@ func (c *Comment) Insert() error {
 				created, 
 				content
 			)
-			VALUES (?, ?, ?, ?)`)
+			VALUES (?, ?, ?, ?, ?)`)
 	}
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
@@ -181,13 +181,13 @@ func (c *Comment) CountReplies() error {
 		}
 		return nil
 	}
-	err := preGet.QueryRow(c.ID).Scan(&c.Replies)
+	err := preCountCommentReplies.QueryRow(c.ID).Scan(&c.Replies)
 	return err
 }
 
 var (
 	// ErrContentLength max 4096
-	ErrContentLength = errors.New("invalid-length-min8-max4096")
+	ErrContentLength = errors.New("invalid-length-min2-max4096")
 )
 
 // Validate is content valid
@@ -199,7 +199,7 @@ func (c *Comment) Validate() error {
 func ContentValid(content string) error {
 	if err := validation.Validate(content,
 		validation.Required,
-		validation.Length(8, 4096),
+		validation.Length(2, 4096),
 	); err != nil {
 		return ErrContentLength
 	}
