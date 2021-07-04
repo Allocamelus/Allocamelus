@@ -48,13 +48,14 @@ func Get(commentId int64) (*Comment, error) {
 			userId,
 			replyToComment,
 			created,
+			updated,
 			content
 		FROM PostComments
 		WHERE postCommentId = ? LIMIT 1`)
 	}
 	c := new(Comment)
 	c.ID = commentId
-	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Content)
+	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Updated, &c.Content)
 	if err != nil {
 		return nil, err
 	}
