@@ -100,29 +100,38 @@ func GetUserId(commentID int64) (int64, error) {
 
 var preGetCanView *sql.Stmt
 
-func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
+func getForCanView(commentID int64) (*Comment, error) {
 	if preGetCanView == nil {
 		preGetCanView = g.Data.Prepare(`SELECT postId, userId FROM PostComments WHERE postCommentId = ? LIMIT 1`)
 	}
 
-	var c *Comment
+	// Get comment from store
+	c := new(Comment)
+	c.PostID = commentID
+	err := preGetCanView.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+		return nil, ErrNoComment
+	}
+	return c, nil
+}
+
+func canViewCheckCache(commentID int64, commentCache ...*Comment) (*Comment, error) {
 	// Check commentCache
 	if len(commentCache) != 0 && commentCache[0] != nil {
 		// Use commentCache if valid
-		c = commentCache[0]
-	} else {
-		// Get comment from store
-		c = new(Comment)
-		c.PostID = commentID
-		err := preGetCanView.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
-		if err != nil {
-			if err != sql.ErrNoRows {
-				return err
-			}
-			return ErrNoComment
-		}
+		return commentCache[0], nil
 	}
+	return getForCanView(commentID)
+}
 
+func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
+	c, err := canViewCheckCache(commentID, commentCache...)
+	if err != nil {
+		return err
+	}
 	// Is user the commenter
 	if compare.EqualInt64(c.UserID, u.UserID) {
 		return nil
@@ -136,11 +145,20 @@ func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
 	return nil
 }
 
-func CanReplyTo(commentID int64, u *user.Session, commentCache ...*Comment) error {
+func CanReplyTo(commentID, postID int64, u *user.Session, commentCache ...*Comment) error {
 	if commentID == 0 {
 		return nil
 	}
-	return CanView(commentID, u, commentCache...)
+	c, err := canViewCheckCache(commentID, commentCache...)
+	if err != nil {
+		return err
+	}
+
+	if !compare.EqualInt64(postID, c.PostID) {
+		return ErrNoComment
+	}
+
+	return CanView(commentID, u, c)
 }
 
 var preInsert *sql.Stmt

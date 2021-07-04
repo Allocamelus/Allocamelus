@@ -47,7 +47,7 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	// Check if session user can reply to comment
-	if err := comment.CanReplyTo(request.ReplyTo, sUser); err != nil {
+	if err := comment.CanReplyTo(request.ReplyTo, postID, sUser); err != nil {
 		switch err {
 		// Handle common errors
 		case comment.ErrNoComment, post.ErrNoPost, user.ErrViewMeNot:
