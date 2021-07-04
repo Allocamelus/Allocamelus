@@ -2,6 +2,7 @@ package update
 
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -10,11 +11,6 @@ import (
 
 type TypeRequest struct {
 	Type user.Types `json:"type" form:"type"`
-}
-
-type TypeResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
 }
 
 // Type Update handler
@@ -43,5 +39,5 @@ func Type(c *fiber.Ctx) error {
 		}
 	}
 
-	return fiberutil.JSON(c, 200, TypeResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
@@ -21,11 +22,6 @@ type validateRequest struct {
 	Token    string `json:"token" form:"token"`
 }
 
-type validateResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
-}
-
 // Validate Email Token handler
 func Validate(c *fiber.Ctx) error {
 	request := new(validateRequest)
@@ -39,9 +35,9 @@ func Validate(c *fiber.Ctx) error {
 	tkn, err := token.Check(request.Selector, request.Token, token.Email)
 	if err != nil {
 		if err == token.ErrExpiredToken {
-			return apierr.Err422(c, validateResp{Error: errExpiredToken})
+			return apierr.Err422(c, shared.SuccessErrResp{Error: errExpiredToken})
 		}
-		return apierr.Err422(c, validateResp{Error: errInvalidToken})
+		return apierr.Err422(c, shared.SuccessErrResp{Error: errInvalidToken})
 	}
 
 	// Update type from Unverified to Private
@@ -53,5 +49,5 @@ func Validate(c *fiber.Ctx) error {
 	if err := tkn.Delete(); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
-	return fiberutil.JSON(c, 200, validateResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }

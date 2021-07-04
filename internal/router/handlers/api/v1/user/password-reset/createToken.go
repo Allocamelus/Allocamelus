@@ -9,6 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
@@ -24,11 +25,6 @@ var (
 type createRequest struct {
 	Identifier string `json:"identifier" form:"identifier"`
 	Captcha    string `json:"captcha" form:"captcha"`
-}
-
-type createResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
 }
 
 // CreateToken Email Token handler
@@ -54,7 +50,7 @@ func CreateToken(c *fiber.Ctx) error {
 				logger.Error(err)
 				return apierr.ErrSomethingWentWrong(c)
 			}
-			return apierr.Err422(c, createResp{Error: "invalid-captcha"})
+			return apierr.Err422(c, shared.SuccessErrResp{Error: "invalid-captcha"})
 		}
 	}
 
@@ -75,7 +71,7 @@ func CreateToken(c *fiber.Ctx) error {
 				return apierr.ErrSomethingWentWrong(c)
 			}
 			// Fail silently
-			return fiberutil.JSON(c, 200, createResp{Success: true})
+			return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 		}
 	}
 
@@ -91,9 +87,9 @@ func CreateToken(c *fiber.Ctx) error {
 		logger.Error(tkn.SendEmail(request.Identifier))
 	}()
 
-	return fiberutil.JSON(c, 200, createResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }
 
 func err422Invalid(c *fiber.Ctx) error {
-	return apierr.Err422(c, createResp{Error: errInvalidIdentifier})
+	return apierr.Err422(c, shared.SuccessErrResp{Error: errInvalidIdentifier})
 }

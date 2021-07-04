@@ -10,6 +10,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -19,11 +20,6 @@ import (
 type CreateRequest struct {
 	ReplyTo int64  `json:"replyTo" form:"replyTo"`
 	Content string `json:"content" form:"content"`
-}
-
-type CreateResponse struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
 }
 
 type GetResponse struct {
@@ -50,14 +46,14 @@ func Create(c *fiber.Ctx) error {
 	// Trim Content
 	request.Content = strings.TrimSpace(request.Content)
 	if err := comment.ContentValid(request.Content); err != nil {
-		return apierr.Err422(c, CreateResponse{Error: err.Error()})
+		return apierr.Err422(c, shared.SuccessErrResp{Error: err.Error()})
 	}
 
 	if err := comment.CanReplyTo(request.ReplyTo, sUser); err != nil {
 		switch err {
 		case comment.ErrNoComment, post.ErrNoPost, user.ErrViewMeNot:
 			if err == comment.ErrNoComment {
-				return apierr.Err404(c, CreateResponse{Error: "comment-not-found"})
+				return apierr.Err404(c, shared.SuccessErrResp{Error: "comment-not-found"})
 			} else {
 				// Log error because middleware should be catching it
 				if err == post.ErrNoPost {
@@ -76,14 +72,14 @@ func Create(c *fiber.Ctx) error {
 
 	comment := comment.New(sUser.UserID, postID, request.ReplyTo, request.Content)
 	if err := comment.Validate(); err != nil {
-		return apierr.Err422(c, CreateResponse{Error: err.Error()})
+		return apierr.Err422(c, shared.SuccessErrResp{Error: err.Error()})
 	}
 
 	if err := comment.Insert(); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, CreateResponse{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }
 
 func Get(c *fiber.Ctx) error {
