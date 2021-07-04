@@ -9,7 +9,7 @@ import (
 // ParamsInt64 get int64 parameters
 // 	returns 0 or defaultValue int64 on empty parameter
 func ParamsInt64(c *fiber.Ctx, key string, defaultValue ...int64) int64 {
-	intStr := c.Params("id")
+	intStr := c.Params(key)
 	if intStr == "" {
 		return defInt64(defaultValue)
 	}
