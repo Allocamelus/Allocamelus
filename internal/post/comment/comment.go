@@ -27,6 +27,15 @@ type Comment struct {
 	Replies   int64  `msg:"replies" json:"replies"`
 }
 
+type ListComments struct {
+	Comments map[int64]*Comment `msg:"comments" json:"comments"`
+}
+
+type List struct {
+	ListComments
+	Order map[int64]int64 `msg:"order" json:"order"`
+}
+
 func New(userID, postID, ReplyToId int64, content string) *Comment {
 	comment := new(Comment)
 	comment.UserID = userID
@@ -37,86 +46,14 @@ func New(userID, postID, ReplyToId int64, content string) *Comment {
 	return comment
 }
 
-var preGet *sql.Stmt
-
-// Get
-func Get(commentId int64) (*Comment, error) {
-	if preGet == nil {
-		preGet = g.Data.Prepare(`
-	 	SELECT
-			postId,
-			userId,
-			replyToComment,
-			created,
-			updated,
-			content
-		FROM PostComments
-		WHERE postCommentId = ? LIMIT 1`)
-	}
-	c := new(Comment)
-	c.ID = commentId
-	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Updated, &c.Content)
-	if err != nil {
-		return nil, err
-	}
-
-	// Get reply count if any
-	if err := c.CountReplies(); err != nil {
-		return nil, err
-	}
-
-	return c, err
+func NewList() *List {
+	l := new(List)
+	l.Comments = map[int64]*Comment{}
+	l.Order = map[int64]int64{}
+	return l
 }
 
 var ErrNoComment = errors.New("post/comment: Error No Comment Found OR Insufficient permission to view this Comment")
-
-// GetForUser
-func GetForUser(commentId int64, u *user.Session) (*Comment, error) {
-	c, err := Get(commentId)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			return c, err
-		}
-		return nil, ErrNoComment
-	}
-
-	if err = CanView(commentId, u, c); err != nil {
-		return nil, err
-	}
-
-	return c, nil
-}
-
-var preGetUserID *sql.Stmt
-
-func GetUserId(commentID int64) (int64, error) {
-	if preGetUserID == nil {
-		preGetUserID = g.Data.Prepare(`SELECT userId FROM PostComments WHERE postCommentId = ? LIMIT 1`)
-	}
-	var userId int64
-	err := preGetUserID.QueryRow(commentID).Scan(&userId)
-	return userId, err
-}
-
-var preGetCanView *sql.Stmt
-
-func getForCanView(commentID int64) (*Comment, error) {
-	if preGetCanView == nil {
-		preGetCanView = g.Data.Prepare(`SELECT postId, userId FROM PostComments WHERE postCommentId = ? LIMIT 1`)
-	}
-
-	// Get comment from store
-	c := new(Comment)
-	c.PostID = commentID
-	err := preGetCanView.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			return nil, err
-		}
-		return nil, ErrNoComment
-	}
-	return c, nil
-}
 
 func canViewCheckCache(commentID int64, commentCache ...*Comment) (*Comment, error) {
 	// Check commentCache
