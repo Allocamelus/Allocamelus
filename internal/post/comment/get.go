@@ -97,29 +97,27 @@ const (
 	SELECT postCommentId, postId, userId, replyToComment, created, updated, content
 	FROM PostComments`
 
+	queryLimit = ` LIMIT ?,?`
+
 	// Get comments and replies
-	getPostCommentsP1 = `
-	WHERE postId = ?
-		AND replyToComment IN (
-			SELECT postCommentId FROM (
-				SELECT postCommentId FROM PostComments`
-	// Only go one deep
-	getPostCommentsP2 = ` WHERE replyToComment = 0`
-	// Close IN
-	getPostCommentsP3 = `
-			) tmp
-		)
-		OR replyToComment = 0`
-	getPostCommentsP4 = ` LIMIT ?,?`
+	getPostCommentsP1 = ` WHERE postId = ?`
+	getPostCommentsP2 = ` replyToComment = 0`
 
 	// Build queries
 	// Post query parts
-	partGetPostComments     = getPostCommentsP1 + getPostCommentsP2 + getPostCommentsP3
-	partGetPostCommentsDeep = getPostCommentsP1 + getPostCommentsP3
+	partGetPostComments = getPostCommentsP1 + `
+	AND replyToComment IN (
+		SELECT postCommentId FROM (
+			SELECT postCommentId FROM PostComments
+			WHERE replyToComment = 0
+			) tmp
+		)
+	OR` + getPostCommentsP2
+	partGetPostCommentsDeep = getPostCommentsP1
 
 	// Get Post queries
-	queryGetPostComments     = selectPostComments + partGetPostComments + getPostCommentsP4
-	queryGetPostCommentsDeep = selectPostComments + partGetPostCommentsDeep + getPostCommentsP4
+	queryGetPostComments     = selectPostComments + partGetPostComments + queryLimit
+	queryGetPostCommentsDeep = selectPostComments + partGetPostCommentsDeep + queryLimit
 
 	// Total Post queries
 	queryGetPostTotal     = countPostComments + partGetPostComments
@@ -193,7 +191,6 @@ const (
 	 			WHERE replyToComment = ?
 			) tmp
 		)`
-	getRepliesP3 = ` LIMIT ?,?`
 
 	// Build queries
 	// Reply query parts
@@ -205,8 +202,8 @@ const (
 	queryGetRepliesTotalDeep = countPostComments + partGetRepliesCommentsDeep
 
 	// Get Replies queries
-	queryGetReplies     = selectPostComments + partGetRepliesComments + getRepliesP3
-	queryGetRepliesDeep = selectPostComments + partGetRepliesCommentsDeep + getRepliesP3
+	queryGetReplies     = selectPostComments + partGetRepliesComments + queryLimit
+	queryGetRepliesDeep = selectPostComments + partGetRepliesCommentsDeep + queryLimit
 )
 
 var (
