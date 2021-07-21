@@ -2,6 +2,7 @@ package comment
 
 import (
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -31,7 +32,87 @@ func Get(c *fiber.Ctx) error {
 }
 
 func GetReplies(c *fiber.Ctx) error {
-	return nil
+	commentID := fiberutil.ParamsInt64(c, "commentID")
+	if commentID == 0 {
+		return apierr.ErrNotFound(c)
+	}
+	page := fiberutil.ParamsInt64(c, "p")
+	if page == 0 {
+		page = 1
+	}
+
+	// Get Total Replies
+	tReplies, err := comment.GetRepliesTotal(commentID, getDeep)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, tReplies)
+	if page > totalPages && totalPages != 0 {
+		return apierr.ErrNotFound(c)
+	}
+
+	replies, err := comment.GetReplies(startNum, perPage, commentID, getDeep)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	users := new(user.List)
+	sessionUser := user.ContextSession(c)
+	for _, c := range replies.Comments {
+		users.AddUser(sessionUser, c.UserID)
+	}
+
+	return fiberutil.JSON(c, 200, GetListResponse{ListComments: replies.ListComments, Users: users.Users, Order: replies.Order})
+}
+
+// GetListResponse posts comments
+type GetListResponse struct {
+	comment.ListComments
+	Users user.ListUsers  `json:"users"`
+	Order map[int64]int64 `json:"order"`
+}
+
+const (
+	perPage int64 = 15
+	getDeep       = true
+)
+
+func GetPostList(c *fiber.Ctx) error {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrNotFound(c)
+	}
+
+	page := fiberutil.ParamsInt64(c, "p")
+	if page == 0 {
+		page = 1
+	}
+
+	// Get Total Comments
+	tComments, err := comment.GetPostTotal(postID, getDeep)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, tComments)
+
+	if page > totalPages && totalPages != 0 {
+		return apierr.ErrNotFound(c)
+	}
+
+	comments, err := comment.GetPostComments(startNum, perPage, postID, getDeep)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	users := new(user.List)
+	sessionUser := user.ContextSession(c)
+	for _, c := range comments.Comments {
+		users.AddUser(sessionUser, c.UserID)
+	}
+
+	return fiberutil.JSON(c, 200, GetListResponse{ListComments: comments.ListComments, Users: users.Users, Order: comments.Order})
 }
 
 func getCommentForPost(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {

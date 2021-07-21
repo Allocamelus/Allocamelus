@@ -62,5 +62,5 @@ func postComment(pID fiber.Router) {
 	cID.Get("/replies", comment.GetReplies)
 
 	// /api/v1/post/:id/comments
-	pID.Group("/comments", comment.PostList)
+	pID.Group("/comments", comment.GetPostList)
 }
