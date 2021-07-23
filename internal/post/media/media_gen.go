@@ -92,7 +92,7 @@ func (z *Media) DecodeMsg(dc *msgp.Reader) (err error) {
 func (z *Media) EncodeMsg(en *msgp.Writer) (err error) {
 	// map header, size 3
 	// write "fileType"
-	err = en.Append(0x83, 0xa9, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x54, 0x79, 0x70, 0x65)
+	err = en.Append(0x83, 0xa8, 0x66, 0x69, 0x6c, 0x65, 0x54, 0x79, 0x70, 0x65)
 	if err != nil {
 		return
 	}
@@ -155,7 +155,7 @@ func (z *Media) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
 	// map header, size 3
 	// string "fileType"
-	o = append(o, 0x83, 0xa9, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x54, 0x79, 0x70, 0x65)
+	o = append(o, 0x83, 0xa8, 0x66, 0x69, 0x6c, 0x65, 0x54, 0x79, 0x70, 0x65)
 	o, err = z.FileType.MarshalMsg(o)
 	if err != nil {
 		err = msgp.WrapError(err, "FileType")
@@ -264,7 +264,7 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Media) Msgsize() (s int) {
-	s = 1 + 10 + z.FileType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
+	s = 1 + 9 + z.FileType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
 	return
 }
 

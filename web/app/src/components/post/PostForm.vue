@@ -276,6 +276,7 @@ export default defineComponent({
         return this.onErr("Text or Image(s) Required");
       }
       this.submited = true;
+      // TODO Limit content in browser
       CreatePost(turndownService.turndown(this.richText), this.images, true)
         .then((r) => {
           if (r.success) {

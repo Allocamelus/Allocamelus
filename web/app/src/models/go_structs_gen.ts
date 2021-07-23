@@ -18,7 +18,7 @@ export class GEN_Meta {
     }
 }
 export class GEN_Media {
-    fileType: number;
+    fileType?: number;
     meta: GEN_Meta;
     url: string;
 

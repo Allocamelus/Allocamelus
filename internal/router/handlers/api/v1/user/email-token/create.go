@@ -8,6 +8,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
@@ -25,11 +26,6 @@ type createRequest struct {
 	Captcha string `json:"captcha" form:"captcha"`
 }
 
-type createResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
-}
-
 // Create Email Token handler
 func Create(c *fiber.Ctx) error {
 	request := new(createRequest)
@@ -40,7 +36,7 @@ func Create(c *fiber.Ctx) error {
 	request.Email = strings.TrimSpace(request.Email)
 	log.Println(request.Email)
 	if err := user.ValidEmail(request.Email); err != nil {
-		return apierr.Err422(c, createResp{Error: errInvalidEmail})
+		return apierr.Err422(c, shared.SuccessErrResp{Error: errInvalidEmail})
 	}
 
 	if g.Config.HCaptcha.Enabled {
@@ -54,7 +50,7 @@ func Create(c *fiber.Ctx) error {
 				logger.Error(err)
 				return apierr.ErrSomethingWentWrong(c)
 			}
-			return apierr.Err422(c, createResp{Error: "invalid-captcha"})
+			return apierr.Err422(c, shared.SuccessErrResp{Error: "invalid-captcha"})
 		}
 	}
 
@@ -65,7 +61,7 @@ func Create(c *fiber.Ctx) error {
 			return apierr.ErrSomethingWentWrong(c)
 		}
 		// Fail silently
-		return fiberutil.JSON(c, 200, createResp{Success: true})
+		return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 	}
 
 	verified, err := user.IsVerified(userID)
@@ -74,7 +70,7 @@ func Create(c *fiber.Ctx) error {
 	}
 	if verified {
 		// Fail silently
-		return fiberutil.JSON(c, 200, createResp{Success: true})
+		return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 	}
 
 	// New go routine to create and send email token
@@ -88,5 +84,5 @@ func Create(c *fiber.Ctx) error {
 		logger.Error(tkn.SendEmail(request.Email))
 	}()
 
-	return fiberutil.JSON(c, 200, createResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }

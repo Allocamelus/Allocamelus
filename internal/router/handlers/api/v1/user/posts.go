@@ -1,8 +1,6 @@
 package user
 
 import (
-	"strconv"
-
 	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
@@ -25,7 +23,7 @@ func Posts(c *fiber.Ctx) error {
 		return errApi
 	}
 
-	page, _ := strconv.ParseInt(c.Query("p"), 10, 64)
+	page := fiberutil.ParamsInt64(c, "p")
 	if page == 0 {
 		page = 1
 	}

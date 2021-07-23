@@ -332,8 +332,5 @@ export default defineComponent({
 });
 </script>
 
-<style src="./scss/index.scss" lang="scss">
-</style>
-
 <style src="./scss/App.scss" lang="scss">
 </style>

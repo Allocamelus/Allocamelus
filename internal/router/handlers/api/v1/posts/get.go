@@ -1,8 +1,6 @@
 package posts
 
 import (
-	"strconv"
-
 	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
@@ -23,7 +21,7 @@ const perPage int64 = 15
 
 // Get posts handler
 func Get(c *fiber.Ctx) error {
-	page, _ := strconv.ParseInt(c.Query("p"), 10, 64)
+	page := fiberutil.ParamsInt64(c, "p")
 	if page == 0 {
 		page = 1
 	}

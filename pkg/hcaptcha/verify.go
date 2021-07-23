@@ -2,7 +2,7 @@ package hcaptcha
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -53,7 +53,7 @@ func Verify(v Values) error {
 		return err
 	}
 
-	byteBody, _ := ioutil.ReadAll(res.Body)
+	byteBody, _ := io.ReadAll(res.Body)
 	resp, err := fastjson.ParseBytes(byteBody)
 	if err != nil {
 		return err

@@ -3,6 +3,7 @@ package update
 import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -10,11 +11,6 @@ import (
 
 type ContentRequest struct {
 	Content string `json:"content" form:"content"`
-}
-
-type ContentResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
 }
 
 // Content Update handler
@@ -30,12 +26,12 @@ func Content(c *fiber.Ctx) error {
 	}
 
 	if err := post.ValidateContent(request.Content); err != nil {
-		return apierr.Err422(c, ContentResp{Error: err.Error()})
+		return apierr.Err422(c, shared.SuccessErrResp{Error: err.Error()})
 	}
 
 	if err := post.UpdateContent(postID, request.Content); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, ContentResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }

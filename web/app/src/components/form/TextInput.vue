@@ -144,6 +144,9 @@ export default defineComponent({
 </script>
 
 <style  lang="scss" scoped>
+@tailwind components;
+@tailwind utilities;
+
 @layer components {
   .input-container {
     @apply w-full rounded-sm box-border border border-solid;

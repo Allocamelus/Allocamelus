@@ -1,7 +1,7 @@
 package imagedit
 
 import (
-	"io/ioutil"
+	"io"
 	"mime/multipart"
 
 	"github.com/mr-tron/base58"
@@ -15,7 +15,7 @@ func MPHtoImg(fileHead *multipart.FileHeader) (img *Image, b58hash string, err e
 	}
 	defer file.Close()
 
-	imageBytes, err := ioutil.ReadAll(file)
+	imageBytes, err := io.ReadAll(file)
 	if err != nil {
 		return
 	}
