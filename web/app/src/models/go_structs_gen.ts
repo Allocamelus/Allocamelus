@@ -95,6 +95,32 @@ export class GEN_Post {
 	    return a;
 	}
 }
+export class GEN_Comment {
+    id: number;
+    userId: number;
+    postId: number;
+    replyToId: number;
+    created: number;
+    updated: number;
+    content: string;
+    replies: number;
+
+    static createFrom(source: any = {}) {
+        return new GEN_Comment(source);
+    }
+
+    constructor(source: any = {}) {
+        if ('string' === typeof source) source = JSON.parse(source);
+        this.id = source["id"];
+        this.userId = source["userId"];
+        this.postId = source["postId"];
+        this.replyToId = source["replyToId"];
+        this.created = source["created"];
+        this.updated = source["updated"];
+        this.content = source["content"];
+        this.replies = source["replies"];
+    }
+}
 export class GEN_FollowStruct {
     following: boolean;
     requested: boolean;

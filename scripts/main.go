@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/allocamelus/allocamelus/internal/post"
+	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/account"
 	apiUser "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/user"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -11,6 +12,7 @@ import (
 func main() {
 	tsGen("web/app/src/models/go_structs_gen.ts", "GEN_",
 		post.Post{},
+		comment.Comment{},
 		user.User{},
 		user.Session{},
 		account.AuthResp{},

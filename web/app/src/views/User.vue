@@ -73,7 +73,7 @@ import { get as getUser } from "../api/user/get";
 import { posts as getPosts } from "../api/user/posts";
 import { post as userFollow, remove as userUnfollow } from "../api/user/follow";
 import { API_Error } from "../models/api_error";
-import { API_Posts } from "../models/api_posts";
+import { API_Posts } from "../models/api_post";
 import { Private as PRIVATE_USER } from "../models/user_types";
 import {
   InvalidCharacters,

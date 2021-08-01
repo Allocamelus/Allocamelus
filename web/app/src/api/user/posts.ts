@@ -1,5 +1,5 @@
 import v1 from "../v1"
-import { API_Posts } from "../../models/api_posts"
+import { API_Posts } from "../../models/api_post"
 import { API_Error } from "../../models/api_error"
 
 export async function posts(userName: string, pageNum: number): Promise<API_Posts> {

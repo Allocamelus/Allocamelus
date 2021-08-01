@@ -1,18 +1,16 @@
-import { GEN_User, GEN_Post } from "./go_structs_gen";
+import { GEN_User } from './go_structs_gen'
 
-export class API_Posts {
-  posts: { [key: number]: GEN_Post };
+export default class ordered_list {
   users: { [key: number]: GEN_User };
   order: { [key: number]: number };
 
 
   static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
-    return new API_Posts(source);
+    return new ordered_list(source);
   }
 
   constructor(source: any = {}) { // skipcq: JS-0323
     if ('string' === typeof source) source = JSON.parse(source);
-    this.posts = source["posts"];
     this.users = source["users"];
     this.order = source["order"]
   }
@@ -20,9 +18,6 @@ export class API_Posts {
   // Method
   user(userId: number): GEN_User {
     return GEN_User.createFrom(this.users[userId]);
-  }
-  post(postId: number): GEN_Post {
-    return GEN_Post.createFrom(this.posts[postId]);
   }
   total(): number {
     if (this.order == undefined || this.order === null) {
