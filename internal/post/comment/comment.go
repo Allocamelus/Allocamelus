@@ -19,12 +19,13 @@ type Comment struct {
 	ID     int64 `msg:"id" json:"id"`
 	UserID int64 `msg:"userId" json:"userId"`
 	PostID int64 `msg:"postId" json:"postId"`
-	// ReplyToId comment id
-	ReplyToId int64  `msg:"replyToId" json:"replyToId"`
-	Created   int64  `msg:"created" json:"created"`
-	Updated   int64  `msg:"updated" json:"updated"`
-	Content   string `msg:"content" json:"content"`
-	Replies   int64  `msg:"replies" json:"replies"`
+	// ParentID comment id
+	ParentID int64           `msg:"parentId" json:"parentId"`
+	Created  int64           `msg:"created" json:"created"`
+	Updated  int64           `msg:"updated" json:"updated"`
+	Content  string          `msg:"content" json:"content"`
+	Replies  int64           `msg:"replies" json:"replies"`
+	Children map[int64]int64 `msg:"children" json:"children"`
 }
 
 type ListComments struct {
@@ -36,14 +37,20 @@ type List struct {
 	Order map[int64]int64 `msg:"order" json:"order"`
 }
 
-func New(userID, postID, ReplyToId int64, content string) *Comment {
-	comment := new(Comment)
+func New(userID, postID, ParentID int64, content string) *Comment {
+	comment := newComment()
 	comment.UserID = userID
 	comment.PostID = postID
-	comment.ReplyToId = ReplyToId
+	comment.ParentID = ParentID
 	comment.Created = time.Now().Unix()
 	comment.Content = content
 	return comment
+}
+
+func newComment() *Comment {
+	c := new(Comment)
+	c.Children = map[int64]int64{}
+	return c
 }
 
 func NewList() *List {
@@ -106,7 +113,7 @@ func (c *Comment) Insert() error {
 			INSERT INTO PostComments (
 				postId, 
 				userId, 
-				replyToComment, 
+				parentComment, 
 				created, 
 				content
 			)
@@ -114,7 +121,7 @@ func (c *Comment) Insert() error {
 	}
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
-		c.ReplyToId, c.Created,
+		c.ParentID, c.Created,
 		c.Content,
 	)
 	if err != nil {
@@ -129,7 +136,7 @@ var preCountCommentReplies *sql.Stmt
 
 func (c *Comment) CountReplies() error {
 	if preCountCommentReplies == nil {
-		preCountCommentReplies = g.Data.Prepare(`SELECT COUNT(*) FROM PostComments WHERE replyToComment = ?`)
+		preCountCommentReplies = g.Data.Prepare(`SELECT COUNT(*) FROM PostComments WHERE parentComment = ?`)
 	}
 	if c.ID == 0 {
 		if klog.V(4).Enabled() {

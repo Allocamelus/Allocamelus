@@ -2,7 +2,7 @@
   <div>
     <feed v-for="(commentId, index) in list.order" :key="index" class="flex-c">
       <div
-        v-if="list.comment(commentId).replyToId == replyToId"
+        v-if="list.comment(commentId).parentId == parentId"
         class="pl-3 py-2"
       >
         <comment-box
@@ -18,7 +18,7 @@
               v-if="list.comment(commentId).replies > 0"
               :list="list"
               :depth="depth + 1"
-              :replyToId="commentId"
+              :parentId="commentId"
             ></comment-feed>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
-    replyToId: {
+    parentId: {
       type: Number,
       default: 0,
     },

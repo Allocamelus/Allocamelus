@@ -16,16 +16,16 @@ func Get(commentId int64) (*Comment, error) {
 	 	SELECT
 			postId,
 			userId,
-			replyToComment,
+			parentComment,
 			created,
 			updated,
 			content
 		FROM PostComments
 		WHERE postCommentId = ? LIMIT 1`)
 	}
-	c := new(Comment)
+	c := newComment()
 	c.ID = commentId
-	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Updated, &c.Content)
+	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ParentID, &c.Created, &c.Updated, &c.Content)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func getForCanView(commentID int64) (*Comment, error) {
 	}
 
 	// Get comment from store
-	c := new(Comment)
+	c := newComment()
 	c.PostID = commentID
 	err := preGetCanView.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
 	if err != nil {
@@ -94,34 +94,32 @@ const (
 	FROM PostComments`
 	// Select All Columns from PostComments
 	selectPostComments = `
-	SELECT postCommentId, postId, userId, replyToComment, created, updated, content
+	SELECT postCommentId, postId, userId, parentComment, created, updated, content
 	FROM PostComments`
 
-	queryLimit = ` LIMIT ?,?`
+	queryOrderLimit = ` ORDER BY postCommentId ASC LIMIT ?,?`
 
 	// Get comments and replies
 	getPostCommentsP1 = ` WHERE postId = ?`
-	getPostCommentsP2 = ` replyToComment = 0`
 
 	// Build queries
 	// Post query parts
 	partGetPostComments = getPostCommentsP1 + `
-	AND replyToComment IN (
+	AND parentComment IN (
 		SELECT postCommentId FROM (
 			SELECT postCommentId FROM PostComments
-			WHERE replyToComment = 0
+			WHERE parentComment = 0
 			) tmp
 		)
-	OR` + getPostCommentsP2
-	partGetPostCommentsDeep = getPostCommentsP1
+	OR parentComment = 0`
 
 	// Get Post queries
-	queryGetPostComments     = selectPostComments + partGetPostComments + queryLimit
-	queryGetPostCommentsDeep = selectPostComments + partGetPostCommentsDeep + queryLimit
+	queryGetPostComments     = selectPostComments + partGetPostComments + queryOrderLimit
+	queryGetPostCommentsDeep = selectPostComments + getPostCommentsP1 + queryOrderLimit
 
 	// Total Post queries
 	queryGetPostTotal     = countPostComments + partGetPostComments
-	queryGetPostTotalDeep = countPostComments + partGetPostCommentsDeep
+	queryGetPostTotalDeep = countPostComments + getPostCommentsP1
 )
 
 var (
@@ -183,12 +181,12 @@ func GetPostComments(startNum, perPage, postID int64, deep bool) (*List, error) 
 
 const (
 	getRepliesP1 = `
-	WHERE replyToComment = ?`
+	WHERE parentComment = ?`
 	getRepliesP2 = `
-		OR replyToComment IN (
+		OR parentComment IN (
 			SELECT postCommentId FROM (
 				SELECT postCommentId FROM PostComments
-	 			WHERE replyToComment = ?
+	 			WHERE parentComment = ?
 			) tmp
 		)`
 
@@ -202,8 +200,8 @@ const (
 	queryGetRepliesTotalDeep = countPostComments + partGetRepliesCommentsDeep
 
 	// Get Replies queries
-	queryGetReplies     = selectPostComments + partGetRepliesComments + queryLimit
-	queryGetRepliesDeep = selectPostComments + partGetRepliesCommentsDeep + queryLimit
+	queryGetReplies     = selectPostComments + partGetRepliesComments + queryOrderLimit
+	queryGetRepliesDeep = selectPostComments + partGetRepliesCommentsDeep + queryOrderLimit
 )
 
 var (
@@ -268,8 +266,8 @@ func iterRowToList(rows *sql.Rows) (*List, error) {
 	)
 
 	for rows.Next() {
-		c := new(Comment)
-		err = rows.Scan(&c.ID, &c.PostID, &c.UserID, &c.ReplyToId, &c.Created, &c.Updated, &c.Content)
+		c := newComment()
+		err = rows.Scan(&c.ID, &c.PostID, &c.UserID, &c.ParentID, &c.Created, &c.Updated, &c.Content)
 		if err != nil {
 			return nil, err
 		}
@@ -279,8 +277,18 @@ func iterRowToList(rows *sql.Rows) (*List, error) {
 		}
 
 		l.Comments[c.ID] = c
-		l.Order[i] = c.ID
-		i++
+		if c.ParentID != 0 {
+			if l.Comments[c.ParentID] != nil {
+				if len(l.Comments[c.ParentID].Children) == 0 {
+					l.Comments[c.ParentID].Children[0] = c.ID
+				} else {
+					l.Comments[c.ParentID].Children[int64(len(l.Comments[c.ParentID].Children)-1)] = c.ID
+				}
+			}
+		} else {
+			l.Order[i] = c.ID
+			i++
+		}
 	}
 
 	return l, nil

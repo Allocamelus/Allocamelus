@@ -42,10 +42,10 @@ func (z *Comment) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "PostID")
 				return
 			}
-		case "replyToId":
-			z.ReplyToId, err = dc.ReadInt64()
+		case "parentId":
+			z.ParentID, err = dc.ReadInt64()
 			if err != nil {
-				err = msgp.WrapError(err, "ReplyToId")
+				err = msgp.WrapError(err, "ParentID")
 				return
 			}
 		case "created":
@@ -116,14 +116,14 @@ func (z *Comment) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "PostID")
 		return
 	}
-	// write "replyToId"
-	err = en.Append(0xa9, 0x72, 0x65, 0x70, 0x6c, 0x79, 0x54, 0x6f, 0x49, 0x64)
+	// write "parentId"
+	err = en.Append(0xa8, 0x70, 0x61, 0x72, 0x65, 0x6e, 0x74, 0x49, 0x64)
 	if err != nil {
 		return
 	}
-	err = en.WriteInt64(z.ReplyToId)
+	err = en.WriteInt64(z.ParentID)
 	if err != nil {
-		err = msgp.WrapError(err, "ReplyToId")
+		err = msgp.WrapError(err, "ParentID")
 		return
 	}
 	// write "created"
@@ -182,9 +182,9 @@ func (z *Comment) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "postId"
 	o = append(o, 0xa6, 0x70, 0x6f, 0x73, 0x74, 0x49, 0x64)
 	o = msgp.AppendInt64(o, z.PostID)
-	// string "replyToId"
-	o = append(o, 0xa9, 0x72, 0x65, 0x70, 0x6c, 0x79, 0x54, 0x6f, 0x49, 0x64)
-	o = msgp.AppendInt64(o, z.ReplyToId)
+	// string "parentId"
+	o = append(o, 0xa8, 0x70, 0x61, 0x72, 0x65, 0x6e, 0x74, 0x49, 0x64)
+	o = msgp.AppendInt64(o, z.ParentID)
 	// string "created"
 	o = append(o, 0xa7, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64)
 	o = msgp.AppendInt64(o, z.Created)
@@ -236,10 +236,10 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "PostID")
 				return
 			}
-		case "replyToId":
-			z.ReplyToId, bts, err = msgp.ReadInt64Bytes(bts)
+		case "parentId":
+			z.ParentID, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "ReplyToId")
+				err = msgp.WrapError(err, "ParentID")
 				return
 			}
 		case "created":
@@ -280,7 +280,7 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Comment) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 7 + msgp.Int64Size + 10 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.Content) + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 7 + msgp.Int64Size + 9 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.Content) + 8 + msgp.Int64Size
 	return
 }
 

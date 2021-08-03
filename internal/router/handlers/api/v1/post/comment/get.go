@@ -119,6 +119,24 @@ func GetPostList(c *fiber.Ctx) error {
 	return fiberutil.JSON(c, 200, GetListResponse{ListComments: comments.ListComments, Users: users.Users, Order: comments.Order})
 }
 
+type GetTotal struct {
+	Total int64 `json:"total"`
+}
+
+func GetTotalForPost(c *fiber.Ctx) error {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrNotFound(c)
+	}
+
+	// Get Total Comments
+	tComments, err := comment.GetPostTotal(postID, true)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+	return fiberutil.JSON(c, 200, GetTotal{Total: tComments})
+}
+
 func getCommentForPost(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {
 	// Get post id from params
 	postID := fiberutil.ParamsInt64(c, "id")

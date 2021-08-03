@@ -33,7 +33,7 @@ export class GEN_Media {
         this.url = source["url"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -77,7 +77,7 @@ export class GEN_Post {
         this.mediaList = this.convertValues(source["mediaList"], GEN_Media);
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -99,11 +99,12 @@ export class GEN_Comment {
     id: number;
     userId: number;
     postId: number;
-    replyToId: number;
+    parentId: number;
     created: number;
     updated: number;
     content: string;
     replies: number;
+    children: {[key: GEN_int64]: number};
 
     static createFrom(source: any = {}) {
         return new GEN_Comment(source);
@@ -114,11 +115,12 @@ export class GEN_Comment {
         this.id = source["id"];
         this.userId = source["userId"];
         this.postId = source["postId"];
-        this.replyToId = source["replyToId"];
+        this.parentId = source["parentId"];
         this.created = source["created"];
         this.updated = source["updated"];
         this.content = source["content"];
         this.replies = source["replies"];
+        this.children = source["children"];
     }
 }
 export class GEN_FollowStruct {
@@ -169,7 +171,7 @@ export class GEN_User {
         this.created = source["created"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -225,7 +227,7 @@ export class GEN_AuthResp {
         this.captcha = source["captcha"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
