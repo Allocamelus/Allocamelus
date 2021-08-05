@@ -20,12 +20,13 @@ type Comment struct {
 	UserID int64 `msg:"userId" json:"userId"`
 	PostID int64 `msg:"postId" json:"postId"`
 	// ParentID comment id
-	ParentID int64           `msg:"parentId" json:"parentId"`
-	Created  int64           `msg:"created" json:"created"`
-	Updated  int64           `msg:"updated" json:"updated"`
-	Content  string          `msg:"content" json:"content"`
-	Replies  int64           `msg:"replies" json:"replies"`
-	Children map[int64]int64 `msg:"children" json:"children"`
+	ParentID int64              `msg:"parentId" json:"parentId"`
+	Created  int64              `msg:"created" json:"created"`
+	Updated  int64              `msg:"updated" json:"updated"`
+	Content  string             `msg:"content" json:"content"`
+	Replies  int64              `msg:"replies" json:"replies"`
+	Depth    int64              `msg:"depth" json:"depth"`
+	Children map[int64]*Comment `msg:"children" json:"children"`
 }
 
 type ListComments struct {
@@ -49,7 +50,7 @@ func New(userID, postID, ParentID int64, content string) *Comment {
 
 func newComment() *Comment {
 	c := new(Comment)
-	c.Children = map[int64]int64{}
+	c.Children = map[int64]*Comment{}
 	return c
 }
 
@@ -174,20 +175,15 @@ func (c *Comment) Insert() error {
 	return err
 }
 
-var preCountCommentReplies *sql.Stmt
-
-func (c *Comment) CountReplies() error {
-	if preCountCommentReplies == nil {
-		preCountCommentReplies = g.Data.Prepare(`SELECT COUNT(*) FROM PostComments WHERE parent = ?`)
-	}
+func (c *Comment) CountReplies() (err error) {
 	if c.ID == 0 {
 		if klog.V(4).Enabled() {
 			klog.Info("post/comment: comment id == 0 was used")
 		}
 		return nil
 	}
-	err := preCountCommentReplies.QueryRow(c.ID).Scan(&c.Replies)
-	return err
+	c.Replies, err = GetRepliesTotal(c.ID)
+	return
 }
 
 var (

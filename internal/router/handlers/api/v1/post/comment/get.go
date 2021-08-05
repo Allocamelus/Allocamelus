@@ -41,10 +41,11 @@ func GetReplies(c *fiber.Ctx) error {
 		page = 1
 	}
 
-	deep := fiberutil.ParamsBool(c, "deep", defaultDeep)
+	// Get depth from query
+	depth := fiberutil.ParamsInt64(c, "depth", defaultDepth)
 
 	// Get Total Replies
-	tReplies, err := comment.GetRepliesTotal(commentID, deep)
+	tReplies, err := comment.GetRepliesTotal(commentID, depth)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -54,7 +55,7 @@ func GetReplies(c *fiber.Ctx) error {
 		return apierr.ErrNotFound(c)
 	}
 
-	replies, err := comment.GetReplies(startNum, perPage, commentID, deep)
+	replies, err := comment.GetReplies(startNum, perPage, commentID, depth) // TODO
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -76,8 +77,8 @@ type GetListResponse struct {
 }
 
 const (
-	perPage     int64 = 15
-	defaultDeep       = true
+	perPage      int64 = 15
+	defaultDepth int64 = 3
 )
 
 func GetPostList(c *fiber.Ctx) error {
@@ -91,21 +92,21 @@ func GetPostList(c *fiber.Ctx) error {
 		page = 1
 	}
 
-	deep := fiberutil.ParamsBool(c, "deep", defaultDeep)
+	// Get depth from query
+	depth := fiberutil.ParamsInt64(c, "depth", defaultDepth)
 
-	// Get Total Comments
-	tComments, err := comment.GetPostTotal(postID)
+	// Get Total top level Comments
+	tComments, err := comment.GetPostTopLevel(postID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, tComments)
-
 	if page > totalPages && totalPages != 0 {
 		return apierr.ErrNotFound(c)
 	}
 
-	comments, err := comment.GetPostComments(startNum, perPage, postID, deep)
+	comments, err := comment.GetPostComments(startNum, perPage, postID, depth) //TODO
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
