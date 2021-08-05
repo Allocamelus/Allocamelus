@@ -16,7 +16,7 @@ func Get(commentId int64) (*Comment, error) {
 	 	SELECT
 			postId,
 			userId,
-			parentComment,
+			parent,
 			created,
 			updated,
 			content
@@ -92,9 +92,12 @@ const (
 	countPostComments = `
 	SELECT COUNT(*)
 	FROM PostComments`
+	countClosures = `
+	SELECT COUNT(*)
+	FROM PostCommentClosures`
 	// Select All Columns from PostComments
 	selectPostComments = `
-	SELECT postCommentId, postId, userId, parentComment, created, updated, content
+	SELECT postCommentId, postId, userId, parent, created, updated, content
 	FROM PostComments`
 
 	queryOrderLimit = ` ORDER BY postCommentId ASC LIMIT ?,?`
@@ -105,47 +108,31 @@ const (
 	// Build queries
 	// Post query parts
 	partGetPostComments = getPostCommentsP1 + `
-	AND parentComment IN (
+	AND parent IN (
 		SELECT postCommentId FROM (
 			SELECT postCommentId FROM PostComments
-			WHERE parentComment = 0
+			WHERE parent = 0
 			) tmp
 		)
-	OR parentComment = 0`
+	OR parent = 0`
 
 	// Get Post queries
 	queryGetPostComments     = selectPostComments + partGetPostComments + queryOrderLimit
 	queryGetPostCommentsDeep = selectPostComments + getPostCommentsP1 + queryOrderLimit
 
 	// Total Post queries
-	queryGetPostTotal     = countPostComments + partGetPostComments
-	queryGetPostTotalDeep = countPostComments + getPostCommentsP1
+	queryGetPostTotal = countPostComments + partGetPostComments
 )
 
-var (
-	preGetPostTotal     *sql.Stmt
-	preGetPostTotalDeep *sql.Stmt
-)
+var preGetPostTotal *sql.Stmt
 
 // GetTotal comments for post
-func GetPostTotal(postID int64, deep bool) (total int64, err error) {
+func GetPostTotal(postID int64) (total int64, err error) {
 	if preGetPostTotal == nil {
 		preGetPostTotal = g.Data.Prepare(queryGetPostTotal)
 	}
-	if preGetPostTotalDeep == nil {
-		preGetPostTotalDeep = g.Data.Prepare(queryGetPostTotalDeep)
-	}
 
-	var query *sql.Stmt
-
-	if deep {
-		query = preGetPostTotalDeep
-	} else {
-		query = preGetPostTotal
-	}
-
-	err = query.QueryRow(postID).Scan(&total)
-
+	err = preGetPostTotal.QueryRow(postID).Scan(&total)
 	return
 }
 
@@ -181,12 +168,12 @@ func GetPostComments(startNum, perPage, postID int64, deep bool) (*List, error) 
 
 const (
 	getRepliesP1 = `
-	WHERE parentComment = ?`
+	WHERE parent = ?`
 	getRepliesP2 = `
-		OR parentComment IN (
+		OR parent IN (
 			SELECT postCommentId FROM (
 				SELECT postCommentId FROM PostComments
-	 			WHERE parentComment = ?
+	 			WHERE parent = ?
 			) tmp
 		)`
 

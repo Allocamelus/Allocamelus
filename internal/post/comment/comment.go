@@ -105,20 +105,50 @@ func CanReplyTo(commentID, postID int64, u *user.Session, commentCache ...*Comme
 	return CanView(commentID, u, c)
 }
 
-var preInsert *sql.Stmt
+var (
+	preInsert *sql.Stmt
+	// Insert (Self,Self,0) into closure table
+	// (?,?) = (postCommentId, postCommentId)
+	preInsertClosureQ1 *sql.Stmt
+	// Insert parent-child relationships for comment
+	// (?,?) = (parent, postCommentId)
+	preInsertClosureQ2 *sql.Stmt
+)
 
-func (c *Comment) Insert() error {
+func prepareInsert() {
 	if preInsert == nil {
 		preInsert = g.Data.Prepare(`
 			INSERT INTO PostComments (
 				postId, 
 				userId, 
-				parentComment, 
+				parent, 
 				created, 
 				content
 			)
 			VALUES (?, ?, ?, ?, ?)`)
 	}
+	if preInsertClosureQ1 == nil {
+		preInsertClosureQ1 = g.Data.Prepare(`
+		INSERT INTO PostCommentClosures(parent, child, depth)
+VALUES (?, ?, 0)
+		`)
+	}
+	if preInsertClosureQ2 == nil {
+		preInsertClosureQ2 = g.Data.Prepare(`
+		INSERT INTO PostCommentClosures(parent, child, depth)
+		SELECT p.parent,
+			c.child,
+			p.depth + c.depth + 1
+		FROM PostCommentClosures p,
+			PostCommentClosures c
+		WHERE p.child = ?
+			AND c.parent = ?
+			`)
+	}
+}
+
+func (c *Comment) Insert() error {
+	prepareInsert()
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
 		c.ParentID, c.Created,
@@ -129,6 +159,18 @@ func (c *Comment) Insert() error {
 	}
 
 	c.ID, err = r.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	_, err = preInsertClosureQ1.Exec(c.ID, c.ID)
+	if err != nil {
+		return err
+	}
+
+	if c.ParentID != 0 {
+		_, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
+	}
 	return err
 }
 
@@ -136,7 +178,7 @@ var preCountCommentReplies *sql.Stmt
 
 func (c *Comment) CountReplies() error {
 	if preCountCommentReplies == nil {
-		preCountCommentReplies = g.Data.Prepare(`SELECT COUNT(*) FROM PostComments WHERE parentComment = ?`)
+		preCountCommentReplies = g.Data.Prepare(`SELECT COUNT(*) FROM PostComments WHERE parent = ?`)
 	}
 	if c.ID == 0 {
 		if klog.V(4).Enabled() {

@@ -94,7 +94,7 @@ func GetPostList(c *fiber.Ctx) error {
 	deep := fiberutil.ParamsBool(c, "deep", defaultDeep)
 
 	// Get Total Comments
-	tComments, err := comment.GetPostTotal(postID, deep)
+	tComments, err := comment.GetPostTotal(postID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -130,7 +130,7 @@ func GetTotalForPost(c *fiber.Ctx) error {
 	}
 
 	// Get Total Comments
-	tComments, err := comment.GetPostTotal(postID, true)
+	tComments, err := comment.GetPostTotal(postID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
