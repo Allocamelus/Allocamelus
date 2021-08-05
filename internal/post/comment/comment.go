@@ -20,17 +20,19 @@ type Comment struct {
 	UserID int64 `msg:"userId" json:"userId"`
 	PostID int64 `msg:"postId" json:"postId"`
 	// ParentID comment id
-	ParentID int64              `msg:"parentId" json:"parentId"`
-	Created  int64              `msg:"created" json:"created"`
-	Updated  int64              `msg:"updated" json:"updated"`
-	Content  string             `msg:"content" json:"content"`
-	Replies  int64              `msg:"replies" json:"replies"`
-	Depth    int64              `msg:"depth" json:"depth"`
-	Children map[int64]*Comment `msg:"children" json:"children"`
+	ParentID int64       `msg:"parentId" json:"parentId"`
+	Created  int64       `msg:"created" json:"created"`
+	Updated  int64       `msg:"updated" json:"updated"`
+	Content  string      `msg:"content" json:"content"`
+	Replies  int64       `msg:"replies" json:"replies"`
+	Depth    int64       `msg:"depth" json:"depth"`
+	Children CommentList `msg:"children" json:"children"`
 }
 
+type CommentList map[int64]*Comment
+
 type ListComments struct {
-	Comments map[int64]*Comment `msg:"comments" json:"comments"`
+	Comments CommentList `msg:"comments" json:"comments"`
 }
 
 type List struct {

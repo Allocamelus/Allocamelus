@@ -214,7 +214,7 @@ func iterRowToList(rows *sql.Rows, noParents bool) (*List, error) {
 		err error
 	)
 
-	locationMap := map[int64]*Comment{}
+	locationMap := CommentList{}
 
 	for rows.Next() {
 		c := newComment()
