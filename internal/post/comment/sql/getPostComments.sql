@@ -15,8 +15,10 @@ WHERE PCC.parent IN (
         FROM PostComments
         WHERE postId = ?
           AND parent = 0
+        ORDER BY postCommentId DESC -- Newest first
         LIMIT ?, ?
       ) tmp
   )
   AND PCC.depth <= ?
+ORDER BY PC.postCommentId ASC -- Comments are flipped back for sorting
 LIMIT ?

@@ -142,12 +142,15 @@ var (
 	preGetPostComments *sql.Stmt
 )
 
-func GetPostComments(startNum, perPage, postID int64, depth int64) (*List, error) {
+// GetPostComments
+//
+// topPerPage maximum num of top level comments per page
+func GetPostComments(startNum, topPerPage, maxPerPage, postID int64, depth int64) (*List, error) {
 	if preGetPostComments == nil {
 		preGetPostComments = g.Data.Prepare(qGetPostComments)
 	}
 
-	rows, err := preGetPostComments.Query(postID, startNum, perPage, depth, perPage)
+	rows, err := preGetPostComments.Query(postID, startNum, topPerPage, depth, maxPerPage)
 	if err != nil {
 		return nil, err
 	}

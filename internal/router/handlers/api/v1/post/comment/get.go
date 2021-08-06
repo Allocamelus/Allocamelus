@@ -50,12 +50,12 @@ func GetReplies(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, tReplies)
+	startNum, totalPages := dbutil.ItemPageCalc(topPerPage, page, tReplies)
 	if page > totalPages && totalPages != 0 {
 		return apierr.ErrNotFound(c)
 	}
 
-	replies, err := comment.GetReplies(startNum, perPage, commentID, depth) // TODO
+	replies, err := comment.GetReplies(startNum, topPerPage, commentID, depth)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -77,16 +77,19 @@ type GetListResponse struct {
 }
 
 const (
-	perPage      int64 = 15
+	topPerPage   int64 = 10
+	maxPerPage   int64 = 40
 	defaultDepth int64 = 3
 )
 
 func GetPostList(c *fiber.Ctx) error {
+	// Get id (postID) from query
 	postID := fiberutil.ParamsInt64(c, "id")
 	if postID == 0 {
 		return apierr.ErrNotFound(c)
 	}
 
+	// Get p (page) from query
 	page := fiberutil.ParamsInt64(c, "p")
 	if page == 0 {
 		page = 1
@@ -101,18 +104,21 @@ func GetPostList(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	startNum, totalPages := dbutil.ItemPageCalc(perPage, page, tComments)
+	// Page calculations are done for top level comments only
+	startNum, totalPages := dbutil.ItemPageCalc(topPerPage, page, tComments)
 	if page > totalPages && totalPages != 0 {
 		return apierr.ErrNotFound(c)
 	}
 
-	comments, err := comment.GetPostComments(startNum, perPage, postID, depth) //TODO
+	// Get comments
+	comments, err := comment.GetPostComments(startNum, topPerPage, maxPerPage, postID, depth)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	users := new(user.List)
 	sessionUser := user.ContextSession(c)
+	// Get users for comments
 	for _, c := range comments.Comments {
 		users.AddUser(sessionUser, c.UserID)
 	}
