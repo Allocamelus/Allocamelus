@@ -1,10 +1,10 @@
 import v1 from "../../v1";
 import { API_Error } from "../../../models/api_error";
 import ordered_list from "../../../models/ordered_list";
-import { GEN_Comment } from "../../../models/go_structs_gen";
+import { API_Comment } from "../comment"
 
 export class API_Comments extends ordered_list {
-  comments: { [key: number]: GEN_Comment };
+  comments: { [key: number]: API_Comment };
 
   static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_Comments(source);
@@ -17,8 +17,8 @@ export class API_Comments extends ordered_list {
   }
 
   // Method
-  comment(commentId: number): GEN_Comment {
-    return GEN_Comment.createFrom(this.comments[commentId]);
+  comment(commentId: number): API_Comment {
+    return API_Comment.createFrom(this.comments[commentId]);
   }
 }
 

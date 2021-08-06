@@ -1,27 +1,11 @@
 <template>
   <div>
-    <feed v-for="(commentId, index) in list.order" :key="index" class="flex-c">
-      <div
-        v-if="list.comment(commentId).parentId == parentId"
-        class="pl-3 py-2"
-      >
-        <comment-box
+    <feed class="flex-col-reverse">
+      <div v-for="(commentId, index) in list.order" :key="index" class="py-2">
+        <comment-tree
           :comment="list.comment(commentId)"
-          :user="list.user(list.comment(commentId).userId)"
-        ></comment-box>
-        <div class="flex flex-grow">
-          <div class="pl-3 w-8 flex align-items-center">
-            <div class="w-[1px] bg-primary-50"></div>
-          </div>
-          <div class="">
-            <comment-feed
-              v-if="list.comment(commentId).replies > 0"
-              :list="list"
-              :depth="depth + 1"
-              :parentId="commentId"
-            ></comment-feed>
-          </div>
-        </div>
+          :userList="list"
+        ></comment-tree>
       </div>
     </feed>
   </div>
@@ -31,9 +15,8 @@
 import { defineComponent } from "vue";
 import { API_Comments } from "../../api/post/comments/get";
 
-import Box from "../box/Box.vue";
 import Feed from "../Feed.vue";
-import CommentBox from "./CommentBox.vue";
+import CommentTree from "./CommentTree.vue";
 
 export default defineComponent({
   name: "comment-feed",
@@ -42,15 +25,7 @@ export default defineComponent({
       type: API_Comments,
       default: new API_Comments(),
     },
-    depth: {
-      type: Number,
-      default: 0,
-    },
-    parentId: {
-      type: Number,
-      default: 0,
-    },
   },
-  components: { Box, CommentBox, Feed },
+  components: { Feed, CommentTree },
 });
 </script>
