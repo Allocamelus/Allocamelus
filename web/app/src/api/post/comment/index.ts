@@ -33,8 +33,26 @@ export class API_Comment {
     return API_Comment.createFrom(this.children[commentId]);
   }
 
+  numNotHad(): Number {
+    var num = 0
+    for (const key in this.children) {
+      if (Object.prototype.hasOwnProperty.call(this.children, key)) {
+        const element = API_Comment.createFrom(this.children[key]);
+        num += element.replies
+        num++
+      }
+    }
+    
+    num = this.replies - num
+    return num
+  }
+
+  numDirectChildren(): Number {
+    return Object.keys(this.children).length
+  }
+
   hasChildren(): Boolean {
-    if (Object.keys(this.children).length != 0) {
+    if (this.numDirectChildren() != 0) {
       return true
     }
     return false
