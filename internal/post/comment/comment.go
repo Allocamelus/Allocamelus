@@ -1,5 +1,7 @@
 //go:generate msgp
 
+// TODO: Markdown Comments
+
 package comment
 
 import (
