@@ -72,6 +72,12 @@ func (z *Comment) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Replies")
 				return
 			}
+		case "depth":
+			z.Depth, err = dc.ReadInt64()
+			if err != nil {
+				err = msgp.WrapError(err, "Depth")
+				return
+			}
 		default:
 			err = dc.Skip()
 			if err != nil {
@@ -85,9 +91,9 @@ func (z *Comment) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Comment) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 8
+	// map header, size 9
 	// write "id"
-	err = en.Append(0x88, 0xa2, 0x69, 0x64)
+	err = en.Append(0x89, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
@@ -166,15 +172,25 @@ func (z *Comment) EncodeMsg(en *msgp.Writer) (err error) {
 		err = msgp.WrapError(err, "Replies")
 		return
 	}
+	// write "depth"
+	err = en.Append(0xa5, 0x64, 0x65, 0x70, 0x74, 0x68)
+	if err != nil {
+		return
+	}
+	err = en.WriteInt64(z.Depth)
+	if err != nil {
+		err = msgp.WrapError(err, "Depth")
+		return
+	}
 	return
 }
 
 // MarshalMsg implements msgp.Marshaler
 func (z *Comment) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 8
+	// map header, size 9
 	// string "id"
-	o = append(o, 0x88, 0xa2, 0x69, 0x64)
+	o = append(o, 0x89, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userId"
 	o = append(o, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
@@ -197,6 +213,9 @@ func (z *Comment) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "replies"
 	o = append(o, 0xa7, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x65, 0x73)
 	o = msgp.AppendInt64(o, z.Replies)
+	// string "depth"
+	o = append(o, 0xa5, 0x64, 0x65, 0x70, 0x74, 0x68)
+	o = msgp.AppendInt64(o, z.Depth)
 	return
 }
 
@@ -266,6 +285,12 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Replies")
 				return
 			}
+		case "depth":
+			z.Depth, bts, err = msgp.ReadInt64Bytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "Depth")
+				return
+			}
 		default:
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -280,7 +305,7 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Comment) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 7 + msgp.Int64Size + 9 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.Content) + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 7 + msgp.Int64Size + 7 + msgp.Int64Size + 9 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.Content) + 8 + msgp.Int64Size + 6 + msgp.Int64Size
 	return
 }
 
