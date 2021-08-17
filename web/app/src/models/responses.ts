@@ -1,6 +1,5 @@
 import { Html404Func, Html403Func, HtmlSomethingWentWrong } from '../components/htmlErrors'
-const invalidLength = "invalid-length",
-  invalidChars = "invalid-characters",
+const invalidChars = "invalid-characters",
   taken = "taken"
 
 export const Shared = {
@@ -32,10 +31,19 @@ export const Post = {
   },
   Validate: {
     Content: {
-      Length: invalidLength + "-min0-max65500"
+      Length: invalidLenErrMaker(0, 65500)
     },
   }
 }
+
+export const Comment = {
+  Validate: {
+    Content: {
+      Length: invalidLenErrMaker(2, 4096)
+    }
+  }
+}
+
 export const User = {
   Create: {
     InvalidCreateToken: "invalid-create-token",
@@ -49,20 +57,20 @@ export const User = {
   },
   Validate: {
     UserName: {
-      Length: invalidLength + "-min5-max64",
+      Length: invalidLenErrMaker(5, 64),
       Taken: taken,
     },
     Name: {
-      Length: invalidLength + "-min1-max128",
+      Length: invalidLenErrMaker(1, 128),
     },
     Email: {
       Invalid: "invalid-email"
     },
     Bio: {
-      Length: invalidLength + "-min0-max255",
+      Length: invalidLenErrMaker(0, 255),
     },
     Password: {
-      Length: invalidLength + "-min8-max1024",
+      Length: invalidLenErrMaker(8, 1024),
       Strength: "weak-password",
     },
     Invalid: invalidChars,
@@ -84,19 +92,19 @@ export default Responses
 export function RespToError(resp: string): string {
   switch (resp) {
     case Responses.User.Validate.Bio.Length:
-      return "Invalid Length 0-255 Characters"
+      return invalidLenTxtMaker(0, 255)
     case Responses.User.Validate.Email.Invalid:
       return "Invalid Email"
     case Responses.User.Validate.Invalid:
       return "Invalid Characters"
     case Responses.User.Validate.Name.Length:
-      return "Invalid Length 1-128 Characters"
+      return invalidLenTxtMaker(1, 128)
     case Responses.User.Validate.Password.Length:
-      return "Invalid Length 8-1024 Characters"
+      return invalidLenTxtMaker(8, 1024)
     case Responses.User.Validate.Password.Strength:
       return "Weak Password"
     case Responses.User.Validate.UserName.Length:
-      return "Invalid Length 5-64 Characters"
+      return invalidLenTxtMaker(5, 64)
     case Responses.User.Validate.UserName.Taken:
       return "Username Taken"
     case Responses.Shared.File.ContentType:
@@ -117,4 +125,12 @@ export function RespToHtml(resp: string): string {
       return Html403Func()
   }
   return HtmlSomethingWentWrong
+}
+
+function invalidLenErrMaker(min: number, max: number) {
+  return `invalid-length-min${min}-max${max}`
+}
+
+function invalidLenTxtMaker(min: number, max: number) {
+  return `Invalid Length ${min}-${max} Characters`
 }

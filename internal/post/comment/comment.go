@@ -11,6 +11,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
+	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/user"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -193,7 +194,7 @@ func (c *Comment) CountReplies() (err error) {
 
 var (
 	// ErrContentLength max 4096
-	ErrContentLength = errors.New("invalid-length-min2-max4096")
+	ErrContentLength = errtools.InvalidLen(2, 4096)
 )
 
 // Validate is content valid
@@ -210,8 +211,8 @@ func ContentValid(content string) error {
 		return ErrContentLength
 	}
 
-	if !g.ContentInvalidChars.MatchString(content) {
-		return g.ErrInvalidChars
+	if !errtools.ContentInvalidChars.MatchString(content) {
+		return errtools.ErrInvalidChars
 	}
 
 	return nil

@@ -6,7 +6,7 @@ import (
 	"regexp"
 
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -40,7 +40,7 @@ func (u *User) ValidatePublic() error {
 
 var (
 	// ErrUserNameLength 5 to 64 characters
-	ErrUserNameLength = errors.New(invalidLength + "-min5-max64")
+	ErrUserNameLength = errtools.InvalidLen(5, 64)
 	// ErrUserNameTaken characters
 	ErrUserNameTaken = errors.New(taken)
 	regexUserName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
@@ -58,7 +58,7 @@ func (u *User) ValidUserName() error {
 	}
 	// Check regex for User Name
 	if !regexUserName.MatchString(u.UserName) {
-		return g.ErrInvalidChars
+		return errtools.ErrInvalidChars
 	}
 	// Check Database for userName
 	var isTaken bool
@@ -75,7 +75,7 @@ func (u *User) ValidUserName() error {
 
 var (
 	// ErrNameLength 1 to 128 characters
-	ErrNameLength = errors.New(invalidLength + "-min1-max128")
+	ErrNameLength = errtools.InvalidLen(1, 128)
 )
 
 // ValidName Validate
@@ -93,8 +93,8 @@ func ValidName(name string) error {
 		return ErrNameLength
 	}
 	// Check regex for Invalid characters
-	if !g.ContentInvalidChars.MatchString(name) {
-		return g.ErrInvalidChars
+	if !errtools.ContentInvalidChars.MatchString(name) {
+		return errtools.ErrInvalidChars
 	}
 	return nil
 }
@@ -143,7 +143,7 @@ func (u *User) IsEmailUnique() error {
 
 var (
 	// ErrBioLength 0 to 255 characters
-	ErrBioLength = errors.New(invalidLength + "-min0-max255")
+	ErrBioLength = errtools.InvalidLen(0, 255)
 )
 
 // ValidBio Validate
@@ -158,8 +158,8 @@ func ValidBio(bio string) error {
 			return ErrBioLength
 		}
 		// Check regex for Invalid characters
-		if !g.ContentInvalidChars.MatchString(bio) {
-			return g.ErrInvalidChars
+		if !errtools.ContentInvalidChars.MatchString(bio) {
+			return errtools.ErrInvalidChars
 		}
 	}
 	return nil
@@ -167,7 +167,7 @@ func ValidBio(bio string) error {
 
 // ErrPasswordLength 8 to 1024
 var (
-	ErrPasswordLength   = errors.New(invalidLength + "-min8-max1024")
+	ErrPasswordLength   = errtools.InvalidLen(8, 1024)
 	ErrPasswordStrength = errors.New("weak-password")
 )
 

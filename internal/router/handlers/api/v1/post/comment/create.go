@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
@@ -25,7 +25,7 @@ func Create(c *fiber.Ctx) error {
 	// Get session user from context
 	sUser := user.ContextSession(c)
 	if !sUser.Perms.CanPost() {
-		return apierr.Err403(c, g.ErrInsufficientPerms.Error())
+		return apierr.Err403(c, errtools.ErrInsufficientPerms.Error())
 	}
 
 	// Get post id from params

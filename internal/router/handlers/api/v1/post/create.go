@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 	"strconv"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/media"
@@ -29,7 +29,7 @@ type createRequest struct {
 func Create(c *fiber.Ctx) error {
 	sUser := user.ContextSession(c)
 	if !sUser.Perms.CanPost() {
-		return post403(c, g.ErrInsufficientPerms.Error())
+		return post403(c, errtools.ErrInsufficientPerms.Error())
 	}
 
 	request := new(createRequest)

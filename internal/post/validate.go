@@ -1,13 +1,12 @@
 package post
 
 import (
-	"errors"
-
+	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 // ErrContentLength max 65500
-var ErrContentLength = errors.New("invalid-length-min0-max65500")
+var ErrContentLength = errtools.InvalidLen(0, 65500)
 
 // ValidateContent is content valid
 func ValidateContent(content string) error {
