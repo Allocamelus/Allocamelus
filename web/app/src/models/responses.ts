@@ -1,6 +1,4 @@
 import { Html404Func, Html403Func, HtmlSomethingWentWrong } from '../components/htmlErrors'
-const invalidChars = "invalid-characters",
-  taken = "taken"
 
 export const Shared = {
   A10: "allocamelus",
@@ -14,6 +12,7 @@ export const Shared = {
     ContentType: "invalid-content-type",
     Size: "invalid-file-size"
   },
+  InvalidChars: "invalid-characters"
 }
 
 export const Account = {
@@ -40,7 +39,8 @@ export const Comment = {
   Validate: {
     Content: {
       Length: invalidLenErrMaker(2, 4096)
-    }
+    },
+    Invalid: Shared.InvalidChars,
   }
 }
 
@@ -58,7 +58,7 @@ export const User = {
   Validate: {
     UserName: {
       Length: invalidLenErrMaker(5, 64),
-      Taken: taken,
+      Taken: "taken",
     },
     Name: {
       Length: invalidLenErrMaker(1, 128),
@@ -73,7 +73,7 @@ export const User = {
       Length: invalidLenErrMaker(8, 1024),
       Strength: "weak-password",
     },
-    Invalid: invalidChars,
+    Invalid: Shared.InvalidChars,
   }
 }
 
@@ -81,6 +81,7 @@ export const Responses = {
   Shared,
   Account,
   Post,
+  Comment,
   User
   // TODO: Add rest of the api codes
 }
@@ -91,26 +92,33 @@ export default Responses
 // TODO: Add All error text
 export function RespToError(resp: string): string {
   switch (resp) {
-    case Responses.User.Validate.Bio.Length:
+    // User errors
+    case User.Validate.Bio.Length:
       return invalidLenTxtMaker(0, 255)
-    case Responses.User.Validate.Email.Invalid:
+    case User.Validate.Email.Invalid:
       return "Invalid Email"
-    case Responses.User.Validate.Invalid:
-      return "Invalid Characters"
-    case Responses.User.Validate.Name.Length:
+    case User.Validate.Name.Length:
       return invalidLenTxtMaker(1, 128)
-    case Responses.User.Validate.Password.Length:
+    case User.Validate.Password.Length:
       return invalidLenTxtMaker(8, 1024)
-    case Responses.User.Validate.Password.Strength:
+    case User.Validate.Password.Strength:
       return "Weak Password"
-    case Responses.User.Validate.UserName.Length:
+    case User.Validate.UserName.Length:
       return invalidLenTxtMaker(5, 64)
-    case Responses.User.Validate.UserName.Taken:
+    case User.Validate.UserName.Taken:
       return "Username Taken"
-    case Responses.Shared.File.ContentType:
+
+    // Comment errors
+    case Comment.Validate.Content.Length:
+      return invalidLenTxtMaker(2, 4096)
+
+    // Shared errors
+    case Shared.File.ContentType:
       return "Unsupported Image Type"
-    case Responses.Shared.File.Size:
+    case Shared.File.Size:
       return "Image size to large"
+    case Shared.InvalidChars:
+      return "Invalid Characters"
   }
   return ""
 }
@@ -119,9 +127,9 @@ export function RespToError(resp: string): string {
 // TODO: Add All error text
 export function RespToHtml(resp: string): string {
   switch (resp) {
-    case Responses.Shared.NotFound:
+    case Shared.NotFound:
       return Html404Func()
-    case Responses.Shared.Unauthorized403:
+    case Shared.Unauthorized403:
       return Html403Func()
   }
   return HtmlSomethingWentWrong

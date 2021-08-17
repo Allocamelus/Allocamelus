@@ -21,7 +21,6 @@ export class API_Comments extends ordered_list {
     return API_Comment.createFrom(this.comments[commentId]);
   }
   appendComment(c: API_Comment) {
-    console.log(this.total());
     this.comments[c.id] = c
     this.order[this.total()] = c.id
   }

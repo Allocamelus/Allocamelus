@@ -153,7 +153,7 @@ VALUES (?, ?, 0)
 	}
 }
 
-func (c *Comment) Insert() (id int64, err error) {
+func (c *Comment) Insert() (err error) {
 	prepareInsert()
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
@@ -172,11 +172,7 @@ func (c *Comment) Insert() (id int64, err error) {
 	_, err = preInsertClosureQ1.Exec(c.ID, c.ID)
 
 	if c.ParentID != 0 {
-		r, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
-		if err != nil {
-			return
-		}
-		id, err = r.LastInsertId()
+		_, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
 	}
 	return
 }

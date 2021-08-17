@@ -88,7 +88,7 @@
         <basic-btn
           class="text-secondary-700 dark:text-rose-600 p-1.5"
           @click="onPost"
-          :disabled="submited"
+          :disabled="submitted"
         >
           Post
         </basic-btn>
@@ -150,7 +150,7 @@ export default defineComponent({
       images: [],
       imageAltErrs: [],
       imageUrls: [],
-      submited: false,
+      submitted: false,
       err: {
         msg: "",
         show: false,
@@ -269,13 +269,13 @@ export default defineComponent({
       }
     },
     onPost() {
-      if (this.submited) {
+      if (this.submitted) {
         return this.onErr("Loading...");
       }
       if (this.hasNoText && this.images.length == 0) {
         return this.onErr("Text or Image(s) Required");
       }
-      this.submited = true;
+      this.submitted = true;
       // TODO Limit content in browser
       CreatePost(turndownService.turndown(this.richText), this.images, true)
         .then((r) => {
@@ -289,7 +289,7 @@ export default defineComponent({
         });
     },
     onPostErr(e) {
-      this.submited = false;
+      this.submitted = false;
       var errText = RespToError(e);
       if (errText.length > 0) {
         this.onErr(errText);
