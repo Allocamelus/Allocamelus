@@ -9,6 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -20,12 +21,6 @@ type createRequest struct {
 	Content   string                  `json:"content" form:"content"`
 	Images    []*multipart.FileHeader `form:"images[]"`
 	ImageAlts []string                `form:"imageAlts[]"`
-}
-
-type createResponse struct {
-	Success bool   `json:"success"`
-	ID      int64  `json:"id,omitempty"`
-	Error   string `json:"error,omitempty"`
 }
 
 // TODO: Rate limiting
@@ -63,7 +58,7 @@ func Create(c *fiber.Ctx) error {
 			if err == fileutil.ErrSomethingWentWrong {
 				return apierr.ErrSomethingWentWrong(c)
 			}
-			return apierr.Err422(c, createResponse{Error: err.Error()})
+			return apierr.Err422(c, shared.SuccessErrResp{Error: err.Error()})
 		}
 		var alt string
 		if imageAltLen > k {
@@ -82,12 +77,12 @@ func Create(c *fiber.Ctx) error {
 		}
 	}
 
-	return fiberutil.JSON(c, 200, createResponse{
+	return fiberutil.JSON(c, 200, shared.SuccessIDErrResp{
 		Success: true,
 		ID:      newPost.ID,
 	})
 }
 
 func post403(c *fiber.Ctx, err string) error {
-	return apierr.Err403(c, createResponse{Error: err})
+	return apierr.Err403(c, shared.SuccessErrResp{Error: err})
 }

@@ -24,6 +24,11 @@ export class user_list {
   user(userId: number): GEN_User {
     return GEN_User.createFrom(this.users[userId]);
   }
+  appendUser(u: GEN_User) {
+    if (!(u.id in this.users)) {
+      this.user[u.id] = u
+    }
+  }
 }
 export default class ordered_list extends user_list {
   order: { [key: number]: number };

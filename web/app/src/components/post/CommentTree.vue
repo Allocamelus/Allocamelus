@@ -89,10 +89,10 @@
                 </div>
               </div>
               <div class="mt-2" v-if="missingReplies > 0">
-                <a class="link text-sm font-semibold">
+                <div class="link text-sm font-semibold">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
-                </a>
+                </div>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import v1 from "../../v1";
-import { API_Success_Error } from "../../../models/api_error";
+import { API_Success_ID_Error } from "../../../models/api_error";
 
 export default function create(postId: number, replyTo: number, content: string) {
   return v1.post(`post/${postId}/comment`,
@@ -12,6 +12,6 @@ export default function create(postId: number, replyTo: number, content: string)
     }
   })
     .then(r => {
-      return API_Success_Error.createFrom(r.data)
+      return API_Success_ID_Error.createFrom(r.data)
     })
 }

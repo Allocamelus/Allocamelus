@@ -48,6 +48,9 @@ export class API_Comment {
   }
 
   numDirectChildren(): Number {
+    if (this.children == undefined || this.children === null) {
+      return 0
+    }
     return Object.keys(this.children).length
   }
 

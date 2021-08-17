@@ -9,7 +9,7 @@
         ></post-box>
       </error-box>
       <div></div>
-      <comment-feed :list="comments"></comment-feed>
+      <comment-feed :list="comments" :postId="id"></comment-feed>
     </div>
   </div>
 </template>
@@ -83,6 +83,16 @@ export default defineComponent({
     getPost(to.params.id)
       .then((r) => {
         this.apiPost = r;
+        // Get Comments once post is fetched
+        (async () => {
+          getComments(to.params.id)
+            .then((r) => {
+              this.comments = r;
+            })
+            .catch((e) => {
+              this.err = e;
+            });
+        })();
       })
       .catch((e) => {
         this.err = e;

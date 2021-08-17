@@ -13,6 +13,20 @@ export class API_Success_Error {
   }
 }
 
+export class API_Success_ID_Error extends API_Success_Error {
+  id?: number;
+
+  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+    return new API_Success_ID_Error(source);
+  }
+
+  constructor(source: any = {}) { // skipcq: JS-0323
+    super(source)
+    if ('string' === typeof source) source = JSON.parse(source);
+    this.id = source["id"];
+  }
+}
+
 export class API_Error {
   error: string;
 

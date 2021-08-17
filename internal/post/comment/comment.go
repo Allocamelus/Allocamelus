@@ -152,7 +152,7 @@ VALUES (?, ?, 0)
 	}
 }
 
-func (c *Comment) Insert() error {
+func (c *Comment) Insert() (id int64, err error) {
 	prepareInsert()
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
@@ -160,23 +160,24 @@ func (c *Comment) Insert() error {
 		c.Content,
 	)
 	if err != nil {
-		return err
+		return
 	}
 
 	c.ID, err = r.LastInsertId()
 	if err != nil {
-		return err
+		return
 	}
 
 	_, err = preInsertClosureQ1.Exec(c.ID, c.ID)
-	if err != nil {
-		return err
-	}
 
 	if c.ParentID != 0 {
-		_, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
+		r, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
+		if err != nil {
+			return
+		}
+		id, err = r.LastInsertId()
 	}
-	return err
+	return
 }
 
 func (c *Comment) CountReplies() (err error) {

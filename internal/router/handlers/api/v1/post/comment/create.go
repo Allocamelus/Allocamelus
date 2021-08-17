@@ -77,9 +77,10 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	// Add comment to database
-	if err := comment.Insert(); logger.Error(err) {
+	commentID, err := comment.Insert()
+	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessIDErrResp{Success: true, ID: commentID})
 }

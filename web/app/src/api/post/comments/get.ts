@@ -20,6 +20,11 @@ export class API_Comments extends ordered_list {
   comment(commentId: number): API_Comment {
     return API_Comment.createFrom(this.comments[commentId]);
   }
+  appendComment(c: API_Comment) {
+    console.log(this.total());
+    this.comments[c.id] = c
+    this.order[this.total()] = c.id
+  }
 }
 
 export async function get(postId: number | string): Promise<API_Comments> {
