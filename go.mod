@@ -1,6 +1,6 @@
 module github.com/allocamelus/allocamelus
 
-go 1.16
+go 1.17
 
 // TODO: Wait for https://github.com/kubernetes/klog/pull/242
 exclude github.com/go-logr/logr v1.0.0
@@ -26,7 +26,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/tinylib/msgp v1.1.6
 	github.com/tkrajina/typescriptify-golang-structs v0.1.5
-	github.com/valyala/fasthttp v1.28.0 // indirect
+	github.com/valyala/fasthttp v1.29.0 // indirect
 	github.com/valyala/fastjson v1.6.3
 	github.com/valyala/quicktemplate v1.6.3
 	github.com/xhit/go-simple-mail/v2 v2.10.0
@@ -36,4 +36,19 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/gographics/imagick.v3 v3.4.0
 	k8s.io/klog/v2 v2.10.0
+)
+
+require (
+	github.com/ProtonMail/go-mime v0.0.0-20190923161245-9b5a4261663a // indirect
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-logr/logr v0.4.0 // indirect
+	github.com/gorilla/css v1.0.0 // indirect
+	github.com/philhofer/fwd v1.1.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/tkrajina/go-reflector v0.5.4 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/tcplisten v1.0.0 // indirect
 )
