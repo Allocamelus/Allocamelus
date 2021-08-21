@@ -1,5 +1,13 @@
 import { Html404Func, Html403Func, HtmlSomethingWentWrong } from '../components/htmlErrors'
 
+function invalidLenErrMaker(min: number, max: number) {
+  return `invalid-length-min${min}-max${max}`
+}
+
+function invalidLenTxtMaker(min: number, max: number) {
+  return `Invalid Length ${min}-${max} Characters`
+}
+
 export const Shared = {
   A10: "allocamelus",
   InvalidAuthToken: "invalid-auth-token",
@@ -133,12 +141,4 @@ export function RespToHtml(resp: string): string {
       return Html403Func()
   }
   return HtmlSomethingWentWrong
-}
-
-function invalidLenErrMaker(min: number, max: number) {
-  return `invalid-length-min${min}-max${max}`
-}
-
-function invalidLenTxtMaker(min: number, max: number) {
-  return `Invalid Length ${min}-${max} Characters`
 }

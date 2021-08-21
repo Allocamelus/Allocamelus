@@ -51,9 +51,7 @@
           </div>
           <!-- TODO: Real options -->
           <dots-dropdown class="ml-3">
-            <div class="bg-secondary-800">
-              WIP
-            </div>
+            <div class="bg-secondary-800">WIP</div>
           </dots-dropdown>
         </div>
         <div
@@ -96,7 +94,6 @@ import RadixEyeNone from "../icons/RadixEyeNone.vue";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
-import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
 import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
@@ -165,7 +162,6 @@ export default defineComponent({
   components: {
     FmtTime,
     UserName,
-    CircleBg,
     UserAvatar,
     PencilAltIcon,
     RadixEyeNone,

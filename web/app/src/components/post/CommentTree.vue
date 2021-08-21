@@ -161,10 +161,7 @@ import OutlineAnnotationIcon from "@heroicons/vue/outline/AnnotationIcon";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
-import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
-import ToLink from "../ToLink.vue";
-import ImageBox from "../box/ImageBox.vue";
 import SmallBtn from "../button/SmallBtn.vue";
 import SmallText from "../text/Small.vue";
 import CommentInput from "./CommentInput.vue";
@@ -223,13 +220,10 @@ export default defineComponent({
   components: {
     FmtTime,
     UserName,
-    CircleBg,
     UserAvatar,
     PencilAltIcon,
     SolidAnnotationIcon,
     OutlineAnnotationIcon,
-    ToLink,
-    ImageBox,
     SmallBtn,
     SmallText,
     CommentInput,
