@@ -41,21 +41,37 @@
           </div>
           <div class="flex">
             <div
-              class="mt-1 pt-1.5 flex xs:w-[30px] mr-2 flex-grow-0 group"
+              class="
+                mt-1
+                pt-1.5
+                flex
+                xs:w-[30px]
+                mr-2
+                flex-grow-0
+                group
+                cursor-pointer
+              "
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'
                   : 'w-2 justify-start xs:justify-center'
               "
+              @click="hidden = !hidden"
             >
               <div
-                class="w-0 border-[1px] border-gray-400 dark:border-gray-700"
-                :class="[
-                  /*TODO Click to hide group-hover:border-gray-700 dark:group-hover:border-gray-400*/
-                ]"
+                class="
+                  w-0
+                  border-[1px] border-gray-400
+                  dark:border-gray-700
+                  group-hover:border-gray-700
+                  dark:group-hover:border-gray-400
+                "
               ></div>
             </div>
-            <div class="flex flex-col flex-grow">
+            <div v-if="hidden" class="flex flex-grow">
+              <small-text class="pt-1.5">[[hidden]]</small-text>
+            </div>
+            <div v-else class="flex flex-col flex-grow">
               <div class="py-1.5 leading-5">{{ comment.content }}</div>
               <div
                 class="
@@ -64,17 +80,26 @@
                   text-sm
                   font-medium
                   mt-2
+                  items-center
                   text-gray-600
                   dark:text-gray-400
                 "
               >
-                <small-btn class="flex pr-0.5 mr-2">
+                <small-btn class="flex items-center pr-0.5 mr-1.5">
                   <AnnotationIcon class="h-4 w-4"></AnnotationIcon>
-                  <div class="pl-1">Reply</div>
+                  <div class="pl-1">Reply TODO</div>
                 </small-btn>
-                <small-btn class="flex pr-0.5 mr-2">
-                  <div class="px-0.5">Share</div>
+                <small-btn class="flex pr-0.5 mr-1.5">
+                  <div class="px-0.5">Share TODO</div>
                 </small-btn>
+                <div v-if="isCommenter" class="flex">
+                  <small-btn class="flex items-center pr-0.5 mr-1.5">
+                    <div class="px-0.5">Edit TODO</div>
+                  </small-btn>
+                  <small-btn class="flex items-center pr-0.5 mr-1.5">
+                    <div class="px-0.5">Delete TODO</div>
+                  </small-btn>
+                </div>
               </div>
               <div v-if="comment.hasChildren()">
                 <div
@@ -119,6 +144,7 @@ import UserAvatar from "../user/Avatar.vue";
 import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
 import SmallBtn from "../button/SmallBtn.vue";
+import SmallText from "../text/Small.vue";
 
 export default defineComponent({
   name: "comment-tree",
@@ -136,8 +162,12 @@ export default defineComponent({
     const store = useStore();
     const loggedIn = computed(() => store.getters.loggedIn),
       storeUser = computed(() => store.getters.user);
+    const data = reactive({
+      hidden: false,
+    });
 
     return {
+      ...toRefs(data),
       loggedIn,
       storeUser,
       Fmt_Short_Time,
@@ -146,16 +176,17 @@ export default defineComponent({
   },
   computed: {
     edited() {
-      if (this.comment.updated > this.comment.created + 60) {
-        return true;
-      }
-      return false;
+      return this.comment.updated > this.comment.created + 60;
     },
     user() {
       return this.userList.user(this.comment.userId);
     },
     missingReplies() {
       return this.comment.numNotHad();
+    },
+    isCommenter() {
+      console.log(this.storeUser.id);
+      return this.loggedIn && this.storeUser.id == this.comment.userId;
     },
   },
   components: {
@@ -168,6 +199,7 @@ export default defineComponent({
     ToLink,
     ImageBox,
     SmallBtn,
+    SmallText,
   },
 });
 </script>
