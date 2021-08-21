@@ -1,37 +1,33 @@
 <template>
   <div>
-    <box class="mt-5 mb-3 px-4 py-3 rounded-xl">
-      <div v-if="loggedIn">
-        <input-label for="comment" class="flex" :err="err.comment">
-          Commenting as
-          <user-name :user="storeUser" :displayType="usernameType"></user-name>
-        </input-label>
-        <text-input
-          v-model="comment"
-          name="comment"
-          :watchModel="true"
-          :check="true"
-          :required="true"
-          :minLen="2"
-          :maxLen="4096"
-          placeholder="Post a Comment"
-          :regex="/^[^<>\[\]]*$/"
-          :regexMsg="InvalidCharacters"
-          @error="err.comment = $event"
+    <input-label for="comment" class="flex" :err="err.comment">
+      Commenting as
+      <user-name :user="storeUser" :displayType="usernameType"></user-name>
+    </input-label>
+    <text-input
+      v-model="comment"
+      name="comment"
+      :watchModel="true"
+      :check="true"
+      :required="true"
+      :minLen="2"
+      :maxLen="4096"
+      placeholder="Post a Comment"
+      :regex="/^[^<>\[\]]*$/"
+      :regexMsg="InvalidCharacters"
+      @error="err.comment = $event"
+    >
+      <div class="flex items-center mr-1.5">
+        <basic-btn
+          class="link p-1"
+          title="Submit Comment"
+          :disabled="commentDisabled"
+          @click="submitComment()"
         >
-          <div class="flex items-center mr-1.5">
-            <basic-btn
-              class="link p-1"
-              title="Submit Comment"
-              :disabled="commentDisabled"
-              @click="submitComment()"
-            >
-              Comment
-            </basic-btn>
-          </div>
-        </text-input>
+          Comment
+        </basic-btn>
       </div>
-    </box>
+    </text-input>
   </div>
 </template>
 
@@ -49,7 +45,6 @@ import InputLabel from "../form/InputLabel.vue";
 import TextInput from "../form/TextInput.vue";
 import BasicBtn from "../button/BasicBtn.vue";
 import UserName, { OneLineLink, NoName } from "../user/Name.vue";
-import Box from "../box/Box.vue";
 
 export default defineComponent({
   name: "comment-input",
@@ -95,7 +90,7 @@ export default defineComponent({
   },
   methods: {
     submitComment() {
-      if (!this.commentErr) {
+      if (!this.commentErr && this.loggedIn) {
         this.submitted = true;
         var start = UnixTime();
         CreateComment(this.postId, this.replyTo, this.comment)
@@ -146,7 +141,6 @@ export default defineComponent({
     TextInput,
     BasicBtn,
     UserName,
-    Box,
   },
 });
 </script>

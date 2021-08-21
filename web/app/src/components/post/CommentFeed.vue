@@ -1,10 +1,14 @@
 <template>
   <div>
-    <comment-input
-      :postId="postId"
-      :replyTo="0"
-      @commented="newComment($event)"
-    ></comment-input>
+    <box class="mt-5 mb-3 px-4 py-3 rounded-xl">
+      <div v-if="loggedIn">
+        <comment-input
+          :postId="postId"
+          :replyTo="0"
+          @commented="newComment($event)"
+        ></comment-input>
+      </div>
+    </box>
     <feed class="flex-col-reverse">
       <div v-for="(commentId, index) in list.order" :key="index" class="py-2">
         <comment-tree
@@ -25,6 +29,7 @@ import { API_Comments } from "../../api/post/comments/get";
 import Feed from "../Feed.vue";
 import CommentTree from "./CommentTree.vue";
 import CommentInput from "./CommentInput.vue";
+import Box from "../box/Box.vue";
 
 export default defineComponent({
   name: "comment-feed",
@@ -57,6 +62,7 @@ export default defineComponent({
     Feed,
     CommentTree,
     CommentInput,
+    Box,
   },
 });
 </script>

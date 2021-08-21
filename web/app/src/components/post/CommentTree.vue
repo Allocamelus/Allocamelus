@@ -85,11 +85,21 @@
                   dark:text-gray-400
                 "
               >
-                <small-btn class="flex items-center pr-0.5 mr-1.5">
-                  <AnnotationIcon class="h-4 w-4"></AnnotationIcon>
-                  <div class="pl-1">Reply TODO</div>
+                <small-btn
+                  class="flex items-center pr-0.5 mr-1.5"
+                  @click="showReplyForm = !showReplyForm"
+                >
+                  <component
+                    class="h-4 w-4"
+                    :is="
+                      showReplyForm
+                        ? 'OutlineAnnotationIcon'
+                        : 'SolidAnnotationIcon'
+                    "
+                  ></component>
+                  <div class="pl-1">Reply</div>
                 </small-btn>
-                <small-btn class="flex pr-0.5 mr-1.5">
+                <small-btn class="pr-0.5 mr-1.5">
                   <div class="px-0.5">Share TODO</div>
                 </small-btn>
                 <div v-if="isCommenter" class="flex">
@@ -100,8 +110,18 @@
                     <div class="px-0.5">Delete TODO</div>
                   </small-btn>
                 </div>
+                <small-btn v-else class="pr-0.5 mr-1.5">
+                  <div class="px-0.5">Report TODO</div>
+                </small-btn>
               </div>
-              <div v-if="comment.hasChildren()">
+              <div v-if="showReplyForm" class="pt-3">
+                <comment-input
+                  :postId="String(comment.postId)"
+                  :replyTo="comment.id"
+                  @commented="newReply($event)"
+                ></comment-input>
+              </div>
+              <feed v-if="comment.hasChildren()" class="flex-col-reverse">
                 <div
                   v-for="(child, index) in comment.children"
                   :key="index"
@@ -112,7 +132,7 @@
                     :userList="userList"
                   ></comment-tree>
                 </div>
-              </div>
+              </feed>
               <div class="mt-2" v-if="missingReplies > 0">
                 <div class="link text-sm font-semibold">
                   {{ missingReplies }}
@@ -135,7 +155,9 @@ import { API_Comment } from "../../api/post/comment";
 import { user_list } from "../../models/ordered_list";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
-import AnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
+import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
+
+import OutlineAnnotationIcon from "@heroicons/vue/outline/AnnotationIcon";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
@@ -145,6 +167,8 @@ import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
 import SmallBtn from "../button/SmallBtn.vue";
 import SmallText from "../text/Small.vue";
+import CommentInput from "./CommentInput.vue";
+import Feed from "../Feed.vue";
 
 export default defineComponent({
   name: "comment-tree",
@@ -164,6 +188,7 @@ export default defineComponent({
       storeUser = computed(() => store.getters.user);
     const data = reactive({
       hidden: false,
+      showReplyForm: false,
     });
 
     return {
@@ -185,8 +210,14 @@ export default defineComponent({
       return this.comment.numNotHad();
     },
     isCommenter() {
-      console.log(this.storeUser.id);
       return this.loggedIn && this.storeUser.id == this.comment.userId;
+    },
+  },
+  methods: {
+    newReply(c) {
+      this.showReplyForm = false;
+      this.comment.appendChild(c);
+      this.user_list.appendUser(this.storeUser);
     },
   },
   components: {
@@ -195,11 +226,14 @@ export default defineComponent({
     CircleBg,
     UserAvatar,
     PencilAltIcon,
-    AnnotationIcon,
+    SolidAnnotationIcon,
+    OutlineAnnotationIcon,
     ToLink,
     ImageBox,
     SmallBtn,
     SmallText,
+    CommentInput,
+    Feed,
   },
 });
 </script>

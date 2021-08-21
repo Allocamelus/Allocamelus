@@ -60,4 +60,8 @@ export class API_Comment {
     }
     return false
   }
+
+  appendChild(c: API_Comment) {
+    this.children[c.id] = c
+  }
 }
