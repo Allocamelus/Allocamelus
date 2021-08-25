@@ -1,9 +1,9 @@
-@import "vars";
-@import "components";
-
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+@import "vars";
+@import "components";
 
 @layer base {
   html {
