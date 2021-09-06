@@ -38,7 +38,7 @@
             <change-avatar
               class="w-full ml-2"
               :user="user"
-              :blockScrool="false"
+              :blockScroll="false"
             >
               <basic-btn class="link">Change Avatar</basic-btn>
             </change-avatar>

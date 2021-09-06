@@ -24,7 +24,18 @@
           :totalNumber="images.length"
         >
           <div
-            class="absolute w-full h-full hidden group-hover:flex flex-col justify-between p-2 bg-black bg-opacity-50 text-white"
+            class="
+              absolute
+              w-full
+              h-full
+              hidden
+              group-hover:flex
+              flex-col
+              justify-between
+              p-2
+              bg-black bg-opacity-50
+              text-white
+            "
           >
             <circle-bg
               class="hover:bg-white w-6 h-6 self-end"
@@ -51,7 +62,17 @@
       </div>
     </div>
     <div
-      class="sticky bottom-3 flex justify-between mt-2 bg-warm-gray-200 dark:bg-black-lighter p-1.5 rounded"
+      class="
+        sticky
+        bottom-3
+        flex
+        justify-between
+        mt-2
+        bg-warm-gray-200
+        dark:bg-black-lighter
+        p-1.5
+        rounded
+      "
     >
       <div class="flex items-center">
         <circle-bg
@@ -103,6 +124,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import Turndown from "turndown";
 
 import { create as CreatePost, MediaFile } from "../../api/post/create";
+import { errorExist } from "../../models/responses";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -119,9 +141,8 @@ import XIcon from "@heroicons/vue/solid/XIcon";
 import ImageBox from "../box/ImageBox.vue";
 import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
-
 function getValidator(str) {
-  return new RegExp(`>${str}\\b`, 'u');
+  return new RegExp(`>${str}\\b`, "u");
 }
 
 Squire.prototype.hasActionSelection = function (name, action, format) {
@@ -290,8 +311,8 @@ export default defineComponent({
     },
     onPostErr(e) {
       this.submitted = false;
-      var errText = RespToError(e);
-      if (errText.length > 0) {
+      if (errorExist(e)) {
+        let errText = RespToError(e);
         this.onErr(errText);
       } else {
         this.onErr(SomethingWentWrong);

@@ -1,7 +1,7 @@
 <template>
   <div>
     <input-label for="comment" class="flex" :err="err.comment">
-      Commenting as
+      {{ theType }}ing as
       <user-name :user="storeUser" :displayType="usernameType"></user-name>
     </input-label>
     <text-input
@@ -12,7 +12,7 @@
       :required="true"
       :minLen="2"
       :maxLen="4096"
-      placeholder="Post a Comment"
+      :placeholder="`Post a ${theType}`"
       :regex="/^[^<>\[\]]*$/"
       :regexMsg="InvalidCharacters"
       @error="err.comment = $event"
@@ -20,11 +20,11 @@
       <div class="flex items-center mr-1.5">
         <basic-btn
           class="link p-1"
-          title="Submit Comment"
+          :title="`Submit ${theType}`"
           :disabled="commentDisabled"
           @click="submitComment()"
         >
-          Comment
+          {{ theType }}
         </basic-btn>
       </div>
     </text-input>
@@ -39,7 +39,7 @@ import { API_Comment } from "../../api/post/comment";
 import CreateComment from "../../api/post/comment/create";
 import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
 import { UnixTime } from "../../pkg/time";
-import { RespToError } from "../../models/responses";
+import { errorExist, RespToError } from "../../models/responses";
 
 import InputLabel from "../form/InputLabel.vue";
 import TextInput from "../form/TextInput.vue";
@@ -87,16 +87,21 @@ export default defineComponent({
     commentDisabled() {
       return this.commentErr || this.submitted;
     },
+    theType() {
+      return this.replyTo > 0 ? "Reply" : "Comment";
+    },
   },
   methods: {
     submitComment() {
       if (!this.commentErr && this.loggedIn) {
         this.submitted = true;
-        var start = UnixTime();
+        // Start time of query
+        let start = UnixTime();
         CreateComment(this.postId, this.replyTo, this.comment)
           .then((r) => {
             if (r.success) {
-              var end = UnixTime();
+              // End time of query + processing
+              let end = UnixTime();
               this.$emit(
                 "commented",
                 new API_Comment({
@@ -126,8 +131,9 @@ export default defineComponent({
     },
     onPostErr(e) {
       this.submitted = false;
-      if (e !== undefined && e !== null && e !== "") {
-        var errText = RespToError(e);
+      // Check if error actually exist
+      if (errorExist(e)) {
+        let errText = RespToError(e);
         if (errText.length > 0) {
           this.err.comment = errText;
         } else {

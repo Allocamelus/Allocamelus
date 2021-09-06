@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="" v-if="!isRemoved">
     <article class="flex flex-col flex-grow flex-shrink">
       <div class="flex flex-grow flex-shrink">
         <div class="flex flex-col flex-grow">
@@ -102,13 +102,26 @@
                 <small-btn class="pr-0.5 mr-1.5">
                   <div class="px-0.5">Share TODO</div>
                 </small-btn>
-                <div v-if="isCommenter" class="flex">
+                <div
+                  v-if="isCommenter"
+                  class="flex flex-row-reverse xs:flex-row"
+                >
                   <small-btn class="flex items-center pr-0.5 mr-1.5">
                     <div class="px-0.5">Edit TODO</div>
                   </small-btn>
-                  <small-btn class="flex items-center pr-0.5 mr-1.5">
-                    <div class="px-0.5">Delete TODO</div>
+                  <small-btn
+                    class="flex items-center pr-0.5 mr-1.5"
+                    @click="showDelete = !showDelete"
+                  >
+                    <div class="px-0.5">Delete</div>
                   </small-btn>
+                  <comment-delete
+                    :show="showDelete"
+                    :postId="comment.postId"
+                    :commentId="comment.id"
+                    @close="showDelete = false"
+                    @deleted="deleted(null)"
+                  ></comment-delete>
                 </div>
                 <small-btn v-else class="pr-0.5 mr-1.5">
                   <div class="px-0.5">Report TODO</div>
@@ -130,6 +143,7 @@
                   <comment-tree
                     :comment="API_Comment.createFrom(child)"
                     :userList="userList"
+                    @deleted="deleted($event)"
                   ></comment-tree>
                 </div>
               </feed>
@@ -166,6 +180,7 @@ import SmallBtn from "../button/SmallBtn.vue";
 import SmallText from "../text/Small.vue";
 import CommentInput from "./CommentInput.vue";
 import Feed from "../Feed.vue";
+import CommentDelete from "./comment/CommentDelete.vue";
 
 export default defineComponent({
   name: "comment-tree",
@@ -179,6 +194,7 @@ export default defineComponent({
       default: new user_list(),
     },
   },
+  emits: ["deleted"],
   setup() {
     const store = useStore();
     const loggedIn = computed(() => store.getters.loggedIn),
@@ -186,6 +202,8 @@ export default defineComponent({
     const data = reactive({
       hidden: false,
       showReplyForm: false,
+      showDelete: false,
+      isRemoved: false,
     });
 
     return {
@@ -216,6 +234,17 @@ export default defineComponent({
       this.comment.appendChild(c);
       this.user_list.appendUser(this.storeUser);
     },
+    deleted(cid) {
+      if (cid == null) {
+        cid = this.comment.id;
+      }
+
+      if (cid == this.comment.id) {
+        this.isRemoved = true;
+      } else {
+        this.$emit("deleted", cid);
+      }
+    },
   },
   components: {
     FmtTime,
@@ -228,6 +257,7 @@ export default defineComponent({
     SmallText,
     CommentInput,
     Feed,
+    CommentDelete,
   },
 });
 </script>

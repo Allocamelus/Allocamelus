@@ -15,8 +15,8 @@
     </div>
     <overlay
       v-model="show"
-      :blockScrool="blockScrool"
-      :xsFullHeigth="false"
+      :blockScroll="blockScroll"
+      :xsFullHeight="false"
       :xsSelfEnd="true"
     >
       <box
@@ -86,7 +86,7 @@ import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
   props: {
-    blockScrool: {
+    blockScroll: {
       type: Boolean,
       default: true,
     },

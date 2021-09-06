@@ -1,4 +1,5 @@
 {
     "editor.tabSize": 2,
-    "cSpell.language": "en,en-US"
+    "cSpell.language": "en,en-US",
+    "tailwindCSS.lint.invalidApply": "warning",
 }

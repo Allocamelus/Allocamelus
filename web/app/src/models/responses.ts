@@ -100,6 +100,12 @@ export default Responses
 // TODO: Add All error text
 export function RespToError(resp: string): string {
   switch (resp) {
+    // Shared errors
+    case Shared.NotFound:
+      return "Error: 404 Not Found"
+    case Shared.Unauthorized403:
+      return "Error: 403 Forbidden"
+      
     // User errors
     case User.Validate.Bio.Length:
       return invalidLenTxtMaker(0, 255)
@@ -129,6 +135,10 @@ export function RespToError(resp: string): string {
       return "Invalid Characters"
   }
   return ""
+}
+
+export function errorExist(err: string): boolean {
+  return err !== undefined && err !== null && err !== ""
 }
 
 // RespToHtml response to a html readable error

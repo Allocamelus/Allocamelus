@@ -62,6 +62,7 @@ export class API_Comment {
   }
 
   appendChild(c: API_Comment) {
+    c.depth = this.depth + 1
     this.children[c.id] = c
   }
 }
