@@ -1,5 +1,5 @@
 <template>
-  <div class="" v-if="!isRemoved">
+  <div class="">
     <article class="flex flex-col flex-grow flex-shrink">
       <div class="flex flex-grow flex-shrink">
         <div class="flex flex-col flex-grow">
@@ -72,7 +72,19 @@
               <small-text class="pt-1.5">[[hidden]]</small-text>
             </div>
             <div v-else class="flex flex-col flex-grow">
-              <div class="py-1.5 leading-5">{{ comment.content }}</div>
+              <div class="py-1.5">
+                <div v-if="!showEdit" class="leading-5">
+                  {{ comment.content }}
+                </div>
+                <div v-else>
+                  <comment-edit
+                    :postId="comment.postId"
+                    :commentId="comment.id"
+                    :modelValue="comment.content"
+                    @close="showEdit = false"
+                  ></comment-edit>
+                </div>
+              </div>
               <div
                 class="
                   flex flex-row-reverse
@@ -106,8 +118,11 @@
                   v-if="isCommenter"
                   class="flex flex-row-reverse xs:flex-row"
                 >
-                  <small-btn class="flex items-center pr-0.5 mr-1.5">
-                    <div class="px-0.5">Edit TODO</div>
+                  <small-btn
+                    class="flex items-center pr-0.5 mr-1.5"
+                    @click="showEdit = !showEdit"
+                  >
+                    <div class="px-0.5">Edit</div>
                   </small-btn>
                   <small-btn
                     class="flex items-center pr-0.5 mr-1.5"
@@ -120,7 +135,7 @@
                     :postId="comment.postId"
                     :commentId="comment.id"
                     @close="showDelete = false"
-                    @deleted="deleted(null)"
+                    @deleted="deleted()"
                   ></comment-delete>
                 </div>
                 <small-btn v-else class="pr-0.5 mr-1.5">
@@ -141,9 +156,8 @@
                   class="pt-3"
                 >
                   <comment-tree
-                    :comment="API_Comment.createFrom(child)"
-                    :userList="userList"
-                    @deleted="deleted($event)"
+                    :commentId="child.id"
+                    :postId="postId"
                   ></comment-tree>
                 </div>
               </feed>
@@ -178,30 +192,38 @@ import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
 import UserAvatar from "../user/Avatar.vue";
 import SmallBtn from "../button/SmallBtn.vue";
 import SmallText from "../text/Small.vue";
-import CommentInput from "./CommentInput.vue";
+import CommentInput from "./comment/CommentInput.vue";
 import Feed from "../Feed.vue";
 import CommentDelete from "./comment/CommentDelete.vue";
+import CommentEdit from "./comment/CommentEdit.vue";
 
 export default defineComponent({
   name: "comment-tree",
   props: {
-    comment: {
-      type: API_Comment,
-      default: new API_Comment(),
+    commentId: {
+      type: Number,
+      required: true,
     },
-    userList: {
-      type: user_list,
-      default: new user_list(),
+    postId: {
+      type: String,
+      required: true,
     },
   },
-  emits: ["deleted"],
-  setup() {
+  setup(props) {
     const store = useStore();
+    const storeName = `p${props.postId}-comments`;
     const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user);
+      comment = computed(() =>
+        store.getters[`${storeName}/comment`](props.commentId)
+      ),
+      storeUser = computed(() => store.getters.user),
+      commentUser = computed(() => store.getters[`${storeName}/user`]),
+      removeComment = (id) => store.commit(`${storeName}/remove`, id);
+
     const data = reactive({
       hidden: false,
       showReplyForm: false,
+      showEdit: false,
       showDelete: false,
       isRemoved: false,
     });
@@ -209,7 +231,10 @@ export default defineComponent({
     return {
       ...toRefs(data),
       loggedIn,
+      comment,
       storeUser,
+      commentUser,
+      removeComment,
       Fmt_Short_Time,
       API_Comment,
     };
@@ -219,7 +244,7 @@ export default defineComponent({
       return this.comment.updated > this.comment.created + 60;
     },
     user() {
-      return this.userList.user(this.comment.userId);
+      return this.commentUser(this.comment.userId);
     },
     missingReplies() {
       return this.comment.numNotHad();
@@ -234,16 +259,8 @@ export default defineComponent({
       this.comment.appendChild(c);
       this.user_list.appendUser(this.storeUser);
     },
-    deleted(cid) {
-      if (cid == null) {
-        cid = this.comment.id;
-      }
-
-      if (cid == this.comment.id) {
-        this.isRemoved = true;
-      } else {
-        this.$emit("deleted", cid);
-      }
+    deleted() {
+      this.removeComment(this.comment.id);
     },
   },
   components: {
@@ -258,6 +275,7 @@ export default defineComponent({
     CommentInput,
     Feed,
     CommentDelete,
+    CommentEdit,
   },
 });
 </script>

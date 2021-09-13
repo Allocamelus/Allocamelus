@@ -12,8 +12,8 @@
     <feed class="flex-col-reverse">
       <div v-for="(commentId, index) in list.order" :key="index" class="py-2">
         <comment-tree
-          :comment="list.comment(commentId)"
-          :userList="list"
+          :commentId="commentId"
+          :postId="postId"
         ></comment-tree>
       </div>
     </feed>
@@ -23,12 +23,13 @@
 <script>
 import { computed, defineComponent, toRefs } from "vue";
 import { useStore } from "vuex";
+import CommentsStore from "../../store/module/comments";
 
 import { API_Comments } from "../../api/post/comments/get";
 
 import Feed from "../Feed.vue";
 import CommentTree from "./CommentTree.vue";
-import CommentInput from "./CommentInput.vue";
+import CommentInput from "./comment/CommentInput.vue";
 import Box from "../box/Box.vue";
 
 export default defineComponent({
@@ -43,14 +44,30 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const store = useStore();
+    const storeName = `p${props.postId}-comments`;
     const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user);
+      storeUser = computed(() => store.getters.user),
+      updateComments = (c) => store.commit(`${storeName}/update`, c);
+
+    store.registerModule(storeName, CommentsStore);
+
     return {
+      storeName,
       loggedIn,
       storeUser,
+      updateComments,
     };
+  },
+  watch: {
+    list(newValue) {
+      this.updateComments(newValue);
+    },
+  },
+  unmounted() {
+    console.log("unmounted");
+    this.$store.unregisterModule(this.storeName);
   },
   methods: {
     newComment(c) {
