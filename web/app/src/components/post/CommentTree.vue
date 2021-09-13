@@ -112,9 +112,9 @@
                   ></component>
                   <div class="pl-1">Reply</div>
                 </small-btn>
-                <small-btn class="pr-0.5 mr-1.5">
-                  <div class="px-0.5">Share TODO</div>
-                </small-btn>
+                <!-- TODO: <small-btn class="pr-0.5 mr-1.5">
+                  <div class="px-0.5">Share</div>
+                </small-btn> -->
                 <div
                   v-if="isCommenter"
                   class="flex flex-row-reverse xs:flex-row"
@@ -139,17 +139,26 @@
                     @deleted="deleted()"
                   ></comment-delete>
                 </div>
-                <small-btn v-else class="pr-0.5 mr-1.5">
-                  <div class="px-0.5">Report TODO</div>
-                </small-btn>
+                <!-- TODO: <small-btn v-else class="pr-0.5 mr-1.5">
+                  <div class="px-0.5">Report</div>
+                </small-btn>-->
               </div>
-              <div v-if="showReplyForm" class="pt-3">
+              <div v-if="loggedIn" class="pt-3">
                 <comment-input
+                  v-if="showReplyForm"
                   :postId="String(comment.postId)"
                   :replyTo="comment.id"
                   @commented="newReply($event)"
                 ></comment-input>
               </div>
+              <sign-up-overlay
+                v-else
+                :show="showReplyForm"
+                :redirect="`/post/${postId}`"
+                @close="showReplyForm = false"
+              >
+                <div>Sign Up or Login to Reply</div>
+              </sign-up-overlay>
               <feed v-if="comment.hasChildren()" class="flex-col-reverse">
                 <div
                   v-for="(child, index) in comment.children"
@@ -196,6 +205,7 @@ import CommentInput from "./comment/CommentInput.vue";
 import Feed from "../Feed.vue";
 import CommentDelete from "./comment/CommentDelete.vue";
 import CommentEdit from "./comment/CommentEdit.vue";
+import SignUpOverlay from "../overlay/SignUpOverlay.vue";
 
 export default defineComponent({
   name: "comment-tree",
@@ -265,8 +275,8 @@ export default defineComponent({
       this.removeComment(this.comment.id);
     },
     updated(c) {
-      this.updateComment(c)
-    }
+      this.updateComment(c);
+    },
   },
   components: {
     FmtTime,
@@ -281,6 +291,7 @@ export default defineComponent({
     Feed,
     CommentDelete,
     CommentEdit,
+    SignUpOverlay,
   },
 });
 </script>

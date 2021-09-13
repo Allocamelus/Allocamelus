@@ -20,7 +20,14 @@
           </div>
         </div>
         <div
-          class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0 flex justify-end items-start"
+          class="
+            mt-3
+            xs:mt-0
+            xs:ml-3
+            flex-shrink-0 flex
+            justify-end
+            items-start
+          "
         >
           <basic-btn
             class="px-3 py-2 border whitespace-nowrap"
@@ -42,9 +49,13 @@
         <sign-up-overlay
           v-if="!loggedIn"
           :show="overlay"
-          :user="user"
+          :redirect="`/u/${user.name}`"
           @close="overlay = false"
         >
+          <div>Sign Up or Login to Follow {{ user.name }}</div>
+          <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
+            @{{ user.userName }}
+          </div>
         </sign-up-overlay>
       </div>
     </error-box>
@@ -199,7 +210,8 @@ export default defineComponent({
           ) {
             return userUnfollow(this.user.userName).then((r) => {
               if (r.success) {
-                this.user.selfFollow.requested = this.user.selfFollow.following = false;
+                this.user.selfFollow.requested =
+                  this.user.selfFollow.following = false;
               }
               return r;
             });

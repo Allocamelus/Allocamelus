@@ -8,13 +8,20 @@
           @commented="newComment($event)"
         ></comment-input>
       </div>
+      <div v-else>
+        <text-input
+          placeholder="Post a Comment"
+          :readonly="true"
+          @click="
+            $router.push({ path: '/login', query: { r: `/post/${postId}` } })
+          "
+        >
+        </text-input>
+      </div>
     </box>
     <feed class="flex-col-reverse">
       <div v-for="(commentId, index) in list.order" :key="index" class="py-2">
-        <comment-tree
-          :commentId="commentId"
-          :postId="postId"
-        ></comment-tree>
+        <comment-tree :commentId="commentId" :postId="postId"></comment-tree>
       </div>
     </feed>
   </div>
@@ -31,6 +38,7 @@ import Feed from "../Feed.vue";
 import CommentTree from "./CommentTree.vue";
 import CommentInput from "./comment/CommentInput.vue";
 import Box from "../box/Box.vue";
+import TextInput from "../form/TextInput.vue";
 
 export default defineComponent({
   name: "comment-feed",
@@ -80,6 +88,7 @@ export default defineComponent({
     CommentTree,
     CommentInput,
     Box,
+    TextInput,
   },
 });
 </script>

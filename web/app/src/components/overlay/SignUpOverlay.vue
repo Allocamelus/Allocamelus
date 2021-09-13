@@ -42,10 +42,7 @@
               justify-evenly
             "
           >
-            <div>Sign Up or Login to Follow {{ user.name }}</div>
-            <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
-              @{{ user.userName }}
-            </div>
+            <slot></slot>
           </div>
           <div class="flex flex-col items-center mt-8">
             <basic-btn
@@ -63,7 +60,7 @@
               Sign Up
             </basic-btn>
             <basic-btn
-              to="/login"
+              :to="{ path: '/login', query: { r: redirect } }"
               class="
                 w-full
                 py-2.5
@@ -87,8 +84,6 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 
-import { GEN_User } from "../../models/go_structs_gen";
-
 import XIcon from "@heroicons/vue/solid/XIcon";
 
 import Box from "../box/Box.vue";
@@ -97,13 +92,14 @@ import Overlay from "./Overlay.vue";
 
 export default defineComponent({
   props: {
-    user: {
-      type: GEN_User,
-      required: true,
-    },
     show: {
       type: Boolean,
       default: false,
+    },
+    // Login only redirect
+    redirect: {
+      type: String,
+      default: "",
     },
   },
   emits: ["close"],
