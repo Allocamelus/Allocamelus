@@ -81,6 +81,7 @@
                     :postId="comment.postId"
                     :commentId="comment.id"
                     :modelValue="comment.content"
+                    @edited="updated($event)"
                     @close="showEdit = false"
                   ></comment-edit>
                 </div>
@@ -180,7 +181,6 @@ import { computed, defineComponent, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
 
 import { API_Comment } from "../../api/post/comment";
-import { user_list } from "../../models/ordered_list";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
@@ -218,7 +218,8 @@ export default defineComponent({
       ),
       storeUser = computed(() => store.getters.user),
       commentUser = computed(() => store.getters[`${storeName}/user`]),
-      removeComment = (id) => store.commit(`${storeName}/remove`, id);
+      removeComment = (id) => store.commit(`${storeName}/remove`, id),
+      updateComment = (c) => store.commit(`${storeName}/updateComment`, c);
 
     const data = reactive({
       hidden: false,
@@ -235,6 +236,7 @@ export default defineComponent({
       storeUser,
       commentUser,
       removeComment,
+      updateComment,
       Fmt_Short_Time,
       API_Comment,
     };
@@ -262,6 +264,9 @@ export default defineComponent({
     deleted() {
       this.removeComment(this.comment.id);
     },
+    updated(c) {
+      this.updateComment(c)
+    }
   },
   components: {
     FmtTime,
