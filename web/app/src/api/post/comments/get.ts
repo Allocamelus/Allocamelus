@@ -26,8 +26,8 @@ export class API_Comments extends ordered_list {
   }
 }
 
-export async function get(postId: number | string): Promise<API_Comments> {
-  return v1.get(`post/${postId}/comments`)
+export async function get(postId: number | string, pageNum = 0): Promise<API_Comments> {
+  return v1.get(`post/${postId}/comments?=${pageNum}`)
     .then(r => {
       if (r.data.error == undefined) {
         return API_Comments.createFrom(r.data)

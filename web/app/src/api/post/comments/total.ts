@@ -14,8 +14,8 @@ export class API_Total {
   }
 }
 
-export async function get(postId: number | string): Promise<API_Total> {
-  return v1.get(`post/${postId}/comments`)
+export async function total(postId: number | string): Promise<API_Total> {
+  return v1.get(`post/${postId}/comments/total`)
     .then(r => {
       if (r.data.error == undefined) {
         return API_Total.createFrom(r.data)
