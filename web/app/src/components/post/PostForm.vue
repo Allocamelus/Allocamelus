@@ -124,7 +124,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import Turndown from "turndown";
 
 import { create as CreatePost, MediaFile } from "../../api/post/create";
-import { errorExist } from "../../models/responses";
+import { notNull } from "../../models/responses";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -311,7 +311,7 @@ export default defineComponent({
     },
     onPostErr(e) {
       this.submitted = false;
-      if (errorExist(e)) {
+      if (notNull(e)) {
         let errText = RespToError(e);
         this.onErr(errText);
       } else {

@@ -46,7 +46,7 @@
 import { defineComponent, reactive, toRefs } from "vue";
 
 import remove from "../../../api/post/comment/remove";
-import { errorExist, RespToError } from "../../../models/responses";
+import { notNull, RespToError } from "../../../models/responses";
 import { SomethingWentWrong } from "../../form/errors";
 
 import Overlay from "../../overlay/Overlay.vue";
@@ -115,7 +115,7 @@ export default defineComponent({
     },
     handleResp(e) {
       this.submitted = false;
-      if (errorExist(e)) {
+      if (notNull(e)) {
         console.log(e);
         let errText = RespToError(e);
         if (errText.length > 0) {

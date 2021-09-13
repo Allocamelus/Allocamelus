@@ -137,7 +137,7 @@ export function RespToError(resp: string): string {
   return ""
 }
 
-export function errorExist(err: string): boolean {
+export function notNull(err: string): boolean {
   return err !== undefined && err !== null && err !== ""
 }
 

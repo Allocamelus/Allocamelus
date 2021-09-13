@@ -42,7 +42,7 @@ import { useStore } from "vuex";
 import { API_Comment } from "../../../api/post/comment";
 import UpdateComment from "../../../api/post/comment/update";
 import { InvalidCharacters, SomethingWentWrong } from "../../form/errors";
-import { errorExist, RespToError } from "../../../models/responses";
+import { notNull, RespToError } from "../../../models/responses";
 import { UnixTime } from "../../../pkg/time";
 
 import InputLabel from "../../form/InputLabel.vue";
@@ -139,7 +139,7 @@ export default defineComponent({
     onPostErr(e) {
       this.submitted = false;
       // Check if error actually exist
-      if (errorExist(e)) {
+      if (notNull(e)) {
         let errText = RespToError(e);
         if (errText.length > 0) {
           this.err.comment = errText;
