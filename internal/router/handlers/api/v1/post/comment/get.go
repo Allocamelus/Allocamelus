@@ -1,7 +1,6 @@
 package comment
 
 import (
-	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/pkg/dbutil"
 	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
@@ -18,7 +17,7 @@ type GetResponse struct {
 
 func Get(c *fiber.Ctx) error {
 	// Get Comment
-	com, errFunc := getCommentForPost(c)
+	com, errFunc := getComment(c)
 	if errFunc != nil {
 		return errFunc(c)
 	}
@@ -144,12 +143,7 @@ func GetTotalForPost(c *fiber.Ctx) error {
 	return fiberutil.JSON(c, 200, GetTotal{Total: tComments})
 }
 
-func getCommentForPost(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {
-	// Get post id from params
-	postID := fiberutil.ParamsInt64(c, "id")
-	if postID == 0 {
-		return nil, apierr.ErrNotFound
-	}
+func getComment(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {
 	// Get comment id from params
 	commentId := fiberutil.ParamsInt64(c, "commentID")
 	if commentId == 0 {
@@ -170,12 +164,5 @@ func getCommentForPost(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {
 		return nil, apierr.ErrNotFound
 	}
 
-	// Allow user to view own comments
-	if !compare.EqualInt64(com.UserID, s.UserID) {
-		// Otherwise only allow comments to be viewed with their post
-		if !compare.EqualInt64(com.PostID, postID) {
-			return nil, apierr.ErrUnauthorized403
-		}
-	}
 	return com, nil
 }

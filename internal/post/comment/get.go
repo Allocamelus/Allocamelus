@@ -70,20 +70,43 @@ func GetUserId(commentID int64) (int64, error) {
 }
 
 var (
-	//go:embed sql/getForCanView.sql
-	qGetForCanView string
-	preGetCanView  *sql.Stmt
+	//go:embed sql/getPostID.sql
+	qGetPostID   string
+	preGetPostID *sql.Stmt
 )
 
-func getForCanView(commentID int64) (*Comment, error) {
-	if preGetCanView == nil {
-		preGetCanView = g.Data.Prepare(qGetForCanView)
+func GetPostID(commentID int64) (int64, error) {
+	if preGetPostID == nil {
+		preGetPostID = g.Data.Prepare(qGetPostID)
+	}
+
+	// Get comment from store
+	var postID int64
+	err := preGetPostID.QueryRow(commentID).Scan(&postID)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return 0, err
+		}
+		return 0, ErrNoComment
+	}
+	return postID, nil
+}
+
+var (
+	//go:embed sql/getPostUserID.sql
+	qGetPostUserID   string
+	preGetPostUserID *sql.Stmt
+)
+
+func GetPostUserID(commentID int64) (*Comment, error) {
+	if preGetPostUserID == nil {
+		preGetPostUserID = g.Data.Prepare(qGetPostUserID)
 	}
 
 	// Get comment from store
 	c := newComment()
 	c.PostID = commentID
-	err := preGetCanView.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
+	err := preGetPostUserID.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, err

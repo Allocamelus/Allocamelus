@@ -111,6 +111,39 @@ func ProtectedCanViewPost(c *fiber.Ctx) error {
 	return c.Next()
 }
 
+// ProtectedCommentPost only allow comment to be viewed with
+func ProtectedCommentPost(c *fiber.Ctx) error {
+	// Get url post id
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+	// Get url comment id
+	commentID := fiberutil.ParamsInt64(c, "commentID")
+	if commentID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	// Get comment post id
+	cPostID, err := comment.GetPostID(commentID)
+	if err != nil {
+		// If No comment
+		if err == comment.ErrNoComment {
+			return apierr.ErrNotFound(c)
+		}
+
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	// Check url id with comment post id
+	if compare.EqualInt64(postID, cPostID) {
+		return c.Next()
+	}
+
+	return apierr.ErrUnauthorized403(c)
+}
+
 func ProtectedCommenterOnly(c *fiber.Ctx) error {
 	commentID := fiberutil.ParamsInt64(c, "commentID")
 	if commentID == 0 {

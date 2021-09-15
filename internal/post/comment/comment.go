@@ -74,7 +74,7 @@ func canViewCheckCache(commentID int64, commentCache ...*Comment) (*Comment, err
 		// Use commentCache if valid
 		return commentCache[0], nil
 	}
-	return getForCanView(commentID)
+	return GetPostUserID(commentID)
 }
 
 func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
