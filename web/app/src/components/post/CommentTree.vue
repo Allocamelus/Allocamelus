@@ -80,7 +80,6 @@
                   <comment-edit
                     :postId="comment.postId"
                     :commentId="comment.id"
-                    :modelValue="comment.content"
                     @edited="updated($event)"
                     @close="showEdit = false"
                   ></comment-edit>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <text-input
-      v-model="comment"
+      v-model="comment.content"
       name="comment"
       :watchModel="true"
       :check="true"
@@ -53,10 +53,6 @@ import UserName, { OneLineLink, NoName } from "../../user/Name.vue";
 export default defineComponent({
   name: "comment-input",
   props: {
-    modelValue: {
-      type: String,
-      default: "",
-    },
     postId: {
       type: Number,
       required: true,
@@ -69,10 +65,12 @@ export default defineComponent({
   emits: ["edited", "close"],
   setup(props) {
     const store = useStore();
+    const storeName = `p${props.postId}-comments`;
     const loggedIn = computed(() => store.getters.loggedIn),
       storeUser = computed(() => store.getters.user);
     const data = reactive({
-      comment: props.modelValue,
+      // Don't use computed value so it can be edited
+      comment: store.getters[`${storeName}/comment`](props.commentId),
       submitted: false,
       err: {
         comment: "",
@@ -96,11 +94,6 @@ export default defineComponent({
       return this.commentErr || this.submitted;
     },
   },
-  watch: {
-    modelValue(newValue) {
-      this.comment = newValue;
-    },
-  },
   methods: {
     close() {
       this.$emit("close");
@@ -111,20 +104,13 @@ export default defineComponent({
 
         // Start time of query
         let start = UnixTime();
-        UpdateComment(this.postId, this.commentId, this.comment)
+        UpdateComment(this.postId, this.commentId, this.comment.content)
           .then((r) => {
             // End time of query + processing
             let end = UnixTime();
             if (r.success) {
-              this.$emit(
-                "edited",
-                new API_Comment({
-                  id: r.id,
-                  postId: Number(this.postId).valueOf(),
-                  updated: (start + end) / 2, // Guess update time with query times
-                  content: this.comment,
-                })
-              );
+              this.comment.updated = (start + end) / 2; // Guess update time with query times
+              this.$emit("edited", new API_Comment(this.comment));
               this.close();
             }
             // Handle error (if any)
