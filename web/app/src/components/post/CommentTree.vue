@@ -228,6 +228,8 @@ export default defineComponent({
       storeUser = computed(() => store.getters.user),
       commentUser = computed(() => store.getters[`${storeName}/user`]),
       removeComment = (id) => store.commit(`${storeName}/remove`, id),
+      addComment = (c) => store.commit(`${storeName}/addComment`, c),
+      addUser = (c) => store.commit(`${storeName}/addUser`, c),
       updateComment = (c) => store.commit(`${storeName}/updateComment`, c);
 
     const data = reactive({
@@ -243,6 +245,8 @@ export default defineComponent({
       loggedIn,
       comment,
       storeUser,
+      addComment,
+      addUser,
       commentUser,
       removeComment,
       updateComment,
@@ -267,8 +271,8 @@ export default defineComponent({
   methods: {
     newReply(c) {
       this.showReplyForm = false;
-      this.comment.appendChild(c);
-      this.user_list.appendUser(this.storeUser);
+      this.addComment(c);
+      this.addUser(this.storeUser);
     },
     deleted() {
       this.removeComment(this.comment.id);

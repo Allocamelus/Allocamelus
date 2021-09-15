@@ -116,7 +116,6 @@ export default defineComponent({
     handleResp(e) {
       this.submitted = false;
       if (notNull(e)) {
-        console.log(e);
         let errText = RespToError(e);
         if (errText.length > 0) {
           this.err.msg = errText;

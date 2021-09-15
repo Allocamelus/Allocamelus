@@ -37,8 +37,9 @@ export function Comment(state: State) {
 
 export function CommentPath(state: State) {
   return (id: number): string[] => {
-    if (!Object.prototype.hasOwnProperty.call(
-      state.comPathCache, id)) {
+    if (!Object.prototype.hasOwnProperty.call(state.comPathCache, id) ||
+      Object.keys(state.comPathCache[id]).length === 0
+    ) {
       state.comPathCache[id] = commentPathFromComments(state.comments, id)
     }
     return state.comPathCache[id]
@@ -46,7 +47,7 @@ export function CommentPath(state: State) {
 }
 
 function commentPathFromComments(comments: API_Comments, id: number): string[] {
-  let path: string[] | undefined
+  let path: string[] | null
   for (const k in comments.comments) {
     if (Object.prototype.hasOwnProperty.call(comments.comments, k)) {
       path = getCommentPath(comments.comments[k], id, [k])
