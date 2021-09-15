@@ -1,5 +1,6 @@
 import { GetterTree } from "vuex";
 import { API_Comment } from "../../../api/post/comment";
+import { API_Comments } from "../../../api/post/comments/get";
 import { GEN_User } from "../../../models/go_structs_gen";
 import { State } from "./state";
 
@@ -8,18 +9,16 @@ export type Getters = {
   user(state: State): (id: number) => GEN_User
 }
 
+export type GettersResp = {
+  comment(id: number): API_Comment | null
+  user(id: number): GEN_User
+}
+
 export const getters = <GetterTree<State, any>>{
   comment(state: State) {
     return (id: number): API_Comment | null => {
-      for (const k in state.comments.comments) {
-        if (Object.prototype.hasOwnProperty.call(state.comments.comments, k)) {
-          let c = getComment(state.comments.comments[k], id)
-          if (c) {
-            return API_Comment.createFrom(c)
-          }
-        }
-      }
-      return null
+      let path = CommentPath(state)(id)
+      return CommentFromPath(state.comments, path)
     }
   },
   user(state: State) {
@@ -29,17 +28,68 @@ export const getters = <GetterTree<State, any>>{
   }
 }
 
-export function getComment(comment: API_Comment, id: number): API_Comment {
-  if (comment.id === id) {
-    return comment
+export function Comment(state: State) {
+  return (id: number): API_Comment | null => {
+    let path = CommentPath(state)(id)
+    return CommentFromPath(state.comments, path)
   }
+}
 
-  for (const k in comment.children) {
-    if (Object.hasOwnProperty.call(comment.children, k)) {
-      let c = getComment(comment.children[k], id)
-      if (c) {
-        return c
+export function CommentPath(state: State) {
+  return (id: number): string[] => {
+    if (!Object.prototype.hasOwnProperty.call(
+      state.comPathCache, id)) {
+      state.comPathCache[id] = commentPathFromComments(state.comments, id)
+    }
+    return state.comPathCache[id]
+  }
+}
+
+function commentPathFromComments(comments: API_Comments, id: number): string[] {
+  let path: string[] | undefined
+  for (const k in comments.comments) {
+    if (Object.prototype.hasOwnProperty.call(comments.comments, k)) {
+      path = getCommentPath(comments.comments[k], id, [k])
+      if (path !== null) {
+        return path
       }
     }
   }
+}
+
+export function CommentFromPath(comments: API_Comments | API_Comment, path: string[]): API_Comment {
+  let c: API_Comment = null
+
+  path.forEach(key => {
+    if (c === null) {
+      if (comments instanceof API_Comments) {
+        c = comments.comment(comments.comments[key].id)
+      } else {
+        c = comments.child(key)
+      }
+    } else {
+      c = c.child(key)
+    }
+  });
+
+  return c
+}
+
+
+function getCommentPath(comment: API_Comment, id: number, path: string[]): string[] | null {
+  if (comment.id == id) {
+    return path
+  }
+  let keys: string[]
+  for (const k in comment.children) {
+    if (Object.hasOwnProperty.call(comment.children, k)) {
+      keys = []
+      keys.push(...path, k)
+      let p = getCommentPath(comment.children[k], id, keys)
+      if (p !== null) {
+        return p
+      }
+    }
+  }
+  return null
 }

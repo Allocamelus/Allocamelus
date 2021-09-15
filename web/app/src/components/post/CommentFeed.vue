@@ -57,7 +57,7 @@ export default defineComponent({
     const storeName = `p${props.postId}-comments`;
     const loggedIn = computed(() => store.getters.loggedIn),
       storeUser = computed(() => store.getters.user),
-      updateComments = (c) => store.commit(`${storeName}/update`, c);
+      populateComments = (c) => store.commit(`${storeName}/populate`, c);
 
     store.registerModule(storeName, CommentsStore);
 
@@ -65,12 +65,12 @@ export default defineComponent({
       storeName,
       loggedIn,
       storeUser,
-      updateComments,
+     populateComments,
     };
   },
   watch: {
     list(newValue) {
-      this.updateComments(newValue);
+      this.populateComments(newValue);
     },
   },
   unmounted() {

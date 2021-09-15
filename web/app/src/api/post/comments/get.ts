@@ -3,8 +3,10 @@ import { API_Error } from "../../../models/api_error";
 import ordered_list from "../../../models/ordered_list";
 import { API_Comment } from "../comment"
 
+export type Ordered_API_Comments = { [key: number]: API_Comment }
+
 export class API_Comments extends ordered_list {
-  comments: { [key: number]: API_Comment };
+  comments: Ordered_API_Comments;
 
   static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_Comments(source);
@@ -16,10 +18,15 @@ export class API_Comments extends ordered_list {
     this.comments = source["comments"];
   }
 
-  // Method
+  // Methods
   comment(commentId: number): API_Comment {
-    return API_Comment.createFrom(this.comments[commentId]);
+    // Convert comments to API_Comment class if not
+    if (!(this.comments[commentId] instanceof API_Comment)) {
+      this.comments[commentId] = new API_Comment(this.comments[commentId])
+    }
+    return this.comments[commentId];
   }
+
   appendComment(c: API_Comment) {
     this.comments[c.id] = c
     this.order[this.total()] = c.id
@@ -27,7 +34,7 @@ export class API_Comments extends ordered_list {
 }
 
 export async function get(postId: number | string, pageNum = 0): Promise<API_Comments> {
-  return v1.get(`post/${postId}/comments?=${pageNum}`)
+  return v1.get(`post/${postId}/comments?p=${pageNum}`)
     .then(r => {
       if (r.data.error == undefined) {
         return API_Comments.createFrom(r.data)

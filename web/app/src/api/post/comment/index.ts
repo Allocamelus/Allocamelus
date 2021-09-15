@@ -1,3 +1,5 @@
+import { Ordered_API_Comments } from "../comments/get";
+
 export class API_Comment {
   id: number;
   userId: number;
@@ -8,7 +10,7 @@ export class API_Comment {
   content: string;
   replies: number;
   depth: number
-  children: { [key: number]: API_Comment };
+  children: Ordered_API_Comments;
 
   static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
     return new API_Comment(source);
@@ -28,9 +30,25 @@ export class API_Comment {
     this.children = source["children"];
   }
 
-  // Method
-  child(commentId: number): API_Comment {
-    return API_Comment.createFrom(this.children[commentId]);
+  // Methods
+  child(key: string): API_Comment {
+    // Convert child to API_Comment class if not
+    if (!(this.children[key] instanceof API_Comment)) {
+      this.children[key] = new API_Comment(this.children[key])
+    }
+    return this.children[key]
+  }
+
+  // Get childKey by commentId
+  childKey(commentId: number): string {
+    for (const key in this.children) {
+      if (Object.prototype.hasOwnProperty.call(this.children, key)) {
+        const c = this.children[key];
+        if (c.id == commentId) {
+          return key
+        }
+      }
+    }
   }
 
   numNotHad(): number {
