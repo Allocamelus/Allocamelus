@@ -16,10 +16,7 @@ export type GettersResp = {
 
 export const getters = <GetterTree<State, any>>{
   comment(state: State) {
-    return (id: number): API_Comment | null => {
-      let path = CommentPath(state)(id)
-      return CommentFromPath(state.comments, path)
-    }
+      return Comment(state)
   },
   user(state: State) {
     return (id: number): GEN_User => {
