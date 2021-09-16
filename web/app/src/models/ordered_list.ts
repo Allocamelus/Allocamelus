@@ -20,13 +20,19 @@ export class user_list {
     }
   }
 
-  // Method
+  // Methods
   user(userId: number): GEN_User {
-    return GEN_User.createFrom(this.users[userId]);
+    if (Object.hasOwnProperty.call(this.users, userId)) {
+      // Convert users to GEN_User class if not
+      if (!(this.users[userId] instanceof GEN_User)) {
+        this.users[userId] = new GEN_User(this.users[userId])
+      }
+      return this.users[userId];
+    }
   }
   appendUser(u: GEN_User) {
     if (!(u.id in this.users)) {
-      this.user[u.id] = u
+      this.users[u.id] = u
     }
   }
 }

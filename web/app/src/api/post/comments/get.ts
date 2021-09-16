@@ -20,11 +20,13 @@ export class API_Comments extends ordered_list {
 
   // Methods
   comment(commentId: number): API_Comment {
-    // Convert comments to API_Comment class if not
-    if (!(this.comments[commentId] instanceof API_Comment)) {
-      this.comments[commentId] = new API_Comment(this.comments[commentId])
+    if (Object.hasOwnProperty.call(this.comments, commentId)) {
+      // Convert comments to API_Comment class if not
+      if (!(this.comments[commentId] instanceof API_Comment)) {
+        this.comments[commentId] = new API_Comment(this.comments[commentId])
+      }
+      return this.comments[commentId];
     }
-    return this.comments[commentId];
   }
 
   appendComment(c: API_Comment) {
