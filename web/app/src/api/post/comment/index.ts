@@ -9,7 +9,7 @@ export class API_Comment {
   updated: number;
   content: string;
   replies: number;
-  depth: number
+  depth: number;
   children: Ordered_API_Comments;
 
   static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
@@ -39,6 +39,13 @@ export class API_Comment {
     return this.children[key]
   }
 
+  delChild(key: string) {
+    if (Object.prototype.hasOwnProperty.call(this.children, key)) {
+      delete this.children[key]
+      this.replies--
+    }
+  }
+
   // Get childKey by commentId
   childKey(commentId: number): string {
     for (const key in this.children) {
@@ -51,12 +58,11 @@ export class API_Comment {
     }
   }
 
-  numNotHad(): number {
+  missingReplies(): number {
     let num = 0
     for (const key in this.children) {
       if (Object.prototype.hasOwnProperty.call(this.children, key)) {
-        const element = API_Comment.createFrom(this.children[key]);
-        num += element.replies
+        num += this.child(key).replies
         num++
       }
     }
@@ -79,9 +85,11 @@ export class API_Comment {
     return false
   }
 
-  appendChild(c: API_Comment) {
+  appendChild(c: API_Comment, newChild = false) {
     c.depth = this.depth + 1
     this.children[this.numDirectChildren()] = c
-    this.replies++
+    if (newChild) {
+      this.replies++
+    }
   }
 }

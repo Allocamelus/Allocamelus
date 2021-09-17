@@ -7,20 +7,27 @@ import { State } from "./state";
 export type Getters = {
   comment(state: State): (id: number) => API_Comment | null
   user(state: State): (id: number) => GEN_User
+  missingReplies(state: State): (id: number) => number
 }
 
 export type GettersResp = {
   comment(id: number): API_Comment | null
   user(id: number): GEN_User
+  missingReplies(id: number): number
 }
 
 export const getters = <GetterTree<State, any>>{
   comment(state: State) {
-      return Comment(state)
+    return Comment(state)
   },
   user(state: State) {
     return (id: number): GEN_User => {
       return state.comments.user(id)
+    }
+  },
+  missingReplies(state: State) {
+    return (id: number): number => {
+      return Comment(state)(id).missingReplies()
     }
   }
 }

@@ -1,5 +1,12 @@
 <template>
   <div class="">
+    <snackbar
+      v-model="err.show"
+      :closeBtn="true"
+      class="text-gray-800 dark:text-gray-200"
+    >
+      {{ err.msg }}
+    </snackbar>
     <article class="flex flex-col flex-grow flex-shrink">
       <div class="flex flex-grow flex-shrink">
         <div class="flex flex-col flex-grow">
@@ -171,7 +178,7 @@
                 </div>
               </feed>
               <div class="mt-2" v-if="missingReplies > 0">
-                <div class="link text-sm font-semibold">
+                <div class="link text-sm font-semibold" @click="getReplies()">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
                 </div>
@@ -189,6 +196,10 @@ import { computed, defineComponent, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
 
 import { API_Comment } from "../../api/post/comment";
+import { replies } from "../../api/post/comment/replies";
+
+import { RespToError } from "../../models/responses";
+import { SomethingWentWrong } from "../form/errors";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
@@ -205,6 +216,7 @@ import Feed from "../Feed.vue";
 import CommentDelete from "./comment/CommentDelete.vue";
 import CommentEdit from "./comment/CommentEdit.vue";
 import SignUpOverlay from "../overlay/SignUpOverlay.vue";
+import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
   name: "comment-tree",
@@ -225,6 +237,9 @@ export default defineComponent({
       comment = computed(() =>
         store.getters[`${storeName}/comment`](props.commentId)
       ),
+      missingReplies = computed(() =>
+        store.getters[`${storeName}/missingReplies`](props.commentId)
+      ),
       storeUser = computed(() => store.getters.user),
       commentUser = computed(() => store.getters[`${storeName}/user`]),
       removeComment = (id) => store.commit(`${storeName}/remove`, id),
@@ -237,13 +252,19 @@ export default defineComponent({
       showReplyForm: false,
       showEdit: false,
       showDelete: false,
-      isRemoved: false,
+      // Replies page
+      page: 0,
+      err: {
+        msg: "",
+        show: false,
+      },
     });
 
     return {
       ...toRefs(data),
       loggedIn,
       comment,
+      missingReplies,
       storeUser,
       addComment,
       addUser,
@@ -261,9 +282,6 @@ export default defineComponent({
     user() {
       return this.commentUser(this.comment.userId);
     },
-    missingReplies() {
-      return this.comment.numNotHad();
-    },
     isCommenter() {
       return this.loggedIn && this.storeUser.id == this.comment.userId;
     },
@@ -271,7 +289,11 @@ export default defineComponent({
   methods: {
     newReply(c) {
       this.showReplyForm = false;
-      this.addComment(c);
+      this.addComment({
+        // AddCommentParams
+        newComment: true,
+        comment: c,
+      });
       this.addUser(this.storeUser);
     },
     deleted() {
@@ -279,6 +301,37 @@ export default defineComponent({
     },
     updated(c) {
       this.updateComment(c);
+    },
+    getReplies() {
+      replies(this.postId, this.commentId, this.page)
+        .then((r) => {
+          // Add users for replies
+          for (const k in r.users) {
+            if (Object.hasOwnProperty.call(r.users, k)) {
+              this.addUser(r.users[k]);
+            }
+          }
+          // Add replies
+          for (const k in r.order) {
+            if (Object.hasOwnProperty.call(r.order, k)) {
+              this.addComment({
+                // AddCommentParams
+                newComment: false,
+                comment: r.comment(r.order[k]),
+              });
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          let errText = RespToError(e);
+          if (errText.length > 0) {
+            this.err.msg = errText;
+          } else {
+            this.err.msg = SomethingWentWrong;
+          }
+          this.err.show = true;
+        });
     },
   },
   components: {
@@ -295,6 +348,7 @@ export default defineComponent({
     CommentDelete,
     CommentEdit,
     SignUpOverlay,
+    Snackbar,
   },
 });
 </script>

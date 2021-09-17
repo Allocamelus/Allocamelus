@@ -1,13 +1,13 @@
 import { MutationTree } from "vuex";
 import { API_Comment } from "../../../api/post/comment";
-import { API_Comments, Ordered_API_Comments } from "../../../api/post/comments/get";
+import { API_Comments } from "../../../api/post/comments/get";
 import { GEN_User } from "../../../models/go_structs_gen";
 import { Comment, CommentFromPath, CommentPath } from "./getters";
 import { State } from "./state";
 
-export type AddChildrenParams = {
-  parentId: number
-  children: Ordered_API_Comments
+export type AddCommentParams = {
+  newComment: boolean
+  comment: API_Comment
 }
 
 export type Mutations = {
@@ -24,21 +24,23 @@ export const mutations = <MutationTree<State>>{
     state.comments = c
   },
   // addComment to parentId
-  addComment(state: State, comment: API_Comment) {
-    if (comment.parentId === 0) {
-      state.comments.appendComment(comment)
+  addComment(state: State, cParams: AddCommentParams) {
+    if (cParams.comment.parentId === 0) {
+      state.comments.appendComment(cParams.comment)
       return
     }
-    let path = CommentPath(state)(comment.parentId)
+    let path = CommentPath(state)(cParams.comment.parentId)
     let parent = CommentFromPath(state.comments, path)
-    parent.appendChild(comment)
-    path.pop()
-
-    // Add reply count to all parents
-    while (path.length > 0) {
-      parent = CommentFromPath(state.comments, path)
-      parent.replies++
+    parent.appendChild(cParams.comment, cParams.newComment)
+    if (cParams.newComment) {
       path.pop()
+
+      // Add reply count to all parents
+      while (path.length > 0) {
+        parent = CommentFromPath(state.comments, path)
+        parent.replies++
+        path.pop()
+      }
     }
   },
   /**
@@ -66,17 +68,16 @@ export const mutations = <MutationTree<State>>{
 
     // delete comment
     if (Object.hasOwnProperty.call(parent.children, key)) {
-      delete parent.children[key]
-    }
+      parent.delChild(key)
+      // remove comment path from cache
+      delete state.comPathCache[id]
 
-    // remove comment path from cache
-    delete state.comPathCache[id]
-
-    // Remove reply count from all parents
-    while (path.length > 0) {
-      parent = CommentFromPath(state.comments, path)
-      parent.replies--
-      path.pop()
+      // Remove reply count from all parents
+      while (path.length > 0) {
+        path.pop()
+        parent = CommentFromPath(state.comments, path)
+        parent.replies--
+      }
     }
   },
 }

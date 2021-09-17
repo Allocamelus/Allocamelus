@@ -82,7 +82,11 @@ export default defineComponent({
   },
   methods: {
     newComment(c) {
-      this.addComment(c);
+      this.addComment({
+        // AddCommentParams
+        newComment: true,
+        comment: c,
+      });
       this.addUser(this.storeUser);
     },
   },
