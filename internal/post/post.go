@@ -70,7 +70,7 @@ func (p *Post) Insert() error {
 }
 
 // Get Post
-// TODO: Likes, Views & Cache
+// TODO: Cache
 func Get(postID int64) (*Post, error) {
 	p := new(Post)
 	p.ID = postID

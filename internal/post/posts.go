@@ -97,7 +97,7 @@ func GetPublicTotal(u *user.Session) (total int64, err error) {
 }
 
 // GetPublicPosts
-// TODO: Likes, Views & Cache
+// TODO: Cache
 func GetPublicPosts(startNum, perPage int64, u *user.Session) (*List, error) {
 	posts := NewList()
 	var (

@@ -27,7 +27,7 @@ type createRequest struct {
 	Captcha    string `json:"captcha" form:"captcha"`
 }
 
-// CreateToken Email Token handler
+// CreateToken Email Password Reset Token handler
 func CreateToken(c *fiber.Ctx) error {
 	request := new(createRequest)
 	if err := c.BodyParser(request); err != nil {

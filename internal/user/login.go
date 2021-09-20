@@ -59,6 +59,7 @@ func PasswordLogin(c *fiber.Ctx, userID int64, password string) error {
 	privateKey, err := key.GetAndDecryptPK(userID, password)
 	if err != nil {
 		if err == key.ErrDecryptingKey {
+			// Get user publicKeys from the last keyRecoveryTime
 			publickeys, err := key.GetPublicKeys(userID)
 			logger.Error(err)
 			event.InsertLoginAttempt(c, userID, publickeys...)

@@ -47,6 +47,7 @@ var (
 	preInsertKey         *sql.Stmt
 )
 
+// keyRecoveryTime 30 Days
 const keyRecoveryTime time.Duration = time.Hour * 24 * 30
 
 func keySelectQueryBuilder(p data.Prepare, items ...string) *sql.Stmt {

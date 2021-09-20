@@ -2,7 +2,6 @@ package emailtoken
 
 import (
 	"database/sql"
-	"log"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -26,7 +25,7 @@ type createRequest struct {
 	Captcha string `json:"captcha" form:"captcha"`
 }
 
-// Create Email Token handler
+// Create Email Verification Token handler
 func Create(c *fiber.Ctx) error {
 	request := new(createRequest)
 	if err := c.BodyParser(request); err != nil {
@@ -34,11 +33,12 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	request.Email = strings.TrimSpace(request.Email)
-	log.Println(request.Email)
+	// Check for valid request Email
 	if err := user.ValidEmail(request.Email); err != nil {
 		return apierr.Err422(c, shared.SuccessErrResp{Error: errInvalidEmail})
 	}
 
+	// Captcha
 	if g.Config.HCaptcha.Enabled {
 		if err := hcaptcha.Verify(hcaptcha.Values{
 			Secret:  g.Data.Config.HCaptcha.Secret,
@@ -54,6 +54,7 @@ func Create(c *fiber.Ctx) error {
 		}
 	}
 
+	// Get UserId from database
 	userID, err := user.GetIDByEmail(request.Email)
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -64,6 +65,7 @@ func Create(c *fiber.Ctx) error {
 		return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 	}
 
+	// Check if user is Verified
 	verified, err := user.IsVerified(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)

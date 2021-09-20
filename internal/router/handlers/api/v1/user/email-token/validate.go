@@ -22,7 +22,7 @@ type validateRequest struct {
 	Token    string `json:"token" form:"token"`
 }
 
-// Validate Email Token handler
+// Validate Email Verification Token handler
 func Validate(c *fiber.Ctx) error {
 	request := new(validateRequest)
 	if err := c.BodyParser(request); err != nil {

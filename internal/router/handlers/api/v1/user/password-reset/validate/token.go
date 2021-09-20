@@ -44,13 +44,15 @@ type tokenResp struct {
 	Error     string `json:"error,omitempty"`
 }
 
-// Token Reset Token handler
+// Token Password Reset Token handler
 func Token(c *fiber.Ctx) error {
 	request := new(tokenRequest)
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
 	request.trim()
+
+	// Get userID
 	userID, err := user.GetIDByUserName(request.UserName)
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -60,6 +62,7 @@ func Token(c *fiber.Ctx) error {
 		return err422(c, errInvalidUserName)
 	}
 
+	// Check Password Reset Token
 	tkn, err := token.CheckWithID(request.Selector, request.Token, userID, token.Reset)
 	if err != nil {
 		if err == token.ErrExpiredToken {
@@ -68,20 +71,25 @@ func Token(c *fiber.Ctx) error {
 		return err422(c, errInvalidToken)
 	}
 
+	// Validate new password
 	if err := user.ValidPassword(request.Password, request.UserName); err != nil {
 		return err422(c, err.Error())
 	}
 
+	// Reset user password
+	// Generates new key pair
 	backupKey, err := user.UpdatePassword(userID, request.Password)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
+	// Get user publicKeys from the last keyRecoveryTime
 	publicKeys, err := key.GetPublicKeys(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
+	// Insert password reset event into database
 	if _, err := event.InsertNew(c, event.Reset, userID, publicKeys...); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
