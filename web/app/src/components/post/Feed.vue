@@ -17,7 +17,7 @@
 <script>
 import { defineComponent } from "vue";
 
-import { API_Posts } from "../../models/api_posts";
+import { API_Posts } from "../../models/api_post";
 
 import Box from "../box/Box.vue";
 import Feed from "../Feed.vue";

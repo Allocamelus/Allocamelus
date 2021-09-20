@@ -108,10 +108,7 @@
         <text-small>
           Save this, you'll need this to recover your account
         </text-small>
-        <input-copy
-          v-model="backupKey"
-          class="my-2"
-        ></input-copy>
+        <input-copy v-model="backupKey" class="my-2"></input-copy>
       </div>
     </div>
   </center-form-box>
@@ -254,13 +251,13 @@ export default defineComponent({
                     if (errText.length > 0) {
                       switch (key) {
                         case "userName":
-                            this.err.userName = errText;
+                          this.err.userName = errText;
                           break;
                         case "email":
-                            this.err.email = errText;
+                          this.err.email = errText;
                           break;
                         case "password":
-                          this.err.password = errText
+                          this.err.password = errText;
                           break;
                         default:
                           this.err.signUp = HtmlSomethingWentWrong;

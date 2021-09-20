@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/post"
+	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/post/update"
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +15,7 @@ func Post(api fiber.Router) {
 	p.Post("/", middleware.Protected, post.Create)
 
 	// /api/v1/post/:id
-	pID := p.Group("/:id")
+	pID := p.Group("/:id", middleware.ProtectedCanViewPost)
 	pID.Get("/", post.Get)
 	// /api/v1/post/:id/publish
 	pID.Post("/publish",
@@ -32,4 +33,38 @@ func Post(api fiber.Router) {
 	pIDu.Post("/content", update.Content)
 	// /api/v1/post/:id/update/media
 	pIDu.Post("/media", update.Media)
+
+	postComment(pID)
+}
+
+func postComment(pID fiber.Router) {
+	// /api/v1/post/:id/comment
+	c := pID.Group("/comment")
+	c.Post("/", middleware.Protected, comment.Create)
+
+	// /api/v1/post/:id/comment/:commentID
+	cID := c.Group("/:commentID", middleware.ProtectedCommentPost)
+	cID.Get("/", comment.Get)
+	// /api/v1/post/:id/comment/:commentID/update
+	cID.Post("/update",
+		middleware.Protected,
+		middleware.ProtectedCommenterOnly,
+		comment.Update,
+	)
+	// /api/v1/post/:id/comment/:commentID/delete
+	cID.Delete("/delete",
+		middleware.Protected,
+		middleware.ProtectedCommenterOnly,
+		comment.Delete,
+	)
+
+	// /api/v1/post/:id/comment/:commentID/replies
+	cID.Get("/replies", comment.GetReplies)
+
+	// /api/v1/post/:id/comments
+	csID := pID.Group("/comments")
+	csID.Get("/", comment.GetPostList)
+	// /api/v1/post/:id/comments/total
+	csID.Get("/total", comment.GetTotalForPost)
+
 }

@@ -1,5 +1,4 @@
 //go:generate msgp
-// TODO: Media
 
 package post
 
@@ -30,7 +29,7 @@ type Post struct {
 }
 
 // New Post
-func New(userID int64, content string, publish bool) *Post {
+func New(userID int64, content string, publish bool) *Post { // skipcq: RVV-A0005
 	p := new(Post)
 	p.UserID = userID
 	p.Content = content
@@ -94,8 +93,7 @@ func Get(postID int64) (*Post, error) {
 
 // Viewing post errors
 var (
-	ErrNoPost    = errors.New("post/post: Error No Post Found OR Insufficient permission to view this post")
-	ErrViewMeNot = errors.New("post/post: Error user can't view post")
+	ErrNoPost = errors.New("post/post: Error No Post Found OR Insufficient permission to view this post")
 )
 
 // GetForUser returns post if user can view it
@@ -108,17 +106,7 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 		return p, err
 	}
 
-	// Check if user can view post
-	if !p.IsPublished() {
-		if !u.LoggedIn || !p.IsPoster(u.UserID) {
-			return nil, ErrNoPost
-		}
-	}
-
-	if err := user.CanView(p.UserID, u); err != nil {
-		if err != user.ErrViewMeNot {
-			return nil, err
-		}
+	if err = CanView(postID, u, p); err != nil {
 		return nil, err
 	}
 
@@ -128,6 +116,45 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 	}
 
 	return p, err
+}
+
+var preGetCanView *sql.Stmt
+
+func CanView(postID int64, u *user.Session, postCache ...*Post) error {
+	if preGetCanView == nil {
+		preGetCanView = g.Data.Prepare(`SELECT userId, published FROM Posts WHERE postId = ? LIMIT 1`)
+	}
+
+	var p *Post
+	// Check postCache
+	if len(postCache) != 0 && postCache[0] != nil {
+		// Use postCache if valid
+		p = postCache[0]
+	} else {
+		// Get post from store
+		p = new(Post)
+		p.ID = postID
+		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				return err
+			}
+			return ErrNoPost
+		}
+	}
+
+	// Check if user can view post
+	if !p.IsPublished() {
+		if !u.LoggedIn || !p.IsPoster(u.UserID) {
+			return user.ErrViewMeNot
+		}
+	}
+
+	if err := user.CanView(p.UserID, u); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetUserId(postID int64) (int64, error) {

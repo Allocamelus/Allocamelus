@@ -18,7 +18,7 @@ export class GEN_Meta {
     }
 }
 export class GEN_Media {
-    fileType: number;
+    fileType?: number;
     meta: GEN_Meta;
     url: string;
 
@@ -33,7 +33,7 @@ export class GEN_Media {
         this.url = source["url"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -77,7 +77,7 @@ export class GEN_Post {
         this.mediaList = this.convertValues(source["mediaList"], GEN_Media);
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -143,7 +143,7 @@ export class GEN_User {
         this.created = source["created"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }
@@ -199,7 +199,7 @@ export class GEN_AuthResp {
         this.captcha = source["captcha"];
     }
 
-	convertValues(a: any, classs: any, asMap = false): any {
+	convertValues(a: any, classs: any, asMap: boolean = false): any {
 	    if (!a) {
 	        return a;
 	    }

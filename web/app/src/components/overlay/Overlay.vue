@@ -13,7 +13,7 @@
       <div
         class="relative flex items-center justify-center w-full"
         :class="[
-          xsFullHeigth ? 'h-full xs:h-auto' : '',
+          xsFullHeight ? 'h-full xs:h-auto' : '',
           xsSelfEnd ? 'self-end xs:self-center' : '',
         ]"
       >
@@ -29,11 +29,11 @@ export default defineComponent({
   name: "overlay",
   props: {
     modelValue: Boolean,
-    blockScrool: {
+    blockScroll: {
       type: Boolean,
       default: true,
     },
-    xsFullHeigth: {
+    xsFullHeight: {
       type: Boolean,
       default: true,
     },
@@ -54,24 +54,10 @@ export default defineComponent({
     };
   },
   beforeMount() {
-    if (this.blockScrool) {
-      // Creating invisible container
-      const outer = document.createElement("div");
-      outer.classList.add("scrollbar")
-      outer.style.visibility = "hidden";
-      outer.style.overflow = "scroll"; // forcing scrollbar to appear
-      outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
-      document.body.appendChild(outer);
-
-      // Creating inner element and placing it in the container
-      const inner = document.createElement("div");
-      outer.appendChild(inner);
-
-      // Calculating difference between container's full width and the child width
-      this.offsetWidth = outer.offsetWidth - inner.offsetWidth;
-
-      // Removing temporary elements from the DOM
-      outer.parentNode.removeChild(outer);
+    if (this.blockScroll) {
+      // Get scrollbar width
+      this.offsetWidth =
+        window.innerWidth - document.querySelector("html").clientWidth;
     }
   },
   watch: {
@@ -79,7 +65,7 @@ export default defineComponent({
       this.show = newValue;
       var h = document.querySelector("html"),
         navS = document.querySelector("#nav").style;
-      if (this.blockScrool) {
+      if (this.blockScroll) {
         if (this.show) {
           h.classList.add("overflow-hidden");
           h.style.marginRight = navS.paddingRight = `${this.offsetWidth}px`;

@@ -10,7 +10,13 @@
         :class="post.content?.length == 0 ? 'justify-center' : ''"
       >
         <div
-          class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
+          class="
+            text-gray-700
+            dark:text-gray-300
+            flex
+            items-center
+            justify-between
+          "
           @click.self="toPost"
         >
           <div class="flex">
@@ -44,11 +50,9 @@
             </div>
           </div>
           <!-- TODO: Real options -->
-          <circle-bg class="ml-3 hover:bg-rose-800">
-            <DotsVerticalIcon
-              class="h-4.5 w-4.5 text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
-            ></DotsVerticalIcon>
-          </circle-bg>
+          <dots-dropdown class="ml-3">
+            <div class="bg-secondary-800">WIP</div>
+          </dots-dropdown>
         </div>
         <div
           @click="toPost"
@@ -85,16 +89,15 @@
 <script>
 import { defineComponent } from "vue";
 
-import DotsVerticalIcon from "@heroicons/vue/outline/DotsVerticalIcon";
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import RadixEyeNone from "../icons/RadixEyeNone.vue";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
-import CircleBg from "../button/CircleBg.vue";
 import UserAvatar from "../user/Avatar.vue";
 import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
+import DotsDropdown from "../menu/DotsDropdown.vue";
 
 import { GEN_User, GEN_Post } from "../../models/go_structs_gen";
 
@@ -159,13 +162,12 @@ export default defineComponent({
   components: {
     FmtTime,
     UserName,
-    DotsVerticalIcon,
-    CircleBg,
     UserAvatar,
     PencilAltIcon,
     RadixEyeNone,
     ToLink,
     ImageBox,
+    DotsDropdown,
   },
 });
 </script>

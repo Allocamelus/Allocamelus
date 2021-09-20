@@ -5,6 +5,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post"
+	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -85,6 +86,75 @@ func ProtectedPosterOnly(c *fiber.Ctx) error {
 	}
 
 	ownerId, err := post.GetUserId(postID)
+	return sessionIdCheck(c, ownerId, err)
+}
+
+// ProtectedCanViewPost only allow access to user who can view post
+func ProtectedCanViewPost(c *fiber.Ctx) error {
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	err := post.CanView(postID, user.ContextSession(c))
+	if err != nil {
+		if err == post.ErrNoPost {
+			return apierr.ErrNotFound(c)
+		}
+		if err == user.ErrViewMeNot {
+			return apierr.ErrUnauthorized403(c)
+		}
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	return c.Next()
+}
+
+// ProtectedCommentPost only allow comment to be viewed with
+func ProtectedCommentPost(c *fiber.Ctx) error {
+	// Get url post id
+	postID := fiberutil.ParamsInt64(c, "id")
+	if postID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+	// Get url comment id
+	commentID := fiberutil.ParamsInt64(c, "commentID")
+	if commentID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	// Get comment post id
+	cPostID, err := comment.GetPostID(commentID)
+	if err != nil {
+		// If No comment
+		if err == comment.ErrNoComment {
+			return apierr.ErrNotFound(c)
+		}
+
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	// Check url id with comment post id
+	if compare.EqualInt64(postID, cPostID) {
+		return c.Next()
+	}
+
+	return apierr.ErrUnauthorized403(c)
+}
+
+func ProtectedCommenterOnly(c *fiber.Ctx) error {
+	commentID := fiberutil.ParamsInt64(c, "commentID")
+	if commentID == 0 {
+		return apierr.ErrUnauthorized403(c)
+	}
+
+	ownerId, err := comment.GetUserId(commentID)
+	return sessionIdCheck(c, ownerId, err)
+}
+
+func sessionIdCheck(c *fiber.Ctx, userId int64, err error) error {
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
@@ -93,7 +163,7 @@ func ProtectedPosterOnly(c *fiber.Ctx) error {
 		return apierr.ErrUnauthorized403(c)
 	}
 
-	return checkIdWithSelf(c, ownerId)
+	return checkIdWithSelf(c, userId)
 }
 
 func checkIdWithSelf(c *fiber.Ctx, userId int64) error {

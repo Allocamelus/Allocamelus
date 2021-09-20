@@ -1,6 +1,9 @@
 <template>
   <div class="container py-5">
-    <box class="py-3 px-4 rounded-xl max-w-prose mx-auto" v-html="errorHtml"></box>
+    <box
+      class="py-3 px-4 rounded-xl max-w-prose mx-auto"
+      v-html="errorHtml"
+    ></box>
   </div>
 </template>
 

@@ -31,6 +31,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@tailwind components;
+
 @layer components {
   .form-box {
     @apply flex flex-col mx-auto flex-grow;

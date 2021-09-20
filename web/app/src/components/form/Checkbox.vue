@@ -43,6 +43,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@tailwind components;
+
 @mixin before($content) {
   &::before {
     content: $content;

@@ -8,11 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type deleteResp struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error,omitempty"`
-}
-
 // Delete remove follow
 func Delete(c *fiber.Ctx) error {
 	_, userID, hasErr, err := shared.GetUserNameIDResp(c)
@@ -25,7 +20,7 @@ func Delete(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, deleteResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }
 
 // Decline follow
@@ -40,5 +35,5 @@ func Decline(c *fiber.Ctx) error {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 
-	return fiberutil.JSON(c, 200, deleteResp{Success: true})
+	return fiberutil.JSON(c, 200, shared.SuccessErrResp{Success: true})
 }

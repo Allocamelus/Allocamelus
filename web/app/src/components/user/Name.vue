@@ -6,6 +6,7 @@
     :to="'/u/' + user.userName"
   >
     <div
+      v-if="!noName"
       class="truncate flex-shrink font-semibold"
       :class="isLink ? 'group-hover:underline' : 'text-xl mb-0.5'"
     >
@@ -24,8 +25,9 @@ import { GEN_User } from "../../models/go_structs_gen";
 import ToLink from "../ToLink.vue";
 import TextSmall from "../text/Small.vue";
 
-export const OneLineLink = "one-line";
-export const TwoLine = "two-line";
+export const OneLineLink = 1 << 1;
+export const TwoLine = 1 << 2;
+export const NoName = 1 << 3;
 
 export default defineComponent({
   props: {
@@ -34,16 +36,16 @@ export default defineComponent({
       required: true,
     },
     displayType: {
-      type: String,
+      type: Number,
       default: OneLineLink,
     },
   },
   computed: {
     isLink() {
-      if (this.displayType == OneLineLink) {
-        return true;
-      }
-      return false;
+      return (this.displayType & OneLineLink) == OneLineLink ? true : false;
+    },
+    noName() {
+      return (this.displayType & NoName) == NoName ? true : false;
     },
   },
   components: { ToLink, TextSmall },

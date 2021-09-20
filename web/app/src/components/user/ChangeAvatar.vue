@@ -5,7 +5,17 @@
       <slot>
         <div class="group relative cursor-pointer">
           <div
-            class="absolute w-full h-full rounded-full hidden group-hover:flex items-center justify-center bg-black bg-opacity-50"
+            class="
+              absolute
+              w-full
+              h-full
+              rounded-full
+              hidden
+              group-hover:flex
+              items-center
+              justify-center
+              bg-black bg-opacity-50
+            "
           >
             <CameraIcon class="opacity-80 text-white w-5 h-5"></CameraIcon>
           </div>
@@ -15,22 +25,46 @@
     </div>
     <overlay
       v-model="show"
-      :blockScrool="blockScrool"
-      :xsFullHeigth="false"
+      :blockScroll="blockScroll"
+      :xsFullHeight="false"
       :xsSelfEnd="true"
     >
       <box
-        class="w-full xs:m-3 self-end xs:self-center rounded-t-lg xs:rounded-md text-center"
+        class="
+          w-full
+          xs:m-3
+          self-end
+          xs:self-center
+          rounded-t-lg
+          xs:rounded-md
+          text-center
+        "
       >
         <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
         <div
-          class="w-full p-4 border-b text-black-lighter dark:text-white border-secondary-300 dark:border-secondary-700 text-2xl font-medium"
+          class="
+            w-full
+            p-4
+            border-b
+            text-black-lighter
+            dark:text-white
+            border-secondary-300
+            dark:border-secondary-700
+            text-2xl
+            font-medium
+          "
         >
           Change Avatar
         </div>
         <div class="font-semibold">
           <div
-            class="cursor-pointer p-3 border-b border-secondary-300 dark:border-secondary-700 text-blue-500"
+            class="
+              cursor-pointer
+              p-3
+              border-b border-secondary-300
+              dark:border-secondary-700
+              text-blue-500
+            "
           >
             <file-input
               class="w-full"
@@ -45,7 +79,13 @@
             </file-input>
           </div>
           <div
-            class="cursor-pointer p-3 border-b border-secondary-300 dark:border-secondary-700 text-red-500"
+            class="
+              cursor-pointer
+              p-3
+              border-b border-secondary-300
+              dark:border-secondary-700
+              text-red-500
+            "
             v-if="user.avatar"
             @click="avatarRemove"
           >
@@ -86,7 +126,7 @@ import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
   props: {
-    blockScrool: {
+    blockScroll: {
       type: Boolean,
       default: true,
     },
