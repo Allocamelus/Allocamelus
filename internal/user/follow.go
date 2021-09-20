@@ -142,7 +142,7 @@ func Accept(userId, followerUserId int64) error {
 
 // Decline userId Decline followerUserId request
 func Decline(userId, followerUserId int64) error {
-	return unfollow(followerUserId, userId)
+	return unfollowDB(followerUserId, userId)
 }
 
 var preAcceptAll *sql.Stmt
@@ -160,8 +160,8 @@ func AcceptAll(userId int64) error {
 
 var preUnfollow *sql.Stmt
 
-// unfollow userId unfollow followUserId
-func unfollow(userId, followUserId int64) error {
+// unfollowDB userId unfollow followUserId
+func unfollowDB(userId, followUserId int64) error {
 	if preUnfollow == nil {
 		preUnfollow = g.Data.Prepare(`DELETE FROM UserFollows WHERE userId = ? AND followUserId = ?`)
 	}
@@ -178,7 +178,7 @@ func unfollow(userId, followUserId int64) error {
 
 func Unfollow(userId, unfollowId int64) error {
 
-	if err := unfollow(userId, unfollowId); err != nil {
+	if err := unfollowDB(userId, unfollowId); err != nil {
 		return err
 	}
 
@@ -190,7 +190,7 @@ func Unfollow(userId, unfollowId int64) error {
 		return err
 	}
 
-	return unfollow(unfollowId, userId)
+	return unfollowDB(unfollowId, userId)
 }
 
 var preFollowers *sql.Stmt

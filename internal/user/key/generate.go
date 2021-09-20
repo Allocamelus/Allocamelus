@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/backupkey"
@@ -58,6 +59,9 @@ func (k *Key) generateKeys(password string) error {
 	k.BackupKey = aesgcm.EncryptBase64(backupKey, []byte(privateKey.Armored))
 	k.RecoveryKeyHash = hashRecoveryKey(backupKey)
 	k.encodedBackupKey = encodedBackupKey
+
+	// Created time
+	k.created = time.Now().Unix()
 
 	return nil
 }

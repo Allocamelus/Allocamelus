@@ -28,14 +28,14 @@ function errMsg(err) {
 export function ErrMsg(err, extra = "", type = "character count") {
   var msg = errMsg(err);
 
-  if (err == ErrMinLength || err == ErrMaxLength) {
+  if (err === ErrMinLength || err === ErrMaxLength) {
     if (type.length > 0) {
       msg += ` ${type}`;
     }
     msg += " of ";
   }
 
-  if (err == ErrRegex && (typeof extra === "undefined" || extra.length <= 0)) {
+  if (err === ErrRegex && (typeof extra === "undefined" || extra.length <= 0)) {
     msg = "Failed Regex Check";
   } else {
     msg += extra;

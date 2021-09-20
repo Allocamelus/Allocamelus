@@ -82,7 +82,7 @@ func (e *Email) Send(config Config) error {
 	// Set TLSConfig to provide custom TLS configuration. For example,
 	// to skip TLS verification (useful for testing):
 	if config.Insecure {
-		server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		server.TLSConfig = &tls.Config{InsecureSkipVerify: true} // skipcq: GSC-G402
 	}
 
 	// SMTP client

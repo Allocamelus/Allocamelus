@@ -14,15 +14,15 @@ import (
 
 // Key user key struct
 type Key struct {
-	ID        int64         `msg:"id"`
-	userID    int64         `msg:"userId"`
-	created   int64         `msg:"created"`
-	replaced  int64         `msg:"replaced"`
+	ID      int64 `msg:"id"`
+	userID  int64 `msg:"userId"`
+	created int64 `msg:"created"`
+	//replaced  int64         `msg:"replaced"`
 	PublicKey pgp.PublicKey `msg:"publicKey,omitempty"`
 	// Salt used in Argon2id to derive encryption key
-	PrivateKeySalt string         `msg:"privateKeySalt,omitempty"`
-	PrivateKey     string         `msg:"encPrivateKey,omitempty"`
-	privateKey     pgp.PrivateKey `msg:"privateKey,omitempty"`
+	PrivateKeySalt string `msg:"privateKeySalt,omitempty"`
+	PrivateKey     string `msg:"encPrivateKey,omitempty"`
+	//armoredPrivateKey pgp.PrivateKey `msg:"privateKey,omitempty"`
 	// Backup PrivateKey encrypted with encodedBackupKey
 	BackupKey string `msg:"backupKey,omitempty"`
 	// Hash of encodedBackupKey
@@ -117,7 +117,7 @@ func (k *Key) UpdateKey() error {
 // Insert key into database
 func (k *Key) Insert() error {
 	_, err := preInsertKey.Exec(
-		k.userID, time.Now().Unix(),
+		k.userID, k.created,
 		k.PublicKey.Armored, k.PrivateKeySalt,
 		k.PrivateKey, k.RecoveryKeyHash,
 		k.BackupKey,

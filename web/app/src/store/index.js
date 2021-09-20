@@ -18,7 +18,7 @@ const vuexLocal = new VuexPersistence({
       },
     };
     if (state.session.expires > UnixTime()) {
-      if (state.session.fresh == true) {
+      if (state.session.fresh === true) {
         state.session.fresh = false;
       }
       storage.session = state.session;
@@ -56,7 +56,7 @@ export default createStore({
       }
     },
     toggleTheme(state) {
-      state.ui.theme = state.ui.theme == "dark" ? "light" : "dark";
+      state.ui.theme = state.ui.theme === "dark" ? "light" : "dark";
     },
     updateViewKey(state) {
       state.ui.viewKey++;
@@ -96,7 +96,7 @@ export default createStore({
     sessionCheck({ commit, state }) {
       status()
         .then((st) => {
-          if (st.loggedIn == false) {
+          if (st.loggedIn === false) {
             if (state.session.loggedIn) {
               commit({
                 type: "newSession",

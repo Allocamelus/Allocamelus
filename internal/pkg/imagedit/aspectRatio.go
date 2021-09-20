@@ -27,8 +27,7 @@ func (img *Image) AR(ar AspectRatio) (width, height int, err error) {
 		return
 	}
 	// TODO
-	switch ar {
-	case AR_1x1:
+	if ar == AR_1x1 {
 		if width > height {
 			width = height
 		} else {

@@ -109,7 +109,7 @@ func (t *Token) GetToken() string {
 
 func (t *Token) generatePair() {
 	t.Selector = genSelector()
-	t.token, t.TokenHash = genTokenPair(t.Type)
+	t.token, t.TokenHash = genTokenPair()
 }
 
 func genSelector() (selector string) {
@@ -131,7 +131,7 @@ func genSelector() (selector string) {
 	return
 }
 
-func genTokenPair(t Types) (token, tokenHash string) {
+func genTokenPair() (token, tokenHash string) {
 	token = random.StringBase64(tokenBytes)
 	tokenHash = hashToken(token)
 	return
