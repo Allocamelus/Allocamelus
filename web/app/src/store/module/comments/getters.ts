@@ -37,13 +37,6 @@ export function CommentFromPath(
   return c;
 }
 
-export function Comment(state: State) {
-  return (id: number): API_Comment | null => {
-    const path = CommentPath(state)(id);
-    return CommentFromPath(state.comments, path);
-  };
-}
-
 function getCommentPath(
   comment: API_Comment,
   id: number,
@@ -52,7 +45,7 @@ function getCommentPath(
   if (comment.id == id) {
     return path;
   }
-  let keys: string[];
+  let keys: string[] = [];
   for (const k in comment.children) {
     if (Object.hasOwnProperty.call(comment.children, k)) {
       keys = [];
@@ -67,7 +60,7 @@ function getCommentPath(
 }
 
 function commentPathFromComments(comments: API_Comments, id: number): string[] {
-  let path: string[] | null;
+  let path: string[] | null = [];
   for (const k in comments.comments) {
     if (Object.prototype.hasOwnProperty.call(comments.comments, k)) {
       path = getCommentPath(comments.comments[k], id, [k]);
@@ -87,6 +80,13 @@ export function CommentPath(state: State) {
       state.comPathCache[id] = commentPathFromComments(state.comments, id);
     }
     return state.comPathCache[id];
+  };
+}
+
+export function Comment(state: State) {
+  return (id: number): API_Comment | null => {
+    const path = CommentPath(state)(id);
+    return CommentFromPath(state.comments, path);
   };
 }
 

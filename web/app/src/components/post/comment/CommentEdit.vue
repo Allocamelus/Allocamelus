@@ -48,8 +48,6 @@ import { UnixTime } from "../../../pkg/time";
 import InputLabel from "../../form/InputLabel.vue";
 import TextInput from "../../form/TextInput.vue";
 import BasicBtn from "../../button/BasicBtn.vue";
-import UserName, { OneLineLink, NoName } from "../../user/Name.vue";
-
 export default defineComponent({
   name: "comment-input",
   props: {
@@ -76,14 +74,12 @@ export default defineComponent({
         comment: "",
       },
     });
-    const usernameType = OneLineLink | NoName;
 
     return {
       ...toRefs(data),
       loggedIn,
       storeUser,
       InvalidCharacters,
-      usernameType,
     };
   },
   computed: {
@@ -139,7 +135,6 @@ export default defineComponent({
     InputLabel,
     TextInput,
     BasicBtn,
-    UserName,
   },
 });
 </script>

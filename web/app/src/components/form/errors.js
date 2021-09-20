@@ -3,6 +3,19 @@ export const ErrRequired = "required",
   ErrMaxLength = "max-length",
   ErrRegex = "regex";
 
+function errMsg(err) {
+  switch (err) {
+    case ErrRequired:
+      return "Required";
+    case ErrMinLength:
+      return "Minimum";
+    case ErrMaxLength:
+      return "Maximum";
+    default:
+      return "";
+  }
+}
+
 /**
  * ErrMsg Returns a pretty readable error message
  *
@@ -22,25 +35,12 @@ export function ErrMsg(err, extra = "", type = "character count") {
     msg += " of ";
   }
 
-  if (err == ErrRegex && (extra == undefined || extra.length <= 0)) {
+  if (err == ErrRegex && (typeof extra === "undefined" || extra.length <= 0)) {
     msg = "Failed Regex Check";
   } else {
     msg += extra;
   }
   return msg;
-}
-
-function errMsg(err) {
-  switch (err) {
-    case ErrRequired:
-      return "Required";
-    case ErrMinLength:
-      return "Minimum";
-    case ErrMaxLength:
-      return "Maximum";
-    default:
-      return "";
-  }
 }
 
 export const InvalidCharacters = "Invalid Character(s)";
