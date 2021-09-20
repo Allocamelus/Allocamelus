@@ -323,7 +323,6 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log(e);
           let errText = RespToError(e);
           if (errText.length > 0) {
             this.err.msg = errText;

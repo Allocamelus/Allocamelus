@@ -6,40 +6,40 @@ import { Comment, CommentFromPath, CommentPath } from "./getters";
 import { State } from "./state";
 
 export type AddCommentParams = {
-  newComment: boolean
-  comment: API_Comment
-}
+  newComment: boolean;
+  comment: API_Comment;
+};
 
 export type Mutations = {
-  populate(state: State, c: API_Comments): void
-  addComment(state: State, comment: API_Comment): void
-  updateComment(state: State, comment: API_Comment): void
-  addUser(state: State, user: GEN_User): void
-  remove(state: State, id: number): void
-}
+  populate(state: State, c: API_Comments): void;
+  addComment(state: State, comment: API_Comment): void;
+  updateComment(state: State, comment: API_Comment): void;
+  addUser(state: State, user: GEN_User): void;
+  remove(state: State, id: number): void;
+};
 
 export const mutations = <MutationTree<State>>{
   // populate state comments
   populate(state, c: API_Comments) {
-    state.comments = c
+    state.comments = c;
   },
   // addComment to parentId
   addComment(state: State, cParams: AddCommentParams) {
     if (cParams.comment.parentId === 0) {
-      state.comments.appendComment(cParams.comment)
-      return
+      state.comments.appendComment(cParams.comment);
+      return;
     }
-    let path = CommentPath(state)(cParams.comment.parentId)
-    let parent = CommentFromPath(state.comments, path)
-    parent.appendChild(cParams.comment, cParams.newComment)
+    const path = CommentPath(state)(cParams.comment.parentId);
+    let parent = CommentFromPath(state.comments, path);
+    parent.appendChild(cParams.comment, cParams.newComment);
     if (cParams.newComment) {
-      path.pop()
+      path.pop();
 
       // Add reply count to all parents
       while (path.length > 0) {
-        parent = CommentFromPath(state.comments, path)
-        parent.replies++
-        path.pop()
+        parent = CommentFromPath(state.comments, path);
+        parent.replies++;
+        path.pop();
       }
     }
   },
@@ -50,34 +50,34 @@ export const mutations = <MutationTree<State>>{
    * @param {API_Comment} comment Only id, updated, and content are used here
    */
   updateComment(state: State, comment: API_Comment) {
-    let c = Comment(state)(comment.id)
-    c.updated = comment.updated
-    c.content = comment.content
+    const c = Comment(state)(comment.id);
+    c.updated = comment.updated;
+    c.content = comment.content;
   },
   // addUser to state
   // TODO user vuex store
   addUser(state: State, user: GEN_User) {
-    state.comments.appendUser(user)
+    state.comments.appendUser(user);
   },
   // remove comment
   remove(state: State, id: number) {
-    let path = CommentPath(state)(id)
+    let path = CommentPath(state)(id);
     // Get parent path and child key
-    let key = path.pop()
-    let parent = CommentFromPath(state.comments, path)
+    const key = path.pop();
+    let parent = CommentFromPath(state.comments, path);
 
     // delete comment
     if (Object.hasOwnProperty.call(parent.children, key)) {
-      parent.delChild(key)
+      parent.delChild(key);
       // remove comment path from cache
-      delete state.comPathCache[id]
+      delete state.comPathCache[id];
 
       // Remove reply count from all parents
       while (path.length > 0) {
-        path.pop()
-        parent = CommentFromPath(state.comments, path)
-        parent.replies--
+        path.pop();
+        parent = CommentFromPath(state.comments, path);
+        parent.replies--;
       }
     }
   },
-}
+};

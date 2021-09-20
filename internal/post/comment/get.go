@@ -233,7 +233,7 @@ func GetReplies(startNum, perPage, commentID int64, depth int64) (*List, error) 
 	return iterRowToList(rows, true)
 }
 
-func iterRowToList(rows *sql.Rows, noParents bool) (*List, error) {
+func iterRowToList(rows *sql.Rows, noParents bool) (*List, error) { // skipcq: RVV-A0005
 	l := NewList()
 	var (
 		i   int64

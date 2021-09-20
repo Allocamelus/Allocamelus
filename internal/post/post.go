@@ -29,7 +29,7 @@ type Post struct {
 }
 
 // New Post
-func New(userID int64, content string, publish bool) *Post {
+func New(userID int64, content string, publish bool) *Post { // skipcq: RVV-A0005
 	p := new(Post)
 	p.UserID = userID
 	p.Content = content
