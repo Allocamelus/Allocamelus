@@ -7,7 +7,7 @@ export class API_Success_Error {
   }
 
   constructor(source: any = {}) { // skipcq: JS-0323
-    if ('string' === typeof source) source = JSON.parse(source);
+    if ("string" === typeof source) source = JSON.parse(source);
     this.success = source["success"];
     this.error = source["error"];
   }
@@ -21,8 +21,8 @@ export class API_Success_ID_Error extends API_Success_Error {
   }
 
   constructor(source: any = {}) { // skipcq: JS-0323
-    super(source)
-    if ('string' === typeof source) source = JSON.parse(source);
+    super(source);
+    if ("string" === typeof source) source = JSON.parse(source);
     this.id = source["id"];
   }
 }
@@ -35,7 +35,7 @@ export class API_Error {
   }
 
   constructor(source: any = {}) { // skipcq: JS-0323
-    if ('string' === typeof source) source = JSON.parse(source);
-    this.error = source["error"]
+    if ("string" === typeof source) source = JSON.parse(source);
+    this.error = source["error"];
   }
 }

@@ -4,4 +4,4 @@ export function sanitize(html: string): string {
   return div.textContent || "";
 }
 
-export default sanitize
+export default sanitize;

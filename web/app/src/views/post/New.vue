@@ -10,7 +10,7 @@
         </div>
         <div class="ml-3 flex-grow flex flex-col">
           <h2 class="text-xl font-medium">New Post</h2>
-          <form @submit.prevent="onSubmit" ref="form" class="mt-2">
+          <form @submit.prevent ref="form" class="mt-2">
             <post-form></post-form>
           </form>
         </div>
@@ -44,5 +44,4 @@ export default defineComponent({
 });
 </script>
 
-<style>
-</style>
+<style></style>

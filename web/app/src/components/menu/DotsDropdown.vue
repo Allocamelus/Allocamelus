@@ -12,7 +12,7 @@
       ></DotsVerticalIcon>
     </circle-bg>
     <dropdown v-model="show" class="w-44">
-        <slot></slot>
+      <slot></slot>
     </dropdown>
   </div>
 </template>

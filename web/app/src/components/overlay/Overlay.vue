@@ -56,7 +56,8 @@ export default defineComponent({
   beforeMount() {
     if (this.blockScroll) {
       // Get scrollbar width
-      this.offsetWidth = window.innerWidth - document.querySelector('html').clientWidth;
+      this.offsetWidth =
+        window.innerWidth - document.querySelector("html").clientWidth;
     }
   },
   watch: {

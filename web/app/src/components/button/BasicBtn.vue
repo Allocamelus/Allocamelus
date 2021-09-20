@@ -8,8 +8,7 @@
       leading-4
       rounded
       cursor-pointer
-      disabled:opacity-50
-      disabled:cursor-auto
+      disabled:opacity-50 disabled:cursor-auto
     "
   >
     <slot></slot>
@@ -28,9 +27,9 @@ export default defineComponent({
   name: "basic-button",
   props: ["to"],
   setup() {
-    return {      
-      notNull
-    }
-  }
+    return {
+      notNull,
+    };
+  },
 });
 </script>

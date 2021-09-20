@@ -1,24 +1,55 @@
 <template>
   <overlay v-model="visable">
     <box
-      class="w-full xs-max:h-full xs:m-3 max-h-screen rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none flex flex-col"
+      class="
+        w-full
+        xs-max:h-full
+        xs:m-3
+        max-h-screen
+        rounded-none
+        xs:rounded-md
+        shadow-lg
+        bg-secondary-800
+        focus:outline-none
+        flex flex-col
+      "
     >
       <snackbar v-model="err.snackbar.show" :closeBtn="true">
         {{ err.snackbar.msg }}
       </snackbar>
       <div
-        class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0"
+        class="
+          w-full
+          p-3
+          border-b border-secondary-600
+          flex
+          items-end
+          flex-shrink-0
+        "
       >
         <div class="flex-1 flex justify-start">
           <basic-btn @click="visable = false">
             <XIcon
-              class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
+              class="
+                w-5
+                h-5
+                text-black
+                dark:text-gray-100
+                hover:text-gray-600
+                dark:hover:text-gray-300
+              "
             ></XIcon>
           </basic-btn>
         </div>
         <div class="flex-1 flex justify-center">
           <div
-            class="font-medium text-base leading-4 text-gray-900 dark:text-gray-100"
+            class="
+              font-medium
+              text-base
+              leading-4
+              text-gray-900
+              dark:text-gray-100
+            "
           >
             Edit Profile
           </div>

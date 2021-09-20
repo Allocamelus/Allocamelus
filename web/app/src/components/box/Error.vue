@@ -10,7 +10,7 @@ import { defineComponent } from "vue";
 
 import Box from "./Box.vue";
 import { API_Error } from "../../models/api_error";
-import { RespToHtml } from '../../models/responses'
+import { RespToHtml } from "../../models/responses";
 
 export default defineComponent({
   props: {
@@ -24,8 +24,8 @@ export default defineComponent({
   },
   computed: {
     htmlErr() {
-      return RespToHtml(this.error.error)
-    }
-  }
+      return RespToHtml(this.error.error);
+    },
+  },
 });
 </script>

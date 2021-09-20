@@ -22,8 +22,7 @@
         <div
           class="
             mt-3
-            xs:mt-0
-            xs:ml-3
+            xs:mt-0 xs:ml-3
             flex-shrink-0 flex
             justify-end
             items-start

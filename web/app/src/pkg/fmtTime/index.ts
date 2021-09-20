@@ -1,4 +1,4 @@
-import { UnixTime } from "../time"
+import { UnixTime } from "../time";
 
 export const times = {
   Second: 1,
@@ -7,43 +7,48 @@ export const times = {
   Day: 86400,
   Month: 2628288,
   Year: 31557600,
-}
+};
 
-export function fmtTime(t: number, tDuration: number, postFix: string, short = false): string {
+export function fmtTime(
+  t: number,
+  tDuration: number,
+  postFix: string,
+  short = false
+): string {
   // time from now divided by the provide duration
   // Example: t=600 so tD...=60 (1 Minute) so t/tD... = 10 (minutes)
-  const sinceIn = Math.round(t / tDuration)
+  const sinceIn = Math.round(t / tDuration);
 
   // If >= 5 seconds ago
   if (tDuration == 1 && 5 >= sinceIn) {
-    return "Just Now"
+    return "Just Now";
   }
 
-  let fmtTime = `${sinceIn}${postFix}`
+  let fmtTime = `${sinceIn}${postFix}`;
   if (!short) {
     if (sinceIn > 1) {
-      fmtTime += "s"
+      fmtTime += "s";
     }
-    fmtTime += " Ago"
+    fmtTime += " Ago";
   }
-  return fmtTime
+  return fmtTime;
 }
 
 export default (time: number): string => {
-  const since = UnixTime(-time)
+  const since = UnixTime(-time);
   if (since >= times.Year) {
-    return fmtTime(since, times.Year, " Year")
+    return fmtTime(since, times.Year, " Year");
   } else if (since >= times.Month) {
-    return fmtTime(since, times.Month, " Month")
+    return fmtTime(since, times.Month, " Month");
   } else if (since >= times.Day) {
-    return fmtTime(since, times.Day, " Day")
+    return fmtTime(since, times.Day, " Day");
   } else if (since >= times.Hour) {
-    return fmtTime(since, times.Hour, " Hour")
+    return fmtTime(since, times.Hour, " Hour");
   } else if (since >= times.Minute) {
-    return fmtTime(since, times.Minute, " Minute")
+    return fmtTime(since, times.Minute, " Minute");
   } else if (since >= times.Second) {
-    return fmtTime(since, times.Second, " Second")
+    return fmtTime(since, times.Second, " Second");
   } else {
-    return "Just Now"
+    return "Just Now";
   }
-}
+};

@@ -146,9 +146,8 @@ export default defineComponent({
         return;
       }
       try {
-        this.captcha.token = document.getElementsByName(
-          "h-captcha-response"
-        )[0].value;
+        this.captcha.token =
+          document.getElementsByName("h-captcha-response")[0].value;
       } catch {
         this.captcha.token = "";
       }
