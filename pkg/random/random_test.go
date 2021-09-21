@@ -1,53 +1,107 @@
-package random
+package random_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/allocamelus/allocamelus/pkg/random"
+)
 
 const n = 32
 
+func TestBytes(t *testing.T) {
+	b := random.Bytes(n)
+	if len(b) != n {
+		t.Error("Failed random Bytes")
+	}
+}
+
 func BenchmarkBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Bytes(n)
+		random.Bytes(n)
+	}
+}
+
+func TestFastBytes(t *testing.T) {
+	b := random.FastBytes(n)
+	if len(b) != n {
+		t.Error("Failed random FastBytes")
 	}
 }
 
 func BenchmarkFastBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		FastBytes(n)
+		random.FastBytes(n)
 	}
+}
+
+func TestInt(t *testing.T) {
+	random.Int(n)
 }
 
 func BenchmarkInt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Int(n)
+		random.Int(n)
 	}
+}
+
+func TestFastInt(t *testing.T) {
+	random.FastInt(n)
 }
 
 func BenchmarkFastInt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		FastInt(n)
+		random.FastInt(n)
+	}
+}
+
+func TestString(t *testing.T) {
+	s := random.String(n)
+	if len(s) != n {
+		t.Error("Failed random TestString")
 	}
 }
 
 func BenchmarkString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		String(n)
+		random.String(n)
+	}
+}
+
+func TestStringBase64(t *testing.T) {
+	s := random.StringBase64(n)
+	if len(s) < n {
+		t.Error("Failed random StringBase64")
 	}
 }
 
 func BenchmarkStringBase64(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		StringBase64(n)
+		random.StringBase64(n)
 	}
 }
 
+func TestStringBase58(t *testing.T) {
+	s := random.StringBase58(n)
+	if len(s) < n {
+		t.Error("Failed random StringBase58")
+	}
+
+}
 func BenchmarkStringBase58(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		StringBase58(n)
+		random.StringBase58(n)
+	}
+}
+
+func TestFastString(t *testing.T) {
+	s := random.FastString(n)
+	if len(s) != n {
+		t.Error("Failed random FastString")
 	}
 }
 
 func BenchmarkFastString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		FastString(n)
+		random.FastString(n)
 	}
 }

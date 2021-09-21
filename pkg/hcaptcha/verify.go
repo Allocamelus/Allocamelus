@@ -46,6 +46,9 @@ func Verify(v Values) error {
 	}
 	if v.SiteKey != "" {
 		requestData.Set("sitekey", v.SiteKey)
+		if klog.V(4).Enabled() {
+			klog.Info(errNilSiteKey)
+		}
 	}
 
 	res, err := http.PostForm("https://hcaptcha.com/siteverify", requestData)
