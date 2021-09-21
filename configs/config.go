@@ -78,6 +78,7 @@ type Config struct {
 		Name        string
 		Port        int64
 		Prefork     bool
+		BodyLimit   int64
 	}
 	Ssl struct {
 		Enabled bool
@@ -259,6 +260,10 @@ func (c *Config) Validate() error {
 	if c.Site.Domain == "" {
 		c.Site.Domain = "localhost"
 		klog.Info("Warning - Config: Missing/Invalid Site Domain | Using Default (localhost)")
+	}
+	if c.Site.BodyLimit == 0 {
+		c.Site.BodyLimit = 50 * 1024 * 1024
+		klog.Info("Warning - Config: Missing/Invalid Site Body Limit | Using Default (50MB)")
 	}
 
 	if c.Mail.Enabled {

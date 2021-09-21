@@ -68,7 +68,8 @@
         "domain": "example.com",
         "name": "Example",
         "port": 8080,
-        "prefork": false
+        "prefork": false,
+        "bodyLimit": 52428800
     },
     "ssl": {
         "enabled": false,
