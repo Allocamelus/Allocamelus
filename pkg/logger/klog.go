@@ -9,14 +9,17 @@ import (
 
 // InitKlog initializes klog
 // Leave filePath empty to use stderr
-func InitKlog(v int8, filePath string) {
+func InitKlog(v int8, isDir bool, path string) {
 	klog.InitFlags(nil)
 	flag.Set("v", strconv.Itoa(int(v)))
-	if filePath != "" {
-		// By default klog writes to stderr. Setting logtostderr to false makes klog
-		// write to a log file.
+	if path != "" {
 		flag.Set("logtostderr", "false")
-		flag.Set("log_file", filePath)
+		flag.Set("alsologtostderr", "true")
+		if isDir {
+			flag.Set("log_dir", path)
+		} else {
+			flag.Set("log_file", path)
+		}
 	}
 	flag.Parse()
 }

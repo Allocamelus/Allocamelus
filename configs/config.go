@@ -47,6 +47,7 @@ type Config struct {
 	}
 	Logs struct {
 		Level int8
+		Dir   bool
 		Path  string
 	}
 	Mail email.Config

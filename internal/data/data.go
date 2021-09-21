@@ -24,7 +24,7 @@ func New(configPath string) *Data {
 
 	data.Config = configs.NewConfig(configPath)
 
-	logger.InitKlog(data.Config.Logs.Level, data.Config.Logs.Path)
+	logger.InitKlog(data.Config.Logs.Level, data.Config.Logs.Dir, data.Config.Logs.Path)
 
 	if err := data.initDatabase(); err != nil {
 		klog.Fatal("Backplate Database Error ", err)

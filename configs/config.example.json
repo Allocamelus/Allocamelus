@@ -35,6 +35,7 @@
     },
     "logs": {
         "level": 2,
+        "dir": false,
         "path": "app.log"
     },
     "mail": {
