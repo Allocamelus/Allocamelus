@@ -11,6 +11,6 @@ build-npm:
 	cd ./web/app; npm run build;
 
 build-go:
-	cd ./cmd/allocamelus; go build -ldflags="-s -w" -o ./application.so .
+	go build -ldflags="-s -w" -o ./cmd/allocamelus/allocamelus ./cmd/allocamelus
 
 build: build-go build-npm
