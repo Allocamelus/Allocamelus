@@ -35,8 +35,8 @@
     },
     "logs": {
         "level": 2,
-        "dir": false,
-        "path": "app.log"
+        "dir": true,
+        "path": "/var/log/allocamelus/"
     },
     "mail": {
         "enabled": true,

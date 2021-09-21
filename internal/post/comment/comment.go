@@ -179,9 +179,7 @@ func (c *Comment) Insert() (err error) {
 
 func (c *Comment) CountReplies() (err error) {
 	if c.ID == 0 {
-		if klog.V(4).Enabled() {
-			klog.Info("post/comment: comment id == 0 was used")
-		}
+		klog.Warning("post/comment: comment id == 0 was used")
 		return nil
 	}
 	c.Replies, err = GetRepliesTotal(c.ID)
