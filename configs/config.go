@@ -8,6 +8,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/argon2id"
 	"github.com/allocamelus/allocamelus/pkg/email"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 	"k8s.io/klog/v2"
 )
@@ -91,8 +92,11 @@ func NewConfig(path string) *Config {
 	config, err := ReadConfig(path)
 	logger.Fatal(err)
 
-	err = config.Validate()
-	logger.Fatal(err)
+	// Only check the config as master
+	if !fiber.IsChild() {
+		err = config.Validate()
+		logger.Fatal(err)
+	}
 
 	config.fillTime()
 	return config
