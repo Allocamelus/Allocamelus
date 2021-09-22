@@ -1,3 +1,4 @@
+//go:generate msgp
 package session
 
 import (
@@ -19,27 +20,32 @@ var (
 type Status int8
 
 const (
-	// Created Session Status for created
+	// Created Session Status
 	Created Status = iota
-	// NotUpdated Session Status for no change
+	// NotUpdated Session Status
 	NotUpdated
-	// Updated Session Status for change
+	// Updated Session Status
 	Updated
-	// Deleted Session Status for deletion
+	// Deleted Session Status
 	Deleted
 )
 
-//go:generate msgp
-
 // Session is session
 type Session struct {
-	Created time.Time              `msg:"created"`
-	Expires time.Time              `msg:"expires"`
-	Status  Status                 `msg:"status"`
-	Key     string                 `msg:"key"`
-	Data    map[string]interface{} `msg:"data"`
-	mu      sync.RWMutex
-	store   *Store
+	// Created time.Time
+	Created time.Time `msg:"created"`
+	// Expires time.Time
+	Expires time.Time `msg:"expires"`
+	// Status of session
+	Status Status `msg:"status"`
+	// Key session identifier
+	Key string `msg:"key"`
+	// Data of session
+	Data map[string]interface{} `msg:"data"`
+	// mu RWMutex
+	mu sync.RWMutex
+	// store pointer to store
+	store *Store
 }
 
 // Init add Store and mutex to session
@@ -68,17 +74,17 @@ func (s *Session) Regenerate() {
 
 // Set session value
 func (s *Session) Set(key string, value interface{}) error {
-	if len(key) > 0 {
-		if value != nil {
-			s.mu.Lock()
-			s.Data[key] = value
-			s.mu.Unlock()
-			s.Updated()
-			return nil
-		}
+	if key == "" {
+		return ErrNilKey
+	}
+	if value == nil {
 		return ErrNilValue
 	}
-	return ErrNilKey
+	s.mu.Lock()
+	s.Data[key] = value
+	s.mu.Unlock()
+	s.Updated()
+	return nil
 }
 
 // Updated updates expires and status
@@ -93,15 +99,18 @@ func (s *Session) Updated() {
 
 // Get session value
 func (s *Session) Get(key string) (interface{}, error) {
-	if len(key) > 0 {
-		if len(s.Data) > 0 {
-			if value, ok := s.Data[key]; ok {
-				return value, nil
-			}
-		}
-		return nil, ErrNilValue
+	if key == "" {
+		return nil, ErrNilKey
 	}
-	return nil, ErrNilKey
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	// Does Data have any
+	if len(s.Data) > 0 {
+		if value, ok := s.Data[key]; ok {
+			return value, nil
+		}
+	}
+	return nil, ErrNilValue
 }
 
 // GetBytes from session

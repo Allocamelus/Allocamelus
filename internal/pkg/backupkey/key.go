@@ -10,7 +10,6 @@ import (
 
 const (
 	splitNum  = 6
-	splitStr  = "-"
 	splitRune = '-'
 )
 
@@ -24,7 +23,7 @@ func Create() ([]byte, string) {
 // Decode backupkey string
 //	return key []byte & error
 func Decode(s string) ([]byte, error) {
-	encodedKey := strings.ReplaceAll(s, splitStr, "")
+	encodedKey := strings.ReplaceAll(s, string(splitRune), "")
 	return base58.Decode(encodedKey)
 }
 
