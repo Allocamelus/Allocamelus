@@ -2,15 +2,76 @@ package data
 
 import (
 	"database/sql"
+	"errors"
+	"sync"
 	"time"
 
 	// Mysql driver
+
+	"github.com/allocamelus/allocamelus/pkg/logger"
 	_ "github.com/go-sql-driver/mysql"
 	"k8s.io/klog/v2"
 )
 
 // Prepare defines a function to prepare a sql statement
 type Prepare = func(sql string) *sql.Stmt
+
+type PrepareCallback = func(Prepare)
+
+// PrepareQueue adds easy tools to queue sql for prepare in
+// the init() function or any time Before the database is ready
+type PrepareQueue struct {
+	mu       sync.Mutex
+	Prepared bool
+	items    map[int]PrepareCallback
+}
+
+// NewPrepareQueue
+func NewPrepareQueue() *PrepareQueue {
+	p := new(PrepareQueue)
+	p.items = map[int]PrepareCallback{}
+	return p
+}
+
+// Add stmt pointer and query to queue
+//
+// Must not be called after prepareAll
+func (p *PrepareQueue) Add(stmt **sql.Stmt, q string) {
+	p.mu.Lock()
+	if p.Prepared {
+		logger.Fatal(errors.New("error: PrepareQueue.Add called after prepareAll"))
+	}
+	p.items[len(p.items)] = func(p Prepare) {
+		*stmt = p(q)
+	}
+	p.mu.Unlock()
+}
+
+// prepareAll prepares all queries in queue
+func (p *PrepareQueue) prepareAll(d *Data) {
+	p.mu.Lock()
+	p.Prepared = true
+	// New WaitGroup
+	var wg sync.WaitGroup
+
+	for _, callback := range p.items {
+		// Add one to WaitGroup
+		wg.Add(1)
+
+		// New goroutine for each queue callback
+		go func(cb PrepareCallback) {
+			cb(d.Prepare)
+			wg.Done()
+		}(callback)
+	}
+
+	// Wait for all routines to be done
+	wg.Wait()
+	p.mu.Unlock()
+}
+
+// PrepareQueuer global to allow queuing
+var PrepareQueuer = NewPrepareQueue()
 
 // InitDatabase initializes a database pool from models.Config
 func (d *Data) initDatabase() error {
@@ -30,6 +91,8 @@ func (d *Data) initDatabase() error {
 	if err != nil {
 		return err
 	}
+	// PrepareAll
+	PrepareQueuer.prepareAll(d)
 	return nil
 }
 
