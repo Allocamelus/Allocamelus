@@ -8,6 +8,7 @@
       <div
         class="ml-3 flex flex-col flex-grow"
         :class="post.content?.length == 0 ? 'justify-center' : ''"
+        @click.self="toPost"
       >
         <div
           class="

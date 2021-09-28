@@ -17,13 +17,13 @@ export default defineConfig({
         target: 'https://allocamelus.localhost',
         changeOrigin: true,
         cookieDomainRewrite: "localhost",
-        secure: true
+        secure: false
       },
       '/media': {
         target: 'https://allocamelus.localhost',
         changeOrigin: true,
         cookieDomainRewrite: "localhost",
-        secure: true
+        secure: false
       }
     }
   }
