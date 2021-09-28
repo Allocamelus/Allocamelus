@@ -4,10 +4,11 @@ package media
 
 import (
 	"database/sql"
+	_ "embed"
 	"html"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -27,14 +28,16 @@ type Meta struct {
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var (
-	preGet    *sql.Stmt
-	preInsert *sql.Stmt
+	//go:embed sql/get.sql
+	qGet   string
+	preGet *sql.Stmt
 )
 
+func init() {
+	data.PrepareQueuer.Add(&preGet, qGet)
+}
+
 func Get(postID int64) ([]*Media, error) {
-	if preGet == nil {
-		preGet = g.Data.Prepare(`SELECT meta, hash FROM PostMedia WHERE postId = ? AND active = 1 ORDER BY postMediaId ASC LIMIT 4`)
-	}
 	rows, err := preGet.Query(postID)
 	if err != nil {
 		return nil, err
@@ -63,10 +66,17 @@ func Get(postID int64) ([]*Media, error) {
 	return mediaList, nil
 }
 
+var (
+	//go:embed sql/insert.sql
+	qInsert   string
+	preInsert *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preInsert, qInsert)
+}
+
 func Insert(postID int64, media Media, hash string) error {
-	if preInsert == nil {
-		preInsert = g.Data.Prepare(`INSERT INTO PostMedia (postId, created, active, fileType, meta, hash) VALUES (?, ?, 1, ?, ?, ?)`)
-	}
 	meta, err := json.MarshalToString(media.Meta)
 	if err != nil {
 		return err
