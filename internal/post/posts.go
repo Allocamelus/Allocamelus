@@ -2,6 +2,7 @@ package post
 
 import (
 	"database/sql"
+	_ "embed"
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/post/media"
@@ -9,6 +10,19 @@ import (
 )
 
 var (
+	//go:embed sql/getPublicPosts/Total.sql
+	qGetPubPostsTotal string
+	//go:embed sql/getPublicPosts/Latest.sql
+	qGetPubPostsLatest string
+	//go:embed sql/getPublicPosts/ByUser/Total.sql
+	qGetPubPostsByUserTotal string
+	//go:embed sql/getPublicPosts/ByUser/Latest.sql
+	qGetPubPostsByUserLatest string
+	//go:embed sql/getPublicPosts/ForUser/Total.sql
+	qGetPubPostsForUserTotal string
+	//go:embed sql/getPublicPosts/ForUser/Latest.sql
+	qGetPubPostsForUserLatest string
+
 	preGetPublicPosts struct {
 		Total  *sql.Stmt
 		Latest *sql.Stmt
@@ -23,73 +37,20 @@ var (
 	}
 )
 
-func initPosts(p data.Prepare) {
-	preGetPublicPosts.Total = p(`
-	SELECT COUNT(postId)
-	FROM Posts
-	WHERE userId IN (
-		SELECT userId FROM (
-			SELECT userId FROM Users 
-			WHERE type = 2
-		) tmp
-	) AND published != 0`)
-	preGetPublicPosts.Latest = p(`
-	SELECT
-		postId, userId, published,
-		updated, content
-	FROM Posts 
-	WHERE userId IN (
-		SELECT userId FROM (
-			SELECT userId FROM Users 
-			WHERE type = 2
-		) tmp
-	) AND published != 0
-	ORDER BY published DESC
-	LIMIT ?,?`)
-
-	preGetPublicPosts.ForUser.Total = p(`
-	SELECT COUNT(postId)
-	FROM Posts
-	WHERE userId IN (
-		SELECT followUserId FROM (
-			SELECT followUserId FROM UserFollows 
-			WHERE userId = ? AND accepted = 1
-		) tmp
-	)
-	AND published != 0
-	OR userId = ?`)
-	preGetPublicPosts.ForUser.Latest = p(`
-	SELECT
-		postId, userId, published,
-		updated, content
-	FROM Posts
-	WHERE userId IN (
-		SELECT followUserId FROM (
-			SELECT followUserId FROM UserFollows 
-			WHERE userId = ? AND accepted = 1
-		) tmp
-	)
-	AND published != 0
-	OR userId = ?
-	ORDER BY published DESC
-	LIMIT ?,?`)
-
-	preGetPublicPosts.ByUser.Total = p(`SELECT COUNT(postId) FROM Posts WHERE published != 0 AND userId = ?`)
-	preGetPublicPosts.ByUser.Latest = p(`
-	SELECT
-		postId, published,
-		updated, content
-	FROM Posts 
-	WHERE published != 0 AND userId = ?
-	ORDER BY published DESC
-	LIMIT ?,?`)
+func init() {
+	data.PrepareQueuer.Add(&preGetPublicPosts.Total, qGetPubPostsTotal)
+	data.PrepareQueuer.Add(&preGetPublicPosts.Latest, qGetPubPostsLatest)
+	data.PrepareQueuer.Add(&preGetPublicPosts.ByUser.Total, qGetPubPostsByUserTotal)
+	data.PrepareQueuer.Add(&preGetPublicPosts.ByUser.Latest, qGetPubPostsByUserLatest)
+	data.PrepareQueuer.Add(&preGetPublicPosts.ForUser.Total, qGetPubPostsForUserTotal)
+	data.PrepareQueuer.Add(&preGetPublicPosts.ForUser.Latest, qGetPubPostsForUserLatest)
 }
 
 // GetPublicTotal Posts
 // TODO: Cache!!!
 func GetPublicTotal(u *user.Session) (total int64, err error) {
 	if !u.LoggedIn {
-		err = preGetPublicPosts.Total.QueryRow().Scan(&total)
+		err = preGetPublicPosts.Total.QueryRow(user.Public).Scan(&total)
 	} else {
 		err = preGetPublicPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
 	}
@@ -106,7 +67,7 @@ func GetPublicPosts(startNum, perPage int64, u *user.Session) (*List, error) {
 	)
 
 	if !u.LoggedIn {
-		rows, err = preGetPublicPosts.Latest.Query(startNum, perPage)
+		rows, err = preGetPublicPosts.Latest.Query(user.Public, startNum, perPage)
 	} else {
 		rows, err = preGetPublicPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
 	}

@@ -4,11 +4,11 @@ package post
 
 import (
 	"database/sql"
+	_ "embed"
 	"errors"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -41,18 +41,13 @@ func New(userID int64, content string, publish bool) *Post { // skipcq: RVV-A000
 }
 
 var (
-	preInsert       *sql.Stmt
-	preGet          *sql.Stmt
-	prePublish      *sql.Stmt
-	preGetPublished *sql.Stmt
-	preGetUserID    *sql.Stmt
+	//go:embed sql/insert.sql
+	qInsert   string
+	preInsert *sql.Stmt
 )
 
-func initPost(p data.Prepare) {
-	preInsert = p(`INSERT INTO Posts (userId, created, published, content)
-	VALUES (?, ?, ?, ?)`)
-	preGet = p(`SELECT userId, created, published, updated, content FROM Posts WHERE postId = ? LIMIT 1`)
-	prePublish = p(`UPDATE Posts SET published = ? WHERE postId = ?`)
+func init() {
+	data.PrepareQueuer.Add(&preInsert, qInsert)
 }
 
 // Insert into database
@@ -67,6 +62,16 @@ func (p *Post) Insert() error {
 
 	p.ID, err = r.LastInsertId()
 	return err
+}
+
+var (
+	//go:embed sql/get.sql
+	qGet   string
+	preGet *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preGet, qGet)
 }
 
 // Get Post
@@ -118,13 +123,17 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 	return p, err
 }
 
-var preGetCanView *sql.Stmt
+var (
+	//go:embed sql/getCanView.sql
+	qGetCanView   string
+	preGetCanView *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preGetCanView, qGetCanView)
+}
 
 func CanView(postID int64, u *user.Session, postCache ...*Post) error {
-	if preGetCanView == nil {
-		preGetCanView = g.Data.Prepare(`SELECT userId, published FROM Posts WHERE postId = ? LIMIT 1`)
-	}
-
 	var p *Post
 	// Check postCache
 	if len(postCache) != 0 && postCache[0] != nil {
@@ -157,23 +166,46 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 	return nil
 }
 
+var (
+	//go:embed sql/getUserID.sql
+	qGetUserID   string
+	preGetUserID *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preGetUserID, qGetUserID)
+}
+
 func GetUserId(postID int64) (int64, error) {
-	if preGetUserID == nil {
-		preGetUserID = g.Data.Prepare(`SELECT userId FROM Posts WHERE postId = ? LIMIT 1`)
-	}
 	var userId int64
 	err := preGetUserID.QueryRow(postID).Scan(&userId)
 	return userId, err
 }
 
-func Published(postID int64) (bool, error) {
-	if preGetPublished == nil {
-		preGetPublished = g.Data.Prepare(`SELECT published FROM Posts WHERE postId = ? LIMIT 1`)
-	}
+var (
+	//go:embed sql/getPublished.sql
+	qGetPublished   string
+	preGetPublished *sql.Stmt
+)
 
+func init() {
+	data.PrepareQueuer.Add(&preGetPublished, qGetPublished)
+}
+
+func Published(postID int64) (bool, error) {
 	var published bool
 	err := preGetPublished.QueryRow(postID).Scan(&published)
 	return published, err
+}
+
+var (
+	//go:embed sql/publish.sql
+	qPublish   string
+	prePublish *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&prePublish, qPublish)
 }
 
 // Publish post if not already
