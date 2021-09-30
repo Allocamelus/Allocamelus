@@ -65,7 +65,7 @@ func (p *Post) Insert() error {
 }
 
 var (
-	//go:embed sql/get.sql
+	//go:embed sql/get/get.sql
 	qGet   string
 	preGet *sql.Stmt
 )
@@ -124,7 +124,7 @@ func GetForUser(postID int64, u *user.Session) (*Post, error) {
 }
 
 var (
-	//go:embed sql/getCanView.sql
+	//go:embed sql/get/canView.sql
 	qGetCanView   string
 	preGetCanView *sql.Stmt
 )
@@ -167,7 +167,7 @@ func CanView(postID int64, u *user.Session, postCache ...*Post) error {
 }
 
 var (
-	//go:embed sql/getUserID.sql
+	//go:embed sql/get/userID.sql
 	qGetUserID   string
 	preGetUserID *sql.Stmt
 )
@@ -183,7 +183,7 @@ func GetUserId(postID int64) (int64, error) {
 }
 
 var (
-	//go:embed sql/getPublished.sql
+	//go:embed sql/get/published.sql
 	qGetPublished   string
 	preGetPublished *sql.Stmt
 )

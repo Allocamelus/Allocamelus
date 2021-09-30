@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	_ "embed"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 )
 
 var (
@@ -13,12 +13,12 @@ var (
 	preDelete *sql.Stmt
 )
 
+func init() {
+	data.PrepareQueuer.Add(&preDelete, qDelete)
+}
+
 // Delete commentID
 func Delete(commentID int64) error {
-	if preDelete == nil {
-		preDelete = g.Data.Prepare(qDelete)
-	}
-
 	_, err := preDelete.Exec(commentID)
 	return err
 }

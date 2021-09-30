@@ -11,4 +11,4 @@ FROM PostComments PC
 WHERE PCC.parent = ?
   AND PCC.depth <= ?
   AND PCC.parent != PCC.child
-  LIMIT ?, ?
+LIMIT ?, ?

@@ -10,17 +10,17 @@ import (
 )
 
 var (
-	//go:embed sql/getPublicPosts/Total.sql
+	//go:embed sql/get/publicPosts/Total.sql
 	qGetPubPostsTotal string
-	//go:embed sql/getPublicPosts/Latest.sql
+	//go:embed sql/get/publicPosts/Latest.sql
 	qGetPubPostsLatest string
-	//go:embed sql/getPublicPosts/ByUser/Total.sql
+	//go:embed sql/get/publicPosts/ByUser/Total.sql
 	qGetPubPostsByUserTotal string
-	//go:embed sql/getPublicPosts/ByUser/Latest.sql
+	//go:embed sql/get/publicPosts/ByUser/Latest.sql
 	qGetPubPostsByUserLatest string
-	//go:embed sql/getPublicPosts/ForUser/Total.sql
+	//go:embed sql/get/publicPosts/ForUser/Total.sql
 	qGetPubPostsForUserTotal string
-	//go:embed sql/getPublicPosts/ForUser/Latest.sql
+	//go:embed sql/get/publicPosts/ForUser/Latest.sql
 	qGetPubPostsForUserLatest string
 
 	preGetPublicPosts struct {

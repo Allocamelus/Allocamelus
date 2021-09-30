@@ -6,10 +6,11 @@ package comment
 
 import (
 	"database/sql"
+	_ "embed"
 	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/post"
@@ -112,49 +113,28 @@ func CanReplyTo(commentID, postID int64, u *user.Session, commentCache ...*Comme
 }
 
 var (
+	//go:embed sql/insert/insert.sql
+	qInsert   string
 	preInsert *sql.Stmt
+	//go:embed sql/insert/closureSelf.sql
+	qInsertClosureSelf string
 	// Insert (Self,Self,0) into closure table
 	// (?,?) = (postCommentId, postCommentId)
-	preInsertClosureQ1 *sql.Stmt
+	preInsertSelfClosure *sql.Stmt
+	//go:embed sql/insert/closureDeep.sql
+	qInsertClosureDeep string
 	// Insert parent-child relationships for comment
 	// (?,?) = (parent, postCommentId)
-	preInsertClosureQ2 *sql.Stmt
+	preInsertClosureDeep *sql.Stmt
 )
 
-func prepareInsert() {
-	if preInsert == nil {
-		preInsert = g.Data.Prepare(`
-			INSERT INTO PostComments (
-				postId, 
-				userId, 
-				parent, 
-				created, 
-				content
-			)
-			VALUES (?, ?, ?, ?, ?)`)
-	}
-	if preInsertClosureQ1 == nil {
-		preInsertClosureQ1 = g.Data.Prepare(`
-		INSERT INTO PostCommentClosures(parent, child, depth)
-VALUES (?, ?, 0)
-		`)
-	}
-	if preInsertClosureQ2 == nil {
-		preInsertClosureQ2 = g.Data.Prepare(`
-		INSERT INTO PostCommentClosures(parent, child, depth)
-		SELECT p.parent,
-			c.child,
-			p.depth + c.depth + 1
-		FROM PostCommentClosures p,
-			PostCommentClosures c
-		WHERE p.child = ?
-			AND c.parent = ?
-			`)
-	}
+func init() {
+	data.PrepareQueuer.Add(&preInsert, qInsert)
+	data.PrepareQueuer.Add(&preInsertSelfClosure, qInsertClosureSelf)
+	data.PrepareQueuer.Add(&preInsertClosureDeep, qInsertClosureDeep)
 }
 
 func (c *Comment) Insert() (err error) {
-	prepareInsert()
 	r, err := preInsert.Exec(
 		c.PostID, c.UserID,
 		c.ParentID, c.Created,
@@ -169,10 +149,10 @@ func (c *Comment) Insert() (err error) {
 		return
 	}
 
-	_, err = preInsertClosureQ1.Exec(c.ID, c.ID)
+	_, err = preInsertSelfClosure.Exec(c.ID, c.ID)
 
 	if c.ParentID != 0 {
-		_, err = preInsertClosureQ2.Exec(c.ParentID, c.ID)
+		_, err = preInsertClosureDeep.Exec(c.ParentID, c.ID)
 	}
 	return
 }
