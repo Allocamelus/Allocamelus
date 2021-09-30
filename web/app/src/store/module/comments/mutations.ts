@@ -62,8 +62,18 @@ export const mutations = <MutationTree<State>>{
   // remove comment
   remove(state: State, id: number) {
     let path = CommentPath(state)(id);
+
     // Get parent path and child key
     const key = path.pop();
+
+    // Is comment top level
+    if (path.length === 0) {
+      state.comments.delComment(key);
+      // remove comment path from cache
+      delete state.comPathCache[id];
+      return;
+    }
+
     let parent = CommentFromPath(state.comments, path);
 
     // delete comment

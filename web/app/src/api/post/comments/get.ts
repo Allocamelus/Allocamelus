@@ -33,6 +33,23 @@ export class API_Comments extends ordered_list {
     this.comments[c.id] = c;
     this.order[this.total()] = c.id;
   }
+
+  delComment(id: number | string) {
+    if (Object.prototype.hasOwnProperty.call(this.comments, id)) {
+      delete this.comments[id];
+      // Remove comment id from order
+      let removed = false;
+      for (let k in this.order) {
+        if (this.order[k] == id) {
+          delete this.order[k];
+          removed = true;
+        } else if (removed) {
+          // Shift order by one after removed id
+          this.order[`${Number(k).valueOf() - 1}`] = this.order[k];
+        }
+      }
+    }
+  }
 }
 
 export async function get(

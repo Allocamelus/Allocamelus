@@ -30,6 +30,9 @@ export class user_list {
     }
   }
   appendUser(u: GEN_User) {
+    if (this.users === null) {
+      this.users = {};
+    }
     if (!(u.id in this.users)) {
       this.users[u.id] = u;
     }

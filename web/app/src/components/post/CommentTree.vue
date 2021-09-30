@@ -289,12 +289,12 @@ export default defineComponent({
   methods: {
     newReply(c) {
       this.showReplyForm = false;
+      this.addUser(this.storeUser);
       this.addComment({
         // AddCommentParams
         newComment: true,
         comment: c,
       });
-      this.addUser(this.storeUser);
     },
     deleted() {
       this.removeComment(this.comment.id);
