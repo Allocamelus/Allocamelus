@@ -4,13 +4,13 @@ go 1.17
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20210920160938-87db9fbc61c7 // indirect
-	github.com/ProtonMail/gopenpgp/v2 v2.2.3
+	github.com/ProtonMail/gopenpgp/v2 v2.2.4
 	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.19.0
-	github.com/gofiber/helmet/v2 v2.2.1
+	github.com/gofiber/helmet/v2 v2.2.2
 	github.com/h2non/bimg v1.1.5
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.13.6 // indirect
@@ -28,8 +28,8 @@ require (
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.10.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20210917221730-978cfadd31cf // indirect
-	golang.org/x/sys v0.0.0-20210921065528-437939a70204 // indirect
+	golang.org/x/net v0.0.0-20210929193557-e81a3d93ecf6 // indirect
+	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/gographics/imagick.v3 v3.4.0
 	k8s.io/klog/v2 v2.20.0
