@@ -10,7 +10,7 @@
   >
     <slot></slot>
     <img
-      :src="url"
+      :src="fullUrl"
       :alt="alt"
       :width="width"
       :height="height"
@@ -52,6 +52,19 @@ export default defineComponent({
     height: {
       type: Number,
       default: 0,
+    },
+  },
+  computed: {
+    fullUrl() {
+      let url = this.url;
+      try {
+        // Try building url with BASE_URL
+        // BASE_URL must be a valid base see new URL(url [, base])
+        // @ https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
+        url = new URL(url, import.meta.env.BASE_URL);
+      } finally {
+        return url;
+      }
     },
   },
 });
