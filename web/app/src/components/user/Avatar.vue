@@ -5,7 +5,7 @@
     class="block flex-shrink-0"
   >
     <img
-      :src="user.avatar ? user.avatarUrl : gray5x5Url"
+      :src="user.avatar ? fullAvatarURL : gray5x5Url"
       loading="auto"
       :alt="`@${user.userName}'s Profile Image`"
       :width="500"
@@ -24,6 +24,7 @@
 import { defineComponent } from "vue";
 import { GEN_User } from "../../models/go_structs_gen";
 import gray5x5Url from "../../assets/gray5x5.jpg";
+import FullURL from "../../pkg/fullUrl";
 
 import ToLink from "../ToLink.vue";
 
@@ -42,6 +43,11 @@ export default defineComponent({
     return {
       gray5x5Url,
     };
+  },
+  computed: {
+    fullAvatarURL() {
+      return FullURL(this.user.avatarUrl, import.meta.env.BASE_URL);
+    },
   },
   components: { ToLink },
 });

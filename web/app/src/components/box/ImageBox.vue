@@ -22,6 +22,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import FullURL from '../../pkg/fullUrl'
 
 export default defineComponent({
   props: {
@@ -56,15 +57,7 @@ export default defineComponent({
   },
   computed: {
     fullUrl() {
-      let url = this.url;
-      try {
-        // Try building url with BASE_URL
-        // BASE_URL must be a valid base see new URL(url [, base])
-        // @ https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
-        url = new URL(url, import.meta.env.BASE_URL).href;
-      } finally {
-        return url;
-      }
+      return FullURL(this.url, import.meta.env.BASE_URL);
     },
   },
 });
