@@ -14,10 +14,10 @@ type Image struct {
 
 // EncodeOptions default encoding options
 var EncodeOptions = map[string]map[int]int{
-	".jpg":  map[int]int{lilliput.JpegQuality: 90},
-	".jpeg": map[int]int{lilliput.JpegQuality: 90},
-	".png":  map[int]int{lilliput.PngCompression: 9},
-	".webp": map[int]int{lilliput.WebpQuality: 90},
+	".jpg":  {lilliput.JpegQuality: 90},
+	".jpeg": {lilliput.JpegQuality: 90},
+	".png":  {lilliput.PngCompression: 9},
+	".webp": {lilliput.WebpQuality: 90},
 }
 
 var (
