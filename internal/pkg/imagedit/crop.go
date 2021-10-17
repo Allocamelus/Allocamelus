@@ -1,7 +1,8 @@
 package imagedit
 
-import "github.com/h2non/bimg"
+import "github.com/discord/lilliput"
 
+/* not supported by lilliput ImageOptions
 type Location int
 
 const (
@@ -17,61 +18,19 @@ const (
 	// bimg only mw defaults to center
 	Smart
 )
-
-func (img *Image) Crop(newWidth, newHeight int, l Location) error {
-	if err := img.Check(); err != nil {
-		return err
-	}
-
-	if img.UseMW {
-		callback := func(callbackImg *Image) error {
-			return callbackImg.CropMW(newWidth, newHeight, l)
-		}
-		return img.IterateOver(callback)
-	}
-
-	return img.BlobToImg(img.Img.Crop(newWidth, newHeight, lToG(l)))
+*/
+func (img *Image) Crop(newWidth, newHeight int) {
+	img.options.Width = newWidth
+	img.options.Height = newHeight
+	img.options.ResizeMethod = lilliput.ImageOpsFit
 }
 
-func (img *Image) CropMW(newWidth, newHeight int, l Location) error {
-	if err := img.Check(); err != nil {
-		return err
-	}
-
-	width, height, _ := img.WH()
-	x, y := fromLocation(width, height, newWidth, newHeight, l)
-
-	return img.MW.CropImage(uint(newWidth), uint(newHeight), x, y)
+func (img *Image) CropAR(ar AspectRatio) {
+	newWidth, newHeight := img.AR(ar)
+	img.Crop(newWidth, newHeight)
 }
 
-func (img *Image) CropAR(ar AspectRatio, l Location) error {
-	if err := img.Check(); err != nil {
-		return err
-	}
-
-	if img.UseMW {
-		callback := func(callbackImg *Image) error {
-			return callbackImg.CropArMw(ar, l)
-		}
-		return img.IterateOver(callback)
-	}
-
-	newWidth, newHeight, err := img.AR(ar)
-	if err != nil {
-		return err
-	}
-	return img.Crop(newWidth, newHeight, l)
-}
-
-func (img *Image) CropArMw(ar AspectRatio, l Location) error {
-	if err := img.Check(); err != nil {
-		return err
-	}
-
-	newWidth, newHeight, _ := img.AR(ar)
-	return img.CropMW(newWidth, newHeight, l)
-}
-
+/*
 func fromLocation(w, h, newH, newW int, l Location) (x, y int) {
 	switch l {
 	case Center:
@@ -111,3 +70,4 @@ func lToG(l Location) bimg.Gravity {
 	}
 	return bimg.GravityCentre
 }
+*/

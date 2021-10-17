@@ -2,28 +2,30 @@ package imagedit
 
 import (
 	"errors"
+	"io/ioutil"
 
-	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
-	"github.com/h2non/bimg"
-	"gopkg.in/gographics/imagick.v3/imagick"
+	"github.com/discord/lilliput"
 )
 
 type Image struct {
-	// MagickWand
-	MW    *imagick.MagickWand
-	Img   *bimg.Image
-	UseMW bool
-	// OptimizeImageLayers panics if images are not all the same size
-	resized bool
+	Img     lilliput.Decoder
+	options *lilliput.ImageOptions
+}
+
+// EncodeOptions default encoding options
+var EncodeOptions = map[string]map[int]int{
+	".jpg":  map[int]int{lilliput.JpegQuality: 90},
+	".jpeg": map[int]int{lilliput.JpegQuality: 90},
+	".png":  map[int]int{lilliput.PngCompression: 9},
+	".webp": map[int]int{lilliput.WebpQuality: 90},
 }
 
 var (
-	ErrNilWand = errors.New("imagedit: Error Nil MagickWand")
-	ErrNilImg  = errors.New("imagedit: Error Nil bimg.Image")
+	ErrBadType = errors.New("imagedit: Error bad file type")
 )
 
 func NewFromPath(imagePath string) (*Image, error) {
-	imgBlob, err := bimg.Read(imagePath)
+	imgBlob, err := ioutil.ReadFile(imagePath)
 	if err != nil {
 		return nil, err
 	}
@@ -32,107 +34,62 @@ func NewFromPath(imagePath string) (*Image, error) {
 
 func NewFromBlob(blob []byte) (*Image, error) {
 	img := new(Image)
-	img.BlobToImg(blob, nil)
-	// h2non/bimg doesn't have gif or animation save support
-	imgFmt := img.GetFormat()
-	if imgFmt == fileutil.GIF || imgFmt == fileutil.WEBP {
-		mw := imagick.NewMagickWand()
-		err := mw.ReadImageBlob(blob)
-		if err != nil {
-			return nil, err
-		}
-
-		if isAnimation(mw) {
-			img.MW = mw
-			img.UseMW = true
-			img.Strip()
-			img.Img = nil
-		} else {
-			mw.Destroy()
-			if imgFmt == fileutil.GIF {
-				if err = img.BlobToImg(img.Img.Convert(bimg.PNG)); err != nil {
-					return nil, err
-				}
-			}
-		}
-	}
-	return img, nil
+	return img, img.BlobToImg(blob)
 }
 
-func (img *Image) BlobToImg(blob []byte, err error) error {
-	img.Img = bimg.NewImage(blob)
-	return err
+// Decodes blob &
+func (img *Image) BlobToImg(blob []byte) (err error) {
+	img.Img, err = lilliput.NewDecoder(blob)
+	if err != nil {
+		return
+	}
+
+	// Get image format
+	imgFmt := strToFmt(img.Img.Description())
+	if !imgFmt.IsImage() {
+		return ErrBadType
+	}
+	// Get image header
+	header, err := img.Img.Header()
+	if err != nil {
+		return
+	}
+
+	img.options = &lilliput.ImageOptions{
+		FileType:             imgFmt.FileExt(),
+		Width:                header.Width(),
+		Height:               header.Height(),
+		ResizeMethod:         lilliput.ImageOpsNoResize,
+		NormalizeOrientation: true,
+		EncodeOptions:        EncodeOptions[imgFmt.FileExt()],
+	}
+	return
 }
 
-func NewFromMW(mw *imagick.MagickWand) (*Image, error) {
-	if mw == nil {
-		return nil, ErrNilWand
+func (img *Image) WriteToPath(imagePath string) (err error) {
+	// get ready to resize image,
+	// using 8192x8192 maximum resize buffer size
+	ops := lilliput.NewImageOps(8192)
+	defer ops.Close()
+
+	// create a buffer to store the output image, 50MB in this case
+	outputImg := make([]byte, 50*1024*1024)
+	// resize and transcode image
+	outputImg, err = ops.Transform(img.Img, img.options, outputImg)
+	if err != nil {
+		return
 	}
 
-	img := new(Image)
-	img.MW = mw
-	img.UseMW = true
-
-	return img, nil
-}
-
-func (img *Image) WriteToPath(imagePath string) error {
-	if err := img.Check(); err != nil {
-		return err
-	}
-	if img.UseMW {
-		img.Optimize()
-		return img.MW.WriteImages(imagePath, true)
-	}
-	return bimg.Write(imagePath, img.Img.Image())
-}
-
-func (img *Image) NewMW(mw ...*imagick.MagickWand) {
-	img.Close()
-	if len(mw) > 0 {
-		if mw[0] != nil {
-			img.MW = mw[0]
-			return
-		}
-	}
-	img.MW = imagick.NewMagickWand()
-}
-
-func (img *Image) Check() error {
-	if img.UseMW {
-		if img.MW == nil {
-			return ErrNilImg
-		}
-	} else if img.Img == nil {
-		return ErrNilImg
-	}
-	return nil
+	err = ioutil.WriteFile(imagePath, outputImg, 0644)
+	return
 }
 
 func (img *Image) Close() {
-	if img.UseMW {
-		if err := img.Check(); err != nil {
-			return
-		}
-		img.MW.Destroy()
-	}
+	img.Img.Close()
 }
 
 // WH returns image width & height
-//  return width uint, height uint
-func (img *Image) WH() (width, height int, err error) {
-	if err = img.Check(); err != nil {
-		return
-	}
-
-	if img.UseMW {
-		width = int(img.MW.GetImageWidth())
-		height = int(img.MW.GetImageHeight())
-		return
-	}
-
-	size, err := img.Img.Size()
-	width = size.Width
-	height = size.Height
-	return
+//  return width, height int, err error
+func (img *Image) WH() (width, height int) {
+	return img.options.Width, img.options.Height
 }

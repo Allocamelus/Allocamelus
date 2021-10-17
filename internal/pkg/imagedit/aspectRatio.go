@@ -21,11 +21,8 @@ const (
 	AR_3x1
 )
 
-func (img *Image) AR(ar AspectRatio) (width, height int, err error) {
-	width, height, err = img.WH()
-	if err != nil {
-		return
-	}
+func (img *Image) AR(ar AspectRatio) (width, height int) {
+	width, height = img.WH()
 	// TODO
 	if ar == AR_1x1 {
 		if width > height {
@@ -37,11 +34,8 @@ func (img *Image) AR(ar AspectRatio) (width, height int, err error) {
 	return
 }
 
-func (img *Image) ARMaxSize(ar AspectRatio, maxPx int) (width, height int, err error) {
-	width, height, err = img.AR(ar)
-	if err != nil {
-		return
-	}
+func (img *Image) ARMaxSize(ar AspectRatio, maxPx int) (width, height int) {
+	width, height = img.AR(ar)
 	wf := float64(width)
 	hf := float64(height)
 	mpf := float64(maxPx)

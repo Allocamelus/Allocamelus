@@ -5,7 +5,7 @@ package fileutil
 type Format int
 
 const (
-	NONE = iota
+	NONE = Format(iota)
 	GIF
 	JPG
 	PNG
@@ -32,4 +32,32 @@ func (f Format) IsImage() bool {
 		return true
 	}
 	return false
+}
+
+func ContentTypeToFormat(ct string) Format {
+	switch ct {
+	case "image/gif":
+		return GIF
+	case "image/jpeg":
+		return JPG
+	case "image/png":
+		return PNG
+	case "image/webp":
+		return WEBP
+	}
+	return NONE
+}
+
+func ExtensionToFormat(ext string) Format {
+	switch ext {
+	case ".gif":
+		return GIF
+	case ".jpeg", ".jpg":
+		return JPG
+	case ".png":
+		return PNG
+	case ".webp":
+		return WEBP
+	}
+	return NONE
 }

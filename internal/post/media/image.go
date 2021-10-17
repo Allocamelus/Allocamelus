@@ -9,7 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
-const MaxHightWidth int = 7680
+const MaxHightWidth int = 8192
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
 	img, b58hash, err := imagedit.MPHtoImg(imageMPH)
@@ -27,13 +27,13 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
-		width, height, err := img.WH()
+		width, height := img.WH()
 		if err != nil {
 			return err
 		}
 		var newWidth, newHeight int
 		if width > MaxHightWidth || height > MaxHightWidth {
-			newWidth, newHeight, err = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
+			newWidth, newHeight = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
 			if err != nil {
 				return err
 			}
@@ -41,10 +41,7 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 			newWidth = width
 			newHeight = height
 		}
-		// Resize to prevent non images
-		if err = img.Resize(newWidth, newHeight); err != nil {
-			return err
-		}
+		img.Resize(newWidth, newHeight)
 
 		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, false))))
 
@@ -56,10 +53,7 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		logger.Error(err)
 	}
 
-	width, height, err := img.WH()
-	if err != nil {
-		return err
-	}
+	width, height := img.WH()
 
 	err = Insert(postID, Media{FileType: imgType, Meta: Meta{Alt: alt, Width: int64(width), Height: int64(height)}}, b58hash)
 	if err != nil {

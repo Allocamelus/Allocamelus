@@ -4,11 +4,11 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 )
 
-func mwToFmt(f string) fileutil.Format {
+func strToFmt(f string) fileutil.Format {
 	switch f {
 	case "GIF", "gif":
 		return fileutil.GIF
-	case "JPEG", "jpeg":
+	case "JPEG", "jpeg", "JPG", "jpg":
 		return fileutil.JPG
 	case "PNG", "png":
 		return fileutil.PNG
@@ -19,8 +19,5 @@ func mwToFmt(f string) fileutil.Format {
 }
 
 func (img *Image) GetFormat() fileutil.Format {
-	if img.UseMW {
-		return mwToFmt(img.MW.GetImageFormat())
-	}
-	return mwToFmt(img.Img.Type())
+	return fileutil.ExtensionToFormat(img.options.FileType)
 }
