@@ -42,9 +42,11 @@
         "enabled": true,
         "insecure": false,
         "server": "mail.example.com",
-        "sender": "bot@example.com",
         "username": "user",
-        "password": "password"
+        "password": "password",
+        "sender": "bot@mailer.example.com",
+        "from": "Example Bot <bot@example.com>",
+        "replyTo": "support <support@example.com>"
     },
     "path": {
         "media": "media/",

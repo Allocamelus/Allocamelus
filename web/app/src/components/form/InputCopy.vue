@@ -1,7 +1,7 @@
 <template>
   <text-input
     v-model="value"
-    :watchModel="watchModel"
+    :watchModel="true"
     :readonly="true"
     class="py-0.5"
     ref="input"
@@ -30,10 +30,6 @@ export default defineComponent({
       type: String,
       default: "",
     },
-    watchModel: {
-      type: Boolean,
-      default: false,
-    },
   },
   setup(props) {
     const data = reactive({
@@ -46,15 +42,13 @@ export default defineComponent({
   },
   watch: {
     modelValue(newValue) {
-      if (this.watchModel) {
-        this.value = newValue;
-      }
+      this.value = newValue;
     },
   },
   methods: {
     doCopy() {
       this.$refs.input.$refs.input.select();
-      document.execCommand("copy");
+      navigator.clipboard.writeText(this.value)
     },
   },
   components: { ClipboardListIcon, TextInput, CircleBg },

@@ -5,7 +5,7 @@
             background: #1a1c1e;
         }
 
-        body {
+        .body {
             font: 600 17px \'Roboto\', Helvetica, Arial, sans-serif;
             color: #e6e6e6;
             background: #121212;
@@ -39,27 +39,26 @@
         .l a {
             color: #fff;
             padding: 10px 16px;
-            font-weight: 500;
-            background-color: #0d629c;
+            background-color: #640f2a;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none
         }
 
         .l a:hover {
-            background-color: #0b5484
+            background-color: #470a1e
         }
 
         {% comment %}s small{% endcomment %}
         .s a {
-            color: #38afff;
+            color: #e11d48;
             background-color: transparent;
             border-radius: 0;
             text-decoration: none;
         }
 
         .s a:hover {
-            color: #094b77;
+            color: #f43f5e;
         }
 
         .py-2 {

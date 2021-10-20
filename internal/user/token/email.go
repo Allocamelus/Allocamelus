@@ -51,7 +51,6 @@ func (t *Token) SendEmail(emailAddress string) error {
 	}
 
 	mail = email.Email{
-		From:    g.Data.Config.Site.Name + " Bot <" + g.Data.Config.Mail.Sender + ">",
 		To:      []string{emailAddress},
 		Subject: subject,
 		Body:    mailBody,

@@ -25,20 +25,46 @@ var (
 
 // Config for email server
 type Config struct {
-	Enabled  bool
+	// Enabled
+	Enabled bool
+	// Insecure skips tls cert verify
 	Insecure bool
-	Server   string
-	Sender   string
+	// SMTP server
+	Server string
+	// SMTP username
 	Username string
+	// SMTP password
 	Password string
+	// Sender email
+	Sender string
+	// From email must not be == to Sender
+	//
+	// Format: name <email>
+	From string
+	// ReplyTo
+	//
+	// Format: name <email>
+	ReplyTo string
 }
 
 // Email struct
 type Email struct {
-	From    string
-	To      []string
+	// From overwrites config.From
+	// (optional)
+	//
+	// Format: name <email>
+	From string
+	// ReplyTo overwrites config.ReplyTo
+	// (optional)
+	//
+	// Format: name <email>
+	ReplyTo string
+	// To 1 or more emails
+	To []string
+	// Email subject
 	Subject string
-	Body    Body
+	// Email body
+	Body Body
 }
 
 // Body plain & html
@@ -91,11 +117,28 @@ func (e *Email) Send(config Config) error {
 		klog.Error(err)
 	}
 
+	if e.From == "" {
+		e.From = config.From
+	}
+
+	if e.ReplyTo == "" {
+		e.ReplyTo = config.ReplyTo
+	}
+
 	for _, to := range e.To {
 		email := mail.NewMSG()
-		email.SetFrom(e.From).
+		email.SetSender(config.Sender).
 			AddTo(to).
 			SetSubject(e.Subject)
+
+		if e.From != "" {
+			email.SetFrom(e.From)
+		}
+
+		if e.ReplyTo != "" {
+			email.SetReplyTo(e.ReplyTo)
+		}
+
 		if e.Body.Plain != "" {
 			email.SetBody(mail.TextPlain, e.Body.Plain)
 			if e.Body.HTML != "" {
@@ -113,9 +156,6 @@ func (e *Email) Send(config Config) error {
 }
 
 func (e *Email) check() error {
-	if e.From == "" {
-		return ErrNilBody
-	}
 	if len(e.To) <= 0 {
 		return ErrNilTo
 	}

@@ -18,7 +18,9 @@ Page prints a html email implementing Email interface.
 		<title>{%= p.Title() %}</title>
 	</head>
 	<body>
-		{%= p.Body() %}
+		<div class="body">
+			{%= p.Body() %}
+		</div>
 	</body>
 </html>
 {% endfunc %}
