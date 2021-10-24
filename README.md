@@ -14,9 +14,7 @@ Features:
     - [x] Email verification
   - [x] Login
     - [x] Password auth (Argon2id)
-      - Posable alternative (PAKE)?:
-        - SRP
-        - OPAQUE 
+      - Posable alternative (Augmented PAKE?)
     - [x] Remember me
     - [ ] Session private key restore (w/ password)
   - [x] Logout
@@ -37,6 +35,9 @@ Features:
       - [x] Failed Login
       - [ ] Successful Login
       - [x] Password reset
+  - [ ] Move crypto to client
+    - Preferably not a web app
+    - But, seeing Proton Mail's browser crypto...
 - [x] User 
   - [x] Profile
     - [x] Bio
