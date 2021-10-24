@@ -129,7 +129,7 @@ import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import InputCopy from "../components/form/InputCopy.vue";
 import EmailInput from "../components/form/EmailInput.vue";
 
-import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
+import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import { GEN_CreateA10Token } from "../models/go_structs_gen";
 import { createA9s } from "../api/user/create";

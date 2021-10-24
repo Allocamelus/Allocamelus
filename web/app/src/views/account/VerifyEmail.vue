@@ -117,7 +117,7 @@ import {
   HtmlSomethingWentWrong,
 } from "../../components/htmlErrors";
 
-import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
+import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import SpinLoader from "../../components/icons/SpinLoader.vue";
 import ToLink from "../../components/ToLink.vue";

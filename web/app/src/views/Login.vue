@@ -79,7 +79,7 @@ import TextSmall from "../components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import ToLink from "../components/ToLink.vue";
 
-import VueHcaptcha from "@jdinabox/vue-3-hcaptcha";
+import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import { GEN_AuthA10Token } from "../models/go_structs_gen";
 import { authA10 } from "../api/account/auth";
