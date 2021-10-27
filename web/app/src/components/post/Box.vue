@@ -61,7 +61,7 @@
             isLink ? 'cursor-pointer' : '',
             dynamicContent ? ['text-lg', 'sm:text-xl'] : '',
           ]"
-          v-html="post.content"
+          v-html="purifiedContent"
         ></div>
       </div>
     </div>
@@ -89,6 +89,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import DOMPurify from 'dompurify';
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import RadixEyeNone from "../icons/RadixEyeNone.vue";
@@ -145,6 +146,9 @@ export default defineComponent({
       }
       return false;
     },
+    purifiedContent() {
+      return DOMPurify.sanitize(this.post.content)
+    }
   },
   methods: {
     toPost(e) {

@@ -187,12 +187,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@heroicons/vue@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "@heroicons/vue@npm:1.0.4"
+"@heroicons/vue@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@heroicons/vue@npm:1.0.5"
   peerDependencies:
     vue: ">= 3"
-  checksum: e15d39f54183301adfa010026c5a4829d679fa341b547233f5bd12fd9317728504849a593ce00210ba5071cc577842a3a8461bf1a62f13a667af41c91b0720ab
+  checksum: 510e50702591355493067e31ea8a119e4ca79a1652ff75b9e68fc489cc342123e18c251c3104b62c9daedd12862592af2d94d91dec34d52ef4f4a4043f1f3665
   languageName: node
   linkType: hard
 
@@ -417,10 +417,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.1":
-  version: 16.11.1
-  resolution: "@types/node@npm:16.11.1"
-  checksum: 22cea470b89292810733b8b9fc1b6a1873bc3ed4d4cdf2f25e777dc607994bd7c12e64166d1a66dd5924734192b0a891b6aeb6813aa935f731345f4086234375
+"@types/node@npm:^16.11.6":
+  version: 16.11.6
+  resolution: "@types/node@npm:16.11.6"
+  checksum: 6e19634766ff589d3d2f361c2196b671f8f133cdadc5ad347a621c360d8994b6c4fbccfb2ad9c60c588c593831a96497c9c6b77d2b7e91be723384b94f6368e7
   languageName: node
   linkType: hard
 
@@ -837,26 +837,25 @@ __metadata:
   resolution: "app@workspace:."
   dependencies:
     "@hcaptcha/vue3-hcaptcha": ^1.0.0
-    "@heroicons/vue": ^1.0.4
-    "@types/node": ^16.11.1
+    "@heroicons/vue": ^1.0.5
+    "@types/node": ^16.11.6
     "@types/turndown": ^5.0.1
     "@types/zxcvbn": ^4.4.1
     "@vitejs/plugin-vue": ^1.9.3
     "@vue/compiler-sfc": ^3.2.20
     "@vuedx/typescript-plugin-vue": ^0.7.4
     autoprefixer: ^10.3.7
-    axios: ^0.23.0
-    croppie: ^2.6.5
-    pell: ^1.0.6
-    postcss: ^8.3.9
+    axios: ^0.24.0
+    dompurify: ^2.3.3
+    postcss: ^8.3.11
     postcss-csso: ^5.0.1
-    sass: ^1.43.2
+    sass: ^1.43.4
     squire-rte: ^1.11.1
     tailwindcss: ^2.2.17
     throttle-debounce: ^3.0.1
     turndown: ^7.1.1
     typescript: ^4.4.4
-    vite: ^2.6.7
+    vite: ^2.6.12
     vue: ^3.2.20
     vue-router: ^4.0.12
     vuex: ^4.0.2
@@ -907,12 +906,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.23.0":
-  version: 0.23.0
-  resolution: "axios@npm:0.23.0"
+"axios@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "axios@npm:0.24.0"
   dependencies:
     follow-redirects: ^1.14.4
-  checksum: 879f61022bd825da2a7ebb72410bc528683ba54c140436baa0b924b7cab02ec0919fe64a04a546f482a75f5fd570b77884f9826764a95f2fd88265e61dcb70db
+  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
   languageName: node
   linkType: hard
 
@@ -1241,13 +1240,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"croppie@npm:^2.6.5":
-  version: 2.6.5
-  resolution: "croppie@npm:2.6.5"
-  checksum: 898e3c8de92c210ba9db6659bf7c7b31b148ad1c3a6250c5e54dfc36660ca3b60489adfac3359ca921a7c784220d350b1e1ab717492c438170484a260fde3733
-  languageName: node
-  linkType: hard
-
 "css-color-names@npm:^0.0.4":
   version: 0.0.4
   resolution: "css-color-names@npm:0.0.4"
@@ -1375,6 +1367,13 @@ __metadata:
   version: 2.1.6
   resolution: "domino@npm:2.1.6"
   checksum: 9b1b6d2661efd8bf942b70d5e11ac0de6a63f17e49b7eb227d9a612fa7b7c12b7775520d64f498988a8ee334ea9c59a463c84ea510b0af17dd3e13fdce120410
+  languageName: node
+  linkType: hard
+
+"dompurify@npm:^2.3.3":
+  version: 2.3.3
+  resolution: "dompurify@npm:2.3.3"
+  checksum: 947e3661681bd183aae1cd08f991b14c6aa41fd188f6c801c5e916c2dc4575bbefbaa121ed06dbe0cb0f595545527d588a44b53bfc35d1cbb898c214dc0d7930
   languageName: node
   linkType: hard
 
@@ -2416,7 +2415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.28":
+"nanoid@npm:^3.1.30":
   version: 3.1.30
   resolution: "nanoid@npm:3.1.30"
   bin:
@@ -2611,13 +2610,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pell@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "pell@npm:1.0.6"
-  checksum: c9506672f2d38651df99f495d5ce47d603b25126a24dd7c0bfedbd622c40288bbf6866cdc4e1206d6586ab9ed27e6835e1593860ab4d95391d291593c37f7752
-  languageName: node
-  linkType: hard
-
 "picocolors@npm:^0.2.1":
   version: 0.2.1
   resolution: "picocolors@npm:0.2.1"
@@ -2734,6 +2726,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss@npm:^8.3.11":
+  version: 8.3.11
+  resolution: "postcss@npm:8.3.11"
+  dependencies:
+    nanoid: ^3.1.30
+    picocolors: ^1.0.0
+    source-map-js: ^0.6.2
+  checksum: 1a230553d74c66aa9585c90781ed8ea75f19cefea405d2117b67fbeb24b5b5e0e17be2e0c5a07db31dd085643a13394127ab2222e940771b70498331bf20f35e
+  languageName: node
+  linkType: hard
+
 "postcss@npm:^8.3.8":
   version: 8.3.8
   resolution: "postcss@npm:8.3.8"
@@ -2742,17 +2745,6 @@ __metadata:
     nanoid: ^3.1.25
     source-map-js: ^0.6.2
   checksum: 20073f3f70487e9fa8d40e930d02595c4d96b7db8b2142ee4efe8e0c9a54c844c720370e178aef57c12d2d5bf65592cfdd1d020a74bf2840bc58650590713a35
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.3.9":
-  version: 8.3.9
-  resolution: "postcss@npm:8.3.9"
-  dependencies:
-    nanoid: ^3.1.28
-    picocolors: ^0.2.1
-    source-map-js: ^0.6.2
-  checksum: b64d0e59bc027b2f09e5a84ca32b4f0620553812110e42295a79fd0e6ea664779e575c2d5e8d35a1b0804f0933ec878404c6e161e008b5bc51cba44eaef216ef
   languageName: node
   linkType: hard
 
@@ -2975,14 +2967,14 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.43.2":
-  version: 1.43.2
-  resolution: "sass@npm:1.43.2"
+"sass@npm:^1.43.4":
+  version: 1.43.4
+  resolution: "sass@npm:1.43.4"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
   bin:
     sass: sass.js
-  checksum: 96bafc42f01395011347c54b31d974a5949866079bb511ec879d1fb56f88d5d8e0c19961aa37e5e4d039d5a3bc536f06159ff432a3de97dfd0e1315a94fbf45d
+  checksum: 9af80105dabd32752c60b4557115832982cf1019c02c952db6a26c61a3e18dc95044c896685e6e9a6d6dd6643fc411ecf2ea4a8a431a8a08a7510a45d5a492ae
   languageName: node
   linkType: hard
 
@@ -3372,9 +3364,9 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.6.7":
-  version: 2.6.7
-  resolution: "vite@npm:2.6.7"
+"vite@npm:^2.6.12":
+  version: 2.6.12
+  resolution: "vite@npm:2.6.12"
   dependencies:
     esbuild: ^0.13.2
     fsevents: ~2.3.2
@@ -3397,7 +3389,7 @@ typescript@^4.4.4:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: cf395366e4895dd90038f592e6609262d78e7f3c99686e7649e9f55e88f6812af6394515bc34f30ed0830001e2b269a6ddd70a28b2d9d3661cf4fb1b254b11e4
+  checksum: b1ee1bd1cfa4e1c52c63607effc596f23e153ab970d75e982f4c91109c2719ee79d404e77928291b90602f1199c4463f97a841c3cbef1466bce12fd31747cb0c
   languageName: node
   linkType: hard
 
