@@ -10,10 +10,6 @@ import (
 )
 
 var (
-	//go:embed sql/get/publicPosts/Total.sql
-	qGetPubPostsTotal string
-	//go:embed sql/get/publicPosts/Latest.sql
-	qGetPubPostsLatest string
 	//go:embed sql/get/publicPosts/ByUser/Total.sql
 	qGetPubPostsByUserTotal string
 	//go:embed sql/get/publicPosts/ByUser/Latest.sql
@@ -23,9 +19,7 @@ var (
 	//go:embed sql/get/publicPosts/ForUser/Latest.sql
 	qGetPubPostsForUserLatest string
 
-	preGetPublicPosts struct {
-		Total  *sql.Stmt
-		Latest *sql.Stmt
+	preGetPosts struct {
 		ByUser struct {
 			Total  *sql.Stmt
 			Latest *sql.Stmt
@@ -38,43 +32,29 @@ var (
 )
 
 func init() {
-	data.PrepareQueuer.Add(&preGetPublicPosts.Total, qGetPubPostsTotal)
-	data.PrepareQueuer.Add(&preGetPublicPosts.Latest, qGetPubPostsLatest)
-	data.PrepareQueuer.Add(&preGetPublicPosts.ByUser.Total, qGetPubPostsByUserTotal)
-	data.PrepareQueuer.Add(&preGetPublicPosts.ByUser.Latest, qGetPubPostsByUserLatest)
-	data.PrepareQueuer.Add(&preGetPublicPosts.ForUser.Total, qGetPubPostsForUserTotal)
-	data.PrepareQueuer.Add(&preGetPublicPosts.ForUser.Latest, qGetPubPostsForUserLatest)
+	data.PrepareQueuer.Add(&preGetPosts.ByUser.Total, qGetPubPostsByUserTotal)
+	data.PrepareQueuer.Add(&preGetPosts.ByUser.Latest, qGetPubPostsByUserLatest)
+	data.PrepareQueuer.Add(&preGetPosts.ForUser.Total, qGetPubPostsForUserTotal)
+	data.PrepareQueuer.Add(&preGetPosts.ForUser.Latest, qGetPubPostsForUserLatest)
 }
 
-// GetPublicTotal Posts
+// GetPostsTotal
 // TODO: Cache!!!
-func GetPublicTotal(u *user.Session) (total int64, err error) {
-	if !u.LoggedIn {
-		err = preGetPublicPosts.Total.QueryRow(user.Public).Scan(&total)
-	} else {
-		err = preGetPublicPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
-	}
+func GetPostsTotal(u *user.Session) (total int64, err error) {
+	err = preGetPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
 	return
 }
 
 // GetPublicPosts
 // TODO: Cache
-func GetPublicPosts(startNum, perPage int64, u *user.Session) (*List, error) {
-	posts := NewList()
-	var (
-		rows *sql.Rows
-		err  error
-	)
-
-	if !u.LoggedIn {
-		rows, err = preGetPublicPosts.Latest.Query(user.Public, startNum, perPage)
-	} else {
-		rows, err = preGetPublicPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
-	}
+func GetPosts(startNum, perPage int64, u *user.Session) (*List, error) {
+	rows, err := preGetPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
+
+	posts := NewList()
 
 	var index int64
 	for rows.Next() {
@@ -102,17 +82,17 @@ func GetPublicPosts(startNum, perPage int64, u *user.Session) (*List, error) {
 	return posts, nil
 }
 
-// GetPublicUserTotal Posts
+// GetUserPostsTotal
 // TODO: Cache!!!
-func GetPublicUserTotal(userID int64) (total int64, err error) {
-	err = preGetPublicPosts.ByUser.Total.QueryRow(userID).Scan(&total)
+func GetUserPostsTotal(userID int64) (total int64, err error) {
+	err = preGetPosts.ByUser.Total.QueryRow(userID).Scan(&total)
 	return
 }
 
-func GetPublicUserPosts(userID, startNum, perPage int64) (*List, error) {
+func GetUserPosts(userID, startNum, perPage int64) (*List, error) {
 	posts := NewList()
 
-	rows, err := preGetPublicPosts.ByUser.Latest.Query(userID, startNum, perPage)
+	rows, err := preGetPosts.ByUser.Latest.Query(userID, startNum, perPage)
 	if err != nil {
 		return nil, err
 	}

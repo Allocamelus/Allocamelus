@@ -18,27 +18,4 @@
   #bodyContent {
     min-height: calc(100vh - var(--nav-height));
   }
-  #footer {
-    @apply flex justify-between items-center py-3 px-5;
-    @apply bg-footer text-white h-footer;
-    > div {
-      @apply flex items-center;
-    }
-    &,
-    a {
-      @apply text-sm text-white;
-    }
-    a {
-      @apply font-semibold no-underline cursor-pointer;
-    }
-    .dash {
-      &::before {
-        @apply mx-1;
-        content: "-";
-      }
-    }
-    .copyright {
-      @apply font-medium text-base self-center;
-    }
-  }
 }

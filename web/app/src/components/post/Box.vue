@@ -61,7 +61,7 @@
             isLink ? 'cursor-pointer' : '',
             dynamicContent ? ['text-lg', 'sm:text-xl'] : '',
           ]"
-          v-html="purifiedContent"
+          v-html="purifiedContent /* skipcq: JS-0693 */" 
         ></div>
       </div>
     </div>

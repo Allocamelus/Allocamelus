@@ -19,7 +19,7 @@
       <div class="container flex flex-row justify-between h-nav leading-nav">
         <div class="flex">
           <to-link
-            to="/"
+            :to="loggedIn ? '/home' : '/'"
             class="
               pr-4
               py-2
@@ -188,18 +188,7 @@
       </snackbar>
     </div>
     <!--TODO: Mobile Menu-->
-    <footer id="footer">
-      <div>
-        <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
-        <to-link to="/about" class="dash">About</to-link>
-      </div>
-      <div></div>
-      <div>
-        <!-- TODO -->
-        <to-link to="/tos">Terms</to-link>
-        <to-link to="/privacy" class="dash">Privacy</to-link>
-      </div>
-    </footer>
+    <bottom-footer v-show="footer"></bottom-footer>
   </div>
 </template>
 
@@ -231,6 +220,7 @@ import ToLink from "./components/ToLink.vue";
 import BarLoader from "./components/overlay/BarLoader.vue";
 import Snackbar from "./components/box/Snackbar.vue";
 import TextSmall from "./components/text/Small.vue";
+import BottomFooter from "./components/BottomFooter.vue";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -253,6 +243,7 @@ export default defineComponent({
     const data = reactive({
       sesKeepAliveInterval: null,
       userMenu: false,
+      footer: true,
       alerts: {
         err: "",
         menu: false,
@@ -368,6 +359,7 @@ export default defineComponent({
       this.checkMenu();
       this.userMenu = false;
       this.alerts.menu = false;
+      this.footer = this.$route.meta.footer ? this.$route.meta.footer : false;
     },
   },
   components: {
@@ -385,6 +377,7 @@ export default defineComponent({
     BarLoader,
     Snackbar,
     TextSmall,
+    BottomFooter,
   },
 });
 </script>

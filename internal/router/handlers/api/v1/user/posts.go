@@ -28,7 +28,7 @@ func Posts(c *fiber.Ctx) error {
 		page = 1
 	}
 
-	totalPosts, err := post.GetPublicUserTotal(userID)
+	totalPosts, err := post.GetUserPostsTotal(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -39,7 +39,7 @@ func Posts(c *fiber.Ctx) error {
 		return apierr.ErrNotFound(c)
 	}
 
-	posts, err := post.GetPublicUserPosts(userID, startNum, perPage)
+	posts, err := post.GetUserPosts(userID, startNum, perPage)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
