@@ -10,11 +10,11 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gofiber/fiber/v2 v2.20.2
+	github.com/gofiber/fiber/v2 v2.21.0
 	github.com/gofiber/helmet/v2 v2.2.3
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.15
+	github.com/microcosm-cc/bluemonday v1.0.16
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mr-tron/base58 v1.2.0
@@ -28,10 +28,10 @@ require (
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.10.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
-	golang.org/x/sys v0.0.0-20211015200801-69063c4bb744 // indirect
+	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
+	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	k8s.io/klog/v2 v2.20.0
+	k8s.io/klog/v2 v2.30.0
 )
 
 require (
@@ -40,7 +40,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/go-logr/logr v1.1.0 // indirect
+	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
