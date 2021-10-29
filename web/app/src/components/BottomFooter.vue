@@ -1,23 +1,47 @@
 <template>
   <footer id="footer">
-    <div>
-      <div class="copyright">&copy; {{ new Date().getFullYear() }}</div>
-      <to-link to="/about" class="dash">About</to-link>
-    </div>
-    <div></div>
-    <div>
-      <!-- TODO -->
-      <to-link to="/tos">Terms</to-link>
-      <to-link to="/privacy" class="dash">Privacy</to-link>
+    <div class="footer container">
+      <div class="flex">
+        <div class="font-semibold self-center">
+          &copy; {{ new Date().getFullYear() }}
+        </div>
+        <div class="dash-before">
+          <to-link to="/about">About</to-link>
+        </div>
+      </div>
+      <div class="hidden xs:flex">
+        <a
+          rel="nofollow"
+          target="_blank"
+          href="https://github.com/Allocamelus/Allocamelus"
+        >
+          <radix-github class="h-5 w-5" />
+        </a>
+        <a href="https://www.allocamelus.com/u/Allocamelus" class="ml-3">
+          <allocamelus class="h-5 w-5" />
+        </a>
+      </div>
+      <div class="flex">
+        <!-- TODO -->
+        <to-link to="/tos">Terms</to-link>
+        <div class="dash-before">
+          <to-link to="/privacy">Privacy</to-link>
+        </div>
+      </div>
     </div>
   </footer>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+
+import Allocamelus from "./icons/Allocamelus.vue";
+import RadixGithub from "./icons/RadixGithub.vue";
+
 import ToLink from "./ToLink.vue";
+
 export default defineComponent({
-  components: { ToLink },
+  components: { ToLink, RadixGithub, Allocamelus },
 });
 </script>
 
@@ -26,10 +50,12 @@ export default defineComponent({
 
 @layer components {
   #footer {
-    @apply flex justify-between items-center py-3 px-5;
-    @apply bg-footer text-white h-footer;
+    @apply bg-footer text-white xs:h-footer;
+  }
+  .footer {
+    @apply flex justify-between items-center py-3;
     > div {
-      @apply flex items-center;
+      @apply items-center;
     }
     &,
     a {
@@ -37,15 +63,6 @@ export default defineComponent({
     }
     a {
       @apply font-semibold no-underline cursor-pointer;
-    }
-    .dash {
-      &::before {
-        @apply mx-1;
-        content: "-";
-      }
-    }
-    .copyright {
-      @apply font-semibold self-center;
     }
   }
 }

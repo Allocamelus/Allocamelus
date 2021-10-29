@@ -33,7 +33,8 @@
     "sass": "^1.43.4",
     "tailwindcss": "^2.2.17",
     "typescript": "^4.4.4",
-    "vite": "^2.6.13"
+    "vite": "^2.6.13",
+    "vite-svg-loader": "^3.0.0"
   },
   "workspaces": [
     "client"
