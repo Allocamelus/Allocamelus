@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"k8s.io/klog/v2"
 )
 
 func (d *Data) initRedis() {
@@ -17,26 +16,49 @@ func (d *Data) initRedis() {
 }
 
 // Set stores values in redis store
-func (d *Data) Set(key string, value interface{}, expiration time.Duration) {
-	ctx := context.Background()
-	if err := d.redis.Set(ctx, key, value, expiration).Err(); err != nil {
-		klog.Error(err)
+func (d *Data) Set(key string, value []byte, expiration time.Duration) error {
+	if key == "" || len(value) == 0 {
+		return nil
 	}
+
+	return d.redis.Set(context.Background(), key, value, expiration).Err()
 }
 
 // Get retrieves values from redis store
-// Default returns nil
-// Interface panics if type hinted for anything but string
-func (d *Data) Get(key string) *redis.StringCmd {
-	if len(key) <= 0 {
-		return &redis.StringCmd{}
+// Default returns nil, nil
+func (d *Data) Get(key string) ([]byte, error) {
+	if key == "" {
+		return nil, nil
 	}
-	ctx := context.Background()
-	return d.redis.Get(ctx, key)
+
+	value, err := d.redis.Get(context.Background(), key).Bytes()
+	if err == redis.Nil {
+		return nil, nil
+	}
+
+	return value, err
 }
 
-// Delete deletes values from redis store
-func (d *Data) Delete(keys ...string) {
-	ctx := context.Background()
-	d.redis.Del(ctx, keys...)
+// Delete deletes a key from redis store
+func (d *Data) Delete(key string) error {
+	if key == "" {
+		return nil
+	}
+
+	return d.redis.Del(context.Background(), key).Err()
+}
+
+// Delete deletes keys from redis store
+func (d *Data) DeleteKeys(keys ...string) error {
+	return d.redis.Del(context.Background(), keys...).Err()
+}
+
+// Reset redis store
+func (d *Data) Reset() error {
+	return d.redis.FlushDB(context.Background()).Err()
+}
+
+// Close redis store
+func (d *Data) Close() error {
+	return d.redis.Close()
 }

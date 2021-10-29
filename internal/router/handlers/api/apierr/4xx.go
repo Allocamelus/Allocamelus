@@ -14,6 +14,8 @@ var (
 	Unauthorized403 = New("unauthorized-403")
 	// UnprocessableEntity 422
 	UnprocessableEntity = New("unprocessable-entity")
+	// TooManyRequests 429
+	TooManyRequests = New("too-many-requests")
 )
 
 // Err400 400 Bad Request
@@ -60,4 +62,14 @@ func Err422(c *fiber.Ctx, data interface{}) error {
 // ErrUnprocessableEntity 422
 func ErrUnprocessableEntity(c *fiber.Ctx) error {
 	return Err422(c, UnprocessableEntity)
+}
+
+// Err429 Too Many Requests
+func Err429(c *fiber.Ctx, data interface{}) error {
+	return fiberutil.JSON(c, 429, data)
+}
+
+// ErrTooManyRequests 429
+func ErrTooManyRequests(c *fiber.Ctx) error {
+	return Err429(c, TooManyRequests)
 }

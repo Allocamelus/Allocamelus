@@ -77,7 +77,7 @@ export default defineComponent({
       this.populateComments(newValue);
     },
   },
-  unmounted() {
+  beforeUnmount() {
     this.$store.unregisterModule(this.storeName);
   },
   methods: {

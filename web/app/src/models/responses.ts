@@ -1,6 +1,8 @@
 import {
   Html404Func,
   Html403Func,
+  Html422,
+  Html429,
   HtmlSomethingWentWrong,
 } from "../components/htmlErrors";
 
@@ -20,6 +22,8 @@ export const Shared = {
   InsufficientPerms: "insufficient-permissions",
   NotFound: "not-found",
   Unauthorized403: "unauthorized-403",
+  UnprocessableEntity: "unprocessable-entity",
+  TooManyRequests: "too-many-requests",
   File: {
     ContentType: "invalid-content-type",
     Size: "invalid-file-size",
@@ -109,6 +113,10 @@ export function RespToError(resp: string): string {
       return "Error: 404 Not Found";
     case Shared.Unauthorized403:
       return "Error: 403 Forbidden";
+    case Shared.UnprocessableEntity:
+      return "Error: 422 Unprocessable Entity";
+    case Shared.TooManyRequests:
+      return "Error: 429 Too Many Requests";
 
     // User errors
     case User.Validate.Bio.Length:
@@ -153,6 +161,10 @@ export function RespToHtml(resp: string): string {
       return Html404Func();
     case Shared.Unauthorized403:
       return Html403Func();
+    case Shared.UnprocessableEntity:
+      return Html422;
+    case Shared.TooManyRequests:
+      return Html429;
   }
   return HtmlSomethingWentWrong;
 }

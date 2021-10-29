@@ -32,7 +32,17 @@ export function Html404Func(path = ""): string {
   return htmlErrBuilder(`Error: 404`, path + `Not Found`);
 }
 
+export function Html422Func(): string {
+  return htmlErrBuilder(`Error: 422 Unprocessable Entity`);
+}
+
+export function Html429Func(): string {
+  return htmlErrBuilder(`Error: 429 Too Many Requests`, `Try again later`);
+}
+
 export const Html403 = Html403Func();
 export const Html404 = Html404Func();
+export const Html422 = Html422Func();
+export const Html429 = Html429Func();
 
 export const HtmlLoadingCaptcha = htmlErrBuilder("Loading captcha...");
