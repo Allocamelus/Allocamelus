@@ -103,6 +103,8 @@ router.beforeEach((to) => {
         return redirectUrl(to.query.r);
       case "Landing":
         return "/home";
+      default:
+        break;
     }
   } else {
     switch (to.name) {
@@ -110,6 +112,8 @@ router.beforeEach((to) => {
         return "/login";
       case "Home":
         return "/";
+      default:
+        break;
     }
   }
 });

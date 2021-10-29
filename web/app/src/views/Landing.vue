@@ -4,7 +4,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
-import BottomFooter from "../components/BottomFooter.vue";
+
 export default defineComponent({
   setup() {
     const data = reactive({});
@@ -15,6 +15,5 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  components: { BottomFooter },
 });
 </script>

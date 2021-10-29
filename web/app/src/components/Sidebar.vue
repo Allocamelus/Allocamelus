@@ -48,7 +48,7 @@
     </div>
     <div class="flex justify-center">
       <a
-        rel="nofollow"
+        rel="noopener noreferrer"
         target="_blank"
         href="https://github.com/Allocamelus/Allocamelus"
       >

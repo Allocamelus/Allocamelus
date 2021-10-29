@@ -11,7 +11,7 @@
       </div>
       <div class="hidden xs:flex">
         <a
-          rel="nofollow"
+          rel="noopener noreferrer"
           target="_blank"
           href="https://github.com/Allocamelus/Allocamelus"
         >
