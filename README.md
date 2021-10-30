@@ -70,4 +70,4 @@ Allocamelus is a (work in progress) self hostable social media platform
 - [ ] Api
   - [ ] Specification
     - [ ] Open api
-  - [ ] Rate limiting (Test [fiber/middleware/limiter](https://docs.gofiber.io/api/middleware/limiter))
+  - [x] Rate limiting (Sliding Window | 690 request / 420 sec)
