@@ -28,8 +28,8 @@ require (
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.10.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
-	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
+	golang.org/x/net v0.0.0-20211029224645-99673261e6eb // indirect
+	golang.org/x/sys v0.0.0-20211031064116-611d5d643895 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	k8s.io/klog/v2 v2.30.0
 )

@@ -2,11 +2,11 @@ package argon2id
 
 // Cost for argon2id
 type Cost struct {
-	Time    uint32
-	Memory  uint32
-	Threads uint8
-	KeyLen  uint32
-	SaltLen int32
+	Time    uint32 `json:"time"`
+	Memory  uint32 `json:"memory"`
+	Threads uint8  `json:"threads"`
+	KeyLen  uint32 `json:"keyLen"`
+	SaltLen int32  `json:"saltLen"`
 }
 
 // FillEmpty override struct defaults with DefaultCost
