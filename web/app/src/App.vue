@@ -50,81 +50,89 @@
                 <BellIcon class="w-5.5 h-5.5"></BellIcon>
               </div>
               <dropdown v-model="alerts.menu" class="max-w-sm w-80">
-                <bar-loader v-if="alerts.loading" />
                 <div
                   class="
-                    dark:bg-gray-800 dark:text-white
+                    dark:bg-gray-800
                     bg-gray-100
-                    text-black
-                    max-h-48
-                    h-48
                     overflow-x-hidden overflow-y-auto
-                    scrollbar
-                    px-3
-                    py-2.5
                   "
                 >
-                  <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
-                  <div v-else>
-                    <text-small
-                      class="
-                        pb-1
-                        text-sm
-                        font-medium
-                        text-gray-700
-                        dark:text-gray-300
-                      "
-                    >
-                      Follow/Friend Request:
-                    </text-small>
-                    <div
-                      v-for="(userId, index) in alerts.requests.requests"
-                      :key="index"
-                      class="pb-3 flex flex-grow flex-shrink items-center"
-                    >
-                      <user-avatar
-                        :user="alerts.requests.user(userId)"
-                        :isLink="true"
-                        class="w-8 h-8"
-                      ></user-avatar>
-                      <div class="flex flex-grow items-center justify-between">
-                        <div class="ml-2 flex">
-                          <user-name
-                            :user="alerts.requests.user(userId)"
-                          ></user-name>
-                        </div>
-                        <div class="ml-2 flex items-center">
-                          <div
-                            class="
-                              text-sm
-                              font-semibold
-                              leading-4
-                              rounded
-                              cursor-pointer
-                              px-2
-                              py-1.5
-                              text-white
-                              bg-secondary-700
-                              hover:bg-secondary-800
-                            "
-                            @click="followRequest(userId, true)"
-                          >
-                            Accept
+                  <bar-loader :show="alerts.loading" />
+                  <div
+                    class="
+                      dark:text-white
+                      text-black
+                      max-h-48
+                      h-48
+                      scrollbar
+                      px-3
+                      py-2.5
+                    "
+                  >
+                    <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
+                    <div v-else>
+                      <text-small
+                        class="
+                          pb-1
+                          text-sm
+                          font-medium
+                          text-gray-700
+                          dark:text-gray-300
+                        "
+                      >
+                        Follow/Friend Request:
+                      </text-small>
+                      <div
+                        v-for="(userId, index) in alerts.requests.requests"
+                        :key="index"
+                        class="pb-3 flex flex-grow flex-shrink items-center"
+                      >
+                        <user-avatar
+                          :user="alerts.requests.user(userId)"
+                          :isLink="true"
+                          class="w-8 h-8"
+                        ></user-avatar>
+                        <div
+                          class="flex flex-grow items-center justify-between"
+                        >
+                          <div class="ml-2 flex">
+                            <user-name
+                              :user="alerts.requests.user(userId)"
+                            ></user-name>
                           </div>
-                          <div
-                            class="
-                              text-sm
-                              font-semibold
-                              leading-4
-                              rounded
-                              cursor-pointer
-                              ml-1.5
-                              p-1
-                              link
-                            "
-                            @click="followRequest(userId, false)"
-                          >
-                            Decline
+                          <div class="ml-2 flex items-center">
+                            <div
+                              class="
+                                text-sm
+                                font-semibold
+                                leading-4
+                                rounded
+                                cursor-pointer
+                                px-2
+                                py-1.5
+                                text-white
+                                bg-secondary-700
+                                hover:bg-secondary-800
+                              "
+                              @click="followRequest(userId, true)"
+                            >
+                              Accept
+                            </div>
+                            <div
+                              class="
+                                text-sm
+                                font-semibold
+                                leading-4
+                                rounded
+                                cursor-pointer
+                                ml-1.5
+                                p-1
+                                link
+                              "
+                              @click="followRequest(userId, false)"
+                            >
+                              Decline
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -301,8 +309,9 @@ export default defineComponent({
     },
     async clickAlerts() {
       this.alerts.menu = !this.alerts.menu;
-      // limit alerts fetch to every 2 seconds
-      if (this.alerts.lastFetched < UnixTime(-2)) {
+
+      // limit alerts fetch to every 1 seconds
+      if (this.alerts.menu && this.alerts.lastFetched < UnixTime(-1)) {
         this.alerts.loading = true;
         this.alerts.err = "Loading...";
         requests()

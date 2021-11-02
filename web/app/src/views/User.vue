@@ -242,7 +242,7 @@ export default defineComponent({
             if (!r.success) {
               this.snackbarErr(SomethingWentWrong);
             } else if (this.user.type === UNVERIFIED_USER) {
-              this.snackbarErr("This user is not verified");
+              this.snackbarErr("This user is unverified");
             }
           })
           .catch(() => {
