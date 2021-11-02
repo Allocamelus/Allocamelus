@@ -8,6 +8,6 @@ import { defineComponent } from "vue";
 import AllocamelusSVG from "../../assets/allocamelus.min.svg?component";
 
 export default defineComponent({
-  components: {AllocamelusSVG}
+  components: { AllocamelusSVG },
 });
 </script>

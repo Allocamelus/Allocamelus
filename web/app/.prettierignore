@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+webfonts
+.yarn/*
+.pnp.*
+wasm_exec.js

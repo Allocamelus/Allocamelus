@@ -3,7 +3,7 @@ import { notNull } from "../../../models/responses";
 import v1 from "../../v1";
 import { API_Comments } from "../comments/get";
 
-export async function replies(
+export function replies(
   postId: number | string,
   commentId: number,
   pageNum = 0

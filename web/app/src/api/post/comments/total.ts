@@ -4,17 +4,17 @@ import { API_Error } from "../../../models/api_error";
 export class API_Total {
   total: number;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: Partial<API_Total> = {}) {
     return new API_Total(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: Partial<API_Total> = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.total = source["total"];
   }
 }
 
-export async function total(postId: number | string): Promise<API_Total> {
+export function total(postId: number | string): Promise<API_Total> {
   return v1.get(`post/${postId}/comments/total`).then((r) => {
     if (r.data.error == undefined) {
       return API_Total.createFrom(r.data);

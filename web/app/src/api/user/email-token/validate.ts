@@ -1,7 +1,7 @@
 import v1 from "../../v1";
 import { API_Success_Error } from "../../../models/api_error";
 
-export async function validate(
+export function validate(
   selector: string,
   token: string
 ): Promise<API_Success_Error> {

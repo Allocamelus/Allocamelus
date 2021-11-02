@@ -16,6 +16,7 @@ var DefaultCost = Cost{
 
 // Hash password with argon2id
 func Hash(password string, c Cost) *Password {
+	c.FillEmpty()
 	return HashSalt(password, random.Bytes(int64(c.SaltLen)), c)
 }
 

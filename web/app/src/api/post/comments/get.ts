@@ -8,13 +8,13 @@ export type Ordered_API_Comments = { [key: number]: API_Comment };
 export class API_Comments extends ordered_list {
   comments: Ordered_API_Comments;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: Partial<API_Comments> = {}) {
     return new API_Comments(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
+  constructor(source: Partial<API_Comments> = {}) {
     super(source);
-    if ("string" === typeof source) source = JSON.parse(source);
+    if (typeof source === "string") source = JSON.parse(source);
     this.comments = source["comments"];
   }
 
@@ -29,12 +29,12 @@ export class API_Comments extends ordered_list {
     }
   }
 
-  appendComment(c: API_Comment) {
+  appendComment(c: API_Comment): void {
     this.comments[c.id] = c;
     this.order[this.total()] = c.id;
   }
 
-  delComment(id: number | string) {
+  delComment(id: number | string): void {
     if (Object.prototype.hasOwnProperty.call(this.comments, id)) {
       delete this.comments[id];
       // Remove comment id from order
@@ -52,7 +52,7 @@ export class API_Comments extends ordered_list {
   }
 }
 
-export async function get(
+export function get(
   postId: number | string,
   pageNum = 0
 ): Promise<API_Comments> {

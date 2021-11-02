@@ -13,12 +13,12 @@ export class CaptchaSiteKeys {
     };
   };
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: Partial<CaptchaSiteKeys> = {}) {
     return new CaptchaSiteKeys(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: Partial<CaptchaSiteKeys> = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.siteKeys = source["site-keys"];
     this.difficulties = source["difficulties"];
   }
@@ -32,7 +32,7 @@ export class CaptchaSiteKeys {
   }
 }
 
-export async function siteKeys(): Promise<CaptchaSiteKeys> {
+export function siteKeys(): Promise<CaptchaSiteKeys> {
   return v1.get("meta/captcha/site-keys").then((r) => {
     return CaptchaSiteKeys.createFrom(r.data);
   });

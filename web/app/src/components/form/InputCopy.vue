@@ -48,7 +48,7 @@ export default defineComponent({
   methods: {
     doCopy() {
       this.$refs.input.$refs.input.select();
-      navigator.clipboard.writeText(this.value)
+      navigator.clipboard.writeText(this.value);
     },
   },
   components: { ClipboardListIcon, TextInput, CircleBg },

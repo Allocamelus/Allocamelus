@@ -2,8 +2,8 @@ import { argon2idCost, argon2idEncoded } from "./argon2id";
 import { Buffer } from "buffer";
 import "./wasm/wasm_exec";
 
-export async function load(): Promise<boolean> {
-  return new Promise(async (resolve, reject) => {
+export function load(): Promise<boolean> {
+  return new Promise(async (resolve) => {
     if (window.argon2id == undefined) {
       window.argon2id = {
         loaded: false,
@@ -15,14 +15,14 @@ export async function load(): Promise<boolean> {
     }
     if (window.argon2id.loading) {
       // wait for argon2id to load
-      await (() => {
-        return new Promise((r) => {
-          document.addEventListener("argon2id-load", () => {
-            r(true);
-          });
+      await new Promise((r) => {
+        document.addEventListener("argon2id-load", () => {
+          r(true);
         });
-      })();
-      resolve(true);
+      }).then(() => {
+        resolve(true);
+        return;
+      });
       return;
     }
 
@@ -40,11 +40,10 @@ export async function load(): Promise<boolean> {
     await WebAssembly.instantiateStreaming(
       fetch(wasmUrl),
       go.importObject
-    ).then(function (obj) {
+    ).then((obj) => {
       go.run(obj.instance);
+      document.dispatchEvent(loadEvent);
     });
-
-    document.dispatchEvent(loadEvent);
 
     resolve(true);
     return;
@@ -57,11 +56,11 @@ export async function load(): Promise<boolean> {
  * @param password
  * @param cost
  */
-export async function hash(
+export function hash(
   password: string,
   cost: argon2idCost
 ): Promise<argon2idEncoded> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     load().then(() => {
       let enc = window.argon2id.hash(
         Buffer.from(password).toString("base64"),
@@ -84,12 +83,12 @@ export async function hash(
  * @param salt
  * @param cost
  */
-export async function hashSalt(
+export function hashSalt(
   password: string,
   salt: string,
   cost: argon2idCost
 ): Promise<argon2idEncoded> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     load().then(() => {
       let enc = window.argon2id.hashSalt(
         Buffer.from(password).toString("base64"),
@@ -112,8 +111,8 @@ export async function hashSalt(
  *
  * @param encodedHash Key is optional
  */
-export async function parse(encodedHash: string): Promise<argon2idEncoded> {
-  return new Promise(async (resolve, reject) => {
+export function parse(encodedHash: string): Promise<argon2idEncoded> {
+  return new Promise((resolve, reject) => {
     load().then(() => {
       let enc = window.argon2id.parse(encodedHash);
       if (typeof enc === "string") {
