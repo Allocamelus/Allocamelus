@@ -4,11 +4,11 @@ import { API_Success_Error } from "../../models/api_error";
 export class CreateResponse extends API_Success_Error {
   id?: number;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<CreateResponse> = {}) {
     return new CreateResponse(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<CreateResponse> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
     this.id = source["id"];
@@ -19,11 +19,11 @@ export class MediaFile {
   media: File;
   alt: string;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<MediaFile> = {}) {
     return new MediaFile(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<MediaFile> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.media = source["media"];
     this.alt = source["alt"];

@@ -8,11 +8,11 @@ export type Ordered_API_Comments = { [key: number]: API_Comment };
 export class API_Comments extends ordered_list {
   comments: Ordered_API_Comments;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<API_Comments> = {}) {
     return new API_Comments(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<API_Comments> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
     this.comments = source["comments"];

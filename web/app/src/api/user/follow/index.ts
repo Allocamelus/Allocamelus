@@ -28,11 +28,11 @@ export class API_Requests {
   requests: { [key: number]: number };
   users: { [key: number]: GEN_User };
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<API_Requests> = {}) {
     return new API_Requests(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<API_Requests> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.requests = source["requests"];
     this.users = source["users"];

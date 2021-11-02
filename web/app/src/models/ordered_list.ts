@@ -3,11 +3,11 @@ import { GEN_User } from "./go_structs_gen";
 export class user_list {
   users: { [key: number]: GEN_User };
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<user_list> = {}) {
     return new user_list(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<user_list> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
 
     this.users = source["users"];
@@ -41,11 +41,11 @@ export class user_list {
 export default class ordered_list extends user_list {
   order: { [key: number]: number };
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<ordered_list> = {}) {
     return new ordered_list(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<ordered_list> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
     this.order = source["order"];

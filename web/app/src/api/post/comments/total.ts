@@ -4,11 +4,11 @@ import { API_Error } from "../../../models/api_error";
 export class API_Total {
   total: number;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<API_Total> = {}) {
     return new API_Total(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<API_Total> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.total = source["total"];
   }

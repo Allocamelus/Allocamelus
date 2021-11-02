@@ -3,11 +3,11 @@ import { API_Success_Error } from "./api_error";
 export class API_Avatar_Resp extends API_Success_Error {
   avatarUrl?: string;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<API_Avatar_Resp> = {}) {
     return new API_Avatar_Resp(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<API_Avatar_Resp> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
     this.avatarUrl = source["avatarUrl"];

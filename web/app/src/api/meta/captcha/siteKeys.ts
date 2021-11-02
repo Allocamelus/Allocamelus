@@ -13,11 +13,11 @@ export class CaptchaSiteKeys {
     };
   };
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<CaptchaSiteKeys> = {}) {
     return new CaptchaSiteKeys(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<CaptchaSiteKeys> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.siteKeys = source["site-keys"];
     this.difficulties = source["difficulties"];

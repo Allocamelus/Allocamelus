@@ -12,11 +12,11 @@ export class API_Comment {
   depth: number;
   children: Ordered_API_Comments;
 
-  static createFrom(source: object | string = {}) {
+  static createFrom(source: Partial<API_Comment> = {}) {
     return new API_Comment(source);
   }
 
-  constructor(source: object | string = {}) {
+  constructor(source: Partial<API_Comment> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.id = source["id"];
     this.userId = source["userId"];
