@@ -34,7 +34,7 @@ func BenchmarkFastBytes(b *testing.B) {
 	}
 }
 
-func TestInt(t *testing.T) {
+func TestInt(_ *testing.T) {
 	random.Int(n)
 }
 
@@ -44,7 +44,7 @@ func BenchmarkInt(b *testing.B) {
 	}
 }
 
-func TestFastInt(t *testing.T) {
+func TestFastInt(_ *testing.T) {
 	random.FastInt(n)
 }
 
