@@ -9,4 +9,4 @@ export function FullURL(url: string, base?: string | URL) {
   }
 }
 
-export default FullURL
+export default FullURL;

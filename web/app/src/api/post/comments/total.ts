@@ -4,12 +4,12 @@ import { API_Error } from "../../../models/api_error";
 export class API_Total {
   total: number;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new API_Total(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.total = source["total"];
   }
 }

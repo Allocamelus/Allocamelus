@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import "./wasm/wasm_exec";
 
 export function load(): Promise<boolean> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (window.argon2id == undefined) {
       window.argon2id = {
         loaded: false,
@@ -37,12 +37,11 @@ export function load(): Promise<boolean> {
     let go = new window.Go();
     let wasmUrl = new URL("./wasm/argon2id.wasm", import.meta.url).href;
 
-    WebAssembly.instantiateStreaming(
-      fetch(wasmUrl),
-      go.importObject
-    ).then(function (obj) {
-      go.run(obj.instance);
-    });
+    WebAssembly.instantiateStreaming(fetch(wasmUrl), go.importObject).then(
+      function (obj) {
+        go.run(obj.instance);
+      }
+    );
 
     document.dispatchEvent(loadEvent);
 

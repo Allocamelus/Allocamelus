@@ -7,12 +7,12 @@ export class API_Comment_User {
   comment: API_Comment;
   user: GEN_User;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new API_Comment_User(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.comment = API_Comment.createFrom(source["comment"]);
     this.user = GEN_User.createFrom(source["user"]);
   }

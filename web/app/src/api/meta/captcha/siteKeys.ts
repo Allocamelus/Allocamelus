@@ -13,12 +13,12 @@ export class CaptchaSiteKeys {
     };
   };
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new CaptchaSiteKeys(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.siteKeys = source["site-keys"];
     this.difficulties = source["difficulties"];
   }

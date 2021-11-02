@@ -40,7 +40,7 @@ export interface argon2id {
 export declare namespace argon2id {
   // loaded set by wasm when all functions have been loaded
   let loaded: boolean;
-  
+
   let loading: boolean;
 
   /**

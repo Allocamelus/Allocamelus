@@ -3,12 +3,12 @@ import { GEN_User } from "./go_structs_gen";
 export class user_list {
   users: { [key: number]: GEN_User };
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new user_list(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
 
     this.users = source["users"];
 
@@ -41,13 +41,13 @@ export class user_list {
 export default class ordered_list extends user_list {
   order: { [key: number]: number };
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new ordered_list(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
+  constructor(source: object | string = {}) {
     super(source);
-    if ("string" === typeof source) source = JSON.parse(source);
+    if (typeof source === "string") source = JSON.parse(source);
     this.order = source["order"];
   }
 

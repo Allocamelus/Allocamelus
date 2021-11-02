@@ -28,12 +28,12 @@ export class API_Requests {
   requests: { [key: number]: number };
   users: { [key: number]: GEN_User };
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new API_Requests(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.requests = source["requests"];
     this.users = source["users"];
   }

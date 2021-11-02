@@ -4,13 +4,13 @@ import { API_Success_Error } from "../../models/api_error";
 export class CreateResponse extends API_Success_Error {
   id?: number;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new CreateResponse(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
+  constructor(source: object | string = {}) {
     super(source);
-    if ("string" === typeof source) source = JSON.parse(source);
+    if (typeof source === "string") source = JSON.parse(source);
     this.id = source["id"];
   }
 }
@@ -19,12 +19,12 @@ export class MediaFile {
   media: File;
   alt: string;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new MediaFile(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
-    if ("string" === typeof source) source = JSON.parse(source);
+  constructor(source: object | string = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
     this.media = source["media"];
     this.alt = source["alt"];
   }

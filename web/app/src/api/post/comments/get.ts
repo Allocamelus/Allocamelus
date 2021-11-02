@@ -8,13 +8,13 @@ export type Ordered_API_Comments = { [key: number]: API_Comment };
 export class API_Comments extends ordered_list {
   comments: Ordered_API_Comments;
 
-  static createFrom(source: any = {}) { // skipcq: JS-0323, JS-0306
+  static createFrom(source: object | string = {}) {
     return new API_Comments(source);
   }
 
-  constructor(source: any = {}) { // skipcq: JS-0323
+  constructor(source: object | string = {}) {
     super(source);
-    if ("string" === typeof source) source = JSON.parse(source);
+    if (typeof source === "string") source = JSON.parse(source);
     this.comments = source["comments"];
   }
 

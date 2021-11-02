@@ -90,7 +90,8 @@ export function Comment(state: State) {
   };
 }
 
-export const getters = <GetterTree<State, any>>{ // skipcq: JS-0323
+// skipcq: JS-0323
+export const getters = <GetterTree<State, any>>{
   comment(state: State) {
     return Comment(state);
   },
