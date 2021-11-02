@@ -14,6 +14,12 @@
               :user="canEdit ? storeUser : user"
               :displayType="TwoLine"
             ></user-name>
+            <text-small
+              v-if="this.user.type === UNVERIFIED_USER"
+              class="font-normal flex-none ml-1"
+            >
+              [[Unverified]]
+            </text-small>
           </div>
           <div class="mt-3 text-lg">
             {{ canEdit ? storeUser.bio : user.bio }}
@@ -85,7 +91,10 @@ import { posts as getPosts } from "../api/user/posts";
 import { post as userFollow, remove as userUnfollow } from "../api/user/follow";
 import { API_Error } from "../models/api_error";
 import { API_Posts } from "../models/api_post";
-import { Private as PRIVATE_USER } from "../models/user_types";
+import {
+  Public as PUBLIC_USER,
+  Unverified as UNVERIFIED_USER,
+} from "../models/user_types";
 import {
   InvalidCharacters,
   SomethingWentWrong,
@@ -109,6 +118,7 @@ import EditOverlay from "../components/user/EditOverlay.vue";
 import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 import Snackbar from "../components/box/Snackbar.vue";
+import TextSmall from "../components/text/Small.vue";
 
 export default defineComponent({
   props: {
@@ -161,6 +171,7 @@ export default defineComponent({
       loggedIn,
       storeUser,
       InvalidCharacters,
+      UNVERIFIED_USER,
     };
   },
   computed: {
@@ -176,7 +187,7 @@ export default defineComponent({
       if (this.canEdit) {
         return "Edit Profile";
       }
-      if (this.user.type == PRIVATE_USER) {
+      if (this.user.type !== PUBLIC_USER) {
         if (this.user.selfFollow?.following) {
           return "Unfriend";
         } else if (this.user.selfFollow?.requested) {
@@ -218,7 +229,7 @@ export default defineComponent({
           }
           return userFollow(this.user.userName).then((r) => {
             if (r.success) {
-              if (this.user.type == PRIVATE_USER) {
+              if (this.user.type !== PUBLIC_USER) {
                 this.user.selfFollow.requested = true;
               } else {
                 this.user.selfFollow.following = true;
@@ -230,6 +241,8 @@ export default defineComponent({
           .then((r) => {
             if (!r.success) {
               this.snackbarErr(SomethingWentWrong);
+            } else if (this.user.type === UNVERIFIED_USER) {
+              this.snackbarErr("This user is not verified");
             }
           })
           .catch(() => {
@@ -285,6 +298,7 @@ export default defineComponent({
     SignUpOverlay,
     NewPostTextInput,
     Snackbar,
+    TextSmall,
   },
 });
 </script>
