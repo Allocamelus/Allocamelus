@@ -23,6 +23,7 @@ export function load(): Promise<boolean> {
         resolve(true);
         return;
       });
+      return;
     }
 
     if (window.argon2id.loaded) {
