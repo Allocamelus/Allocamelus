@@ -15,13 +15,11 @@ export function load(): Promise<boolean> {
     }
     if (window.argon2id.loading) {
       // wait for argon2id to load
-      (() => {
-        return new Promise((r) => {
-          document.addEventListener("argon2id-load", () => {
-            r(true);
-          });
+      new Promise((r) => {
+        document.addEventListener("argon2id-load", () => {
+          r(true);
         });
-      })();
+      });
       resolve(true);
       return;
     }
@@ -38,7 +36,7 @@ export function load(): Promise<boolean> {
     let wasmUrl = new URL("./wasm/argon2id.wasm", import.meta.url).href;
 
     WebAssembly.instantiateStreaming(fetch(wasmUrl), go.importObject).then(
-      function (obj) {
+      (obj) => {
         go.run(obj.instance);
       }
     );

@@ -29,7 +29,7 @@ export class user_list {
       return this.users[userId];
     }
   }
-  appendUser(u: GEN_User) {
+  appendUser(u: GEN_User): void {
     if (this.users === null) {
       this.users = {};
     }

@@ -1,4 +1,4 @@
-export function FullURL(url: string, base?: string | URL) {
+export function FullURL(url: string, base?: string | URL): string {
   try {
     // Try building url with base
     // base must be a valid see new URL(url [, base])

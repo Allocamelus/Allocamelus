@@ -29,12 +29,12 @@ export class API_Comments extends ordered_list {
     }
   }
 
-  appendComment(c: API_Comment) {
+  appendComment(c: API_Comment): void {
     this.comments[c.id] = c;
     this.order[this.total()] = c.id;
   }
 
-  delComment(id: number | string) {
+  delComment(id: number | string): void {
     if (Object.prototype.hasOwnProperty.call(this.comments, id)) {
       delete this.comments[id];
       // Remove comment id from order

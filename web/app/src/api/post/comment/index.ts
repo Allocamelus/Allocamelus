@@ -39,7 +39,7 @@ export class API_Comment {
     return this.children[key];
   }
 
-  delChild(key: string) {
+  delChild(key: string): void {
     if (Object.prototype.hasOwnProperty.call(this.children, key)) {
       delete this.children[key];
       this.replies--;
@@ -85,7 +85,7 @@ export class API_Comment {
     return false;
   }
 
-  appendChild(c: API_Comment, newChild = false) {
+  appendChild(c: API_Comment, newChild = false): void {
     c.depth = this.depth + 1;
     this.children[this.numDirectChildren()] = c;
     if (newChild) {

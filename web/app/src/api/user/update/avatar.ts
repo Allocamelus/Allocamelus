@@ -15,6 +15,6 @@ export function avatar(userName: string, file: File): Promise<API_Avatar_Resp> {
     });
 }
 
-export function removeAvatar(userName: string) {
+export function removeAvatar(userName: string): void {
   v1.delete(`/user/${userName}/update/avatar`);
 }
