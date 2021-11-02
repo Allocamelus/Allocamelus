@@ -7,9 +7,7 @@ import {
 
 const a9s = "allocamelus";
 
-export async function create(
-  request: GEN_CreateRequest
-): Promise<GEN_CreateResp> {
+export function create(request: GEN_CreateRequest): Promise<GEN_CreateResp> {
   return v1
     .post("user", JSON.stringify(request), {
       headers: {
@@ -21,9 +19,7 @@ export async function create(
     });
 }
 
-export async function createA9s(
-  token: GEN_CreateA10Token
-): Promise<GEN_CreateResp> {
+export function createA9s(token: GEN_CreateA10Token): Promise<GEN_CreateResp> {
   return create(
     GEN_CreateRequest.createFrom({
       with: a9s,

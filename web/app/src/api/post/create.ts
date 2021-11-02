@@ -30,7 +30,7 @@ export class MediaFile {
   }
 }
 
-export async function create(
+export function create(
   content: string,
   images: Array<MediaFile>,
   publish: boolean

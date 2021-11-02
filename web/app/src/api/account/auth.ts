@@ -7,7 +7,7 @@ import {
 
 const a9s = "allocamelus";
 
-export async function auth(request: GEN_AuthRequest): Promise<GEN_AuthResp> {
+export function auth(request: GEN_AuthRequest): Promise<GEN_AuthResp> {
   return v1
     .post("account/auth", JSON.stringify(request), {
       headers: {
@@ -19,7 +19,7 @@ export async function auth(request: GEN_AuthRequest): Promise<GEN_AuthResp> {
     });
 }
 
-export async function authA10(token: GEN_AuthA10Token): Promise<GEN_AuthResp> {
+export function authA10(token: GEN_AuthA10Token): Promise<GEN_AuthResp> {
   return auth(
     GEN_AuthRequest.createFrom({
       with: a9s,

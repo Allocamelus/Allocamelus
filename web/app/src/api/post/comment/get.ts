@@ -18,7 +18,7 @@ export class API_Comment_User {
   }
 }
 
-export async function get(
+export function get(
   postId: number | string,
   commentId: number | string
 ): Promise<API_Comment_User> {

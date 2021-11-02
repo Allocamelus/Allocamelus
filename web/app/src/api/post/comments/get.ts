@@ -52,7 +52,7 @@ export class API_Comments extends ordered_list {
   }
 }
 
-export async function get(
+export function get(
   postId: number | string,
   pageNum = 0
 ): Promise<API_Comments> {

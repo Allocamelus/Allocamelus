@@ -1,7 +1,7 @@
 import v1 from "../../v1";
 import { API_Success_Error } from "../../../models/api_error";
 
-export async function create(
+export function create(
   email: string,
   captcha: string
 ): Promise<API_Success_Error> {
