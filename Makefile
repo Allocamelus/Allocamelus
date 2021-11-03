@@ -8,7 +8,6 @@ run:
 	go run ./cmd/allocamelus
 
 build-npm:
-	cd ./web/app/src/pkg/argon2id; make;
 	cd ./web/app; npm run build;
 
 build-go:

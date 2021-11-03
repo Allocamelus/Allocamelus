@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "node --max_old_space_size=4096 ./node_modules/vite/bin/vite.js",
     "build": "vite build",
-    "serve": "vite preview",
+    "serve": "vite preview --host",
     "lint": "prettier --write ."
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@vue/compiler-sfc": "^3.2.20",
     "@vuedx/typescript-plugin-vue": "^0.7.4",
     "autoprefixer": "^10.4.0",
+    "hash-wasm": "^4.9.0",
     "postcss": "^8.3.11",
     "postcss-csso": "^5.0.1",
     "prettier": "^2.4.1",
