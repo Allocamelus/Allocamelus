@@ -23,19 +23,37 @@ const (
 	taken         = "taken"
 )
 
+type ValidationErrors struct {
+	UserName error `json:"userName,omitempty"`
+	Name     error `json:"name,omitempty"`
+	Email    error `json:"email,omitempty"`
+	Bio      error `json:"Bio,omitempty"`
+}
+
+// Empty Are all errors nil
+func (v *ValidationErrors) Empty() bool {
+	if v.UserName != nil {
+		return false
+	}
+	if v.Name != nil {
+		return false
+	}
+	if v.Email != nil {
+		return false
+	}
+	if v.Bio != nil {
+		return false
+	}
+	return true
+}
+
 // ValidatePublic values
-func (u *User) ValidatePublic() error {
-	errs := make(validation.Errors)
-	if err := u.ValidUserName(); err != nil {
-		errs["userName"] = err
-	}
-	if err := u.ValidEmail(); err != nil {
-		errs["email"] = err
-	}
-	if err := u.ValidBio(); err != nil {
-		errs["bio"] = err
-	}
-	return errs.Filter()
+func (u *User) ValidatePublic() (v ValidationErrors) {
+	v.UserName = u.ValidUserName()
+	v.Name = u.ValidName()
+	v.Email = u.ValidEmail()
+	v.Bio = u.ValidBio()
+	return
 }
 
 var (
@@ -87,8 +105,7 @@ func (u *User) ValidName() error {
 func ValidName(name string) error {
 	// Check Length
 	if err := validation.Validate(name,
-		validation.Required,
-		validation.Length(1, 128),
+		validation.Length(0, 128),
 	); err != nil {
 		return ErrNameLength
 	}

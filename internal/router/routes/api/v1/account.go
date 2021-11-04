@@ -10,6 +10,7 @@ import (
 func Account(api fiber.Router) {
 	// /api/v1/account
 	a := api.Group("/account")
+	a.Post("/", account.Create)
 
 	// /api/v1/account/auth
 	aA := a.Group("/auth")

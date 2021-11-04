@@ -15,7 +15,6 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/allocamelus/allocamelus/pkg/random"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -70,17 +69,6 @@ func Create(c *fiber.Ctx) error {
 		token.trimSpace()
 
 		newUser := user.New(token.UserName, "", token.Email)
-
-		userErrs := make(validation.Errors)
-		if err := newUser.ValidatePublic(); err != nil {
-			userErrs = err.(validation.Errors)
-		}
-
-		userErrs["password"] = newUser.ValidPassword(token.Password)
-
-		if errs := userErrs.Filter(); errs != nil {
-			return apierr.Err422(c, CreateResp{Errors: errs.(validation.Errors)})
-		}
 
 		if g.Config.HCaptcha.Enabled {
 			if err := hcaptcha.Verify(hcaptcha.Values{
