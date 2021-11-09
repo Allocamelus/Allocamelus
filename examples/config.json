@@ -15,7 +15,7 @@
     "db": {
         "Net": "unix",
         "server": "/var/run/mysqld/mysqld.sock",
-        "name": "databaseName",
+        "name": "allocamelus",
         "username": "user",
         "password": "password (Don\"t use this one)"
     },

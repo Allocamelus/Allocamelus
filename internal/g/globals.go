@@ -1,7 +1,7 @@
 package g
 
 import (
-	"github.com/allocamelus/allocamelus/configs"
+	"github.com/allocamelus/allocamelus/internal/config"
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil/session"
 )
@@ -13,4 +13,4 @@ var Data *data.Data
 var Session *session.Store
 
 // Config global
-var Config *configs.Config
+var Config *config.Config
