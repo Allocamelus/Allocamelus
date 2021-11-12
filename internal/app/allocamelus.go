@@ -27,6 +27,8 @@ type Allocamelus struct {
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
+const Version = "0.0.0-alpha"
+
 // New Allocamelus server
 func New(configPath string) *Allocamelus {
 	g.Data = data.New(configPath)
@@ -76,7 +78,7 @@ func (c *Allocamelus) AwaitAndClose(serverClosed chan struct{}) {
 // InitListener initializes fiber
 func (c *Allocamelus) InitListener() error {
 	if g.Data.Config.Ssl.Enabled {
-		// Create tls certificate
+		// Load tls certificate
 		cer, err := tls.LoadX509KeyPair(g.Data.Config.Ssl.Cert, g.Data.Config.Ssl.Key)
 		if err != nil {
 			return err
@@ -85,7 +87,7 @@ func (c *Allocamelus) InitListener() error {
 		tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
 
 		// Create custom listener
-		ln, err := tls.Listen("tcp", "127.0.0.1:"+strconv.FormatInt(g.Data.Config.Ssl.Port, 10), tlsConfig)
+		ln, err := tls.Listen("tcp", "127.0.0.1:"+strconv.Itoa(int(g.Data.Config.Ssl.Port)), tlsConfig)
 		if err != nil {
 			return err
 		}
