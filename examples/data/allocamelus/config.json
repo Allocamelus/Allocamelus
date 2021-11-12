@@ -13,10 +13,10 @@
     "prefix": "allocamelus_"
   },
   "db": {
-    "Net": "tcp",
-    "server": "172.20.30.3:3306",
+    "Net": "unix",
+    "server": "172.20.30.3",
     "name": "allocamelus",
-    "username": "user",
+    "username": "allocamelus",
     "password": "password (Don\"t use this one)"
   },
   "dev": false,
@@ -44,8 +44,8 @@
     "replyTo": "support <support@example.com>"
   },
   "path": {
-    "publicDir": "./",
-    "mediaDir": "./media/",
+    "publicDir": "/etc/allocamelus/public/",
+    "media": "/usr/share/allocamelus/media/",
     "tmpDir": "/tmp/allocamelus_tmp_dir",
     "public": {
       "verifyEmail": "/account/verify-email",
@@ -54,9 +54,9 @@
     }
   },
   "redis": {
-    "host": "/var/run/redis/redis-server.sock",
-    "user": "",
-    "password": ""
+    "host": "172.20.30.5:6379",
+    "user": "allocamelus",
+    "password": "password"
   },
   "session": {
     "maxLife": 86400,
@@ -66,15 +66,15 @@
     "description": "Explore Example",
     "domain": "example.com",
     "name": "Example",
-    "port": 8080,
+    "port": 80,
     "prefork": false,
     "bodyLimit": 52428800,
     "static": true
   },
   "ssl": {
     "enabled": false,
-    "cert": "Path to ssl Cert",
-    "key": "Path to ssl Key",
-    "port": 8443
+    "cert": "/etc/allocamelus/certs/ssl.crt",
+    "key": "/etc/allocamelus/certs/ssl.key",
+    "port": 443
   }
 }

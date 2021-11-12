@@ -31,12 +31,7 @@ type Config struct {
 		UserName string
 		Password string
 	}
-	Dev          bool
-	GoogleClient struct {
-		Enabled bool
-		ID      string
-		Key     string
-	}
+	Dev      bool
 	HCaptcha struct {
 		Enabled  bool
 		Secret   string
@@ -190,17 +185,6 @@ func (c *Config) Validate() error {
 
 	if c.Dev {
 		klog.Info("Config: Dev Mode Enabled")
-	}
-
-	if c.GoogleClient.Enabled {
-		if c.GoogleClient.ID == "" {
-			klog.Error("Error - Config: Missing Google Client ID")
-			hasErr = true
-		}
-		if c.GoogleClient.Key == "" {
-			klog.Error("Error - Config: Missing Google Client Key")
-			hasErr = true
-		}
 	}
 
 	if c.HCaptcha.Enabled {

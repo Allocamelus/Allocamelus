@@ -6,7 +6,11 @@
 
 Allocamelus is a (work in progress) self hostable social media platform
 
-### Features:
+## Running
+
+See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompose.md)
+
+## Features
 
 - [ ] Account
   - [x] Signup
@@ -38,7 +42,7 @@ Allocamelus is a (work in progress) self hostable social media platform
   - [ ] Move crypto to client
     - Preferably not a web app
     - But, seeing Proton Mail's browser crypto...
-- [x] User 
+- [x] User
   - [x] Profile
     - [x] Bio
     - [x] Avatar
