@@ -52,9 +52,10 @@ type Config struct {
 	}
 	Mail email.Config
 	Path struct {
-		Media  string
-		TmpDir string
-		Public struct {
+		PublicDir string
+		MediaDir  string
+		TmpDir    string
+		Public    struct {
 			VerifyEmail   string
 			ResetPassword string
 			Media         string
@@ -80,6 +81,7 @@ type Config struct {
 		Port        int64
 		Prefork     bool
 		BodyLimit   int64
+		Static      bool
 	}
 	Ssl struct {
 		Enabled bool
@@ -211,8 +213,8 @@ func (c *Config) Validate() error {
 		}
 	}
 
-	if c.Path.Media == "" {
-		c.Path.Media = "media/"
+	if c.Path.MediaDir == "" {
+		c.Path.MediaDir = "media/"
 		klog.Warning("Warning - Config: Missing media file path | Using Default (media/)")
 	}
 	if c.Path.TmpDir == "" {

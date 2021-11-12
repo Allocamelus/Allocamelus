@@ -9,7 +9,10 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
-const MaxHightWidth int = 8192
+const (
+	MaxHightWidth int = 8192
+	SubPath           = "posts/images"
+)
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
 	img, b58hash, err := imagedit.MPHtoImg(imageMPH)

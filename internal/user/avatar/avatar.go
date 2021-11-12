@@ -15,7 +15,10 @@ var (
 	preRemove       *sql.Stmt
 )
 
-const MaxHightWidth int = 500
+const (
+	MaxHightWidth int = 500
+	SubPath           = "users/avatars"
+)
 
 func HasAvatar(userID int64) (hasAvatar bool, err error) {
 	if preHasAvatar == nil {
@@ -65,5 +68,5 @@ func Remove(userID int64) error {
 }
 
 func selectorPath(b58hash string, includeFile bool) string {
-	return fileutil.RelativePath("users/avatars", b58hash, includeFile)
+	return fileutil.RelativePath(SubPath, b58hash, includeFile)
 }

@@ -49,7 +49,8 @@
         "replyTo": "support <support@example.com>"
     },
     "path": {
-        "media": "media/",
+        "publicDir": "./",
+        "mediaDir": "./media/",
         "tmpDir": "/tmp/allocamelus_tmp_dir",
         "public": {
             "verifyEmail": "/account/verify-email",
@@ -72,7 +73,8 @@
         "name": "Example",
         "port": 8080,
         "prefork": false,
-        "bodyLimit": 52428800
+        "bodyLimit": 52428800,
+        "static": true
     },
     "ssl": {
         "enabled": false,
