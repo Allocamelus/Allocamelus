@@ -71,7 +71,9 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
     - [ ] Comments
   - Possible
     - [ ] Explore public users
-- [ ] Api
-  - [ ] Specification
-    - [ ] Open api
-  - [x] Rate limiting (Sliding Window | 690 request / 420 sec)
+- [ ] App
+  - [ ] Api
+    - [ ] Api Specification
+      - [ ] Open api
+    - [x] Rate limiting (Sliding Window | 690 request / 420 sec)
+  - [ ] Federation
