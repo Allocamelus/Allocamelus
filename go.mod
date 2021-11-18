@@ -3,15 +3,15 @@ module github.com/allocamelus/allocamelus
 go 1.17
 
 require (
-	github.com/ProtonMail/go-crypto v0.0.0-20210920160938-87db9fbc61c7 // indirect
-	github.com/ProtonMail/gopenpgp/v2 v2.2.4
-	github.com/andybalholm/brotli v1.0.3 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3 // indirect
+	github.com/ProtonMail/gopenpgp/v2 v2.3.0
+	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/discord/lilliput v0.0.0-20210720001558-e1547514bd5f
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gofiber/fiber/v2 v2.21.0
-	github.com/gofiber/helmet/v2 v2.2.3
+	github.com/gofiber/fiber/v2 v2.22.0
+	github.com/gofiber/helmet/v2 v2.2.4
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.16
@@ -27,9 +27,9 @@ require (
 	github.com/valyala/fastjson v1.6.3
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.10.0
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20211029224645-99673261e6eb // indirect
-	golang.org/x/sys v0.0.0-20211031064116-611d5d643895 // indirect
+	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
+	golang.org/x/net v0.0.0-20211116231205-47ca1ff31462 // indirect
+	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	k8s.io/klog/v2 v2.30.0
 )
