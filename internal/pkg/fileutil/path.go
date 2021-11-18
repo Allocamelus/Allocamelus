@@ -8,7 +8,7 @@ import (
 )
 
 func FilePath(relativePath string) string {
-	return filepath.Join(g.Config.Path.Media, relativePath)
+	return filepath.Join(g.Config.Path.MediaDir, relativePath)
 }
 
 func PublicPath(relativePath string) string {

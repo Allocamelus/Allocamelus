@@ -1,0 +1,80 @@
+{
+  "argon2cost": {
+    "time": 3,
+    "memory": 81920,
+    "threads": 2,
+    "keyLen": 32,
+    "saltLen": 32
+  },
+  "cloudflare": {
+    "enabled": false
+  },
+  "cookie": {
+    "prefix": "allocamelus_"
+  },
+  "db": {
+    "Net": "unix",
+    "server": "172.20.30.3",
+    "name": "allocamelus",
+    "username": "allocamelus",
+    "password": "password (Don\"t use this one)"
+  },
+  "dev": false,
+  "hcaptcha": {
+    "enabled": false,
+    "secret": "",
+    "easy": "",
+    "moderate": "",
+    "hard": "",
+    "all": ""
+  },
+  "logs": {
+    "level": 2,
+    "dir": true,
+    "path": "/var/log/allocamelus/"
+  },
+  "mail": {
+    "enabled": true,
+    "insecure": false,
+    "server": "mail.example.com",
+    "username": "user",
+    "password": "password",
+    "sender": "bot@mailer.example.com",
+    "from": "Example Bot <bot@example.com>",
+    "replyTo": "support <support@example.com>"
+  },
+  "path": {
+    "publicDir": "/etc/allocamelus/public/",
+    "media": "/usr/share/allocamelus/media/",
+    "tmpDir": "/tmp/allocamelus_tmp_dir",
+    "public": {
+      "verifyEmail": "/account/verify-email",
+      "resetPassword": "/account/reset-password",
+      "media": "/media/"
+    }
+  },
+  "redis": {
+    "host": "172.20.30.5:6379",
+    "user": "allocamelus",
+    "password": "password"
+  },
+  "session": {
+    "maxLife": 86400,
+    "expiration": 900
+  },
+  "site": {
+    "description": "Explore Example",
+    "domain": "example.com",
+    "name": "Example",
+    "port": 80,
+    "prefork": false,
+    "bodyLimit": 52428800,
+    "static": true
+  },
+  "ssl": {
+    "enabled": false,
+    "cert": "/etc/allocamelus/certs/ssl.crt",
+    "key": "/etc/allocamelus/certs/ssl.key",
+    "port": 443
+  }
+}

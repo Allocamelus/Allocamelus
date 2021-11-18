@@ -3,7 +3,7 @@ package data
 import (
 	"database/sql"
 
-	"github.com/allocamelus/allocamelus/configs"
+	"github.com/allocamelus/allocamelus/internal/config"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/go-redis/redis/v8"
 	"k8s.io/klog/v2"
@@ -11,7 +11,7 @@ import (
 
 // Data struct
 type Data struct {
-	Config   *configs.Config
+	Config   *config.Config
 	database *sql.DB
 	redis    *redis.Client
 }
@@ -22,7 +22,7 @@ type Data struct {
 func New(configPath string) *Data {
 	data := new(Data)
 
-	data.Config = configs.NewConfig(configPath)
+	data.Config = config.NewConfig(configPath)
 
 	logger.InitKlog(data.Config.Logs.Level, data.Config.Logs.Dir, data.Config.Logs.Path)
 

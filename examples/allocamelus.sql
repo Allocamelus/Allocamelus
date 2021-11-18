@@ -1,11 +1,9 @@
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+USE `allocamelus`;
 SET NAMES utf8mb4;
-CREATE DATABASE `allocamelus-dev`
-/*!40100 DEFAULT CHARACTER SET utf8mb4 */
-;
-USE `allocamelus-dev`;
 CREATE TABLE `PostCommentClosures` (
   `parent` bigint(20) NOT NULL,
   `child` bigint(20) NOT NULL,
@@ -16,8 +14,8 @@ CREATE TABLE `PostCommentClosures` (
   KEY `parent` (`parent`),
   KEY `child` (`child`),
   KEY `depth` (`depth`),
-  CONSTRAINT `PostCommentClosures_ibfk_4` FOREIGN KEY (`parent`) REFERENCES `PostComments` (`postCommentId`) ON DELETE CASCADE,
-  CONSTRAINT `PostCommentClosures_ibfk_5` FOREIGN KEY (`child`) REFERENCES `PostComments` (`postCommentId`) ON DELETE CASCADE
+  CONSTRAINT `PostCommentClosures_ibfk_7` FOREIGN KEY (`parent`) REFERENCES `PostComments` (`postCommentId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PostCommentClosures_ibfk_8` FOREIGN KEY (`child`) REFERENCES `PostComments` (`postCommentId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 CREATE TABLE `PostComments` (
   `postCommentId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -31,8 +29,8 @@ CREATE TABLE `PostComments` (
   KEY `parent` (`parent`),
   KEY `userId` (`userId`),
   KEY `postId` (`postId`),
-  CONSTRAINT `PostComments_ibfk_5` FOREIGN KEY (`userId`) REFERENCES `Users` (`userId`) ON DELETE CASCADE,
-  CONSTRAINT `PostComments_ibfk_6` FOREIGN KEY (`postId`) REFERENCES `Posts` (`postId`) ON DELETE CASCADE
+  CONSTRAINT `PostComments_ibfk_8` FOREIGN KEY (`userId`) REFERENCES `Users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PostComments_ibfk_9` FOREIGN KEY (`postId`) REFERENCES `Posts` (`postId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 CREATE TABLE `PostMedia` (
   `postMediaId` bigint(20) NOT NULL AUTO_INCREMENT,

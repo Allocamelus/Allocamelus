@@ -11,3 +11,5 @@ webfonts
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+*.env
+!.example.env

@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"errors"
@@ -31,12 +31,7 @@ type Config struct {
 		UserName string
 		Password string
 	}
-	Dev          bool
-	GoogleClient struct {
-		Enabled bool
-		ID      string
-		Key     string
-	}
+	Dev      bool
 	HCaptcha struct {
 		Enabled  bool
 		Secret   string
@@ -52,9 +47,10 @@ type Config struct {
 	}
 	Mail email.Config
 	Path struct {
-		Media  string
-		TmpDir string
-		Public struct {
+		PublicDir string
+		MediaDir  string
+		TmpDir    string
+		Public    struct {
 			VerifyEmail   string
 			ResetPassword string
 			Media         string
@@ -80,6 +76,7 @@ type Config struct {
 		Port        int64
 		Prefork     bool
 		BodyLimit   int64
+		Static      bool
 	}
 	Ssl struct {
 		Enabled bool
@@ -190,17 +187,6 @@ func (c *Config) Validate() error {
 		klog.Info("Config: Dev Mode Enabled")
 	}
 
-	if c.GoogleClient.Enabled {
-		if c.GoogleClient.ID == "" {
-			klog.Error("Error - Config: Missing Google Client ID")
-			hasErr = true
-		}
-		if c.GoogleClient.Key == "" {
-			klog.Error("Error - Config: Missing Google Client Key")
-			hasErr = true
-		}
-	}
-
 	if c.HCaptcha.Enabled {
 		if c.HCaptcha.Secret == "" {
 			klog.Error("Error - Config: Missing HCaptcha Secret")
@@ -211,8 +197,8 @@ func (c *Config) Validate() error {
 		}
 	}
 
-	if c.Path.Media == "" {
-		c.Path.Media = "media/"
+	if c.Path.MediaDir == "" {
+		c.Path.MediaDir = "media/"
 		klog.Warning("Warning - Config: Missing media file path | Using Default (media/)")
 	}
 	if c.Path.TmpDir == "" {
