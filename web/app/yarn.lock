@@ -968,7 +968,8 @@ __metadata:
     buffer: ^6.0.3
     dompurify: ^2.3.3
     hash-wasm: ^4.9.0
-    openpgp: ^5.0.0
+    multiformats: ^9.4.10
+    openpgp: ^5.0.1
     postcss: ^8.3.11
     postcss-csso: ^5.0.1
     prettier: ^2.4.1
@@ -2639,6 +2640,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"multiformats@npm:^9.4.10":
+  version: 9.4.10
+  resolution: "multiformats@npm:9.4.10"
+  checksum: 57093ef493696122d3f843bc683167f535687d327a07a2488ac9b23ca555ca049db99c4f8344aac09646b515c8e48edac92ab5dccd6622b0437760f0b8effe27
+  languageName: node
+  linkType: hard
+
 "mz@npm:^2.4.0":
   version: 2.7.0
   resolution: "mz@npm:2.7.0"
@@ -2812,12 +2820,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openpgp@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "openpgp@npm:5.0.0"
+"openpgp@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "openpgp@npm:5.0.1"
   dependencies:
     asn1.js: ^5.0.0
-  checksum: 6b6d2e8345a0fa876665f9cb71a15593b06c25bfbd4af885d8ff9b543cfbf3ab2b833eb25de824e6552c0eafe2b78e9ccb3a7270841baff98fabb6b3ac370999
+  checksum: d42c195ae04cef997658d42c6db713dad1471eb487bda2a88050b7b9b120ec5922e245481ab6897eb5905e94ea2476d8f952b99be4b590b53820a741ef1593ed
   languageName: node
   linkType: hard
 

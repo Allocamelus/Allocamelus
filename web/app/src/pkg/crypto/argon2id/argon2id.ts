@@ -65,6 +65,4 @@ export interface argon2idEncoded {
   salt: string;
   // Key (Base64 encoded)
   key?: string;
-  // KeyHash blake2b hash of key (Base64 encoded)
-  keyHash?: string;
 }

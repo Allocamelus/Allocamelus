@@ -1,4 +1,4 @@
-import { argon2id, blake2b } from "hash-wasm";
+import { argon2id } from "hash-wasm";
 import { Buffer } from "buffer";
 
 import { argon2idCost, argon2idEncoded } from "./argon2id";
@@ -58,8 +58,7 @@ export function hashSalt(
       outputType: "encoded",
     })
       .then(async (encodedHash) => {
-        let e = await parse(encodedHash);
-        resolve(e);
+        resolve(await parse(encodedHash));
         return;
       })
       .catch((e) => {
@@ -96,9 +95,6 @@ export function parse(encodedHash: string): Promise<argon2idEncoded> {
     if (slice.length > 5) {
       encoded.key = slice.pop();
       encoded.cost.keyLen = Buffer.from(encoded.key, "base64").length;
-      blake2b(Buffer.from(encoded.key, "base64")).then((hex) => {
-        encoded.keyHash = Buffer.from(hex, "hex").toString("base64");
-      });
     }
     encoded.encoded = slice.join("$");
     resolve(encoded);
