@@ -9,21 +9,18 @@ import { genKey } from "./pgp";
 /**
  * userKey
  *
- * @var {number} created unix time (to server)
- * @var {string} keyAuthHash key hashed (to server)
- * @var {string} keySaltEncoded (to server)
- * @var {string} publicKey (to server)
- * @var {string} privateKey (to server)
- * @var {string} backupKey
+ * @var {number} created unix time
+ * @var {string} keyAuthHash key hashed
+ * @var {string} keySaltEncoded
+ * @var {string} publicKey
+ * @var {string} privateKey
  */
 export interface userKey {
   created: number;
-  // key hashed and sent to server
   keyAuthHash: string;
   keySaltEncoded: string;
   publicKey: string;
   privateKey: string;
-  backupKey: string;
 }
 
 const b2bAuthKey = "B2b User Authentication Key-Info";
@@ -36,7 +33,10 @@ const b2bPgpKey = "B2b Pretty Good Privacy Key-Info";
  * @param {string} password un-hashed password
  * @return {Promise<userKey>} msg pretty readable error
  */
-export function userKeys(username: string, password: string): Promise<userKey> {
+export function userKeys(
+  username: string,
+  password: string
+): Promise<{ userKey: userKey; backupKey: string }> {
   return new Promise(async (resolve) => {
     let now = UnixTime();
 
@@ -49,11 +49,13 @@ export function userKeys(username: string, password: string): Promise<userKey> {
     );
 
     resolve({
-      created: now,
-      keyAuthHash: (await derivedKeys).authKey,
-      keySaltEncoded: (await derivedKeys).saltEncoded,
-      publicKey: (await pgpKey).armoredPublic,
-      privateKey: (await pgpKey).armoredPrivate,
+      userKey: {
+        created: now,
+        keyAuthHash: (await derivedKeys).authKey,
+        keySaltEncoded: (await derivedKeys).saltEncoded,
+        publicKey: (await pgpKey).armoredPublic,
+        privateKey: (await pgpKey).armoredPrivate,
+      },
       backupKey: await backupKey,
     });
     return;
