@@ -28,10 +28,10 @@ type Password struct {
 }
 
 type Key struct {
-	PublicArmored  string `json:"publicArmored" form:"publicArmored"`
-	PrivateArmored string `json:"privateArmored" form:"privateArmored"`
-	RecoveryHash   string `json:"recoveryHash" form:"recoveryHash"`
-	BackupArmored  string `json:"backupArmored" form:"backupArmored"`
+	PublicArmored   string `json:"publicArmored" form:"publicArmored"`
+	PrivateArmored  string `json:"privateArmored" form:"privateArmored"`
+	RecoveryHash    string `json:"recoveryHash" form:"recoveryHash"`
+	RecoveryArmored string `json:"recoveryArmored" form:"recoveryArmored"`
 }
 
 func (t *CreateRequest) trimSpace() {
