@@ -1,5 +1,5 @@
 import { base58btc } from "multiformats/bases/base58";
-import { importKey, newKey } from "./aesgcm-tools";
+import { importKey, exportKey, newKey } from "./aesgcm-tools";
 
 const splitNum = 6,
   splitRune = "-";
@@ -12,10 +12,10 @@ export function create(): Promise<{ key: CryptoKey; encoded: string }> {
   });
 }
 
-export function decode(encodedKey: string): Promise<CryptoKey> {
+export function decode(splitKey: string): Promise<CryptoKey> {
   return new Promise(async (resolve) => {
-    encodedKey = encodedKey.replace(splitRune, "");
-    resolve(await importKey(base58btc.decode(encodedKey)));
+    let encodedKey = splitKey.replace(new RegExp(splitRune, "g"), "");
+    resolve(await importKey(base58btc.baseDecode(encodedKey)));
     return;
   });
 }
@@ -25,9 +25,7 @@ function encode(key: CryptoKey): Promise<string> {
   return new Promise(async (resolve) => {
     let encodedKey: string = "";
 
-    let keyStr = await base58btc.baseEncode(
-      new Uint8Array(await window.crypto.subtle.exportKey("raw", key))
-    );
+    let keyStr = base58btc.baseEncode(await exportKey(key));
     let before = splitNum - 1;
     let last = keyStr.length - 1;
 
