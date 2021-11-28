@@ -1,8 +1,10 @@
 import { Buffer } from "buffer";
+import { blake2b } from "hash-wasm";
 import { UnixTime } from "../time";
+import { decrypt, encrypt, exportKey } from "./aesgcm-tools";
 import { hash } from "./argon2id";
 import { argon2idCost } from "./argon2id/argon2id";
-import { encode, decode } from "./backupKey";
+import { create, decode } from "./backupKey";
 import { blake2bB64 } from "./blake2b";
 import { genKey } from "./pgp";
 
@@ -13,7 +15,9 @@ import { genKey } from "./pgp";
  * @var {string} keyAuthHash key hashed
  * @var {string} keySaltEncoded
  * @var {string} publicKey
- * @var {string} privateKey
+ * @var {string} privateKey encrypted
+ * @var {string} passphrase encrypted
+ * @var {string} backupKeyHash
  */
 export interface userKey {
   created: number;
@@ -21,6 +25,8 @@ export interface userKey {
   keySaltEncoded: string;
   publicKey: string;
   privateKey: string;
+  passphrase: string;
+  backupKeyHash: string;
 }
 
 const b2bAuthKey = "B2b User Authentication Key-Info";
@@ -40,23 +46,30 @@ export function userKeys(
   return new Promise(async (resolve) => {
     let now = UnixTime();
 
-    let derivedKeys = deriveKeys(password);
+    let keys = deriveKeys(password);
 
-    let pgpKey = genKey(username, (await derivedKeys).pgpPassphrase);
+    let pgpKey = genKey(username, (await keys).pgpPassphrase);
 
-    let backupKey = encode(
-      Buffer.from((await derivedKeys).pgpPassphrase, "base64")
+    let backupKey = create();
+
+    let encryptedPassphrase = encryptPGPPassphrase(
+      (await backupKey).key,
+      (await keys).pgpPassphrase
     );
+
+    let backupKeyHash = blake2bB64(await exportKey((await backupKey).key), 512);
 
     resolve({
       userKey: {
         created: now,
-        keyAuthHash: (await derivedKeys).authKey,
-        keySaltEncoded: (await derivedKeys).saltEncoded,
+        keyAuthHash: (await keys).authKey,
+        keySaltEncoded: (await keys).saltEncoded,
         publicKey: (await pgpKey).armoredPublic,
         privateKey: (await pgpKey).armoredPrivate,
+        passphrase: await encryptedPassphrase,
+        backupKeyHash: await backupKeyHash,
       },
-      backupKey: await backupKey,
+      backupKey: (await backupKey).encoded,
     });
     return;
   });
@@ -81,7 +94,7 @@ function deriveKeys(
     let key = Buffer.from(keyEncoded.key, "base64");
 
     let authKey = blake2bB64(key, 512, b2bAuthKey);
-    let pgpPassphrase = blake2bB64(key, 256, b2bPgpKey);
+    let pgpPassphrase = blake2bB64(key, 512, b2bPgpKey);
 
     resolve({
       saltEncoded: keyEncoded.encoded,
@@ -93,15 +106,43 @@ function deriveKeys(
 }
 
 /**
- * decodeBackupKey decodes backup key into pgp passphrase
+ * encryptPGPPassphrase encrypts pgp passphrase with backup key
  * @param backupKey
+ * @param pgpPassphrase
  * @returns
  */
-export function decodeBackupKey(backupKey: string): Promise<string> {
+export function encryptPGPPassphrase(
+  backupKey: CryptoKey,
+  pgpPassphrase: string
+): Promise<string> {
+  return new Promise(async (resolve) => {
+    resolve(
+      Buffer.from(
+        await encrypt(backupKey, Buffer.from(pgpPassphrase, "base64"))
+      ).toString("base64")
+    );
+    return;
+  });
+}
+
+/**
+ * decryptBackupKey decrypts pgp passphrase with backup key
+ * @param backupKey
+ * @param pgpPassphrase
+ * @returns
+ */
+export function decryptPGPPassphrase(
+  backupKey: string,
+  pgpPassphrase: string
+): Promise<string> {
   return new Promise(async (resolve) => {
     let key = await decode(backupKey);
 
-    resolve(Buffer.from(key).toString("base64"));
+    resolve(
+      Buffer.from(
+        await decrypt(key, Buffer.from(pgpPassphrase, "base64"))
+      ).toString("base64")
+    );
     return;
   });
 }
