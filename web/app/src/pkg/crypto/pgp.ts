@@ -1,4 +1,9 @@
-import { generateKey } from "openpgp";
+import {
+  generateKey,
+  decryptKey as decryptPrivateKey,
+  readPrivateKey,
+  PrivateKey,
+} from "openpgp";
 
 export interface pgpKey {
   armoredPrivate?: string;
@@ -6,8 +11,8 @@ export interface pgpKey {
   armoredRevocation?: string;
 }
 
-export function genkey(name: string, passphrase: string): Promise<pgpKey> {
-  return new Promise(async (resolve) => {
+export function genKey(name: string, passphrase: string): Promise<pgpKey> {
+  return new Promise((resolve) => {
     generateKey({
       type: "ecc", // Type of the key, defaults to ECC
       curve: "curve25519", // ECC curve name, defaults to curve25519
@@ -15,14 +20,27 @@ export function genkey(name: string, passphrase: string): Promise<pgpKey> {
       passphrase: passphrase, // protects the private key
       format: "armored", // output key format, defaults to 'armored' (other options: 'binary' or 'object')
     }).then((skp) => {
-      let keys: pgpKey = {
+      resolve({
         armoredPrivate: skp.privateKey,
         armoredPublic: skp.publicKey,
         armoredRevocation: skp.revocationCertificate,
-      };
-
-      resolve(keys);
+      });
       return;
     });
+  });
+}
+
+export function decryptKey(
+  key: string,
+  passphrase: string
+): Promise<PrivateKey> {
+  return new Promise(async (resolve) => {
+    resolve(
+      await decryptPrivateKey({
+        privateKey: await readPrivateKey({ armoredKey: key }),
+        passphrase,
+      })
+    );
+    return;
   });
 }
