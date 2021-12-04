@@ -57,9 +57,9 @@
             ></email-input>
           </div>
           <div class="mt-3">
-            <input-label for="password" :err="err.password"
-              >Password</input-label
-            >
+            <input-label for="password" :err="err.password">
+              Password
+            </input-label>
             <password-input
               v-model="password"
               :check="true"
@@ -106,9 +106,10 @@
         </div>
         <div>Backup Key:</div>
         <text-small>
-          Save this, you'll need this to recover your account
+          Save this, you'll need this to recover your account if you lose your
+          password
         </text-small>
-        <input-copy v-model="backupKey" class="my-2"></input-copy>
+        <input-copy v-model="recoveryKey" class="my-2"></input-copy>
       </div>
     </div>
   </center-form-box>
@@ -130,6 +131,8 @@ import InputCopy from "../components/form/InputCopy.vue";
 import EmailInput from "../components/form/EmailInput.vue";
 
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
+
+import { genKeys } from "../pkg/crypto/userKeys";
 
 import { GEN_CreateA10Token } from "../models/go_structs_gen";
 import { createA9s } from "../api/user/create";
@@ -168,7 +171,7 @@ export default defineComponent({
         token: "",
         theme: store.getters.theme,
       },
-      backupKey: "",
+      recoveryKey: "",
       showForm: true,
     });
 
@@ -195,7 +198,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       if (
         this.err.userName.length != 0 ||
         this.err.email.length != 0 ||
@@ -208,6 +211,10 @@ export default defineComponent({
         this.captcha.show = true;
         return;
       }
+
+      let keys = await genKeys(this.userName, this.password);
+      let userKey = keys.userKey;
+      this.recoveryKey = keys.recoveryKey;
 
       createA9s(
         GEN_CreateA10Token.createFrom({
@@ -273,7 +280,7 @@ export default defineComponent({
               this.err.signUp = HtmlSomethingWentWrong;
             }
           } else {
-            this.backupKey = r.backupKey;
+            this.recoveryKey = r.backupKey;
             this.captcha.show = false;
             this.showForm = false;
           }

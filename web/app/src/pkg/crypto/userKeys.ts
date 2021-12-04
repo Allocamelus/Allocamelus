@@ -4,7 +4,8 @@ import { hash } from "./argon2id";
 import { argon2idCost } from "./argon2id/argon2id";
 import { create, decode } from "./recoveryKey";
 import { blake2bB64 } from "./blake2b";
-import { genKey } from "./pgp";
+import { genKey, encryptKey, decryptKey } from "./pgp";
+import { PrivateKey } from "openpgp";
 
 /**
  * userKey
@@ -15,7 +16,7 @@ import { genKey } from "./pgp";
  * @var {string} publicKey
  * @var {string} privateKey encrypted
  * @var {string} passphrase encrypted
- * @var {string} backupKeyHash
+ * @var {string} recoveryHash
  */
 export interface userKey {
   keyAuthHash: string;
@@ -30,39 +31,39 @@ const b2bAuthKey = "B2b User Authentication Key-Info";
 const b2bPgpKey = "B2b Pretty Good Privacy Key-Info";
 
 /**
- * userKeys Generates a new pgp key, recovery key, and password hash
+ * genKeys Generates a new pgp key, recovery key, and password hash
  *
  * @param {string} username
  * @param {string} password un-hashed password
  * @return {Promise<userKey>} msg pretty readable error
  */
-export function userKeys(
+export function genKeys(
   username: string,
   password: string
 ): Promise<{ userKey: userKey; recoveryKey: string }> {
   return new Promise(async (resolve) => {
-    let keys = deriveKeys(password);
-
-    let pgpKey = genKey(username, (await keys).pgpPassphrase);
-
     let recoveryKey = create();
-
-    let encryptedPassphrase = encryptPGPPassphrase(
-      (await recoveryKey).key,
-      (await keys).pgpPassphrase
-    );
 
     let recoveryHash = blake2bB64(
       await exportKey((await recoveryKey).key),
       512
     );
 
+    let keys = await deriveKeys(password);
+
+    let pgpKey = await genKey(username, keys.pgpPassphrase);
+
+    let encryptedPassphrase = encryptPassphrase(
+      (await recoveryKey).key,
+      keys.pgpPassphrase
+    );
+
     resolve({
       userKey: {
-        keyAuthHash: (await keys).authKey,
-        keySaltEncoded: (await keys).saltEncoded,
-        publicArmored: (await pgpKey).armoredPublic,
-        privateArmored: (await pgpKey).armoredPrivate,
+        keyAuthHash: keys.authKey,
+        keySaltEncoded: keys.saltEncoded,
+        publicArmored: pgpKey.armoredPublic,
+        privateArmored: pgpKey.armoredPrivate,
         passphrase: await encryptedPassphrase,
         recoveryHash: await recoveryHash,
       },
@@ -103,12 +104,12 @@ function deriveKeys(
 }
 
 /**
- * encryptPGPPassphrase encrypts pgp passphrase with recovery key
+ * encryptPassphrase encrypts pgp passphrase with recovery key
  * @param recoveryKey
  * @param pgpPassphrase
  * @returns
  */
-export function encryptPGPPassphrase(
+export function encryptPassphrase(
   recoveryKey: CryptoKey,
   pgpPassphrase: string
 ): Promise<string> {
@@ -123,12 +124,12 @@ export function encryptPGPPassphrase(
 }
 
 /**
- * decryptBackupKey decrypts pgp passphrase with recovery key
+ * decryptPassphrase decrypts pgp passphrase with recovery key
  * @param recoveryKey
  * @param pgpPassphrase
  * @returns
  */
-export function decryptPGPPassphrase(
+export function decryptPassphrase(
   recoveryKey: string,
   pgpPassphrase: string
 ): Promise<string> {
@@ -144,4 +145,4 @@ export function decryptPGPPassphrase(
   });
 }
 
-export default userKeys;
+export default genKeys;

@@ -2,6 +2,7 @@ import {
   generateKey,
   decryptKey as decryptPrivateKey,
   readPrivateKey,
+  reformatKey,
   PrivateKey,
 } from "openpgp";
 
@@ -41,6 +42,24 @@ export function decryptKey(
         passphrase,
       })
     );
+    return;
+  });
+}
+
+export function encryptKey(
+  key: PrivateKey,
+  name: string,
+  passphrase: string
+): Promise<string> {
+  return new Promise(async (resolve) => {
+    let armoredKey = await reformatKey({
+      privateKey: key,
+      userIDs: [{ name: name }],
+      passphrase,
+      format: "armored",
+    });
+
+    resolve(armoredKey.privateKey);
     return;
   });
 }
