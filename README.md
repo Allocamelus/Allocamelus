@@ -74,6 +74,6 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
 - [ ] App
   - [ ] Api
     - [ ] Api Specification
-      - [ ] Open api
+      - [ ] Open api (WIP [Repo](https://github.com/Allocamelus/api-description))
     - [x] Rate limiting (Sliding Window | 690 request / 420 sec)
   - [ ] Federation
