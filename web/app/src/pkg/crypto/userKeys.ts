@@ -4,8 +4,7 @@ import { hash } from "./argon2id";
 import { argon2idCost } from "./argon2id/argon2id";
 import { create, decode } from "./recoveryKey";
 import { blake2bB64 } from "./blake2b";
-import { genKey, encryptKey, decryptKey } from "./pgp";
-import { PrivateKey } from "openpgp";
+import { genKey } from "./pgp";
 
 /**
  * userKey

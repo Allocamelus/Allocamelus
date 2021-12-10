@@ -28,18 +28,14 @@ type Password struct {
 }
 
 type Key struct {
-	PublicArmored   string `json:"publicArmored" form:"publicArmored"`
-	PrivateArmored  string `json:"privateArmored" form:"privateArmored"`
-	RecoveryHash    string `json:"recoveryHash" form:"recoveryHash"`
-	RecoveryArmored string `json:"recoveryArmored" form:"recoveryArmored"`
-}
-
-func (t *CreateRequest) trimSpace() {
-	t.UserName = strings.TrimSpace(t.UserName)
-	t.Email = strings.TrimSpace(t.Email)
-	t.Password.Salt = strings.TrimSpace(t.Password.Salt)
-	t.Password.Hash = strings.TrimSpace(t.Password.Hash)
-	t.Captcha = strings.TrimSpace(t.Captcha)
+	// PublicArmored armored PGP public key
+	PublicArmored string `json:"publicArmored" form:"publicArmored"`
+	// PrivateArmored armored PGP private key encrypted with passphrase
+	PrivateArmored string `json:"privateArmored" form:"privateArmored"`
+	// RecoveryHash hash of recovery key
+	RecoveryHash string `json:"recoveryHash" form:"recoveryHash"`
+	// Passphrase encrypted with recovery key
+	Passphrase string `json:"passphrase" form:"passphrase"`
 }
 
 type CreateResp struct {
@@ -84,4 +80,22 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	return fiberutil.JSON(c, 200, request.Password.Hash)
+}
+
+func (t *CreateRequest) trimSpace() {
+	t.UserName = strings.TrimSpace(t.UserName)
+	t.Email = strings.TrimSpace(t.Email)
+	t.Password.trimSpace()
+	t.Key.trimSpace()
+	t.Captcha = strings.TrimSpace(t.Captcha)
+}
+func (p *Password) trimSpace() {
+	p.Salt = strings.TrimSpace(p.Salt)
+	p.Hash = strings.TrimSpace(p.Hash)
+}
+func (k *Key) trimSpace() {
+	k.PublicArmored = strings.TrimSpace(k.PublicArmored)
+	k.PrivateArmored = strings.TrimSpace(k.PrivateArmored)
+	k.RecoveryHash = strings.TrimSpace(k.RecoveryHash)
+	k.Passphrase = strings.TrimSpace(k.Passphrase)
 }
