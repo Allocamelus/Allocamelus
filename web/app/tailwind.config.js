@@ -3,7 +3,9 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   mode: "jit",
-  purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  purge: {
+    content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  },
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
@@ -74,12 +76,12 @@ module.exports = {
       footer: "#371b28",
       black: { lighter: "#050505", DEFAULT: colors.black },
       blue: colors.blue,
-      gray: colors.trueGray,
+      gray: colors.neutral,
       green: colors.green,
       orange: colors.orange,
       red: colors.red,
       rose: colors.rose,
-      "warm-gray": colors.warmGray,
+      "warm-gray": colors.stone,
       white: colors.white,
       yellow: colors.yellow,
     },

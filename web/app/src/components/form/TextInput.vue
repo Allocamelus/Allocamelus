@@ -160,7 +160,7 @@ export default defineComponent({
     @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
     @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
   }
-  @variants hover, focus, active {
+  @layer utilities hover, focus, active {
     .input,
     .dark .input {
       &:-webkit-autofill {
