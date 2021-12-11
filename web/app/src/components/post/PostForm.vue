@@ -24,18 +24,7 @@
           :totalNumber="images.length"
         >
           <div
-            class="
-              absolute
-              w-full
-              h-full
-              hidden
-              group-hover:flex
-              flex-col
-              justify-between
-              p-2
-              bg-black bg-opacity-50
-              text-white
-            "
+            class="absolute w-full h-full hidden group-hover:flex flex-col justify-between p-2 bg-black bg-opacity-50 text-white"
           >
             <circle-bg
               class="hover:bg-white w-6 h-6 self-end"
@@ -62,17 +51,7 @@
       </div>
     </div>
     <div
-      class="
-        sticky
-        bottom-3
-        flex
-        justify-between
-        mt-2
-        bg-warm-gray-200
-        dark:bg-black-lighter
-        p-1.5
-        rounded
-      "
+      class="sticky bottom-3 flex justify-between mt-2 bg-warm-gray-200 dark:bg-black-lighter p-1.5 rounded"
     >
       <div class="flex items-center">
         <circle-bg

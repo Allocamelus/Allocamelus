@@ -26,13 +26,7 @@
           </div>
         </div>
         <div
-          class="
-            mt-3
-            xs:mt-0 xs:ml-3
-            flex-shrink-0 flex
-            justify-end
-            items-start
-          "
+          class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0 flex justify-end items-start"
         >
           <basic-btn
             class="px-3 py-2 border whitespace-nowrap"

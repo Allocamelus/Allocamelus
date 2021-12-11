@@ -17,15 +17,7 @@
         @click="toggleShow"
       ></div>
       <div
-        class="
-          w-full
-          z-40
-          relative
-          rounded-md
-          shadow-lg
-          focus:outline-none
-          overflow-hidden
-        "
+        class="w-full z-40 relative rounded-md shadow-lg focus:outline-none overflow-hidden"
       >
         <slot></slot>
       </div></div

@@ -11,13 +11,7 @@
       <div class="flex flex-grow flex-shrink">
         <div class="flex flex-col flex-grow">
           <div
-            class="
-              text-gray-700
-              dark:text-gray-300
-              flex
-              items-center
-              justify-between
-            "
+            class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
             @click.self="toPost"
           >
             <div class="flex text-sm xs:text-base items-center">
@@ -48,16 +42,7 @@
           </div>
           <div class="flex">
             <div
-              class="
-                mt-1
-                pt-1.5
-                flex
-                xs:w-[30px]
-                mr-2
-                flex-grow-0
-                group
-                cursor-pointer
-              "
+              class="mt-1 pt-1.5 flex xs:w-[30px] mr-2 flex-grow-0 group cursor-pointer"
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'
@@ -66,13 +51,7 @@
               @click="hidden = !hidden"
             >
               <div
-                class="
-                  w-0
-                  border-[1px] border-gray-400
-                  dark:border-gray-700
-                  group-hover:border-gray-700
-                  dark:group-hover:border-gray-400
-                "
+                class="w-0 border-[1px] border-gray-400 dark:border-gray-700 group-hover:border-gray-700 dark:group-hover:border-gray-400"
               ></div>
             </div>
             <div v-if="hidden" class="flex flex-grow">
@@ -93,16 +72,7 @@
                 </div>
               </div>
               <div
-                class="
-                  flex flex-row-reverse
-                  xs:flex-row
-                  text-sm
-                  font-medium
-                  mt-2
-                  items-center
-                  text-gray-600
-                  dark:text-gray-400
-                "
+                class="flex flex-row-reverse xs:flex-row text-sm font-medium mt-2 items-center text-gray-600 dark:text-gray-400"
               >
                 <small-btn
                   class="flex items-center pr-0.5 mr-1.5"

@@ -11,13 +11,7 @@
         @click.self="toPost"
       >
         <div
-          class="
-            text-gray-700
-            dark:text-gray-300
-            flex
-            items-center
-            justify-between
-          "
+          class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
           @click.self="toPost"
         >
           <div class="flex">
