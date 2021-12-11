@@ -23,15 +23,7 @@
     </box>
     <slot></slot>
     <div
-      class="
-        px-4
-        mb-3
-        text-sm
-        flex
-        justify-center
-        text-gray-800
-        dark:text-gray-500
-      "
+      class="px-4 mb-3 text-sm flex justify-center text-gray-800 dark:text-gray-500"
     >
       <div class="self-center text-gray-700 dark:text-gray-400">
         &copy; {{ new Date().getFullYear() }}

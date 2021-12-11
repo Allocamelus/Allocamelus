@@ -8,17 +8,7 @@
       {{ err.msg }}
     </snackbar>
     <box
-      class="
-        w-full
-        xs:m-3
-        rounded-t-lg
-        xs:rounded-md
-        shadow-lg
-        focus:outline-none
-        overflow-hidden
-        flex flex-col
-        self-end
-      "
+      class="w-full xs:m-3 rounded-t-lg xs:rounded-md shadow-lg focus:outline-none overflow-hidden flex flex-col self-end"
     >
       <div class="text-gray-800 dark:text-gray-200 py-4 px-5">
         <h3 class="text-xl">Delete Comment</h3>

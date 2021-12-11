@@ -2,34 +2,13 @@
   <div>
     <nav
       id="nav"
-      class="
-        bg-primary-600
-        text-gray-50
-        shadow
-        z-30
-        m-0
-        p-0
-        fixed
-        top-0
-        w-full
-        h-nav
-        leading-nav
-      "
+      class="bg-primary-600 text-gray-50 shadow z-30 m-0 p-0 fixed top-0 w-full h-nav leading-nav"
     >
       <div class="container flex flex-row justify-between h-nav leading-nav">
         <div class="flex">
           <to-link
             :to="loggedIn ? '/home' : '/'"
-            class="
-              pr-4
-              py-2
-              text-white text-lg
-              font-sans
-              truncate
-              no-underline
-              tracking-wide
-              relative
-            "
+            class="pr-4 py-2 text-white text-lg font-sans truncate no-underline tracking-wide relative"
           >
             Allocamelus
           </to-link>
@@ -51,34 +30,16 @@
               </div>
               <dropdown v-model="alerts.menu" class="max-w-sm w-80">
                 <div
-                  class="
-                    dark:bg-gray-800
-                    bg-gray-100
-                    overflow-x-hidden overflow-y-auto
-                  "
+                  class="dark:bg-gray-800 bg-gray-100 overflow-x-hidden overflow-y-auto"
                 >
                   <bar-loader :show="alerts.loading" />
                   <div
-                    class="
-                      dark:text-white
-                      text-black
-                      max-h-48
-                      h-48
-                      scrollbar
-                      px-3
-                      py-2.5
-                    "
+                    class="dark:text-white text-black max-h-48 h-48 scrollbar px-3 py-2.5"
                   >
                     <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
                     <div v-else>
                       <text-small
-                        class="
-                          pb-1
-                          text-sm
-                          font-medium
-                          text-gray-700
-                          dark:text-gray-300
-                        "
+                        class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
                       >
                         Follow/Friend Request:
                       </text-small>
@@ -102,33 +63,13 @@
                           </div>
                           <div class="ml-2 flex items-center">
                             <div
-                              class="
-                                text-sm
-                                font-semibold
-                                leading-4
-                                rounded
-                                cursor-pointer
-                                px-2
-                                py-1.5
-                                text-white
-                                bg-secondary-700
-                                hover:bg-secondary-800
-                              "
+                              class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5 text-white bg-secondary-700 hover:bg-secondary-800"
                               @click="followRequest(userId, true)"
                             >
                               Accept
                             </div>
                             <div
-                              class="
-                                text-sm
-                                font-semibold
-                                leading-4
-                                rounded
-                                cursor-pointer
-                                ml-1.5
-                                p-1
-                                link
-                              "
+                              class="text-sm font-semibold leading-4 rounded cursor-pointer ml-1.5 p-1 link"
                               @click="followRequest(userId, false)"
                             >
                               Decline

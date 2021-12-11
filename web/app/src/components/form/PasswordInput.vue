@@ -24,13 +24,7 @@
         <div class="ps-2"></div>
       </div>
       <component
-        class="
-          w5
-          h-5
-          cursor-pointer
-          text-secondary-600
-          hover:text-secondary-700
-        "
+        class="w5 h-5 cursor-pointer text-secondary-600 hover:text-secondary-700"
         @click="togglePass"
         :is="show ? 'EyeOffIcon' : 'EyeIcon'"
         title="Toggle Visibility"
