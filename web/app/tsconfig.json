@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "es6"
+    "target": "ES6",
+    "module": "es2020",
+    "allowJs": true,
+    // this enables stricter inference for data properties on `this`
+    "strict": true,
+    "types": ["vite/client"]
   },
   "include": ["src/**/*"]
 }

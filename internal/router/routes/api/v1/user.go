@@ -15,7 +15,6 @@ import (
 func User(api fiber.Router) {
 	// /api/v1/user
 	u := api.Group("/user")
-	u.Post("/", user.Create)
 
 	// /api/v1/user/email-token
 	uET := u.Group("/email-token")

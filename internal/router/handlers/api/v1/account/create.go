@@ -34,8 +34,8 @@ type Key struct {
 	PrivateArmored string `json:"privateArmored" form:"privateArmored"`
 	// RecoveryHash hash of recovery key
 	RecoveryHash string `json:"recoveryHash" form:"recoveryHash"`
-	// Passphrase encrypted with recovery key
-	Passphrase string `json:"passphrase" form:"passphrase"`
+	// RecoveryArmored PGP private key encrypted with recovery key
+	RecoveryArmored string `json:"recoveryArmored" form:"recoveryArmored"`
 }
 
 type CreateResp struct {
@@ -97,5 +97,5 @@ func (k *Key) trimSpace() {
 	k.PublicArmored = strings.TrimSpace(k.PublicArmored)
 	k.PrivateArmored = strings.TrimSpace(k.PrivateArmored)
 	k.RecoveryHash = strings.TrimSpace(k.RecoveryHash)
-	k.Passphrase = strings.TrimSpace(k.Passphrase)
+	k.RecoveryArmored = strings.TrimSpace(k.RecoveryArmored)
 }

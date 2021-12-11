@@ -7,9 +7,9 @@ import {
 } from "openpgp";
 
 export interface pgpKey {
-  armoredPrivate?: string;
-  armoredPublic?: string;
-  armoredRevocation?: string;
+  armoredPrivate: string;
+  armoredPublic: string;
+  armoredRevocation: string;
 }
 
 export function genKey(name: string, passphrase: string): Promise<pgpKey> {

@@ -11,39 +11,40 @@ export class CreateResp {
   }
 }
 
-export class CreateRequest {
+export interface CreateRequest {
   userName: string;
   email: string;
   password: Password;
+  key: Key;
   captcha: string;
-
-  constructor(source: Partial<CreateRequest> = {}) {
-    if (typeof source === "string") source = JSON.parse(source);
-    this.userName = source["userName"];
-    this.email = source["email"];
-    this.password = new Password(source["password"]);
-    this.captcha = source["captcha"];
-  }
 }
-export class Password {
+export interface Password {
   salt: string;
   hash: string;
+}
 
-  constructor(source: Partial<Password> = {}) {
-    if (typeof source === "string") source = JSON.parse(source);
-    this.salt = source["salt"];
-    this.hash = source["hash"];
-  }
+export interface Key {
+  // PublicArmored armored PGP public key
+  publicArmored: string;
+  // PrivateArmored armored PGP private key encrypted with passphrase
+  privateArmored: string;
+  // RecoveryHash hash of recovery key
+  recoveryHash: string;
+  // RecoveryArmored PGP private key encrypted with recovery key
+  recoveryArmored: string;
 }
 
 export function create(request: CreateRequest): Promise<CreateResp> {
-  return v1
-    .post("account", JSON.stringify(request), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((r) => {
-      return new CreateResp(r.data);
-    });
+  return new Promise(async (resolve) => {
+    resolve(
+      new CreateResp(
+        await v1.post("account", JSON.stringify(request), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      )
+    );
+    return;
+  });
 }

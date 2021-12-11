@@ -223,8 +223,10 @@ export class GEN_AuthResp {
   }
 }
 export class GEN_AuthRequest {
-  with: string;
-  token: string;
+  userName: string;
+  passwordHash: string;
+  remember: boolean;
+  captcha: string;
 
   static createFrom(source: any = {}) {
     return new GEN_AuthRequest(source);
@@ -232,73 +234,9 @@ export class GEN_AuthRequest {
 
   constructor(source: any = {}) {
     if ("string" === typeof source) source = JSON.parse(source);
-    this.with = source["with"];
-    this.token = source["token"];
-  }
-}
-export class GEN_AuthA10Token {
-  userName: string;
-  password: string;
-  remember: boolean;
-  captcha: string;
-
-  static createFrom(source: any = {}) {
-    return new GEN_AuthA10Token(source);
-  }
-
-  constructor(source: any = {}) {
-    if ("string" === typeof source) source = JSON.parse(source);
     this.userName = source["userName"];
-    this.password = source["password"];
+    this.passwordHash = source["passwordHash"];
     this.remember = source["remember"];
-    this.captcha = source["captcha"];
-  }
-}
-export class GEN_CreateResp {
-  success: boolean;
-  backupKey?: string;
-  errors?: any;
-
-  static createFrom(source: any = {}) {
-    return new GEN_CreateResp(source);
-  }
-
-  constructor(source: any = {}) {
-    if ("string" === typeof source) source = JSON.parse(source);
-    this.success = source["success"];
-    this.backupKey = source["backupKey"];
-    this.errors = source["errors"];
-  }
-}
-export class GEN_CreateRequest {
-  with: string;
-  token: string;
-
-  static createFrom(source: any = {}) {
-    return new GEN_CreateRequest(source);
-  }
-
-  constructor(source: any = {}) {
-    if ("string" === typeof source) source = JSON.parse(source);
-    this.with = source["with"];
-    this.token = source["token"];
-  }
-}
-export class GEN_CreateA10Token {
-  userName: string;
-  email: string;
-  password: string;
-  captcha: string;
-
-  static createFrom(source: any = {}) {
-    return new GEN_CreateA10Token(source);
-  }
-
-  constructor(source: any = {}) {
-    if ("string" === typeof source) source = JSON.parse(source);
-    this.userName = source["userName"];
-    this.email = source["email"];
-    this.password = source["password"];
     this.captcha = source["captcha"];
   }
 }
