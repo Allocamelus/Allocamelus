@@ -211,6 +211,7 @@ export default defineComponent({
         this.err.email.length != 0 ||
         this.err.password.length != 0
       ) {
+        this.loading = false;
         return;
       }
 
