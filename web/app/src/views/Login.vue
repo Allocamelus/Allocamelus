@@ -64,7 +64,7 @@
   </center-form-box>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
 import { redirectUrl } from "../router";
 import { useStore } from "vuex";
@@ -79,6 +79,7 @@ import TextSmall from "../components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import ToLink from "../components/ToLink.vue";
 
+// @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import { GEN_AuthA10Token } from "../models/go_structs_gen";

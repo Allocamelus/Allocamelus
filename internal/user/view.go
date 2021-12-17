@@ -2,13 +2,15 @@ package user
 
 import (
 	"errors"
+
+	"github.com/allocamelus/allocamelus/internal/user/session"
 )
 
 var ErrViewMeNot = errors.New("user/view: Error can't view user")
 
 // CanView can userId be viewed by session user
 // 	return nil if userId can be viewed
-func CanView(userId int64, sUser *Session) error {
+func CanView(userId int64, sUser *session.Session) error {
 	t, err := GetType(userId)
 	if err != nil {
 		return err

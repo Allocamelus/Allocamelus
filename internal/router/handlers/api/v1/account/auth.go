@@ -1,13 +1,15 @@
 package account
 
 import (
-	"database/sql"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
+	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/auth"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
@@ -15,34 +17,39 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type PreAuthRequest struct {
-}
-
 // AuthRequest struct
 type AuthRequest struct {
-	UserName     string `json:"userName"`
-	PasswordHash string `json:"passwordHash"`
-	Remember     bool   `json:"remember"`
-	Captcha      string `json:"captcha"`
+	UserName string `json:"userName"`
+	AuthKey  string `json:"authkey"`
+	Remember bool   `json:"remember"`
+	Captcha  string `json:"captcha"`
 }
 
 func (t *AuthRequest) trimSpace() {
 	t.UserName = strings.TrimSpace(t.UserName)
-	t.PasswordHash = strings.TrimSpace(t.PasswordHash)
+	t.AuthKey = strings.TrimSpace(t.AuthKey)
 	t.Captcha = strings.TrimSpace(t.Captcha)
 }
 
-// AuthResp struct
-type AuthResp struct {
-	Success bool      `json:"success"`
-	User    user.User `json:"user,omitempty"`
-	Error   string    `json:"error,omitempty"`
+// AuthResponse struct
+type AuthResponse struct {
+	Success        bool           `json:"success"`
+	PrivateArmored pgp.PrivateKey `json:"privateArmored"`
+	User           user.User      `json:"user,omitempty"`
+	Error          string         `json:"error,omitempty"`
 	// Require Captcha
 	Captcha string `json:"captcha,omitempty"`
 }
 
+func (s *AuthResponse) error(c *fiber.Ctx, err string, captcha ...string) error {
+	s.Error = err
+	if len(captcha) != 0 {
+		s.Captcha = captcha[0]
+	}
+	return apierr.Err422(c, s)
+}
+
 const (
-	withA10                    = "allocamelus"
 	errInvalidCaptcha          = "invalid-captcha"
 	errInvalidUsernamePassword = "invalid-username-password"
 	errUnverifiedEmail         = "unverified-email"
@@ -59,42 +66,26 @@ func Auth(c *fiber.Ctx) error {
 	}
 
 	request.trimSpace()
-	if request.UserName == "" || request.PasswordHash == "" {
-		return authErr(c, errInvalidUsernamePassword)
+	if request.AuthKey == "" {
+		return new(AuthResponse).error(c, errInvalidUsernamePassword)
 	}
 
-	// Check if user exists
-	userID, err := user.GetIDByUserName(request.UserName)
+	userID, err := auth.CanLogin(request.UserName)
 	if err != nil {
-		if err != sql.ErrNoRows {
-			logger.Error(err)
-			return apierr.ErrSomethingWentWrong(c)
+		switch err {
+		case auth.ErrInvalidUsername:
+			return new(AuthResponse).error(c, errInvalidUsernamePassword)
+		case auth.ErrUnverifiedEmail:
+			return new(AuthResponse).error(c, errUnverifiedEmail)
 		}
-		return authErr(c, errInvalidUsernamePassword)
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
 	}
 
 	// TODO: Multiple accounts
-	if user.LoggedIn(c) {
-		s := user.ContextSession(c)
-		if userID == s.UserID {
-			// Allow user to re-auth if the session can't decrypt
-			if s.CanDecrypt() {
-				return apierr.Err403(c, AuthResp{Error: errAuthenticated})
-			}
-		}
-	}
-
-	// Check if user is Verified
-	verified, err := user.IsVerified(userID)
-	if logger.Error(err) {
-		return apierr.ErrSomethingWentWrong(c)
-	}
-	if !verified {
-		return authErr(c, errUnverifiedEmail)
-	}
 
 	// Get user's login difficulty
-	diff, err := user.LoginDiff(userID)
+	diff, err := auth.LoginDiff(userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -103,12 +94,12 @@ func Auth(c *fiber.Ctx) error {
 		var siteKey string
 		// check login difficulty
 		switch diff {
-		case user.None:
-		case user.Easy:
+		case auth.None:
+		case auth.Easy:
 			siteKey = g.Data.Config.HCaptcha.Easy
-		case user.Medium:
+		case auth.Medium:
 			siteKey = g.Data.Config.HCaptcha.Moderate
-		case user.Hard:
+		case auth.Hard:
 			siteKey = g.Data.Config.HCaptcha.Hard
 		default:
 			siteKey = g.Data.Config.HCaptcha.All
@@ -125,24 +116,23 @@ func Auth(c *fiber.Ctx) error {
 					logger.Error(err)
 					return apierr.ErrSomethingWentWrong(c)
 				}
-				return apierr.Err422(c, AuthResp{
-					Error:   errInvalidCaptcha,
-					Captcha: siteKey,
-				})
+				return new(AuthResponse).error(c, errInvalidCaptcha, siteKey)
 			}
 		}
 	}
+
+	privateArmored, err := auth.AuthKeyLogin(c, userID, request.AuthKey)
 	// Login
-	if err := user.PasswordLogin(c, userID, request.PasswordHash); err != nil {
-		if err != user.ErrInvalidPassword {
+	if err != nil {
+		if err != auth.ErrInvalidAuthKey {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}
-		return authErr(c, errInvalidUsernamePassword)
+		return new(AuthResponse).error(c, errInvalidUsernamePassword)
 	}
 
 	// Get db username
-	currentUser, err := user.GetPublic(user.ContextSession(c), userID)
+	currentUser, err := user.GetPublic(session.Context(c), userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -151,13 +141,9 @@ func Auth(c *fiber.Ctx) error {
 		// Set persistent auth token
 		if err := token.SetAuth(c, userID); logger.Error(err) {
 			// successful failure
-			return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser, Error: errAuth})
+			return fiberutil.JSON(c, 200, AuthResponse{Success: true, PrivateArmored: privateArmored, User: currentUser, Error: errAuth})
 		}
 	}
 
-	return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser})
-}
-
-func authErr(c *fiber.Ctx, err string) error {
-	return apierr.Err422(c, AuthResp{Error: err})
+	return fiberutil.JSON(c, 200, AuthResponse{Success: true, PrivateArmored: privateArmored, User: currentUser})
 }

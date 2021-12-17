@@ -1,3 +1,4 @@
+import { API_Success_Error } from "../../models/api_error";
 import v1 from "../v1";
 
 export class CreateResp {
@@ -6,6 +7,9 @@ export class CreateResp {
 
   constructor(source: Partial<CreateResp> = {}) {
     if ("string" === typeof source) source = JSON.parse(source);
+    if (source["success"] == undefined) {
+      source["success"] = false;
+    }
     this.success = source["success"];
     this.errors = source["errors"];
   }
@@ -14,11 +18,11 @@ export class CreateResp {
 export interface CreateRequest {
   userName: string;
   email: string;
-  password: Password;
+  auth: authParts;
   key: Key;
   captcha: string;
 }
-export interface Password {
+export interface authParts {
   salt: string;
   hash: string;
 }

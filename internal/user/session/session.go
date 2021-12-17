@@ -1,4 +1,6 @@
-package user
+//go:generate msgp
+
+package session
 
 import (
 	"bytes"
@@ -8,34 +10,41 @@ import (
 	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/g"
-	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/internal/user/key"
+	"github.com/allocamelus/allocamelus/internal/user/perms"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"k8s.io/klog/v2"
 )
 
+// Session user session struct
+type Session struct {
+	LoggedIn   bool        `msg:"loggedIn" json:"loggedIn"`
+	UserID     int64       `msg:"userId" json:"userId"`
+	Perms      perms.Perms `msg:"perms" json:"perms"`
+	LoginToken []byte      `msg:"loginToken" json:"-"`
+	NotNew     bool        `msg:"notNew"  json:"notNew"`
+}
+
 const storeName = "session"
 
-// NewSession new session
-func NewSession(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session, error) {
+// New new session
+func New(c *fiber.Ctx, userID int64) (*Session, error) {
 	var err error
 	session := new(Session)
 	session.LoggedIn = true
 	session.UserID = userID
-	session.UserName, err = GetUserNameByID(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	session.PrivateKey = privateKey
-	pkSalt, err := key.GetPrivateKeySalt(userID)
+	pkSalt, err := key.GetSalt(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	perms, err := GetPerms(userID)
+	perms, err := perms.Get(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -45,19 +54,13 @@ func NewSession(c *fiber.Ctx, userID int64, privateKey pgp.PrivateKey) (*Session
 	return session, nil
 }
 
-// NewSessionFromID new session from user id
-// Can not Decrypt
-func NewSessionFromID(c *fiber.Ctx, userID int64) (*Session, error) {
-	return NewSession(c, userID, pgp.PrivateKey{})
+// ToContext set user session to context
+func ToContext(c *fiber.Ctx) {
+	c.Locals(storeName, Get(c))
 }
 
-// SessionToContext set user session to context
-func SessionToContext(c *fiber.Ctx) {
-	c.Locals(storeName, GetSession(c))
-}
-
-// ContextSession get user session from fiber context
-func ContextSession(c *fiber.Ctx) *Session {
+// Context get user session from fiber context
+func Context(c *fiber.Ctx) *Session {
 	session := c.Locals(storeName)
 	if session != nil {
 		return session.(*Session)
@@ -67,7 +70,7 @@ func ContextSession(c *fiber.Ctx) *Session {
 
 // LoggedIn User
 func LoggedIn(c *fiber.Ctx) bool {
-	return ContextSession(c).LoggedIn
+	return Context(c).LoggedIn
 }
 
 // ToStore set user session to session store
@@ -85,10 +88,10 @@ func (s *Session) ToStore(c *fiber.Ctx) error {
 	return errors.New("session/session: nil *Session")
 }
 
-// GetSession get session from store
+// Get get session from store
 // attempt auth login on New session
-func GetSession(c *fiber.Ctx) *Session {
-	session := sessionFromStore(c)
+func Get(c *fiber.Ctx) *Session {
+	session := fromStore(c)
 	// If Not Not New
 	if !session.NotNew {
 		var err error
@@ -108,8 +111,8 @@ func GetSession(c *fiber.Ctx) *Session {
 	return session
 }
 
-// sessionFromStore get user session from session store
-func sessionFromStore(c *fiber.Ctx) *Session {
+// fromStore get user session from session store
+func fromStore(c *fiber.Ctx) *Session {
 	session := new(Session)
 	store := g.Session.Get(c)
 	sessionBytes, err := store.GetBytes(storeName)
@@ -134,11 +137,6 @@ func sessionFromStore(c *fiber.Ctx) *Session {
 	return session
 }
 
-// CanDecrypt can session decrypt
-func (s *Session) CanDecrypt() bool {
-	return s.PrivateKey.Armored != ""
-}
-
 var (
 	errToken = errors.New("session/session: Error Token")
 )
@@ -148,7 +146,7 @@ func (s *Session) checkToken(c *fiber.Ctx) error {
 		return errToken
 	}
 
-	pkSalt, err := key.GetPrivateKeySalt(s.UserID)
+	pkSalt, err := key.GetSalt(s.UserID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
@@ -161,6 +159,22 @@ func (s *Session) checkToken(c *fiber.Ctx) error {
 	}
 
 	return nil
+}
+
+func authTokenLogin(c *fiber.Ctx) (*Session, error) {
+	userToken, err := token.GetAuth(c)
+	if err != nil {
+		return nil, err
+	}
+
+	session, err := New(c, userToken.UserID)
+	if err != nil {
+		return nil, err
+	}
+	if err := session.ToStore(c); err != nil {
+		return nil, err
+	}
+	return session, nil
 }
 
 func genLoginToken(c *fiber.Ctx, userData []byte) []byte {

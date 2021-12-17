@@ -90,323 +90,6 @@ func (z FollowStruct) Msgsize() (s int) {
 }
 
 // DecodeMsg implements msgp.Decodable
-func (z *Perms) DecodeMsg(dc *msgp.Reader) (err error) {
-	{
-		var zb0001 int64
-		zb0001, err = dc.ReadInt64()
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		(*z) = Perms(zb0001)
-	}
-	return
-}
-
-// EncodeMsg implements msgp.Encodable
-func (z Perms) EncodeMsg(en *msgp.Writer) (err error) {
-	err = en.WriteInt64(int64(z))
-	if err != nil {
-		err = msgp.WrapError(err)
-		return
-	}
-	return
-}
-
-// MarshalMsg implements msgp.Marshaler
-func (z Perms) MarshalMsg(b []byte) (o []byte, err error) {
-	o = msgp.Require(b, z.Msgsize())
-	o = msgp.AppendInt64(o, int64(z))
-	return
-}
-
-// UnmarshalMsg implements msgp.Unmarshaler
-func (z *Perms) UnmarshalMsg(bts []byte) (o []byte, err error) {
-	{
-		var zb0001 int64
-		zb0001, bts, err = msgp.ReadInt64Bytes(bts)
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		(*z) = Perms(zb0001)
-	}
-	o = bts
-	return
-}
-
-// Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
-func (z Perms) Msgsize() (s int) {
-	s = msgp.Int64Size
-	return
-}
-
-// DecodeMsg implements msgp.Decodable
-func (z *Session) DecodeMsg(dc *msgp.Reader) (err error) {
-	var field []byte
-	_ = field
-	var zb0001 uint32
-	zb0001, err = dc.ReadMapHeader()
-	if err != nil {
-		err = msgp.WrapError(err)
-		return
-	}
-	for zb0001 > 0 {
-		zb0001--
-		field, err = dc.ReadMapKeyPtr()
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		switch msgp.UnsafeString(field) {
-		case "loggedIn":
-			z.LoggedIn, err = dc.ReadBool()
-			if err != nil {
-				err = msgp.WrapError(err, "LoggedIn")
-				return
-			}
-		case "userId":
-			z.UserID, err = dc.ReadInt64()
-			if err != nil {
-				err = msgp.WrapError(err, "UserID")
-				return
-			}
-		case "userName":
-			z.UserName, err = dc.ReadString()
-			if err != nil {
-				err = msgp.WrapError(err, "UserName")
-				return
-			}
-		case "perms":
-			{
-				var zb0002 int64
-				zb0002, err = dc.ReadInt64()
-				if err != nil {
-					err = msgp.WrapError(err, "Perms")
-					return
-				}
-				z.Perms = Perms(zb0002)
-			}
-		case "privateKey":
-			err = z.PrivateKey.DecodeMsg(dc)
-			if err != nil {
-				err = msgp.WrapError(err, "PrivateKey")
-				return
-			}
-		case "loginToken":
-			z.LoginToken, err = dc.ReadBytes(z.LoginToken)
-			if err != nil {
-				err = msgp.WrapError(err, "LoginToken")
-				return
-			}
-		case "notNew":
-			z.NotNew, err = dc.ReadBool()
-			if err != nil {
-				err = msgp.WrapError(err, "NotNew")
-				return
-			}
-		default:
-			err = dc.Skip()
-			if err != nil {
-				err = msgp.WrapError(err)
-				return
-			}
-		}
-	}
-	return
-}
-
-// EncodeMsg implements msgp.Encodable
-func (z *Session) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 7
-	// write "loggedIn"
-	err = en.Append(0x87, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
-	if err != nil {
-		return
-	}
-	err = en.WriteBool(z.LoggedIn)
-	if err != nil {
-		err = msgp.WrapError(err, "LoggedIn")
-		return
-	}
-	// write "userId"
-	err = en.Append(0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
-	if err != nil {
-		return
-	}
-	err = en.WriteInt64(z.UserID)
-	if err != nil {
-		err = msgp.WrapError(err, "UserID")
-		return
-	}
-	// write "userName"
-	err = en.Append(0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
-	if err != nil {
-		return
-	}
-	err = en.WriteString(z.UserName)
-	if err != nil {
-		err = msgp.WrapError(err, "UserName")
-		return
-	}
-	// write "perms"
-	err = en.Append(0xa5, 0x70, 0x65, 0x72, 0x6d, 0x73)
-	if err != nil {
-		return
-	}
-	err = en.WriteInt64(int64(z.Perms))
-	if err != nil {
-		err = msgp.WrapError(err, "Perms")
-		return
-	}
-	// write "privateKey"
-	err = en.Append(0xaa, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79)
-	if err != nil {
-		return
-	}
-	err = z.PrivateKey.EncodeMsg(en)
-	if err != nil {
-		err = msgp.WrapError(err, "PrivateKey")
-		return
-	}
-	// write "loginToken"
-	err = en.Append(0xaa, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
-	if err != nil {
-		return
-	}
-	err = en.WriteBytes(z.LoginToken)
-	if err != nil {
-		err = msgp.WrapError(err, "LoginToken")
-		return
-	}
-	// write "notNew"
-	err = en.Append(0xa6, 0x6e, 0x6f, 0x74, 0x4e, 0x65, 0x77)
-	if err != nil {
-		return
-	}
-	err = en.WriteBool(z.NotNew)
-	if err != nil {
-		err = msgp.WrapError(err, "NotNew")
-		return
-	}
-	return
-}
-
-// MarshalMsg implements msgp.Marshaler
-func (z *Session) MarshalMsg(b []byte) (o []byte, err error) {
-	o = msgp.Require(b, z.Msgsize())
-	// map header, size 7
-	// string "loggedIn"
-	o = append(o, 0x87, 0xa8, 0x6c, 0x6f, 0x67, 0x67, 0x65, 0x64, 0x49, 0x6e)
-	o = msgp.AppendBool(o, z.LoggedIn)
-	// string "userId"
-	o = append(o, 0xa6, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64)
-	o = msgp.AppendInt64(o, z.UserID)
-	// string "userName"
-	o = append(o, 0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
-	o = msgp.AppendString(o, z.UserName)
-	// string "perms"
-	o = append(o, 0xa5, 0x70, 0x65, 0x72, 0x6d, 0x73)
-	o = msgp.AppendInt64(o, int64(z.Perms))
-	// string "privateKey"
-	o = append(o, 0xaa, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79)
-	o, err = z.PrivateKey.MarshalMsg(o)
-	if err != nil {
-		err = msgp.WrapError(err, "PrivateKey")
-		return
-	}
-	// string "loginToken"
-	o = append(o, 0xaa, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e)
-	o = msgp.AppendBytes(o, z.LoginToken)
-	// string "notNew"
-	o = append(o, 0xa6, 0x6e, 0x6f, 0x74, 0x4e, 0x65, 0x77)
-	o = msgp.AppendBool(o, z.NotNew)
-	return
-}
-
-// UnmarshalMsg implements msgp.Unmarshaler
-func (z *Session) UnmarshalMsg(bts []byte) (o []byte, err error) {
-	var field []byte
-	_ = field
-	var zb0001 uint32
-	zb0001, bts, err = msgp.ReadMapHeaderBytes(bts)
-	if err != nil {
-		err = msgp.WrapError(err)
-		return
-	}
-	for zb0001 > 0 {
-		zb0001--
-		field, bts, err = msgp.ReadMapKeyZC(bts)
-		if err != nil {
-			err = msgp.WrapError(err)
-			return
-		}
-		switch msgp.UnsafeString(field) {
-		case "loggedIn":
-			z.LoggedIn, bts, err = msgp.ReadBoolBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "LoggedIn")
-				return
-			}
-		case "userId":
-			z.UserID, bts, err = msgp.ReadInt64Bytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "UserID")
-				return
-			}
-		case "userName":
-			z.UserName, bts, err = msgp.ReadStringBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "UserName")
-				return
-			}
-		case "perms":
-			{
-				var zb0002 int64
-				zb0002, bts, err = msgp.ReadInt64Bytes(bts)
-				if err != nil {
-					err = msgp.WrapError(err, "Perms")
-					return
-				}
-				z.Perms = Perms(zb0002)
-			}
-		case "privateKey":
-			bts, err = z.PrivateKey.UnmarshalMsg(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "PrivateKey")
-				return
-			}
-		case "loginToken":
-			z.LoginToken, bts, err = msgp.ReadBytesBytes(bts, z.LoginToken)
-			if err != nil {
-				err = msgp.WrapError(err, "LoginToken")
-				return
-			}
-		case "notNew":
-			z.NotNew, bts, err = msgp.ReadBoolBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "NotNew")
-				return
-			}
-		default:
-			bts, err = msgp.Skip(bts)
-			if err != nil {
-				err = msgp.WrapError(err)
-				return
-			}
-		}
-	}
-	o = bts
-	return
-}
-
-// Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
-func (z *Session) Msgsize() (s int) {
-	s = 1 + 9 + msgp.BoolSize + 7 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 6 + msgp.Int64Size + 11 + z.PrivateKey.Msgsize() + 11 + msgp.BytesPrefixSize + len(z.LoginToken) + 7 + msgp.BoolSize
-	return
-}
-
-// DecodeMsg implements msgp.Decodable
 func (z *Types) DecodeMsg(dc *msgp.Reader) (err error) {
 	{
 		var zb0001 int8
@@ -529,14 +212,10 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				z.Type = Types(zb0002)
 			}
 		case "permissions":
-			{
-				var zb0003 int64
-				zb0003, err = dc.ReadInt64()
-				if err != nil {
-					err = msgp.WrapError(err, "Permissions")
-					return
-				}
-				z.Permissions = Perms(zb0003)
+			err = z.Permissions.DecodeMsg(dc)
+			if err != nil {
+				err = msgp.WrapError(err, "Permissions")
+				return
 			}
 		case "created":
 			z.Created, err = dc.ReadInt64()
@@ -643,7 +322,7 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	err = en.WriteInt64(int64(z.Permissions))
+	err = z.Permissions.EncodeMsg(en)
 	if err != nil {
 		err = msgp.WrapError(err, "Permissions")
 		return
@@ -691,7 +370,11 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.AppendInt8(o, int8(z.Type))
 	// string "permissions"
 	o = append(o, 0xab, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73)
-	o = msgp.AppendInt64(o, int64(z.Permissions))
+	o, err = z.Permissions.MarshalMsg(o)
+	if err != nil {
+		err = msgp.WrapError(err, "Permissions")
+		return
+	}
 	// string "created"
 	o = append(o, 0xa7, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64)
 	o = msgp.AppendInt64(o, z.Created)
@@ -769,14 +452,10 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				z.Type = Types(zb0002)
 			}
 		case "permissions":
-			{
-				var zb0003 int64
-				zb0003, bts, err = msgp.ReadInt64Bytes(bts)
-				if err != nil {
-					err = msgp.WrapError(err, "Permissions")
-					return
-				}
-				z.Permissions = Perms(zb0003)
+			bts, err = z.Permissions.UnmarshalMsg(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "Permissions")
+				return
 			}
 		case "created":
 			z.Created, bts, err = msgp.ReadInt64Bytes(bts)
@@ -798,6 +477,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 10 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + msgp.Int64Size + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 10 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + z.Permissions.Msgsize() + 8 + msgp.Int64Size
 	return
 }

@@ -6,7 +6,7 @@ import (
 )
 
 // InsertLoginAttempt for user
-func InsertLoginAttempt(c *fiber.Ctx, userID int64, pk ...*key.Key) error {
+func InsertLoginAttempt(c *fiber.Ctx, userID int64, pk ...*key.Public) error {
 	_, err := InsertNew(c, LoginAttempt, userID, pk...)
 	return err
 }

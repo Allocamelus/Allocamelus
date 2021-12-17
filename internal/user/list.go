@@ -1,5 +1,7 @@
 package user
 
+import "github.com/allocamelus/allocamelus/internal/user/session"
+
 type ListUsers map[int64]*User
 
 type List struct {
@@ -7,7 +9,7 @@ type List struct {
 }
 
 // AddTo add user to list if not already
-func (l *List) AddUser(s *Session, userID int64, userStruct ...*User) error {
+func (l *List) AddUser(s *session.Session, userID int64, userStruct ...*User) error {
 	if l == nil {
 		l = new(List)
 	}

@@ -12,6 +12,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 )
@@ -102,7 +103,7 @@ var (
 )
 
 // GetForUser returns post if user can view it
-func GetForUser(postID int64, u *user.Session) (*Post, error) {
+func GetForUser(postID int64, u *session.Session) (*Post, error) {
 	p, err := Get(postID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -133,7 +134,7 @@ func init() {
 	data.PrepareQueuer.Add(&preGetCanView, qGetCanView)
 }
 
-func CanView(postID int64, u *user.Session, postCache ...*Post) error {
+func CanView(postID int64, u *session.Session, postCache ...*Post) error {
 	var p *Post
 	// Check postCache
 	if len(postCache) != 0 && postCache[0] != nil {

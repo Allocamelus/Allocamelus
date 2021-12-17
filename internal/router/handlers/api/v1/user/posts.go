@@ -7,6 +7,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	postsApi "github.com/allocamelus/allocamelus/internal/router/handlers/api/v1/posts"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -46,7 +47,7 @@ func Posts(c *fiber.Ctx) error {
 
 	// TODO Better Feed
 	users := new(user.List)
-	sessionUser := user.ContextSession(c)
+	sessionUser := session.Context(c)
 	for _, p := range posts.Posts {
 		users.AddUser(sessionUser, p.UserID)
 		p.MDtoHTMLContent()

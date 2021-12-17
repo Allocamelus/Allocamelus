@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/allocamelus/allocamelus/internal/data"
-	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
@@ -39,7 +39,7 @@ func Get(commentId int64) (*Comment, error) {
 }
 
 // GetForUser
-func GetForUser(commentId int64, u *user.Session) (*Comment, error) {
+func GetForUser(commentId int64, u *session.Session) (*Comment, error) {
 	c, err := Get(commentId)
 	if err != nil {
 		if err != sql.ErrNoRows {

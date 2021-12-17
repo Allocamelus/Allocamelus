@@ -27,7 +27,7 @@ type ValidationErrors struct {
 	UserName error `json:"userName,omitempty"`
 	Name     error `json:"name,omitempty"`
 	Email    error `json:"email,omitempty"`
-	Bio      error `json:"Bio,omitempty"`
+	Bio      error `json:"bio,omitempty"`
 }
 
 // Empty Are all errors nil

@@ -6,7 +6,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/post/media"
-	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 )
 
 var (
@@ -40,14 +40,14 @@ func init() {
 
 // GetPostsTotal
 // TODO: Cache!!!
-func GetPostsTotal(u *user.Session) (total int64, err error) {
+func GetPostsTotal(u *session.Session) (total int64, err error) {
 	err = preGetPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
 	return
 }
 
 // GetPublicPosts
 // TODO: Cache
-func GetPosts(startNum, perPage int64, u *user.Session) (*List, error) {
+func GetPosts(startNum, perPage int64, u *session.Session) (*List, error) {
 	rows, err := preGetPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
 	if err != nil {
 		return nil, err

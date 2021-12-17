@@ -230,7 +230,7 @@ export default defineComponent({
         userName: this.userName,
         email: this.email,
         captcha: this.captcha.token,
-        password: {
+        auth: {
           salt: userKey.keySaltEncoded,
           hash: userKey.keyAuthHash,
         },

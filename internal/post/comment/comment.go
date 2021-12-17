@@ -14,7 +14,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/post"
-	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"k8s.io/klog/v2"
 )
@@ -78,7 +78,7 @@ func canViewCheckCache(commentID int64, commentCache ...*Comment) (*Comment, err
 	return GetPostUserID(commentID)
 }
 
-func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
+func CanView(commentID int64, u *session.Session, commentCache ...*Comment) error {
 	c, err := canViewCheckCache(commentID, commentCache...)
 	if err != nil {
 		return err
@@ -96,7 +96,7 @@ func CanView(commentID int64, u *user.Session, commentCache ...*Comment) error {
 	return nil
 }
 
-func CanReplyTo(commentID, postID int64, u *user.Session, commentCache ...*Comment) error {
+func CanReplyTo(commentID, postID int64, u *session.Session, commentCache ...*Comment) error {
 	if commentID == 0 {
 		return nil
 	}

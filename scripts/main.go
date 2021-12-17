@@ -11,8 +11,6 @@ func main() {
 	tsGen("web/app/src/models/go_structs_gen.ts", "GEN_",
 		post.Post{},
 		user.User{},
-		user.Session{},
-		account.AuthResp{},
 		account.AuthRequest{},
 	)
 }

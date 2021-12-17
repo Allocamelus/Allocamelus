@@ -60,7 +60,7 @@ func initEvents(p data.Prepare) {
 }
 
 // New User Event
-func New(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Key) (*Event, error) {
+func New(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Public) (*Event, error) {
 	event := new(Event)
 	event.UserID = userID
 	event.Type = t
@@ -75,7 +75,7 @@ func New(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Key) (*Event, erro
 }
 
 // InsertNew Create and insert User Event
-func InsertNew(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Key) (*Event, error) {
+func InsertNew(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Public) (*Event, error) {
 	event, err := New(c, t, userID, pubKeys...)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (e *Event) Insert() error {
 	return nil
 }
 
-func (e *Event) encryptInfo(pubKeys ...*key.Key) error {
+func (e *Event) encryptInfo(pubKeys ...*key.Public) error {
 	e.infoKey = random.Bytes(32)
 
 	infoBytes, err := e.info.MarshalMsg(nil)
@@ -128,7 +128,7 @@ func (e *Event) encryptInfo(pubKeys ...*key.Key) error {
 
 	for _, key := range pubKeys {
 		// Encrypt info Key with user's public key
-		encInfoKey, err := key.PublicKey.EncryptArmored(e.infoKey)
+		encInfoKey, err := key.PublicArmored.EncryptArmored(e.infoKey)
 		if err != nil {
 			return err
 		}

@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -28,7 +29,7 @@ func Type(c *fiber.Ctx) error {
 		newType = user.Private
 	}
 
-	ctxUser := user.ContextSession(c)
+	ctxUser := session.Context(c)
 	if err := user.UpdateType(ctxUser.UserID, newType); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
