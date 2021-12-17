@@ -20,7 +20,7 @@ import (
 // AuthRequest struct
 type AuthRequest struct {
 	UserName string `json:"userName"`
-	AuthKey  string `json:"authkey"`
+	AuthKey  string `json:"authKey"`
 	Remember bool   `json:"remember"`
 	Captcha  string `json:"captcha"`
 }
@@ -34,7 +34,7 @@ func (t *AuthRequest) trimSpace() {
 // AuthResponse struct
 type AuthResponse struct {
 	Success        bool           `json:"success"`
-	PrivateArmored pgp.PrivateKey `json:"privateArmored"`
+	PrivateArmored pgp.PrivateKey `json:"privateArmored,omitempty"`
 	User           user.User      `json:"user,omitempty"`
 	Error          string         `json:"error,omitempty"`
 	// Require Captcha
