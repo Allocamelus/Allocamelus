@@ -21,6 +21,6 @@ func HashKeyB64(key string) (keyHash string, err error) {
 	if err != nil {
 		return
 	}
-	keyHash = base64.RawStdEncoding.EncodeToString(keyBHash[:])
+	keyHash = base64.RawStdEncoding.EncodeToString(keyBHash)
 	return
 }
