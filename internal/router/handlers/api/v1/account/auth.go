@@ -9,6 +9,8 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/auth"
+	"github.com/allocamelus/allocamelus/internal/user/event"
+	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
@@ -121,13 +123,20 @@ func Auth(c *fiber.Ctx) error {
 		}
 	}
 
-	privateArmored, err := auth.AuthKeyLogin(c, userID, request.AuthKey)
 	// Login
+	privateArmored, err := auth.AuthKeyLogin(c, userID, request.AuthKey)
 	if err != nil {
 		if err != auth.ErrInvalidAuthKey {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}
+
+		publickeys, err := key.GetPublicKeys(userID)
+		if logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
+		}
+		event.InsertLoginAttempt(c, userID, publickeys...)
+
 		return new(AuthResponse).error(c, errInvalidUsernamePassword)
 	}
 

@@ -79,6 +79,7 @@ func AuthKeyLogin(c *fiber.Ctx, userID int64, authKey string) (privateArmored pg
 	// Hash Auth Key
 	keyHash, err := HashKey(authKey)
 	if err != nil {
+		// Return real error
 		if klog.V(5).Enabled() {
 			return
 		}
