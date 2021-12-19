@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 import { decrypt, encrypt, exportKey } from "./aesgcm-tools";
-import { hash } from "./argon2id";
-import { argon2idCost } from "./argon2id/argon2id";
+import { hash, hashSalt, parse } from "./argon2id";
+import { argon2idCost, argon2idEncoded } from "./argon2id/argon2id";
 import { create, decode } from "./recoveryKey";
 import { blake2bB64 } from "./blake2b";
 import { genKey, decryptKey, encryptKey } from "./pgp";
@@ -46,7 +46,7 @@ export function genKeys(
     let recoveryKeyArray = exportKey((await recoveryKey).key);
     let recoveryHash = blake2bB64(await recoveryKeyArray, 512);
 
-    let keys = await deriveKeys(password);
+    let keys = await genHashKeys(password);
 
     let pgpKey = await genKey(username, keys.pgpPassphrase);
 
@@ -73,6 +73,23 @@ export function genKeys(
 }
 
 function deriveKeys(
+  keyEncoded: argon2idEncoded
+): Promise<{ authKey: string; pgpPassphrase: string }> {
+  return new Promise(async (resolve) => {
+    let key = Buffer.from(keyEncoded.key, "base64");
+
+    let authKey = blake2bB64(key, 512, b2bAuthKey);
+    let pgpPassphrase = blake2bB64(key, 512, b2bPgpKey);
+
+    resolve({
+      authKey: await authKey,
+      pgpPassphrase: await pgpPassphrase,
+    });
+    return;
+  });
+}
+
+function genHashKeys(
   password: string
 ): Promise<{ saltEncoded: string; authKey: string; pgpPassphrase: string }> {
   return new Promise(async (resolve) => {
@@ -88,15 +105,32 @@ function deriveKeys(
       })
     );
 
-    let key = Buffer.from(keyEncoded.key, "base64");
-
-    let authKey = blake2bB64(key, 512, b2bAuthKey);
-    let pgpPassphrase = blake2bB64(key, 512, b2bPgpKey);
+    let { authKey, pgpPassphrase } = await deriveKeys(keyEncoded);
 
     resolve({
       saltEncoded: keyEncoded.encoded,
-      authKey: await authKey,
-      pgpPassphrase: await pgpPassphrase,
+      authKey: authKey,
+      pgpPassphrase: pgpPassphrase,
+    });
+    return;
+  });
+}
+
+export function getKeys(
+  password: string,
+  saltEncoded: string
+): Promise<{ authKey: string; pgpPassphrase: string }> {
+  return new Promise(async (resolve) => {
+    let salt = await parse(saltEncoded);
+    salt.cost.FillEmpty();
+
+    let hash = await hashSalt(password, salt.salt, salt.cost);
+
+    let { authKey, pgpPassphrase } = await deriveKeys(hash);
+
+    resolve({
+      authKey: authKey,
+      pgpPassphrase: pgpPassphrase,
     });
     return;
   });

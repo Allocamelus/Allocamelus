@@ -12,6 +12,8 @@ func Account(api fiber.Router) {
 	a := api.Group("/account")
 	a.Post("/", account.Create)
 
+	a.Post("/salt", account.Salt)
+
 	// /api/v1/account/auth
 	aA := a.Group("/auth")
 	aA.Post("/", account.Auth)

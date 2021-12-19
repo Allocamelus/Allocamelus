@@ -1,36 +1,41 @@
 export interface argon2idCost {
   // time t= (default: 3)
-  time?: number;
+  time: number;
   // memory m= (default: 128 * 1024 // 128MB)
-  memory?: number;
+  memory: number;
   // threads p= (default: 2)
-  threads?: number;
+  threads: number;
   // Key length (default: 32 // 256 bits)
-  keyLen?: number;
+  keyLen: number;
   // Salt length (default: 32 // 256 bits)
-  saltLen?: number;
+  saltLen: number;
   // Sets defaults
   FillEmpty(): void;
 }
 
 export class argon2idCost {
   // time t= (default: 3)
-  time?: number;
+  time: number;
   // memory m= (default: 128 * 1024 // 128MB)
-  memory?: number;
+  memory: number;
   // threads p= (default: 2)
-  threads?: number;
+  threads: number;
   // Key length (default: 32 // 256 bits)
-  keyLen?: number;
+  keyLen: number;
   // Salt length (default: 32 // 256 bits)
-  saltLen?: number;
+  saltLen: number;
 
   constructor(source: Partial<argon2idCost> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
+    if (source["time"] == undefined) source["time"] = 0;
     this.time = source["time"];
+    if (source["memory"] == undefined) source["memory"] = 0;
     this.memory = source["memory"];
+    if (source["threads"] == undefined) source["threads"] = 0;
     this.threads = source["threads"];
+    if (source["keyLen"] == undefined) source["keyLen"] = 0;
     this.keyLen = source["keyLen"];
+    if (source["saltLen"] == undefined) source["saltLen"] = 0;
     this.saltLen = source["saltLen"];
   }
 

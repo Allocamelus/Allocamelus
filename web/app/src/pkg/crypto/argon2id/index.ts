@@ -90,10 +90,12 @@ export function parse(encodedHash: string): Promise<argon2idEncoded> {
       encoded: "",
       salt: slice[4],
       version: parseInt(slice[2].replace(/[v=\s]/g, "")),
+      key: "",
     };
 
     if (slice.length > 5) {
-      encoded.key = slice.pop();
+      encoded.key = slice[5];
+      slice.pop();
       encoded.cost.keyLen = Buffer.from(encoded.key, "base64").length;
     }
     encoded.encoded = slice.join("$");
