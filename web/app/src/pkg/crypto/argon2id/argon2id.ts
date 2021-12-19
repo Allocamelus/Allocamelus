@@ -27,16 +27,11 @@ export class argon2idCost {
 
   constructor(source: Partial<argon2idCost> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    if (source["time"] == undefined) source["time"] = 0;
-    this.time = source["time"];
-    if (source["memory"] == undefined) source["memory"] = 0;
-    this.memory = source["memory"];
-    if (source["threads"] == undefined) source["threads"] = 0;
-    this.threads = source["threads"];
-    if (source["keyLen"] == undefined) source["keyLen"] = 0;
-    this.keyLen = source["keyLen"];
-    if (source["saltLen"] == undefined) source["saltLen"] = 0;
-    this.saltLen = source["saltLen"];
+    this.time = source["time"] || 0;
+    this.memory = source["memory"] || 0;
+    this.threads = source["threads"] || 0;
+    this.keyLen = source["keyLen"] || 0;
+    this.saltLen = source["saltLen"] || 0;
   }
 
   // Sets defaults

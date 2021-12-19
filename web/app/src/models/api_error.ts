@@ -8,8 +8,7 @@ export class API_Success_Error {
 
   constructor(source: Partial<API_Success_Error> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    if (source["success"] == undefined) source["success"] = false;
-    this.success = source["success"];
+    this.success = source["success"] || false;
     this.error = source["error"];
   }
 }
@@ -37,7 +36,6 @@ export class API_Error {
 
   constructor(source: Partial<API_Error> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    if (source["error"] == undefined) source["error"] = "";
-    this.error = source["error"];
+    this.error = source["error"] || "";
   }
 }

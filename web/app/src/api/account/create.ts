@@ -7,8 +7,7 @@ export class CreateResp {
 
   constructor(source: Partial<CreateResp> = {}) {
     if ("string" === typeof source) source = JSON.parse(source);
-    if (source["success"] == undefined) source["success"] = false;
-    this.success = source["success"];
+    this.success = source["success"] || false;
     this.errors = source["errors"];
   }
 }

@@ -6,8 +6,7 @@ export class SaltResponse {
 
   constructor(source: Partial<SaltResponse> = {}) {
     if ("string" === typeof source) source = JSON.parse(source);
-    if (source["salt"] == undefined) source["salt"] = "";
-    this.salt = source["salt"];
+    this.salt = source["salt"] || "";
     this.error = source["error"];
   }
 }
