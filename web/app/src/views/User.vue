@@ -15,7 +15,7 @@
               :displayType="TwoLine"
             ></user-name>
             <text-small
-              v-if="this.user.type === UNVERIFIED_USER"
+              v-if="user.type === UNVERIFIED_USER"
               class="font-normal flex-none ml-1"
             >
               [[Unverified]]
@@ -88,13 +88,12 @@ import { API_Posts } from "../models/api_post";
 import {
   Public as PUBLIC_USER,
   Unverified as UNVERIFIED_USER,
-} from "../models/user_types";
+  User,
+} from "../models/user";
 import {
   InvalidCharacters,
   SomethingWentWrong,
 } from "../components/form/errors";
-
-import { GEN_User } from "../models/go_structs_gen";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
@@ -117,7 +116,7 @@ import TextSmall from "../components/text/Small.vue";
 export default defineComponent({
   props: {
     userName: {
-      type: Array,
+      type: String,
       required: true,
     },
   },
@@ -126,7 +125,7 @@ export default defineComponent({
     const loggedIn = computed(() => store.getters.loggedIn),
       storeUser = computed(() => store.getters.user);
     const data = reactive({
-      user: new GEN_User(),
+      user: new User(),
       postsList: new API_Posts(),
       overlay: false,
       page: 1,
@@ -140,7 +139,7 @@ export default defineComponent({
       },
     });
 
-    getUser(props.userName[0])
+    getUser(props.userName)
       .then((r) => {
         data.user = r;
       })
@@ -148,7 +147,7 @@ export default defineComponent({
         data.err.user = e;
       });
 
-    getPosts(props.userName[0], data.page)
+    getPosts(props.userName, data.page)
       .then((r) => {
         data.postsList = r;
         if (Object.keys(r.posts).length == 0) {
@@ -253,11 +252,11 @@ export default defineComponent({
     },
   },
   async beforeRouteUpdate(to) {
-    this.user = new GEN_User();
+    this.user = new User();
     this.postsList = new API_Posts();
     this.page = 1;
 
-    getUser(to.params.userName[0])
+    getUser(to.params.userName)
       .then((r) => {
         this.user = r;
       })
@@ -265,7 +264,7 @@ export default defineComponent({
         this.err.user = e;
       });
 
-    getPosts(to.params.userName[0], this.page)
+    getPosts(to.params.userName, this.page)
       .then((r) => {
         this.postsList = r;
         if (Object.keys(r.posts).length == 0) {

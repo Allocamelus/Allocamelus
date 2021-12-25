@@ -1,11 +1,11 @@
 import v1 from "../../v1";
 import { API_Error } from "../../../models/api_error";
-import { GEN_User } from "../../../models/go_structs_gen";
+import { User } from "../../../models/user";
 import { API_Comment } from "./index";
 
 export class API_Comment_User {
   comment: API_Comment;
-  user: GEN_User;
+  user: User;
 
   static createFrom(source: Partial<API_Comment_User> = {}) {
     return new API_Comment_User(source);
@@ -14,7 +14,7 @@ export class API_Comment_User {
   constructor(source: Partial<API_Comment_User> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
     this.comment = API_Comment.createFrom(source["comment"]);
-    this.user = GEN_User.createFrom(source["user"]);
+    this.user = new User(source["user"]);
   }
 }
 

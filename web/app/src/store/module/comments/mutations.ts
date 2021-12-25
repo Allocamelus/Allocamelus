@@ -1,7 +1,7 @@
 import { MutationTree } from "vuex";
 import { API_Comment } from "../../../api/post/comment";
 import { API_Comments } from "../../../api/post/comments/get";
-import { GEN_User } from "../../../models/go_structs_gen";
+import { User } from "../../../models/user";
 import { Comment, CommentFromPath, CommentPath } from "./getters";
 import { State } from "./state";
 
@@ -14,7 +14,7 @@ export type Mutations = {
   populate(state: State, c: API_Comments): void;
   addComment(state: State, comment: API_Comment): void;
   updateComment(state: State, comment: API_Comment): void;
-  addUser(state: State, user: GEN_User): void;
+  addUser(state: State, user: User): void;
   remove(state: State, id: number): void;
 };
 
@@ -56,7 +56,7 @@ export const mutations = <MutationTree<State>>{
   },
   // addUser to state
   // TODO user vuex store
-  addUser(state: State, user: GEN_User) {
+  addUser(state: State, user: User) {
     state.comments.appendUser(user);
   },
   // remove comment

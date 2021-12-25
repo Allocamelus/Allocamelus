@@ -22,7 +22,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { GEN_User } from "../../models/go_structs_gen";
+import { User } from "../../models/user";
 import gray5x5Url from "../../assets/gray5x5.jpg";
 import FullURL from "../../pkg/fullUrl";
 
@@ -31,7 +31,7 @@ import ToLink from "../ToLink.vue";
 export default defineComponent({
   props: {
     user: {
-      type: GEN_User,
+      type: User,
       required: true,
     },
     isLink: {

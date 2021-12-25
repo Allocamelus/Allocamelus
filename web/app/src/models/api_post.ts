@@ -1,9 +1,10 @@
-import { GEN_User, GEN_Post } from "./go_structs_gen";
+import { User } from "./user";
+import { Post } from "./post";
 import ordered_list from "./ordered_list";
 
 export class API_Post {
-  post: GEN_Post;
-  user: GEN_User;
+  post: Post;
+  user: User;
 
   static createFrom(source: Partial<API_Post> = {}) {
     return new API_Post(source);
@@ -11,12 +12,12 @@ export class API_Post {
 
   constructor(source: Partial<API_Post> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    this.post = GEN_Post.createFrom(source["post"]);
-    this.user = GEN_User.createFrom(source["user"]);
+    this.post = new Post(source["post"]);
+    this.user = new User(source["user"]);
   }
 }
 export class API_Posts extends ordered_list {
-  posts: { [key: number]: GEN_Post };
+  posts: { [key: number]: Post };
 
   static createFrom(source: Partial<API_Posts> = {}) {
     return new API_Posts(source);
@@ -25,11 +26,11 @@ export class API_Posts extends ordered_list {
   constructor(source: Partial<API_Posts> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
-    this.posts = source["posts"];
+    this.posts = source["posts"] || [];
   }
 
   // Method
-  post(postId: number): GEN_Post {
-    return GEN_Post.createFrom(this.posts[postId]);
+  post(postId: number): Post {
+    return new Post(this.posts[postId]);
   }
 }

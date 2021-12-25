@@ -85,7 +85,7 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 
-import { GEN_User } from "../../models/go_structs_gen";
+import { User } from "../../models/user";
 import { RespToError } from "../../models/responses";
 import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
 
@@ -114,7 +114,7 @@ import Checkbox from "../form/Checkbox.vue";
 export default defineComponent({
   props: {
     user: {
-      type: GEN_User,
+      type: User,
       required: true,
     },
     show: {

@@ -1,18 +1,18 @@
 import { GetterTree } from "vuex";
 import { API_Comment } from "../../../api/post/comment";
 import { API_Comments } from "../../../api/post/comments/get";
-import { GEN_User } from "../../../models/go_structs_gen";
+import { User } from "../../../models/user";
 import { State } from "./state";
 
 export type Getters = {
   comment(state: State): (id: number) => API_Comment | null;
-  user(state: State): (id: number) => GEN_User;
+  user(state: State): (id: number) => User;
   missingReplies(state: State): (id: number) => number;
 };
 
 export type GettersResp = {
   comment(id: number): API_Comment | null;
-  user(id: number): GEN_User;
+  user(id: number): User;
   missingReplies(id: number): number;
 };
 
@@ -96,7 +96,7 @@ export const getters = <GetterTree<State, any>>{
     return Comment(state);
   },
   user(state: State) {
-    return (id: number): GEN_User => {
+    return (id: number): User => {
       return state.comments.user(id);
     };
   },

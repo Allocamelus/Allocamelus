@@ -8,7 +8,7 @@
           :theme="captcha.theme"
           @rendered="captcha.loaded = true"
           @verify="
-            (token, eKey) => {
+            (token) => {
               captcha.token = token;
               onSubmit();
             }
@@ -82,14 +82,16 @@ import ToLink from "../components/ToLink.vue";
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
-import { GEN_AuthA10Token } from "../models/go_structs_gen";
-import { authA10 } from "../api/account/auth";
+import { auth } from "../api/account/auth";
 import ApiResp from "../models/responses";
 import {
   htmlErrBuilder,
   HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "../components/htmlErrors";
+import { salt as getSalt } from "../api/account/salt";
+import { hashSalt, parse } from "../pkg/crypto/argon2id";
+import { getKeys } from "../pkg/crypto/userKeys";
 
 const HtmlInvalidUsernamePassword = htmlErrBuilder(
     `Invalid Username/Email or Password`,
@@ -117,6 +119,10 @@ export default defineComponent({
       },
       username: "",
       password: "",
+      keys: {
+        authKey: "",
+        pgpPassphrase: "",
+      },
       remember: false,
       captcha: {
         show: false,
@@ -142,43 +148,33 @@ export default defineComponent({
     },
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       if (this.err.username.length != 0 || this.err.password.length != 0) {
         return;
       }
-      try {
-        this.captcha.token =
-          document.getElementsByName("h-captcha-response")[0].value;
-      } catch {
-        this.captcha.token = "";
+
+      if (this.keys.authKey == "" || this.keys.pgpPassphrase == "") {
+        let salt = await getSalt(this.username).catch(() => {
+          this.handleErr();
+          return undefined;
+        });
+        if (salt == undefined) return;
+        if (salt.error != undefined) {
+          return this.handleErr(salt.error);
+        }
+
+        this.keys = await getKeys(this.password, salt.salt);
       }
-      authA10(
-        GEN_AuthA10Token.createFrom({
-          userName: this.username,
-          password: this.password,
-          remember: this.remember,
-          captcha: this.captcha.token,
-        })
-      )
+
+      auth({
+        userName: this.username,
+        authKey: this.password,
+        remember: this.remember,
+        captcha: this.captcha.token,
+      })
         .then((r) => {
-          this.captcha.show = false;
           if (!r.success) {
-            switch (r.error) {
-              case ApiResp.Account.Auth.InvalidUsernamePassword:
-                this.err.login = HtmlInvalidUsernamePassword;
-                return;
-              case ApiResp.Account.Auth.UnverifiedEmail:
-                this.err.login = HtmlUnverifiedEmail;
-                return;
-              case ApiResp.Shared.InvalidCaptcha:
-                this.captcha.show = true;
-                this.captcha.siteKey = r.captcha;
-                this.err.login = HtmlLoadingCaptcha;
-                return;
-              default:
-                this.err.login = HtmlSomethingWentWrong;
-                return;
-            }
+            return this.handleErr(r.error, r.captcha);
           } else {
             this.$store.dispatch("newLoginSession", {
               user: r.user,
@@ -188,9 +184,38 @@ export default defineComponent({
           }
         })
         .catch(() => {
-          this.captcha.show = false;
-          this.err.login = HtmlSomethingWentWrong;
+          this.handleErr();
         });
+    },
+    handleErr(err?: string, captcha?: string) {
+      this.captcha.show = false;
+
+      switch (err) {
+        case ApiResp.Account.Auth.InvalidUsernamePassword:
+          this.resetSensitive();
+          this.err.login = HtmlInvalidUsernamePassword;
+          return;
+        case ApiResp.Account.Auth.UnverifiedEmail:
+          this.resetSensitive();
+          this.err.login = HtmlUnverifiedEmail;
+          return;
+        case ApiResp.Shared.InvalidCaptcha:
+          if (captcha == undefined) {
+            this.err.login = HtmlSomethingWentWrong;
+            throw new Error("login: Error missing captcha siteKey");
+          }
+          this.captcha.show = true;
+          this.captcha.siteKey = captcha;
+          this.err.login = HtmlLoadingCaptcha;
+          return;
+        default:
+          this.resetSensitive();
+          this.err.login = HtmlSomethingWentWrong;
+          throw new Error(err);
+      }
+    },
+    resetSensitive() {
+      this.password = this.keys.authKey = this.keys.pgpPassphrase = "";
     },
   },
   components: {

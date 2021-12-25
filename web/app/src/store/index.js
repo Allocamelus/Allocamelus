@@ -6,7 +6,7 @@ import { keepAlive } from "../api/account/auth/keepAlive";
 import { logout } from "../api/account/logout";
 import { status } from "../api/account/auth/status";
 
-import { GEN_User } from "../models/go_structs_gen";
+import { User } from "../models/user";
 
 const vuexLocal = new VuexPersistence({
   key: "a10storage",
@@ -30,7 +30,7 @@ const vuexLocal = new VuexPersistence({
 function sessionDefault() {
   return {
     loggedIn: false,
-    user: new GEN_User(),
+    user: new User(),
     fresh: true,
     created: UnixTime(),
     expires: UnixTime(MinToSec(10)),
@@ -146,7 +146,7 @@ export default createStore({
       return state.session.loggedIn;
     },
     user(state) {
-      return new GEN_User(state.session.user);
+      return new User(state.session.user);
     },
     theme(state) {
       return state.ui.theme;
