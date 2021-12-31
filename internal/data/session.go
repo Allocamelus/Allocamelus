@@ -19,7 +19,7 @@ func (d *Data) NewSessionStore() *session.Store {
 			HTTPOnly: true,
 			SameSite: "Lax",
 		},
-		Data: stores.New(d.redis),
+		Data: stores.NewRedis(d.redis),
 		Key: session.Key{
 			Length:    32,
 			Generator: random.StringBase64,

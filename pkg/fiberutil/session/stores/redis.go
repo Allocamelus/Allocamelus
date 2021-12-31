@@ -19,8 +19,8 @@ type Redis struct {
 	db *redis.Client
 }
 
-// New Storage
-func New(redis *redis.Client) *Redis {
+// NewRedis Storage
+func NewRedis(redis *redis.Client) *Redis {
 	// Check Redis
 	if err := redis.Ping(context.Background()).Err(); err != nil {
 		klog.Fatal(err)
