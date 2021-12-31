@@ -1,6 +1,6 @@
 <template>
   <div class="hidden ml-6 w-64 items-stretch md:flex flex-col flex-shrink-0">
-    <box v-if="loggedIn" class="py-3 px-4 rounded-xl mb-3">
+    <box v-if="loggedIn" class="py-3 px-4 rounded-xl">
       <div class="w-max mx-auto">
         <basic-btn
           to="/post/new"
@@ -23,7 +23,7 @@
     </box>
     <slot></slot>
     <div
-      class="px-4 mb-3 text-sm flex justify-center text-gray-800 dark:text-gray-500"
+      class="px-4 mt-3 text-sm flex justify-center text-gray-800 dark:text-gray-500"
     >
       <div class="self-center text-gray-700 dark:text-gray-400">
         &copy; {{ new Date().getFullYear() }}
@@ -38,7 +38,7 @@
         <to-link to="/about" class="link">About</to-link>
       </div>
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center mt-3">
       <a
         rel="noopener noreferrer"
         target="_blank"
@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 

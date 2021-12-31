@@ -1,4 +1,4 @@
-import VuexPersistence from "vuex-persist";
+import { VuexPersistence } from "vuex-persist";
 import { createStore } from "vuex";
 import { DaysToSec, MinToSec, UnixTime } from "../pkg/time";
 
@@ -8,11 +8,11 @@ import { status } from "../api/account/auth/status";
 
 import { User } from "../models/user";
 
-const vuexLocal = new VuexPersistence({
+const vuexLocal = new VuexPersistence<State>({
   key: "a10storage",
   storage: window.localStorage,
   reducer: (state) => {
-    let storage = {
+    let storage = <State>{
       ui: {
         theme: state.ui.theme,
       },
@@ -27,7 +27,23 @@ const vuexLocal = new VuexPersistence({
   },
 });
 
-function sessionDefault() {
+export interface State {
+  ui: {
+    theme: string;
+    viewKey: number;
+  };
+  session: Session;
+}
+
+export interface Session {
+  loggedIn: boolean;
+  user: User;
+  fresh: boolean;
+  created: number;
+  expires: number;
+}
+
+function sessionDefault(): Session {
   return {
     loggedIn: false,
     user: new User(),
@@ -38,7 +54,7 @@ function sessionDefault() {
 }
 
 export default createStore({
-  state: {
+  state: <State>{
     ui: {
       theme: "dark",
       // TODO: https://github.com/vuejs/vue-router/issues/974
@@ -67,7 +83,7 @@ export default createStore({
         state.session.user.avatarUrl = url;
       } else {
         state.session.user.avatar = false;
-        state.session.user.avatarUrl = null;
+        state.session.user.avatarUrl = undefined;
       }
     },
     updateBio(state, bio) {

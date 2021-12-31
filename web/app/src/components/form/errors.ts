@@ -3,7 +3,7 @@ export const ErrRequired = "required",
   ErrMaxLength = "max-length",
   ErrRegex = "regex";
 
-function errMsg(err) {
+function errMsg(err: string): string {
   switch (err) {
     case ErrRequired:
       return "Required";
@@ -25,7 +25,11 @@ function errMsg(err) {
  * @param {string} type for length checkers
  * @return {string} msg pretty readable error
  */
-export function ErrMsg(err, extra = "", type = "character count") {
+export function ErrMsg(
+  err: string,
+  extra = "",
+  type = "character count"
+): string {
   var msg = errMsg(err);
 
   if (err === ErrMinLength || err === ErrMaxLength) {

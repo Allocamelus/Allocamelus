@@ -1,14 +1,24 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  LocationQueryValue,
+  RouteRecordRaw,
+} from "vue-router";
 import store from "./store";
 
-export function redirectUrl(redirect = "") {
-  if (redirect?.length > 0) {
+export function redirectUrl(
+  redirect: LocationQueryValue | LocationQueryValue[]
+) {
+  if (Array.isArray(redirect) || redirect == null) {
+    redirect = "";
+  }
+  if (redirect.length > 0) {
     return redirect;
   }
   return "/";
 }
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/about",
     name: "About",
