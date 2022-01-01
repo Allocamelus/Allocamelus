@@ -244,7 +244,7 @@ export default defineComponent({
         .then((r) => {
           this.loading = false;
           if (!r.success) {
-            if (typeof r.errors === "object") {
+            if (r.errors != undefined) {
               if (Array.isArray(r.errors)) {
                 r.errors.forEach((err) => {
                   switch (err) {
@@ -270,29 +270,20 @@ export default defineComponent({
                   }
                 });
               } else {
-                for (const key in r.errors) {
-                  if (Object.hasOwnProperty.call(r.errors, key)) {
-                    var err = r.errors[key];
-                    var errText = RespToError(err);
-                    if (errText.length > 0) {
-                      switch (key) {
-                        case "userName":
-                          this.err.userName = errText;
-                          break;
-                        case "email":
-                          this.err.email = errText;
-                          break;
-                        case "password":
-                          this.err.password = errText;
-                          break;
-                        default:
-                          this.err.signUp = HtmlSomethingWentWrong;
-                          break;
-                      }
-                    } else {
-                      this.err.signUp = HtmlSomethingWentWrong;
-                    }
-                  }
+                if (
+                  r.errors.userName.length == 0 &&
+                  r.errors.email.length == 0
+                ) {
+                  return;
+                }
+
+                if (r.errors.userName.length > 0) {
+                  let errText = RespToError(r.errors.userName);
+                  this.err.userName = errText;
+                }
+                if (r.errors.email.length > 0) {
+                  let errText = RespToError(r.errors.email);
+                  this.err.email = errText;
                 }
               }
             } else {

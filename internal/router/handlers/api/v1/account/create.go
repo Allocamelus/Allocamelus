@@ -65,7 +65,7 @@ func Create(c *fiber.Ctx) error {
 
 	// Validate newUser
 	if userErrs := newUser.ValidatePublic(); !userErrs.Empty() {
-		return new(CreateResponse).error(c, userErrs)
+		return new(CreateResponse).error(c, userErrs.ToString())
 	}
 
 	// Validate Password and Key structs

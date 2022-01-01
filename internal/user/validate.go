@@ -24,10 +24,37 @@ const (
 )
 
 type ValidationErrors struct {
-	UserName error `json:"userName,omitempty"`
-	Name     error `json:"name,omitempty"`
-	Email    error `json:"email,omitempty"`
-	Bio      error `json:"bio,omitempty"`
+	UserName error
+	Name     error
+	Email    error
+	Bio      error
+}
+
+func (v *ValidationErrors) ToString() *ValidationErrStrings {
+	s := new(ValidationErrStrings)
+	if v.Empty() {
+		return s
+	}
+	if v.UserName != nil {
+		s.UserName = v.UserName.Error()
+	}
+	if v.Name != nil {
+		s.Name = v.Name.Error()
+	}
+	if v.Email != nil {
+		s.Email = v.Email.Error()
+	}
+	if v.Bio != nil {
+		s.Bio = v.Bio.Error()
+	}
+	return s
+}
+
+type ValidationErrStrings struct {
+	UserName string `json:"userName,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Bio      string `json:"bio,omitempty"`
 }
 
 // Empty Are all errors nil

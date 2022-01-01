@@ -1,14 +1,28 @@
-import { API_Success_Error } from "../../models/api_error";
 import v1 from "../v1";
 
 export class CreateResp {
   success: boolean;
-  errors?: any;
+  errors?: errors | Array<string>;
 
   constructor(source: Partial<CreateResp> = {}) {
     if ("string" === typeof source) source = JSON.parse(source);
     this.success = source["success"] || false;
-    this.errors = source["errors"];
+    if (source["errors"] != undefined) {
+      this.errors = Array.isArray(source["errors"])
+        ? source["errors"]
+        : new errors(source["errors"]);
+    }
+  }
+}
+
+class errors {
+  userName: string;
+  email: string;
+
+  constructor(source: Partial<errors> = {}) {
+    if ("string" === typeof source) source = JSON.parse(source);
+    this.userName = source["userName"] || "";
+    this.email = source["email"] || "";
   }
 }
 
@@ -36,16 +50,13 @@ export interface Key {
 }
 
 export function create(request: CreateRequest): Promise<CreateResp> {
-  return new Promise(async (resolve) => {
-    resolve(
-      new CreateResp(
-        await v1.post("account", JSON.stringify(request), {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-      )
-    );
-    return;
-  });
+  return v1
+    .post("account", JSON.stringify(request), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((r) => {
+      return new CreateResp(r.data);
+    });
 }
