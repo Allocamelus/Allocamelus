@@ -124,7 +124,11 @@ export function getKeys(
     let salt = await parse(saltEncoded);
     salt.cost.FillEmpty();
 
-    let hash = await hashSalt(password, salt.salt, salt.cost);
+    let hash = await hashSalt(
+      password,
+      Buffer.from(salt.salt, "base64"),
+      salt.cost
+    );
 
     let { authKey, pgpPassphrase } = await deriveKeys(hash);
 

@@ -168,7 +168,7 @@ export default defineComponent({
 
       auth({
         userName: this.username,
-        authKey: this.password,
+        authKey: this.keys.authKey,
         remember: this.remember,
         captcha: this.captcha.token,
       })
