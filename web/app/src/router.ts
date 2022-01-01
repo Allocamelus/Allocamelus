@@ -4,7 +4,7 @@ import {
   LocationQueryValue,
   RouteRecordRaw,
 } from "vue-router";
-import store from "./store";
+import { store } from "./store";
 
 export function redirectUrl(
   redirect: LocationQueryValue | LocationQueryValue[]

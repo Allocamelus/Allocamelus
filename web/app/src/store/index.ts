@@ -1,5 +1,8 @@
-import { VuexPersistence } from "vuex-persist";
-import { createStore } from "vuex";
+import { AsyncStorage, VuexPersistence } from "vuex-persist";
+import { createStore, useStore as baseUseStore, Store } from "vuex";
+import { getters } from "./getters";
+
+import { createInstance } from "localforage";
 import { DaysToSec, MinToSec, UnixTime } from "../pkg/time";
 
 import { keepAlive } from "../api/account/auth/keepAlive";
@@ -7,10 +10,16 @@ import { logout } from "../api/account/logout";
 import { status } from "../api/account/auth/status";
 
 import { User } from "../models/user";
+import { InjectionKey } from "vue";
+
+var localInstance = createInstance({
+  name: "allocamelus",
+});
 
 const vuexLocal = new VuexPersistence<State>({
-  key: "a10storage",
-  storage: window.localStorage,
+  key: "sessionStore",
+  storage: localInstance as AsyncStorage,
+  asyncStorage: true,
   reducer: (state) => {
     let storage = <State>{
       ui: {
@@ -35,32 +44,34 @@ export interface State {
   session: Session;
 }
 
-export interface Session {
+// define injection key
+export const key: InjectionKey<Store<State>> = Symbol();
+
+export class Session {
   loggedIn: boolean;
   user: User;
   fresh: boolean;
   created: number;
   expires: number;
+
+  constructor(source: Partial<Session> = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
+    this.loggedIn = source["loggedIn"] || false;
+    this.user = new User(source["user"]);
+    this.fresh = source["fresh"] || true;
+    this.created = source["created"] || UnixTime();
+    this.expires = source["expires"] || UnixTime(MinToSec(10));
+  }
 }
 
-function sessionDefault(): Session {
-  return {
-    loggedIn: false,
-    user: new User(),
-    fresh: true,
-    created: UnixTime(),
-    expires: UnixTime(MinToSec(10)),
-  };
-}
-
-export default createStore({
-  state: <State>{
+export const store = createStore<State>({
+  state: {
     ui: {
       theme: "dark",
       // TODO: https://github.com/vuejs/vue-router/issues/974
       viewKey: 0,
     },
-    session: sessionDefault(),
+    session: new Session(),
   },
   mutations: {
     newSession(state, payload) {
@@ -100,13 +111,13 @@ export default createStore({
     newLoginSession({ commit }, payload) {
       commit({
         type: "newSession",
-        session: {
+        session: new Session({
           loggedIn: true,
           user: payload.user,
           fresh: true,
           created: UnixTime(),
           expires: UnixTime(payload.authToken ? DaysToSec(30) : MinToSec(15)),
-        },
+        }),
       });
     },
     sessionCheck({ commit, state }) {
@@ -116,20 +127,20 @@ export default createStore({
             if (state.session.loggedIn) {
               commit({
                 type: "newSession",
-                session: sessionDefault(),
+                session: new Session(),
               });
             }
           } else {
             if (!state.session.loggedIn) {
               commit({
                 type: "newSession",
-                session: {
+                session: new Session({
                   loggedIn: true,
                   user: st.user,
                   fresh: state.session.fresh,
                   created: state.session.created,
                   expires: state.session.expires,
-                },
+                }),
               });
             }
           }
@@ -150,26 +161,14 @@ export default createStore({
       }
       commit({
         type: "newSession",
-        session: sessionDefault(),
+        session: new Session(),
       });
     },
   },
-  getters: {
-    loggedIn(state) {
-      if (state.session.expires < UnixTime()) {
-        return false;
-      }
-      return state.session.loggedIn;
-    },
-    user(state) {
-      return new User(state.session.user);
-    },
-    theme(state) {
-      return state.ui.theme;
-    },
-    viewKey(state) {
-      return state.ui.viewKey;
-    },
-  },
+  getters,
   plugins: [vuexLocal.plugin],
 });
+
+export function useStore() {
+  return baseUseStore(key);
+}
