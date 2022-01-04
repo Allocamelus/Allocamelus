@@ -45,7 +45,7 @@
   },
   "path": {
     "publicDir": "/etc/allocamelus/public/",
-    "media": "/usr/share/allocamelus/media/",
+    "mediaDir": "/usr/share/allocamelus/media/",
     "tmpDir": "/tmp/allocamelus_tmp_dir",
     "public": {
       "verifyEmail": "/account/verify-email",
