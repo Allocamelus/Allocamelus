@@ -433,10 +433,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.5":
-  version: 17.0.5
-  resolution: "@types/node@npm:17.0.5"
-  checksum: 105535e78722515c26cfdc1b0cbf1b19f55fe53b814e2e90d8b1e653bc63136d4760c7efc102eca111c6d124a291e37d60d761d569a3f4afb3fba05bad5d9ade
+"@types/node@npm:^17.0.8":
+  version: 17.0.8
+  resolution: "@types/node@npm:17.0.8"
+  checksum: f4cadeb9e602027520abc88c77142697e33cf6ac98bb02f8b595a398603cbd33df1f94d01c055c9f13cde0c8eaafc5e396ca72645458d42b4318b845bc7f1d0f
   languageName: node
   linkType: hard
 
@@ -967,7 +967,7 @@ __metadata:
   dependencies:
     "@hcaptcha/vue3-hcaptcha": ^1.0.1
     "@heroicons/vue": ^1.0.5
-    "@types/node": ^17.0.5
+    "@types/node": ^17.0.8
     "@types/turndown": ^5.0.1
     "@types/zxcvbn": ^4.4.1
     "@vitejs/plugin-vue": ^2.0.1
@@ -980,18 +980,18 @@ __metadata:
     hash-wasm: ^4.9.0
     jose: ^4.3.7
     localforage: ^1.10.0
-    multiformats: ^9.4.10
+    multiformats: ^9.5.6
     openpgp: ^5.0.1
     postcss: ^8.4.5
     postcss-csso: ^6.0.0
     prettier: ^2.5.1
-    sass: ^1.45.1
+    sass: ^1.45.2
     squire-rte: ^1.11.3
-    tailwindcss: ^3.0.8
+    tailwindcss: ^3.0.10
     throttle-debounce: ^3.0.1
     turndown: ^7.1.1
     typescript: ^4.5.4
-    vite: ^2.7.9
+    vite: ^2.7.10
     vite-svg-loader: ^3.1.1
     vue: ^3.2.26
     vue-router: ^4.0.12
@@ -2602,10 +2602,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multiformats@npm:^9.4.10":
-  version: 9.4.10
-  resolution: "multiformats@npm:9.4.10"
-  checksum: 57093ef493696122d3f843bc683167f535687d327a07a2488ac9b23ca555ca049db99c4f8344aac09646b515c8e48edac92ab5dccd6622b0437760f0b8effe27
+"multiformats@npm:^9.5.6":
+  version: 9.5.6
+  resolution: "multiformats@npm:9.5.6"
+  checksum: 29c7d70add1334a5db15c3f9484719635a2acc2704bfe7ea7053ab0a086ec0c0c4e986320fae32b358b27f5982173e8fd4589b8b99ef8b6a1b7368affb80f60b
   languageName: node
   linkType: hard
 
@@ -3086,7 +3086,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+"rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
@@ -3134,16 +3134,16 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.45.1":
-  version: 1.45.1
-  resolution: "sass@npm:1.45.1"
+"sass@npm:^1.45.2":
+  version: 1.45.2
+  resolution: "sass@npm:1.45.2"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 5c310b9d6260a304520678442f5814bd54c8068b659f54ae51ccb9156168811abf4e48eae4f857a5feb2958c4c07eacd5812e28018749ab25fdb40200c5bdd65
+  checksum: 7041ae5532b2a5dec10fe10d66cf2d1fc52f3f80ecedb5a6ffffdc5545eb996c12d3e749131778a765ada445f2a47671ab1bf13bf736cbbf9e71f29c592cb41d
   languageName: node
   linkType: hard
 
@@ -3354,9 +3354,9 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.0.8":
-  version: 3.0.8
-  resolution: "tailwindcss@npm:3.0.8"
+"tailwindcss@npm:^3.0.10":
+  version: 3.0.10
+  resolution: "tailwindcss@npm:3.0.10"
   dependencies:
     arg: ^5.0.1
     chalk: ^4.1.2
@@ -3378,14 +3378,13 @@ resolve@^1.20.0:
     postcss-value-parser: ^4.2.0
     quick-lru: ^5.1.1
     resolve: ^1.20.0
-    tmp: ^0.2.1
   peerDependencies:
     autoprefixer: ^10.0.2
     postcss: ^8.0.9
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: 7a3215e2d9e121d5cf465cede3204c02740792659200e87b0c0344fea3092415581eedf0ccf70e79bc9270396a8aac9e049566e372f10ce646e15e196273e35e
+  checksum: 40e7515bdd957d7abbd47ab46e7b9d3530175b1f25e99af7dd2b5656d0f06ba61371f78faf5a8430219217b0e9db76fedd11a3a79ab5a635bd023b106445961e
   languageName: node
   linkType: hard
 
@@ -3425,15 +3424,6 @@ resolve@^1.20.0:
   version: 3.0.1
   resolution: "throttle-debounce@npm:3.0.1"
   checksum: e34ef638e8df3a9154249101b68afcbf2652a139c803415ef8a2f6a8bc577bcd4d79e4bb914ad3cd206523ac78b9fb7e80885bfa049f64fbb1927f99d98b5736
-  languageName: node
-  linkType: hard
-
-"tmp@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "tmp@npm:0.2.1"
-  dependencies:
-    rimraf: ^3.0.0
-  checksum: 8b1214654182575124498c87ca986ac53dc76ff36e8f0e0b67139a8d221eaecfdec108c0e6ec54d76f49f1f72ab9325500b246f562b926f85bcdfca8bf35df9e
   languageName: node
   linkType: hard
 
@@ -3533,9 +3523,9 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.7.9":
-  version: 2.7.9
-  resolution: "vite@npm:2.7.9"
+"vite@npm:^2.7.10":
+  version: 2.7.10
+  resolution: "vite@npm:2.7.10"
   dependencies:
     esbuild: ^0.13.12
     fsevents: ~2.3.2
@@ -3558,7 +3548,7 @@ resolve@^1.20.0:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 6a13e0678fec4d5811d4e1bc796a98644856e4d7a56b5e56dbe513834c871d2313a065e4b82469de910568c0d6c762133517c6b7bccff4514f9acf5ed47f1f61
+  checksum: 1757108547ca34bd01a8ee3973cb04b484492c9e5690fc75f54bbcbde5965ab6e0a5b8355c336adf0a9117aa0fdae3053af3aafa9e5eb783282fffa948cfbe11
   languageName: node
   linkType: hard
 
