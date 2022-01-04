@@ -3,8 +3,8 @@ package update
 import (
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
-	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/avatar"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +19,7 @@ type AvatarResp struct {
 // Avatar Update handler
 func Avatar(c *fiber.Ctx) error {
 	// User can't post images
-	if !user.ContextSession(c).Perms.CanUploadMedia() {
+	if !session.Context(c).Perms.CanUploadMedia() {
 		return apierr.ErrUnauthorized403(c)
 	}
 
@@ -35,7 +35,7 @@ func Avatar(c *fiber.Ctx) error {
 		return apierr.Err422(c, AvatarResp{Error: err.Error()})
 	}
 
-	newUrl, err := avatar.TransformAndSave(user.ContextSession(c).UserID, file)
+	newUrl, err := avatar.TransformAndSave(session.Context(c).UserID, file)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -45,7 +45,7 @@ func Avatar(c *fiber.Ctx) error {
 
 // RemoveAvatar handler
 func RemoveAvatar(c *fiber.Ctx) error {
-	userId := user.ContextSession(c).UserID
+	userId := session.Context(c).UserID
 
 	hasAvatar, err := avatar.HasAvatar(userId)
 	if logger.Error(err) {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +19,7 @@ type requestsResp struct {
 
 // Requests create follow
 func Requests(c *fiber.Ctx) error {
-	r, err := user.ListRequests(user.ContextSession(c).UserID)
+	r, err := user.ListRequests(session.Context(c).UserID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			logger.Error(err)
@@ -28,7 +29,7 @@ func Requests(c *fiber.Ctx) error {
 	}
 
 	users := new(user.List)
-	sessionUser := user.ContextSession(c)
+	sessionUser := session.Context(c)
 	for _, userId := range r {
 		err = users.AddUser(sessionUser, userId)
 		if logger.Error(err) {

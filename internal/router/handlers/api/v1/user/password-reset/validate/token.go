@@ -9,6 +9,7 @@ import (
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/auth"
 	"github.com/allocamelus/allocamelus/internal/user/event"
 	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/allocamelus/allocamelus/internal/user/token"
@@ -76,12 +77,19 @@ func Token(c *fiber.Ctx) error {
 		return err422(c, err.Error())
 	}
 
+	// TODO; Password reset
+	backupKey := ""
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+	/* TODO:
 	// Reset user password
 	// Generates new key pair
 	backupKey, err := user.UpdatePassword(userID, request.Password)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
+	*/
 
 	// Get user publicKeys from the last keyRecoveryTime
 	publicKeys, err := key.GetPublicKeys(userID)
@@ -97,7 +105,7 @@ func Token(c *fiber.Ctx) error {
 	if err := tkn.Delete(); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
-	user.Logout(c)
+	auth.Logout(c)
 	if err := token.DeleteAuthByID(userID); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}

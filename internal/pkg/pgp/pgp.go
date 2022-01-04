@@ -1,20 +1,29 @@
+//go:generate msgp
+
 package pgp
 
 import (
 	"github.com/ProtonMail/gopenpgp/v2/crypto"
 )
 
-//go:generate msgp
+// PrivateKey Key
+type PrivateKey string
 
-// PrivateKey Key struct with functions
-type PrivateKey struct {
-	// Armored is Public because it needs to be stored in session for decryption
-	Armored string `msg:"privateKey"`
+// PublicKey Key
+type PublicKey string
+
+func (k *PrivateKey) ToString() string {
+	if k == nil {
+		return ""
+	}
+	return string(*k)
 }
 
-// PublicKey Key struct with functions
-type PublicKey struct {
-	Armored string `msg:"publicKey"`
+func (k *PublicKey) ToString() string {
+	if k == nil {
+		return ""
+	}
+	return string(*k)
 }
 
 // NewKey Generates a new Curve25519 Pgp key
@@ -29,12 +38,12 @@ func NewKey(name, userStr string) (*PrivateKey, error) {
 		return nil, err
 	}
 
-	return &PrivateKey{Armored: armoredKey}, nil
+	return (*PrivateKey)(&armoredKey), nil
 }
 
 // PublicKey of Private Key
 func (pk *PrivateKey) PublicKey() (*PublicKey, error) {
-	privateKeyObj, err := crypto.NewKeyFromArmored(pk.Armored)
+	privateKeyObj, err := crypto.NewKeyFromArmored(pk.ToString())
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +53,12 @@ func (pk *PrivateKey) PublicKey() (*PublicKey, error) {
 		return nil, err
 	}
 
-	return &PublicKey{Armored: publicKey}, nil
+	return (*PublicKey)(&publicKey), nil
 }
 
 // EncryptArmored encrypt data with public key
 func (pk *PublicKey) EncryptArmored(data []byte) (string, error) {
-	publicKeyRing, err := newKeyRingFromArmored(pk.Armored)
+	publicKeyRing, err := newKeyRingFromArmored(pk.ToString())
 	if err != nil {
 		return "", err
 	}
@@ -68,7 +77,7 @@ func (pk *PrivateKey) DecryptArmored(armored string) ([]byte, error) {
 		return nil, err
 	}
 
-	privateKeyRing, err := newKeyRingFromArmored(pk.Armored)
+	privateKeyRing, err := newKeyRingFromArmored(pk.ToString())
 	if err != nil {
 		return nil, err
 	}

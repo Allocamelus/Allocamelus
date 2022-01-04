@@ -1,6 +1,6 @@
 import v1 from "../../v1";
 import { API_Success_Error } from "../../../models/api_error";
-import { GEN_User } from "../../../models/go_structs_gen";
+import { User } from "../../../models/user";
 
 export function remove(userName: string): Promise<API_Success_Error> {
   return v1.delete(`/user/${userName}/follow`).then((r) => {
@@ -26,7 +26,7 @@ export function accept(userName: string): Promise<API_Success_Error> {
 
 export class API_Requests {
   requests: { [key: number]: number };
-  users: { [key: number]: GEN_User };
+  users: { [key: number]: User };
 
   static createFrom(source: Partial<API_Requests> = {}) {
     return new API_Requests(source);
@@ -34,13 +34,13 @@ export class API_Requests {
 
   constructor(source: Partial<API_Requests> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    this.requests = source["requests"];
-    this.users = source["users"];
+    this.requests = source["requests"] || [];
+    this.users = source["users"] || [];
   }
 
   // Method
-  user(userId: number): GEN_User {
-    return GEN_User.createFrom(this.users[userId]);
+  user(userId: number): User {
+    return new User(this.users[userId]);
   }
 }
 

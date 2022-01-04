@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -22,7 +23,7 @@ func Get(c *fiber.Ctx) error {
 	}
 
 	p.MDtoHTMLContent()
-	u, err := user.GetPublic(user.ContextSession(c), p.UserID)
+	u, err := user.GetPublic(session.Context(c), p.UserID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -35,7 +36,7 @@ func getForUser(c *fiber.Ctx) (*post.Post, fiber.Handler) {
 		return nil, apierr.ErrNotFound
 	}
 
-	p, err := post.GetForUser(int64(postID), user.ContextSession(c))
+	p, err := post.GetForUser(int64(postID), session.Context(c))
 	if err != nil {
 		if err != post.ErrNoPost {
 			if err == user.ErrViewMeNot {

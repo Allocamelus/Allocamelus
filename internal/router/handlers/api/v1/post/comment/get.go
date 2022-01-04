@@ -5,6 +5,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post/comment"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,7 @@ func Get(c *fiber.Ctx) error {
 	}
 
 	// Get User
-	u, err := user.GetPublic(user.ContextSession(c), com.UserID)
+	u, err := user.GetPublic(session.Context(c), com.UserID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -60,7 +61,7 @@ func GetReplies(c *fiber.Ctx) error {
 	}
 
 	users := new(user.List)
-	sessionUser := user.ContextSession(c)
+	sessionUser := session.Context(c)
 	for _, c := range replies.Comments {
 		users.AddUser(sessionUser, c.UserID)
 	}
@@ -116,7 +117,7 @@ func GetPostList(c *fiber.Ctx) error {
 	}
 
 	users := new(user.List)
-	sessionUser := user.ContextSession(c)
+	sessionUser := session.Context(c)
 	// Get users for comments
 	for _, c := range comments.Comments {
 		users.AddUser(sessionUser, c.UserID)
@@ -151,7 +152,7 @@ func getComment(c *fiber.Ctx) (*comment.Comment, fiber.Handler) {
 	}
 
 	// Get session user from context
-	s := user.ContextSession(c)
+	s := session.Context(c)
 	com, err := comment.GetForUser(commentId, s)
 	if err != nil {
 		if err != comment.ErrNoComment {

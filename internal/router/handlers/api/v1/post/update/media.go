@@ -2,7 +2,7 @@ package update
 
 import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
-	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,7 +16,7 @@ type MediaResp struct {
 // Avatar Update handler
 func Media(c *fiber.Ctx) error {
 	// User can't post images
-	if !user.ContextSession(c).Perms.CanUploadMedia() {
+	if !session.Context(c).Perms.CanUploadMedia() {
 		return apierr.ErrUnauthorized403(c)
 	}
 	/*form, err := c.MultipartForm()

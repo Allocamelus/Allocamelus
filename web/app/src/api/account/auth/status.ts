@@ -1,9 +1,9 @@
 import v1 from "../../v1";
-import { GEN_User } from "../../../models/go_structs_gen";
+import { User } from "../../../models/user";
 
 export class Status {
   loggedIn: boolean;
-  user?: GEN_User;
+  user?: User;
 
   static createFrom(source: Partial<Status> = {}) {
     return new Status(source);
@@ -11,7 +11,7 @@ export class Status {
 
   constructor(source: Partial<Status> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    this.loggedIn = source["loggedIn"];
+    this.loggedIn = source["loggedIn"] || false;
     this.user = source["user"];
   }
 }

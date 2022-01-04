@@ -29,7 +29,7 @@
 
 <script>
 import { computed, defineComponent, toRefs } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 import CommentsStore from "../../store/module/comments";
 
 import { API_Comments } from "../../api/post/comments/get";

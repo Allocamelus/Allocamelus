@@ -22,7 +22,6 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/tinylib/msgp v1.1.6
-	github.com/tkrajina/typescriptify-golang-structs v0.1.5
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	github.com/valyala/fastjson v1.6.3
 	github.com/valyala/quicktemplate v1.7.0
@@ -44,7 +43,7 @@ require (
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/tkrajina/go-reflector v0.5.4 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 )

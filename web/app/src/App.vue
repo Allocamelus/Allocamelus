@@ -143,7 +143,7 @@
 
 <script>
 import { defineComponent, computed, toRefs, reactive } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "./store";
 
 import { MinToSec, SecToMs, UnixTime } from "./pkg/time";
 

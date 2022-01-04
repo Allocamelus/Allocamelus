@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -24,7 +25,7 @@ func Name(c *fiber.Ctx) error {
 		return apierr.Err422(c, shared.SuccessErrResp{Error: err.Error()})
 	}
 
-	if err := user.UpdateName(user.ContextSession(c).UserID, request.Name); logger.Error(err) {
+	if err := user.UpdateName(session.Context(c).UserID, request.Name); logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 

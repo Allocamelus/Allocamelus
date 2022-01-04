@@ -5,6 +5,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -26,7 +27,8 @@ func Get(c *fiber.Ctx) error {
 		page = 1
 	}
 
-	totalPosts, err := post.GetPostsTotal(user.ContextSession(c))
+	sessionUser := session.Context(c)
+	totalPosts, err := post.GetPostsTotal(sessionUser)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -37,12 +39,11 @@ func Get(c *fiber.Ctx) error {
 		return apierr.ErrNotFound(c)
 	}
 
-	posts, err := post.GetPosts(startNum, perPage, user.ContextSession(c))
+	posts, err := post.GetPosts(startNum, perPage, sessionUser)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}
 	users := new(user.List)
-	sessionUser := user.ContextSession(c)
 	for _, p := range posts.Posts {
 		users.AddUser(sessionUser, p.UserID)
 		p.MDtoHTMLContent()

@@ -65,9 +65,9 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 
-import { GEN_User } from "../../models/go_structs_gen";
+import { User } from "../../models/user";
 import { RespToError } from "../../models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
@@ -91,7 +91,7 @@ export default defineComponent({
       default: true,
     },
     user: {
-      type: GEN_User,
+      type: User,
       required: true,
     },
   },

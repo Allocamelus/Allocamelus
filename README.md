@@ -24,7 +24,7 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
   - [x] Logout
   - [ ] Delete
   - [ ] Password reset
-    - [x] Api
+    - [ ] Api
     - [ ] Web app
   - [ ] Recovery
     - [ ] Old data (w/ old password or backup key)
@@ -39,9 +39,8 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
       - [x] Failed Login
       - [ ] Successful Login
       - [x] Password reset
-  - [ ] Move crypto to client
-    - Preferably not a web app
-    - But, seeing Proton Mail's browser crypto...
+  - [x] Move crypto to client
+    - [ ] Alterative to web app
 - [x] User
   - [x] Profile
     - [x] Bio

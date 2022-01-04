@@ -95,17 +95,18 @@ import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
 import DotsDropdown from "../menu/DotsDropdown.vue";
 
-import { GEN_User, GEN_Post } from "../../models/go_structs_gen";
+import { User } from "../../models/user";
+import { Post } from "../../models/post";
 
 export default defineComponent({
   name: "post-box",
   props: {
     post: {
-      type: GEN_Post,
+      type: Post,
       required: true,
     },
     user: {
-      type: GEN_User,
+      type: User,
       required: true,
     },
     isLink: {

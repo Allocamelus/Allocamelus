@@ -163,7 +163,7 @@
 
 <script>
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 
 import { API_Comment } from "../../api/post/comment";
 import { replies } from "../../api/post/comment/replies";

@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,7 +16,7 @@ func Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = user.Unfollow(user.ContextSession(c).UserID, userID)
+	err = user.Unfollow(session.Context(c).UserID, userID)
 	if err != nil {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -30,7 +31,7 @@ func Decline(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = user.Decline(user.ContextSession(c).UserID, userID)
+	err = user.Decline(session.Context(c).UserID, userID)
 	if err != nil {
 		return apierr.ErrSomethingWentWrong(c)
 	}

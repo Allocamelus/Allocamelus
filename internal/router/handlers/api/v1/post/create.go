@@ -10,7 +10,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
-	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -27,7 +27,7 @@ type createRequest struct {
 
 // Create post handler
 func Create(c *fiber.Ctx) error {
-	sUser := user.ContextSession(c)
+	sUser := session.Context(c)
 	if !sUser.Perms.CanPost() {
 		return post403(c, errtools.ErrInsufficientPerms.Error())
 	}

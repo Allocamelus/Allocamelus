@@ -1,64 +1,63 @@
 package account
 
 import (
-	"database/sql"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
+	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/auth"
+	"github.com/allocamelus/allocamelus/internal/user/event"
+	"github.com/allocamelus/allocamelus/internal/user/key"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
-	jsoniter "github.com/json-iterator/go"
 )
 
 // AuthRequest struct
 type AuthRequest struct {
-	With  string `json:"with" form:"with"`
-	Token string `json:"token" form:"token"`
-}
-
-// AuthA10Token struct
-type AuthA10Token struct {
 	UserName string `json:"userName"`
-	Password string `json:"password"`
+	AuthKey  string `json:"authKey"`
 	Remember bool   `json:"remember"`
 	Captcha  string `json:"captcha"`
 }
 
-func (t *AuthA10Token) trimSpace() {
+func (t *AuthRequest) trimSpace() {
 	t.UserName = strings.TrimSpace(t.UserName)
-	t.Password = strings.TrimSpace(t.Password)
+	t.AuthKey = strings.TrimSpace(t.AuthKey)
 	t.Captcha = strings.TrimSpace(t.Captcha)
 }
 
-// AuthResp struct
-type AuthResp struct {
-	Success bool      `json:"success"`
-	User    user.User `json:"user,omitempty"`
-	Error   string    `json:"error,omitempty"`
+// AuthResponse struct
+type AuthResponse struct {
+	Success        bool           `json:"success"`
+	PrivateArmored pgp.PrivateKey `json:"privateArmored,omitempty"`
+	User           user.User      `json:"user,omitempty"`
+	Error          string         `json:"error,omitempty"`
 	// Require Captcha
 	Captcha string `json:"captcha,omitempty"`
 }
 
-var (
-	json                = jsoniter.ConfigCompatibleWithStandardLibrary
-	errInvalidAuthToken = apierr.New("invalid-auth-token")
-	errInvalidWith      = apierr.New("invalid-with-value")
-)
+func (s *AuthResponse) error(c *fiber.Ctx, err string, captcha ...string) error {
+	s.Error = err
+	if len(captcha) != 0 {
+		s.Captcha = captcha[0]
+	}
+	return apierr.Err422(c, s)
+}
 
 const (
-	withA10                    = "allocamelus"
 	errInvalidCaptcha          = "invalid-captcha"
 	errInvalidUsernamePassword = "invalid-username-password"
 	errUnverifiedEmail         = "unverified-email"
 	errAuthenticated           = "already-authenticated"
 	// Persistent Auth Failed
-	errAuthToken = "persistent-auth-failed"
+	errAuth = "persistent-auth-failed"
 )
 
 // Auth User authentication handler
@@ -67,113 +66,93 @@ func Auth(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		return apierr.ErrInvalidRequestParams(c)
 	}
-	if request.With == withA10 {
-		var authToken AuthA10Token
-		if err := json.Unmarshal([]byte(request.Token), &authToken); err != nil {
-			return apierr.Err422(c, errInvalidAuthToken)
-		}
-		authToken.trimSpace()
-		if authToken.UserName == "" || authToken.Password == "" {
-			return authErr(c, errInvalidUsernamePassword)
-		}
 
-		// Check if user exists
-		userID, err := user.GetIDByUserName(authToken.UserName)
-		if err != nil {
-			if err != sql.ErrNoRows {
-				logger.Error(err)
-				return apierr.ErrSomethingWentWrong(c)
-			}
-			return authErr(c, errInvalidUsernamePassword)
-		}
-
-		// TODO: Multiple accounts
-		if user.LoggedIn(c) {
-			s := user.ContextSession(c)
-			if userID == s.UserID {
-				// Allow user to re-auth if the session can't decrypt
-				if s.CanDecrypt() {
-					return apierr.Err403(c, AuthResp{Error: errAuthenticated})
-				}
-			}
-		}
-
-		// Check if user is Verified
-		verified, err := user.IsVerified(userID)
-		if logger.Error(err) {
-			return apierr.ErrSomethingWentWrong(c)
-		}
-		if !verified {
-			return authErr(c, errUnverifiedEmail)
-		}
-
-		// Get user's login difficulty
-		diff, err := user.LoginDiff(userID)
-		if logger.Error(err) {
-			return apierr.ErrSomethingWentWrong(c)
-		}
-		// TODO: add timeout if HCaptcha disabled
-		if g.Config.HCaptcha.Enabled {
-			var siteKey string
-			// check login difficulty
-			switch diff {
-			case user.None:
-			case user.Easy:
-				siteKey = g.Data.Config.HCaptcha.Easy
-			case user.Medium:
-				siteKey = g.Data.Config.HCaptcha.Moderate
-			case user.Hard:
-				siteKey = g.Data.Config.HCaptcha.Hard
-			default:
-				siteKey = g.Data.Config.HCaptcha.All
-			}
-
-			if siteKey != "" {
-				if err := hcaptcha.Verify(hcaptcha.Values{
-					Secret:  g.Data.Config.HCaptcha.Secret,
-					Token:   authToken.Captcha,
-					SiteKey: siteKey,
-					IP:      clientip.Get(c),
-				}); err != nil {
-					if err != hcaptcha.ErrInvalidToken {
-						logger.Error(err)
-						return apierr.ErrSomethingWentWrong(c)
-					}
-					return apierr.Err422(c, AuthResp{
-						Error:   errInvalidCaptcha,
-						Captcha: siteKey,
-					})
-				}
-			}
-		}
-		// Login
-		if err := user.PasswordLogin(c, userID, authToken.Password); err != nil {
-			if err != user.ErrInvalidPassword {
-				logger.Error(err)
-				return apierr.ErrSomethingWentWrong(c)
-			}
-			return authErr(c, errInvalidUsernamePassword)
-		}
-
-		// Get db username
-		currentUser, err := user.GetPublic(user.ContextSession(c), userID)
-		if logger.Error(err) {
-			return apierr.ErrSomethingWentWrong(c)
-		}
-
-		if authToken.Remember {
-			// Set persistent auth token
-			if err := token.SetAuth(c, userID); logger.Error(err) {
-				// successful failure
-				return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser, Error: errAuthToken})
-			}
-		}
-
-		return fiberutil.JSON(c, 200, AuthResp{Success: true, User: currentUser})
+	request.trimSpace()
+	if request.AuthKey == "" {
+		return new(AuthResponse).error(c, errInvalidUsernamePassword)
 	}
-	return apierr.Err422(c, errInvalidWith)
-}
 
-func authErr(c *fiber.Ctx, err string) error {
-	return apierr.Err422(c, AuthResp{Error: err})
+	userID, err := auth.CanLogin(request.UserName)
+	if err != nil {
+		switch err {
+		case auth.ErrInvalidUsername:
+			return new(AuthResponse).error(c, errInvalidUsernamePassword)
+		case auth.ErrUnverifiedEmail:
+			return new(AuthResponse).error(c, errUnverifiedEmail)
+		}
+		logger.Error(err)
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	// TODO: Multiple accounts
+
+	// Get user's login difficulty
+	diff, err := auth.LoginDiff(userID)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+	// TODO: add timeout if HCaptcha disabled
+	if g.Config.HCaptcha.Enabled {
+		var siteKey string
+		// check login difficulty
+		switch diff {
+		case auth.None:
+		case auth.Easy:
+			siteKey = g.Data.Config.HCaptcha.Easy
+		case auth.Medium:
+			siteKey = g.Data.Config.HCaptcha.Moderate
+		case auth.Hard:
+			siteKey = g.Data.Config.HCaptcha.Hard
+		default:
+			siteKey = g.Data.Config.HCaptcha.All
+		}
+
+		if siteKey != "" {
+			if err := hcaptcha.Verify(hcaptcha.Values{
+				Secret:  g.Data.Config.HCaptcha.Secret,
+				Token:   request.Captcha,
+				SiteKey: siteKey,
+				IP:      clientip.Get(c),
+			}); err != nil {
+				if err != hcaptcha.ErrInvalidToken {
+					logger.Error(err)
+					return apierr.ErrSomethingWentWrong(c)
+				}
+				return new(AuthResponse).error(c, errInvalidCaptcha, siteKey)
+			}
+		}
+	}
+
+	// Login
+	privateArmored, err := auth.AuthKeyLogin(c, userID, request.AuthKey)
+	if err != nil {
+		if err != auth.ErrInvalidAuthKey {
+			logger.Error(err)
+			return apierr.ErrSomethingWentWrong(c)
+		}
+
+		publickeys, err := key.GetPublicKeys(userID)
+		if logger.Error(err) {
+			return apierr.ErrSomethingWentWrong(c)
+		}
+		event.InsertLoginAttempt(c, userID, publickeys...)
+
+		return new(AuthResponse).error(c, errInvalidUsernamePassword)
+	}
+
+	// Get db username
+	currentUser, err := user.GetPublic(session.Context(c), userID)
+	if logger.Error(err) {
+		return apierr.ErrSomethingWentWrong(c)
+	}
+
+	if request.Remember {
+		// Set persistent auth token
+		if err := token.SetAuth(c, userID); logger.Error(err) {
+			// successful failure
+			return fiberutil.JSON(c, 200, AuthResponse{Success: true, PrivateArmored: privateArmored, User: currentUser, Error: errAuth})
+		}
+	}
+
+	return fiberutil.JSON(c, 200, AuthResponse{Success: true, PrivateArmored: privateArmored, User: currentUser})
 }

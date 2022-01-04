@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -20,7 +21,7 @@ func Get(c *fiber.Ctx) error {
 		return errApi
 	}
 
-	u, err := user.GetPublic(user.ContextSession(c), userID)
+	u, err := user.GetPublic(session.Context(c), userID)
 	if logger.Error(err) {
 		return apierr.ErrSomethingWentWrong(c)
 	}

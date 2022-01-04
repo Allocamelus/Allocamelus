@@ -20,7 +20,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { GEN_User } from "../../models/go_structs_gen";
+import { User } from "../../models/user";
 
 import ToLink from "../ToLink.vue";
 import TextSmall from "../text/Small.vue";
@@ -32,7 +32,7 @@ export const NoName = 1 << 3;
 export default defineComponent({
   props: {
     user: {
-      type: GEN_User,
+      type: User,
       required: true,
     },
     displayType: {

@@ -9,6 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
@@ -16,16 +17,7 @@ import (
 
 // Protected from non logged in users
 func Protected(c *fiber.Ctx) error {
-	if !user.LoggedIn(c) {
-		return apierr.ErrUnauthorized403(c)
-	}
-	return c.Next()
-}
-
-// ProtectedDecrypter can user session decrypt
-func ProtectedDecrypter(c *fiber.Ctx) error {
-	if !user.ContextSession(c).CanDecrypt() {
-		// TODO: password challenge
+	if !session.LoggedIn(c) {
 		return apierr.ErrUnauthorized403(c)
 	}
 	return c.Next()
@@ -66,7 +58,7 @@ func ProtectedPubOrFollow(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	following, err := user.Following(user.ContextSession(c).UserID, userID)
+	following, err := user.Following(session.Context(c).UserID, userID)
 	if logger.Error(err) {
 		// return if following silently
 		return apierr.ErrSomethingWentWrong(c)
@@ -96,7 +88,7 @@ func ProtectedCanViewPost(c *fiber.Ctx) error {
 		return apierr.ErrUnauthorized403(c)
 	}
 
-	err := post.CanView(postID, user.ContextSession(c))
+	err := post.CanView(postID, session.Context(c))
 	if err != nil {
 		if err == post.ErrNoPost {
 			return apierr.ErrNotFound(c)
@@ -167,7 +159,7 @@ func sessionIdCheck(c *fiber.Ctx, userId int64, err error) error {
 }
 
 func checkIdWithSelf(c *fiber.Ctx, userId int64) error {
-	if compare.EqualInt64(userId, user.ContextSession(c).UserID) {
+	if compare.EqualInt64(userId, session.Context(c).UserID) {
 		return c.Next()
 	}
 	return apierr.ErrUnauthorized403(c)

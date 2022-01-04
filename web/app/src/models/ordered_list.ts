@@ -1,7 +1,7 @@
-import { GEN_User } from "./go_structs_gen";
+import { User } from "./user";
 
 export class user_list {
-  users: { [key: number]: GEN_User };
+  users: { [key: number]: User };
 
   static createFrom(source: Partial<user_list> = {}) {
     return new user_list(source);
@@ -9,27 +9,26 @@ export class user_list {
 
   constructor(source: Partial<user_list> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
+    this.users = source["users"] || [];
 
-    this.users = source["users"];
-
-    if (this.users != undefined) {
+    if (source["users"] != undefined) {
       for (const [key, value] of Object.entries(this.users)) {
-        this.users[key] = GEN_User.createFrom(value);
+        this.users[Number(key).valueOf()] = new User(value);
       }
     }
   }
 
   // Methods
-  user(userId: number): GEN_User {
+  user(userId: number): User {
     if (Object.hasOwnProperty.call(this.users, userId)) {
-      // Convert users to GEN_User class if not
-      if (!(this.users[userId] instanceof GEN_User)) {
-        this.users[userId] = new GEN_User(this.users[userId]);
+      // Convert users to User class if not
+      if (!(this.users[userId] instanceof User)) {
+        this.users[userId] = new User(this.users[userId]);
       }
       return this.users[userId];
     }
   }
-  appendUser(u: GEN_User): void {
+  appendUser(u: User): void {
     if (this.users === null) {
       this.users = {};
     }
@@ -48,7 +47,7 @@ export default class ordered_list extends user_list {
   constructor(source: Partial<ordered_list> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
-    this.order = source["order"];
+    this.order = source["order"] || [];
   }
 
   // Method

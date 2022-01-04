@@ -4,6 +4,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/shared"
 	"github.com/allocamelus/allocamelus/internal/user"
+	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,7 +16,7 @@ func Post(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = user.Follow(user.ContextSession(c).UserID, userID)
+	err = user.Follow(session.Context(c).UserID, userID)
 	if err != nil {
 		return apierr.ErrSomethingWentWrong(c)
 	}
@@ -30,7 +31,7 @@ func Accept(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = user.Accept(user.ContextSession(c).UserID, userID)
+	err = user.Accept(session.Context(c).UserID, userID)
 	if err != nil {
 		return apierr.ErrSomethingWentWrong(c)
 	}

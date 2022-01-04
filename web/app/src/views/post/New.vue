@@ -21,7 +21,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 
 import Box from "../../components/box/Box.vue";
 import PostForm from "../../components/post/PostForm.vue";
