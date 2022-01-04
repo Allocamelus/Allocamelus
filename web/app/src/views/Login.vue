@@ -67,7 +67,7 @@
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
 import { redirectUrl } from "../router";
-import { useStore } from "vuex";
+import { useStore } from "../store";
 
 import CenterFormBox from "../components/form/CenterFormBox.vue";
 import TextInput from "../components/form/TextInput.vue";

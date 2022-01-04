@@ -65,7 +65,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 
 import { User } from "../../models/user";
 import { RespToError } from "../../models/responses";

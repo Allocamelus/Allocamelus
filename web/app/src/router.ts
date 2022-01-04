@@ -80,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("./views/Home.vue"),
   },
   {
-    path: "/u/:userName(.*)*",
+    path: "/u/:userName(.*)",
     name: "User",
     component: () => import("./views/User.vue"),
     props: true,

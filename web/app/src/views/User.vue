@@ -78,7 +78,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../store";
 
 import { get as getUser } from "../api/user/get";
 import { posts as getPosts } from "../api/user/posts";
@@ -138,7 +138,7 @@ export default defineComponent({
         },
       },
     });
-
+    console.log(props);
     getUser(props.userName)
       .then((r) => {
         data.user = r;

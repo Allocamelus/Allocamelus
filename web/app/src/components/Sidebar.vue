@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../store";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";

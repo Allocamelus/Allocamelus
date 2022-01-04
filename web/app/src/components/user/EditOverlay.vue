@@ -107,7 +107,7 @@ import TextInput from "../form/TextInput.vue";
 import Overlay from "../overlay/Overlay.vue";
 import UserAvatar from "./Avatar.vue";
 import ChangeAvatar from "./ChangeAvatar.vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 import Snackbar from "../box/Snackbar.vue";
 import Checkbox from "../form/Checkbox.vue";
 

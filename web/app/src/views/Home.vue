@@ -14,7 +14,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../store";
 import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_post";
 import PostFeed from "../components/post/Feed.vue";

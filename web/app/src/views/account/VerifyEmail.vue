@@ -106,7 +106,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "../../store";
 
 import ApiResp, { RespToError } from "../../models/responses";
 import { validate } from "../../api/user/email-token/validate";
