@@ -39,9 +39,8 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
       - [x] Failed Login
       - [ ] Successful Login
       - [x] Password reset
-  - [x] (Untested) Move crypto to client
-    - Preferably not a web app
-    - But, seeing Proton Mail's browser crypto...
+  - [x] Move crypto to client
+    - [ ] Alterative to web app
 - [x] User
   - [x] Profile
     - [x] Bio

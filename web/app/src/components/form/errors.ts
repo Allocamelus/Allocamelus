@@ -30,7 +30,7 @@ export function ErrMsg(
   extra = "",
   type = "character count"
 ): string {
-  var msg = errMsg(err);
+  let msg = errMsg(err);
 
   if (err === ErrMinLength || err === ErrMaxLength) {
     if (type.length > 0) {
