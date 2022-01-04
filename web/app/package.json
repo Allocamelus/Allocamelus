@@ -32,6 +32,7 @@
     "@vuedx/typescript-plugin-vue": "^0.7.4",
     "autoprefixer": "^10.4.1",
     "hash-wasm": "^4.9.0",
+    "jose": "^4.3.7",
     "multiformats": "^9.4.10",
     "openpgp": "^5.0.1",
     "postcss": "^8.4.5",
