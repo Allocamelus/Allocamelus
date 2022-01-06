@@ -1,6 +1,7 @@
 package static
 
 import (
+	"path/filepath"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -20,5 +21,9 @@ func Static(app *fiber.App) {
 		Compress:      true,
 		CacheDuration: cacheDuration,
 		MaxAge:        maxAge,
+	})
+
+	static.Get("/*", func(ctx *fiber.Ctx) error {
+		return ctx.SendFile(filepath.Join(g.Config.Path.PublicDir, "index.html"))
 	})
 }

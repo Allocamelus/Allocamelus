@@ -23,7 +23,7 @@ services:
         ipv4_address: 172.20.30.3
     volumes:
       - "./data/mariadb:/var/lib/mysql:delegated"
-      - "./allocamelus.sql:/docker-entrypoint-initdb.d:ro"
+      - "./allocamelus.sql:/docker-entrypoint-initdb.d/allocamelus.sql:ro"
     #ports:
     #  - "3306:3306"
     restart: always
