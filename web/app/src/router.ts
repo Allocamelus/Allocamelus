@@ -103,7 +103,7 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to) => {
+router.beforeResolve((to) => {
   // canUserAccess() returns `true` or `false`
   if (store.getters.loggedIn) {
     switch (to.name) {
