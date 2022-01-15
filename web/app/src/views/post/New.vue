@@ -1,12 +1,9 @@
 <template>
   <div class="container py-5">
-    <box class="py-3 px-4 max-w-prose mx-auto rounded-xl">
+    <box class="py-3 px-3.5 max-w-prose mx-auto rounded-xl">
       <div class="flex">
         <div class="flex-shrink-0">
-          <user-avatar
-            :user="user"
-            class="w-11 h-11 xs:w-14 xs:h-14 sm:w-16 sm:h-16"
-          ></user-avatar>
+          <user-avatar :user="user" class="w-11 h-11"></user-avatar>
         </div>
         <div class="ml-3 flex-grow flex flex-col">
           <h2 class="text-xl font-medium">New Post</h2>

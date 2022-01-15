@@ -7,12 +7,13 @@
             <component
               :is="canEdit ? 'change-avatar' : 'user-avatar'"
               :user="canEdit ? storeUser : user"
-              class="flex-shrink-0 w-16 h-16 xs:w-20 xs:h-20"
+              class="flex-shrink-0 w-14 h-14 xs:w-16 xs:h-16 md:w-20 md:h-20"
             ></component>
             <user-name
               class="ml-3"
               :user="canEdit ? storeUser : user"
-              :displayType="TwoLine"
+              :twoLine="true"
+              :isLink="false"
             ></user-name>
             <text-small
               v-if="user.type === UNVERIFIED_USER"
@@ -97,7 +98,7 @@ import {
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
-import UserName, { TwoLine } from "../components/user/Name.vue";
+import UserName from "../components/user/Name.vue";
 import ErrorBox from "../components/box/Error.vue";
 import PostFeed from "../components/post/Feed.vue";
 import Feed from "../components/Feed.vue";
@@ -160,7 +161,6 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      TwoLine,
       loggedIn,
       storeUser,
       InvalidCharacters,

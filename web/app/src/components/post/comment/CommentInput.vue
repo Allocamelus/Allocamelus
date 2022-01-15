@@ -2,7 +2,7 @@
   <div>
     <input-label for="comment" class="flex" :err="err.comment">
       {{ theType }}ing as
-      <user-name :user="storeUser" :displayType="usernameType"></user-name>
+      <user-name :user="storeUser" :isLink="true" :noName="true"></user-name>
     </input-label>
     <text-input
       v-model="comment"
@@ -44,7 +44,7 @@ import { notNull, RespToError } from "../../../models/responses";
 import InputLabel from "../../form/InputLabel.vue";
 import TextInput from "../../form/TextInput.vue";
 import BasicBtn from "../../button/BasicBtn.vue";
-import UserName, { OneLineLink, NoName } from "../../user/Name.vue";
+import UserName from "../../user/Name.vue";
 
 export default defineComponent({
   name: "comment-input",
@@ -70,14 +70,12 @@ export default defineComponent({
         comment: "",
       },
     });
-    const usernameType = OneLineLink | NoName;
 
     return {
       ...toRefs(data),
       loggedIn,
       storeUser,
       InvalidCharacters,
-      usernameType,
     };
   },
   computed: {

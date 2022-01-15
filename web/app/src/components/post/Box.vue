@@ -3,7 +3,7 @@
     class="flex flex-col flex-grow flex-shrink"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <div class="flex flex-grow flex-shrink py-3 px-4" @click.self="toPost">
+    <div class="flex flex-grow flex-shrink py-3 px-3.5" @click.self="toPost">
       <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
       <div
         class="ml-3 flex flex-col flex-grow"
@@ -57,26 +57,26 @@
           ]"
           v-html="purifiedContent /* skipcq: JS-0693 */"
         ></div>
+        <div
+          v-if="post.media"
+          @click="toPost"
+          class="flex flex-wrap mt-2 rounded-lg overflow-hidden"
+        >
+          <image-box
+            v-for="(media, key) in post.mediaList"
+            :key="key"
+            :index="key"
+            :url="media.url"
+            :alt="media.meta.alt"
+            :width="media.meta.width"
+            :height="media.meta.height"
+            :totalNumber="post.mediaList.length"
+            :rounded="false"
+            loading="lazy"
+          >
+          </image-box>
+        </div>
       </div>
-    </div>
-    <div
-      v-if="post.media"
-      @click="toPost"
-      class="flex flex-wrap rounded-b-xl overflow-hidden"
-    >
-      <image-box
-        v-for="(media, key) in post.mediaList"
-        :key="key"
-        :index="key"
-        :url="media.url"
-        :alt="media.meta.alt"
-        :width="media.meta.width"
-        :height="media.meta.height"
-        :totalNumber="post.mediaList.length"
-        :rounded="false"
-        loading="lazy"
-      >
-      </image-box>
     </div>
   </article>
 </template>

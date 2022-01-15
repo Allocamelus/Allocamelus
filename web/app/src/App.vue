@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font-sans">
     <nav
       id="nav"
       class="bg-primary-600 text-gray-50 shadow z-30 m-0 p-0 fixed top-0 w-full h-nav leading-nav"
@@ -98,33 +98,91 @@
               >
                 <span class="sr-only">Open user menu</span>
                 <!--TODO:User Mobile Menu-->
-                <user-avatar
-                  :user="user"
-                  class="w-6 h-6"
-                  :isLink="userMobile"
-                ></user-avatar>
+                <user-avatar :user="user" class="w-6 h-6"></user-avatar>
                 <component
                   v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
                   class="hidden md:block w-4 h-4"
                 ></component>
               </div>
-              <dropdown v-model="userMenu" class="w-44">
+              <dropdown
+                v-if="!userMobile"
+                v-model="userMenu"
+                class="w-min whitespace-nowrap"
+              >
                 <div class="bg-secondary-800">
                   <dropdown-item
                     :to="`/u/${user.userName}`"
                     class="hover:bg-secondary-700"
                   >
-                    Profile
+                    <UserCircleIcon class="w-5 h-5 mr-2"></UserCircleIcon>
+                    <div>Profile</div>
                   </dropdown-item>
-                  <dropdown-item class="hover:bg-secondary-700"
-                    >Settings (TODO)</dropdown-item
-                  >
-                  <dropdown-item to="/logout" class="hover:bg-secondary-700"
-                    >Logout</dropdown-item
-                  >
+                  <dropdown-item class="hover:bg-secondary-700">
+                    <CogIcon class="w-5 h-5 mr-2"></CogIcon>
+                    <div>Settings (TODO)</div>
+                  </dropdown-item>
+                  <dropdown-item to="/logout" class="hover:bg-secondary-700">
+                    <LogoutIcon class="w-5 h-5 mr-2"></LogoutIcon>
+                    <div>Logout</div>
+                  </dropdown-item>
                 </div>
               </dropdown>
+              <Overlay
+                v-else
+                v-model="userMenu"
+                :blockScroll="true"
+                :xsFullHeight="true"
+              >
+                <Box
+                  class="h-full w-full flex flex-col flex-grow justify-between xs:mx-2 xs:rounded-lg"
+                >
+                  <div class="flex flex-col">
+                    <div
+                      class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0"
+                    >
+                      <div class="flex-1 flex justify-end">
+                        <basic-btn @click="userMenu = false">
+                          <XIcon
+                            class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
+                          ></XIcon>
+                        </basic-btn>
+                      </div>
+                    </div>
+                    <div
+                      class="flex flex-col border-b border-secondary-600 py-2"
+                    >
+                      <dropdown-item :to="`/u/${user.userName}`">
+                        <user-avatar
+                          :user="user"
+                          class="w-11 h-11"
+                        ></user-avatar>
+                        <div
+                          class="ml-3 flex flex-col flex-grow justify-evenly"
+                        >
+                          <user-name :user="user" :isLink="false"></user-name>
+                          <div class="link">View Profile</div>
+                        </div>
+                      </dropdown-item>
+                      <dropdown-item to="/post/new">
+                        <PlusIcon class="w-5 h-5 mr-2"></PlusIcon>
+                        <div>New Post</div>
+                      </dropdown-item>
+                    </div>
+                    <div class="flex flex-col py-2">
+                      <dropdown-item>
+                        <CogIcon class="w-5 h-5 mr-2"></CogIcon>
+                        <div>Settings (TODO)</div>
+                      </dropdown-item>
+                      <dropdown-item to="/logout">
+                        <LogoutIcon class="w-5 h-5 mr-2"></LogoutIcon>
+                        <div class="flex items-center">Logout</div>
+                      </dropdown-item>
+                    </div>
+                  </div>
+                  <BottomLinks class="justify-self-end mb-3"></BottomLinks>
+                </Box>
+              </Overlay>
             </div>
           </div>
         </div>
@@ -141,7 +199,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, computed, toRefs, reactive } from "vue";
 import { useStore } from "./store";
 
@@ -160,6 +218,12 @@ import MoonIcon from "@heroicons/vue/solid/MoonIcon";
 import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
 import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
 import BellIcon from "@heroicons/vue/outline/BellIcon";
+import XIcon from "@heroicons/vue/solid/XIcon";
+import UserCircleIcon from "@heroicons/vue/outline/UserCircleIcon";
+import CogIcon from "@heroicons/vue/outline/CogIcon";
+import LogoutIcon from "@heroicons/vue/outline/LogoutIcon";
+import PlusIcon from "@heroicons/vue/outline/PlusIcon";
+
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
 import BasicBtn from "./components/button/BasicBtn.vue";
@@ -170,6 +234,9 @@ import BarLoader from "./components/overlay/BarLoader.vue";
 import Snackbar from "./components/box/Snackbar.vue";
 import TextSmall from "./components/text/Small.vue";
 import BottomFooter from "./components/BottomFooter.vue";
+import Overlay from "./components/overlay/Overlay.vue";
+import Box from "./components/box/Box.vue";
+import BottomLinks from "./components/BottomLinks.vue";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -190,9 +257,9 @@ export default defineComponent({
       sessionCheck = () => store.dispatch("sessionCheck"),
       sessionKeepAlive = () => store.dispatch("sessionKeepAlive");
     const data = reactive({
-      sesKeepAliveInterval: null,
+      sesKeepAliveInterval: setInterval(() => {}, SecToMs(MinToSec(10))),
       userMenu: false,
-      footer: true,
+      footer: false,
       alerts: {
         err: "",
         menu: false,
@@ -210,10 +277,10 @@ export default defineComponent({
     (async () => sessionCheck())();
     var keepAliveDelay = async () => {
       const interval = SecToMs(MinToSec(5));
-      setTimeout(
-        (data.sesKeepAliveInterval = setInterval(sessionKeepAlive, interval)),
-        interval
-      );
+      clearInterval(data.sesKeepAliveInterval);
+      setTimeout(() => {
+        data.sesKeepAliveInterval = setInterval(sessionKeepAlive, interval);
+      }, interval);
     };
     keepAliveDelay();
 
@@ -242,11 +309,7 @@ export default defineComponent({
   methods: {
     toggleUserMenu() {
       this.checkMenu();
-      if (!this.userMobile) {
-        this.userMenu = !this.userMenu;
-      } else {
-        this.userMenu = false;
-      }
+      this.userMenu = !this.userMenu;
     },
     async clickAlerts() {
       this.alerts.menu = !this.alerts.menu;
@@ -273,7 +336,7 @@ export default defineComponent({
           });
       }
     },
-    followRequest(userId, accept) {
+    followRequest(userId: number, accept: boolean) {
       (() => {
         var uN = this.alerts.requests.user(userId).userName;
         if (accept) {
@@ -286,16 +349,19 @@ export default defineComponent({
             this.snackbarMsg(SomethingWentWrong);
             return;
           }
-          var requests = this.alerts.requests.requests;
-          delete requests[
-            Object.keys(requests).find((k) => requests[k] === userId)
-          ];
+          let requests = this.alerts.requests.requests;
+          let del = Object.keys(requests).find(
+            (k) => requests[Number(k)] === userId
+          );
+          if (del != undefined) {
+            delete requests[Number(del)];
+          }
         })
         .catch(() => {
           this.snackbarMsg(SomethingWentWrong);
         });
     },
-    snackbarMsg(msg) {
+    snackbarMsg(msg: string) {
       this.snackbar.msg = "";
       if (msg.length > 0) {
         this.snackbar.msg = msg;
@@ -309,7 +375,9 @@ export default defineComponent({
       this.checkMenu();
       this.userMenu = false;
       this.alerts.menu = false;
-      this.footer = this.$route.meta.footer ? this.$route.meta.footer : false;
+      if (typeof this.$route.meta.footer === "boolean") {
+        this.footer = this.$route.meta.footer;
+      }
     },
   },
   components: {
@@ -320,6 +388,11 @@ export default defineComponent({
     BellIcon,
     ChevronDownIcon,
     ChevronUpIcon,
+    XIcon,
+    UserCircleIcon,
+    CogIcon,
+    LogoutIcon,
+    PlusIcon,
     BasicBtn,
     UserAvatar,
     UserName,
@@ -328,6 +401,9 @@ export default defineComponent({
     Snackbar,
     TextSmall,
     BottomFooter,
+    Overlay,
+    Box,
+    BottomLinks,
   },
 });
 </script>
