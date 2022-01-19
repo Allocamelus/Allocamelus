@@ -1,9 +1,6 @@
 qtpl:
 	qtc -dir=web/template
 
-tscriptify:
-	go run ./scripts
-
 run:
 	go run ./cmd/allocamelus
 
