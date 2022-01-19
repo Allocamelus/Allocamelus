@@ -17,8 +17,7 @@ export class User {
   userName: string;
   name: string;
   email?: string;
-  avatar: boolean;
-  avatarUrl?: string;
+  avatar: string;
   bio?: string;
   selfFollow?: FollowStruct;
   userFollow?: FollowStruct;
@@ -32,8 +31,7 @@ export class User {
     this.userName = source["userName"] || "";
     this.name = source["name"] || "";
     this.email = source["email"];
-    this.avatar = source["avatar"] || false;
-    this.avatarUrl = source["avatarUrl"];
+    this.avatar = source["avatar"] || "";
     this.bio = source["bio"];
     if (source["selfFollow"] != undefined) {
       this.selfFollow = new FollowStruct(source["selfFollow"]);

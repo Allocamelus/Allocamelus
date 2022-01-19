@@ -139,7 +139,7 @@ export default defineComponent({
         },
       },
     });
-    console.log(props);
+
     getUser(props.userName)
       .then((r) => {
         data.user = r;

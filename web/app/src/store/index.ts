@@ -90,11 +90,9 @@ export const store = createStore<State>({
     },
     updateAvatar(state, url) {
       if (url?.length > 0) {
-        state.session.user.avatar = true;
-        state.session.user.avatarUrl = url;
+        state.session.user.avatar = url;
       } else {
-        state.session.user.avatar = false;
-        state.session.user.avatarUrl = undefined;
+        state.session.user.avatar = "";
       }
     },
     updateBio(state, bio) {
@@ -123,7 +121,7 @@ export const store = createStore<State>({
     sessionCheck({ commit, state }) {
       status()
         .then((st) => {
-          if (st.loggedIn === false) {
+          if (!st.loggedIn) {
             if (state.session.loggedIn) {
               commit({
                 type: "newSession",

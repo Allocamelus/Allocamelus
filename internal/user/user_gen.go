@@ -183,12 +183,6 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Email")
 				return
 			}
-		case "avatar":
-			z.Avatar, err = dc.ReadBool()
-			if err != nil {
-				err = msgp.WrapError(err, "Avatar")
-				return
-			}
 		case "bio":
 			z.Bio, err = dc.ReadString()
 			if err != nil {
@@ -236,9 +230,9 @@ func (z *User) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 10
+	// map header, size 9
 	// write "id"
-	err = en.Append(0x8a, 0xa2, 0x69, 0x64)
+	err = en.Append(0x89, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
@@ -275,16 +269,6 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 	err = en.WriteString(z.Email)
 	if err != nil {
 		err = msgp.WrapError(err, "Email")
-		return
-	}
-	// write "avatar"
-	err = en.Append(0xa6, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72)
-	if err != nil {
-		return
-	}
-	err = en.WriteBool(z.Avatar)
-	if err != nil {
-		err = msgp.WrapError(err, "Avatar")
 		return
 	}
 	// write "bio"
@@ -343,9 +327,9 @@ func (z *User) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 10
+	// map header, size 9
 	// string "id"
-	o = append(o, 0x8a, 0xa2, 0x69, 0x64)
+	o = append(o, 0x89, 0xa2, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.ID)
 	// string "userName"
 	o = append(o, 0xa8, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65)
@@ -356,9 +340,6 @@ func (z *User) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "email"
 	o = append(o, 0xa5, 0x65, 0x6d, 0x61, 0x69, 0x6c)
 	o = msgp.AppendString(o, z.Email)
-	// string "avatar"
-	o = append(o, 0xa6, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72)
-	o = msgp.AppendBool(o, z.Avatar)
 	// string "bio"
 	o = append(o, 0xa3, 0x62, 0x69, 0x6f)
 	o = msgp.AppendString(o, z.Bio)
@@ -423,12 +404,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				err = msgp.WrapError(err, "Email")
 				return
 			}
-		case "avatar":
-			z.Avatar, bts, err = msgp.ReadBoolBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "Avatar")
-				return
-			}
 		case "bio":
 			z.Bio, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
@@ -477,6 +452,6 @@ func (z *User) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *User) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 7 + msgp.BoolSize + 4 + msgp.StringPrefixSize + len(z.Bio) + 10 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + z.Permissions.Msgsize() + 8 + msgp.Int64Size
+	s = 1 + 3 + msgp.Int64Size + 9 + msgp.StringPrefixSize + len(z.UserName) + 5 + msgp.StringPrefixSize + len(z.Name) + 6 + msgp.StringPrefixSize + len(z.Email) + 4 + msgp.StringPrefixSize + len(z.Bio) + 10 + msgp.Int64Size + 5 + msgp.Int8Size + 12 + z.Permissions.Msgsize() + 8 + msgp.Int64Size
 	return
 }

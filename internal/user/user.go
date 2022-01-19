@@ -26,8 +26,7 @@ type User struct {
 	UserName    string       `msg:"userName" json:"userName"`
 	Name        string       `msg:"name" json:"name"`
 	Email       string       `msg:"email" json:"email,omitempty"`
-	Avatar      bool         `msg:"avatar" json:"avatar"`
-	AvatarUrl   string       `msg:"-" json:"avatarUrl,omitempty"`
+	Avatar      string       `msg:"-" json:"avatar"`
 	Bio         string       `msg:"bio" json:"bio,omitempty"`
 	SelfFollow  FollowStruct `msg:"-" json:"selfFollow,omitempty"`
 	UserFollow  FollowStruct `msg:"-" json:"userFollow,omitempty"`
@@ -88,14 +87,12 @@ func GetPublic(s *session.Session, userID int64) (user User, err error) {
 		return
 	}
 
-	user.AvatarUrl, err = avatar.GetUrl(userID)
+	user.Avatar, err = avatar.GetUrl(userID)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			return
 		}
 		err = nil
-	} else {
-		user.Avatar = true
 	}
 
 	if s.LoggedIn {

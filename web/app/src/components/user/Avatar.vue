@@ -5,14 +5,14 @@
     class="block flex-shrink-0"
   >
     <img
-      :src="user.avatar ? fullAvatarURL : gray5x5Url"
+      :src="hasAvatar ? fullAvatarURL : gray5x5Url"
       loading="auto"
       :alt="`@${user.userName}'s Profile Image`"
       :width="500"
       :height="500"
       class="w-full h-full rounded-full mr-2 border-none"
       :class="
-        user.avatar
+        hasAvatar
           ? 'bg-gray-50 dark:bg-gray-900'
           : 'bg-gray-200 dark:bg-gray-800'
       "
@@ -20,7 +20,7 @@
   </component>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import { User } from "../../models/user";
 import gray5x5Url from "../../assets/gray5x5.jpg";
@@ -46,7 +46,10 @@ export default defineComponent({
   },
   computed: {
     fullAvatarURL() {
-      return FullURL(this.user.avatarUrl, import.meta.env.BASE_URL);
+      return FullURL(this.user.avatar, import.meta.env.BASE_URL);
+    },
+    hasAvatar() {
+      return this.user.avatar.length > 0;
     },
   },
   components: { ToLink },

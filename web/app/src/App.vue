@@ -97,7 +97,6 @@
                 @click="toggleUserMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <!--TODO:User Mobile Menu-->
                 <user-avatar :user="user" class="w-6 h-6"></user-avatar>
                 <component
                   v-if="!user.avatar"
