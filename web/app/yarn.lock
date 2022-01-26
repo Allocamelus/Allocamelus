@@ -598,6 +598,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vue/devtools-api@npm:^6.0.0-beta.21":
+  version: 6.0.0-beta.21.1
+  resolution: "@vue/devtools-api@npm:6.0.0-beta.21.1"
+  checksum: 0ba256aa6e184455ff0e990e765ebb4d8f7cb5509c97d25898d2e98f213c2d2b3d44492b3f92ff50fae22ee4806f684675f15f324ae81260ada89e9b3e12303c
+  languageName: node
+  linkType: hard
+
 "@vue/reactivity-transform@npm:3.2.26":
   version: 3.2.26
   resolution: "@vue/reactivity-transform@npm:3.2.26"
@@ -841,6 +848,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:^7.5.5":
+  version: 7.5.5
+  resolution: "@vueuse/core@npm:7.5.5"
+  dependencies:
+    "@vueuse/shared": 7.5.5
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.0
+    vue: ^2.6.0 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    vue:
+      optional: true
+  checksum: 20d21fcb145155c686963acc1ac11c7925eb9700e82fd05650c942f6be81ab1e6c05087a6ac57966d2367d11e9bd5a0813f144e27ce46da5321c32c59ad70e60
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:7.5.5":
+  version: 7.5.5
+  resolution: "@vueuse/shared@npm:7.5.5"
+  dependencies:
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.0
+    vue: ^2.6.0 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    vue:
+      optional: true
+  checksum: 1a2f0b29d2bba23c631cdf9a8b7b7065131a1701accb25f4a17973c6bd8da5905fb55e144b5e95ef7877de5c910c10af403122f2e0dfb0155a7f81d6ed4b2844
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:1":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -973,11 +1015,13 @@ __metadata:
     "@vitejs/plugin-vue": ^2.0.1
     "@vue/compiler-sfc": ^3.2.26
     "@vuedx/typescript-plugin-vue": ^0.7.4
+    "@vueuse/core": ^7.5.5
     autoprefixer: ^10.4.1
     axios: ^0.24.0
     buffer: ^6.0.3
     dompurify: ^2.3.4
     hash-wasm: ^4.9.0
+    idb-keyval: ^6.1.0
     jose: ^4.3.7
     localforage: ^1.10.0
     multiformats: ^9.5.6
@@ -2129,6 +2173,15 @@ __metadata:
   dependencies:
     safer-buffer: ">= 2.1.2 < 3.0.0"
   checksum: 03e03eb9fc003bc94f7956849f747258e57c162760259d76d1e67483058cad854a4b681b635e21e3ec41f4bd15ceed1b4a350f890565d680343442c5b139fa8a
+  languageName: node
+  linkType: hard
+
+"idb-keyval@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "idb-keyval@npm:6.1.0"
+  dependencies:
+    safari-14-idb-fix: ^3.0.0
+  checksum: 431a7467739f0279e6af5f36c408f4c83e71ad0a892296d11360e5f2eaac8948da274783946b51c46847d8286570cc9d95d2e54b3cde351749d47bba419c25fc
   languageName: node
   linkType: hard
 
@@ -3570,6 +3623,22 @@ resolve@^1.20.0:
   version: 0.3.3
   resolution: "vscode-web-custom-data@npm:0.3.3"
   checksum: 6cd6326d09dc33de4e61a0ff3525e55892494c2c822f5f6d50800b6e269db022cbfcd72acff4315045744e84311aeaef54695ab947a9723331af99e46285b390
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:*":
+  version: 0.12.1
+  resolution: "vue-demi@npm:0.12.1"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: d39a43e765e5bc34cf5b378ccff53a521e824f8c55aae6a9163c294364e8af593c5331b3b3b1b679b28096a3142abed5aed07e2dfb581c96f2eba88a176666f2
   languageName: node
   linkType: hard
 

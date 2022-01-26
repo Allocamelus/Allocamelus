@@ -10,9 +10,11 @@
   "dependencies": {
     "@hcaptcha/vue3-hcaptcha": "^1.0.1",
     "@heroicons/vue": "^1.0.5",
+    "@vueuse/core": "^7.5.5",
     "axios": "^0.24.0",
     "buffer": "^6.0.3",
     "dompurify": "^2.3.4",
+    "idb-keyval": "^6.1.0",
     "localforage": "^1.10.0",
     "squire-rte": "^1.11.3",
     "throttle-debounce": "^3.0.1",
