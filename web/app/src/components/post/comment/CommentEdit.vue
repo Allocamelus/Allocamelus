@@ -35,9 +35,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
 import { useStore } from "../../../store";
+import { useSessionStore } from "../../../store2/session";
 
 import { API_Comment } from "../../../api/post/comment";
 import UpdateComment from "../../../api/post/comment/update";
@@ -63,9 +64,8 @@ export default defineComponent({
   emits: ["edited", "close"],
   setup(props) {
     const store = useStore();
+    const session = useSessionStore();
     const storeName = `p${props.postId}-comments`;
-    const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user);
     const data = reactive({
       // Don't use computed value so it can be edited
       comment: store.getters[`${storeName}/comment`](props.commentId),
@@ -77,8 +77,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      loggedIn,
-      storeUser,
+      loggedIn: computed(() => session.loggedIn),
+      storeUser: computed(() => session.user),
       InvalidCharacters,
     };
   },
@@ -114,11 +114,11 @@ export default defineComponent({
           })
           // Handle error
           .catch((e) => {
-            this.onPostErr(e);
+            this.onPostErr(String(e));
           });
       }
     },
-    onPostErr(e) {
+    onPostErr(e: string | undefined) {
       this.submitted = false;
       // Check if error actually exist
       if (notNull(e)) {

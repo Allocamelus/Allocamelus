@@ -18,7 +18,7 @@
             <div class="p-1 rounded-full cursor-pointer" @click="toggleTheme">
               <span class="sr-only">Toggle Theme</span>
               <component
-                :is="this.theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
+                :is="theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
                 class="w-5.5 h-5.5"
               ></component>
             </div>
@@ -200,7 +200,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, toRefs, reactive } from "vue";
-import { useStore } from "./store";
+import { useStateStore } from "./store2";
+import { useSessionStore } from "./store2/session";
 
 import { MinToSec, SecToMs, UnixTime } from "./pkg/time";
 
@@ -247,14 +248,9 @@ function setTheme(theme = "dark") {
 
 export default defineComponent({
   setup() {
-    const store = useStore(),
-      loggedIn = computed(() => store.getters.loggedIn),
-      user = computed(() => store.getters.user),
-      theme = computed(() => store.getters.theme),
-      viewKey = computed(() => store.getters.viewKey),
-      toggleTheme = () => store.commit("toggleTheme"),
-      sessionCheck = () => store.dispatch("sessionCheck"),
-      sessionKeepAlive = () => store.dispatch("sessionKeepAlive");
+    const state = useStateStore(),
+      session = useSessionStore();
+    const theme = computed(() => state.theme);
     const data = reactive({
       sesKeepAliveInterval: setInterval(() => {}, SecToMs(MinToSec(10))),
       userMenu: false,
@@ -273,12 +269,12 @@ export default defineComponent({
       userMobile: window.screen.width < 768,
     });
 
-    (async () => sessionCheck())();
+    (async () => session.getStatus())();
     var keepAliveDelay = async () => {
       const interval = SecToMs(MinToSec(5));
       clearInterval(data.sesKeepAliveInterval);
       setTimeout(() => {
-        data.sesKeepAliveInterval = setInterval(sessionKeepAlive, interval);
+        data.sesKeepAliveInterval = setInterval(session.keepAlive, interval);
       }, interval);
     };
     keepAliveDelay();
@@ -286,12 +282,11 @@ export default defineComponent({
     setTheme(theme.value);
     return {
       ...toRefs(data),
-      loggedIn,
-      user,
+      loggedIn: computed(() => session.loggedIn),
+      user: computed(() => session.user),
       theme,
-      viewKey,
-      toggleTheme,
-      sessionCheck,
+      viewKey: computed(() => state.viewKey),
+      toggleTheme: state.toggleTheme,
     };
   },
   watch: {

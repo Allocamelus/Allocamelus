@@ -82,8 +82,9 @@
   </overlay>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import { useSessionStore } from "../../store2/session";
 
 import { User } from "../../models/user";
 import { RespToError } from "../../models/responses";
@@ -107,7 +108,6 @@ import TextInput from "../form/TextInput.vue";
 import Overlay from "../overlay/Overlay.vue";
 import UserAvatar from "./Avatar.vue";
 import ChangeAvatar from "./ChangeAvatar.vue";
-import { useStore } from "../../store";
 import Snackbar from "../box/Snackbar.vue";
 import Checkbox from "../form/Checkbox.vue";
 
@@ -124,14 +124,11 @@ export default defineComponent({
   },
   emits: ["close"],
   setup(props) {
-    const store = useStore(),
-      updateStoreBio = (bio) => store.commit("updateBio", bio),
-      updateStoreName = (name) => store.commit("updateName", name),
-      updateStoreType = (type) => store.commit("updateType", type);
+    const session = useSessionStore();
     const data = reactive({
       visable: props.show,
-      name: props.user.name,
-      bio: props.user.bio,
+      name: props.user.name || "",
+      bio: props.user.bio || "",
       privateUser: props.user.type == TYPE_PRIVATE,
       err: {
         name: "",
@@ -146,9 +143,9 @@ export default defineComponent({
     return {
       ...toRefs(data),
       InvalidCharacters,
-      updateStoreBio,
-      updateStoreName,
-      updateStoreType,
+      updateStoreBio: (bio: string) => session.$patch({ user: { bio } }),
+      updateStoreName: (name: string) => session.$patch({ user: { name } }),
+      updateStoreType: (type: number) => session.$patch({ user: { type } }),
     };
   },
   watch: {
@@ -238,7 +235,7 @@ export default defineComponent({
       }
       return true;
     },
-    snackbarErr(err) {
+    snackbarErr(err: string) {
       this.err.snackbar.msg = "";
       if (err.length > 0) {
         this.err.snackbar.msg = err;

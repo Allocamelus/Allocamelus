@@ -63,9 +63,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "../../store";
+import { useSessionStore } from "../../store2/session";
 
 import { User } from "../../models/user";
 import { RespToError } from "../../models/responses";
@@ -96,8 +96,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const store = useStore(),
-      updateStoreAvatar = (url) => store.commit("updateAvatar", url),
+    const session = useSessionStore(),
       maxImageSize = 5242880;
 
     const data = reactive({
@@ -110,7 +109,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      updateStoreAvatar,
+      updateStoreAvatar: (url: string | undefined) =>
+        session.$patch({ user: { avatar: url } }),
       maxImageSize,
     };
   },
@@ -123,7 +123,7 @@ export default defineComponent({
     toggleShow() {
       this.show = !this.show;
     },
-    avatarUpload(avatar) {
+    avatarUpload(avatar: File) {
       if (this.err.msg == "") {
         UploadAvatar(this.user.userName, avatar)
           .then((r) => {
@@ -151,11 +151,10 @@ export default defineComponent({
           this.toggleShow();
         })
         .catch(() => {
-          hasErr = true;
           this.onErr(SomethingWentWrong);
         });
     },
-    onErr(err) {
+    onErr(err: string) {
       this.err.msg = "";
       if (err.length > 0) {
         this.err.msg = err;

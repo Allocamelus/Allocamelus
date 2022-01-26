@@ -79,7 +79,7 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "../store";
+import { useSessionStore } from "../store2/session";
 
 import { get as getUser } from "../api/user/get";
 import { posts as getPosts } from "../api/user/posts";
@@ -122,9 +122,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-    const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user);
+    const session = useSessionStore();
     const data = reactive({
       user: new User(),
       postsList: new API_Posts(),
@@ -161,8 +159,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      loggedIn,
-      storeUser,
+      loggedIn: computed(() => session.loggedIn),
+      storeUser: computed(() => session.user),
       InvalidCharacters,
       UNVERIFIED_USER,
     };

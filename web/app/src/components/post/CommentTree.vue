@@ -12,7 +12,6 @@
         <div class="flex flex-col flex-grow">
           <div
             class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
-            @click.self="toPost"
           >
             <div class="flex text-sm xs:text-base items-center">
               <user-avatar
@@ -161,19 +160,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
 import { useStore } from "../../store";
+import { useSessionStore } from "../../store2/session";
 
 import { API_Comment } from "../../api/post/comment";
 import { replies } from "../../api/post/comment/replies";
+import { User } from "../../models/user";
+import { AddCommentParams } from "../../store/module/comments/mutations";
 
 import { RespToError } from "../../models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
-
 import OutlineAnnotationIcon from "@heroicons/vue/outline/AnnotationIcon";
 
 import UserName from "../user/Name.vue";
@@ -202,20 +203,21 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
+    const session = useSessionStore();
     const storeName = `p${props.postId}-comments`;
-    const loggedIn = computed(() => store.getters.loggedIn),
-      comment = computed(() =>
+    const comment = computed(() =>
         store.getters[`${storeName}/comment`](props.commentId)
       ),
       missingReplies = computed(() =>
         store.getters[`${storeName}/missingReplies`](props.commentId)
       ),
-      storeUser = computed(() => store.getters.user),
       commentUser = computed(() => store.getters[`${storeName}/user`]),
-      removeComment = (id) => store.commit(`${storeName}/remove`, id),
-      addComment = (c) => store.commit(`${storeName}/addComment`, c),
-      addUser = (c) => store.commit(`${storeName}/addUser`, c),
-      updateComment = (c) => store.commit(`${storeName}/updateComment`, c);
+      removeComment = (id: number) => store.commit(`${storeName}/remove`, id),
+      addComment = (c: AddCommentParams) =>
+        store.commit(`${storeName}/addComment`, c),
+      addUser = (u: User) => store.commit(`${storeName}/addUser`, u),
+      updateComment = (c: API_Comment) =>
+        store.commit(`${storeName}/updateComment`, c);
 
     const data = reactive({
       hidden: false,
@@ -232,10 +234,10 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      loggedIn,
+      loggedIn: computed(() => session.loggedIn),
       comment,
       missingReplies,
-      storeUser,
+      storeUser: computed(() => session.user),
       addComment,
       addUser,
       commentUser,
@@ -257,7 +259,7 @@ export default defineComponent({
     },
   },
   methods: {
-    newReply(c) {
+    newReply(c: API_Comment) {
       this.showReplyForm = false;
       this.addUser(this.storeUser);
       this.addComment({
@@ -269,7 +271,7 @@ export default defineComponent({
     deleted() {
       this.removeComment(this.comment.id);
     },
-    updated(c) {
+    updated(c: API_Comment) {
       this.updateComment(c);
     },
     getReplies() {

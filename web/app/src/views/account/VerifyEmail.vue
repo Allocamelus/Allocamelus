@@ -15,7 +15,7 @@
         </div>
         <div v-else>
           <div class="text-lg font-semibold">Error verifying email</div>
-          <div v-if="err == UserResp.EmailToken.Validate.Expired">
+          <div v-if="err.api == UserResp.EmailToken.Validate.Expired">
             <text-small>Expired Email Token</text-small>
             <text-small> Your verification token/link has expired </text-small>
           </div>
@@ -49,7 +49,7 @@
             :theme="captcha.theme"
             @rendered="captcha.loaded = true"
             @verify="
-              (token, eKey) => {
+              (token: string) => {
                 captcha.token = token;
                 onSubmit();
               }
@@ -104,9 +104,9 @@
   </center-form-box>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "../../store";
+import { useStateStore } from "../../store2";
 
 import ApiResp, { RespToError } from "../../models/responses";
 import { validate } from "../../api/user/email-token/validate";
@@ -117,6 +117,7 @@ import {
   HtmlSomethingWentWrong,
 } from "../../components/htmlErrors";
 
+// @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import SpinLoader from "../../components/icons/SpinLoader.vue";
@@ -128,12 +129,11 @@ import Submit from "../../components/form/Submit.vue";
 import InputLabel from "../../components/form/InputLabel.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 
-function hasST(selector, token) {
-  return selector != undefined && token != undefined
-    ? selector.length != 0 && token.length != 0
-      ? true
-      : false
-    : false;
+function hasST(selector: string, token: string) {
+  if (selector.length != 0 || token.length != 0) {
+    return false;
+  }
+  return true;
 }
 
 export default defineComponent({
@@ -148,13 +148,13 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const state = useStateStore();
     const data = reactive({
       loading: true,
       success: false,
-      err: "",
       email: "",
       err: {
+        api: "",
         email: "",
         create: "",
       },
@@ -163,7 +163,7 @@ export default defineComponent({
         loaded: false,
         siteKey: "",
         token: "",
-        theme: store.getters.theme,
+        theme: state.theme,
       },
       showForm: true,
     });
@@ -176,7 +176,7 @@ export default defineComponent({
       validate(props.selector, props.token)
         .then((r) => {
           data.success = r.success;
-          data.err = r.error;
+          data.err.api = r.error || "";
         })
         .finally(() => {
           data.loading = false;
@@ -251,14 +251,16 @@ export default defineComponent({
   async beforeRouteUpdate(to) {
     this.loading = true;
     this.success = false;
-    this.err = "";
+    this.err.api = "";
     this.captcha.show = this.captcha.loaded = false;
 
-    if (hasST(to.query.selector, to.query.token)) {
-      validate(to.query.selector, to.query.token)
+    let selector = String(to.query.selector);
+    let token = String(to.query.token);
+    if (hasST(selector, token)) {
+      validate(selector, token)
         .then((r) => {
           this.success = r.success;
-          this.err = r.error;
+          this.err.api = r.error || "";
         })
         .finally(() => {
           this.loading = false;

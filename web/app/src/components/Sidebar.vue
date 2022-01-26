@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useStore } from "../store";
+import { useSessionStore } from "../store2/session";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";
@@ -39,9 +39,9 @@ import BottomLinks from "./BottomLinks.vue";
 
 export default defineComponent({
   setup() {
-    const store = useStore();
+    const session = useSessionStore();
     return {
-      loggedIn: computed(() => store.getters.loggedIn),
+      loggedIn: computed(() => session.loggedIn),
     };
   },
   components: { Box, BasicBtn, ToLink, RadixGithub, Allocamelus, BottomLinks },

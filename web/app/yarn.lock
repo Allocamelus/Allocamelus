@@ -1026,6 +1026,7 @@ __metadata:
     localforage: ^1.10.0
     multiformats: ^9.5.6
     openpgp: ^5.0.1
+    pinia: ^2.0.9
     postcss: ^8.4.5
     postcss-csso: ^6.0.0
     prettier: ^2.5.1
@@ -2907,6 +2908,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinia@npm:^2.0.9":
+  version: 2.0.9
+  resolution: "pinia@npm:2.0.9"
+  dependencies:
+    "@vue/devtools-api": ^6.0.0-beta.21
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: f4f29f8db71091b16a808b8f8bdf14693970df467328653752b63cccfcb23196a18c39fd595560c59df9a0e8258840caedbb6a1d69ec7465446efb24f6b18957
+  languageName: node
+  linkType: hard
+
 "postcss-csso@npm:^6.0.0":
   version: 6.0.0
   resolution: "postcss-csso@npm:6.0.0"
@@ -3170,6 +3190,13 @@ resolve@^1.20.0:
   dependencies:
     queue-microtask: ^1.2.2
   checksum: cb4f97ad25a75ebc11a8ef4e33bb962f8af8516bb2001082ceabd8902e15b98f4b84b4f8a9b222e5d57fc3bd1379c483886ed4619367a7680dad65316993021d
+  languageName: node
+  linkType: hard
+
+"safari-14-idb-fix@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "safari-14-idb-fix@npm:3.0.0"
+  checksum: 30d5baf3d9a17b52842b2c3fd3f0001fde7095a36191b6140ac78c19e8e1ff4b2607b9beb3b066c6bec107ccb5399c96e29748a6f5fcd592425f806f5e36f759
   languageName: node
   linkType: hard
 

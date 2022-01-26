@@ -31,9 +31,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "../../../store";
+import { useSessionStore } from "../../../store2/session";
 
 import { API_Comment } from "../../../api/post/comment";
 import CreateComment from "../../../api/post/comment/create";
@@ -60,9 +60,7 @@ export default defineComponent({
   },
   emits: ["commented"],
   setup() {
-    const store = useStore();
-    const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user);
+    const session = useSessionStore();
     const data = reactive({
       comment: "",
       submitted: false,
@@ -73,8 +71,8 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      loggedIn,
-      storeUser,
+      loggedIn: computed(() => session.loggedIn),
+      storeUser: computed(() => session.user),
       InvalidCharacters,
     };
   },
@@ -93,9 +91,10 @@ export default defineComponent({
     submitComment() {
       if (!this.commentErr && this.loggedIn) {
         this.submitted = true;
+        let postId = Number(this.postId).valueOf();
         // Start time of query
         let start = UnixTime();
-        CreateComment(this.postId, this.replyTo, this.comment)
+        CreateComment(postId, this.replyTo, this.comment)
           .then((r) => {
             if (r.success) {
               // End time of query + processing
@@ -105,7 +104,7 @@ export default defineComponent({
                 new API_Comment({
                   id: r.id,
                   userId: this.storeUser.id,
-                  postId: Number(this.postId).valueOf(),
+                  postId: postId,
                   parentId: this.replyTo,
                   created: (start + end) / 2, // Guess creation time with query times
                   updated: 0,
@@ -123,11 +122,11 @@ export default defineComponent({
           })
           // Handle error
           .catch((e) => {
-            this.onPostErr(e);
+            this.onPostErr(String(e));
           });
       }
     },
-    onPostErr(e) {
+    onPostErr(e: string | undefined) {
       this.submitted = false;
       // Check if error actually exist
       if (notNull(e)) {

@@ -30,6 +30,7 @@
 <script>
 import { computed, defineComponent, toRefs } from "vue";
 import { useStore } from "../../store";
+import { useSessionStore } from "../../store2/session";
 import CommentsStore from "../../store/module/comments";
 
 import { API_Comments } from "../../api/post/comments/get";
@@ -54,10 +55,9 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
+    const session = useSessionStore();
     const storeName = `p${props.postId}-comments`;
-    const loggedIn = computed(() => store.getters.loggedIn),
-      storeUser = computed(() => store.getters.user),
-      addComment = (c) => store.commit(`${storeName}/addComment`, c),
+    const addComment = (c) => store.commit(`${storeName}/addComment`, c),
       addUser = (c) => store.commit(`${storeName}/addUser`, c),
       populateComments = (c) => store.commit(`${storeName}/populate`, c);
 
@@ -65,8 +65,8 @@ export default defineComponent({
 
     return {
       storeName,
-      loggedIn,
-      storeUser,
+      loggedIn: computed(() => session.loggedIn),
+      storeUser: computed(() => session.user),
       addComment,
       addUser,
       populateComments,

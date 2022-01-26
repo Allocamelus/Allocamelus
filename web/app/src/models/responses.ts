@@ -106,7 +106,11 @@ export default Responses;
 
 // RespToError response to a more human readable error
 // TODO: Add All error text
-export function RespToError(resp: string): string {
+export function RespToError(resp: string | undefined): string {
+  if (typeof resp == "undefined") {
+    return "";
+  }
+
   switch (resp) {
     // Shared errors
     case Shared.NotFound:
@@ -149,7 +153,7 @@ export function RespToError(resp: string): string {
   return "";
 }
 
-export function notNull(err: string): boolean {
+export function notNull(err: string | undefined | null): boolean {
   return err !== undefined && err !== null && err !== "";
 }
 

@@ -4,7 +4,7 @@ import {
   LocationQueryValue,
   RouteRecordRaw,
 } from "vue-router";
-import { store } from "./store";
+import { useSessionStore } from "./store2/session";
 
 export function redirectUrl(
   redirect: LocationQueryValue | LocationQueryValue[]
@@ -42,7 +42,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/logout",
     redirect: (to) => {
-      store.dispatch("sessionLogout");
+      const session = useSessionStore();
+      session.logout();
       return { path: redirectUrl(to.query.r), query: { ref: "logout" } };
     },
   },
@@ -104,8 +105,10 @@ const router = createRouter({
 });
 
 router.beforeResolve((to) => {
+  const session = useSessionStore();
+
   // canUserAccess() returns `true` or `false`
-  if (store.getters.loggedIn) {
+  if (session.loggedIn) {
     switch (to.name) {
       case "Login":
       case "Signup":

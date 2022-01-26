@@ -1,8 +1,7 @@
-import { AsyncStorage, VuexPersistence } from "vuex-persist";
+import { VuexPersistence } from "vuex-persist";
 import { createStore, useStore as baseUseStore, Store } from "vuex";
 import { getters } from "./getters";
 
-import { createInstance } from "localforage";
 import { DaysToSec, MinToSec, UnixTime } from "../pkg/time";
 
 import { keepAlive } from "../api/account/auth/keepAlive";
@@ -12,14 +11,8 @@ import { status } from "../api/account/auth/status";
 import { User } from "../models/user";
 import { InjectionKey } from "vue";
 
-var localInstance = createInstance({
-  name: "allocamelus",
-});
-
 const vuexLocal = new VuexPersistence<State>({
   key: "sessionStore",
-  storage: localInstance as AsyncStorage,
-  asyncStorage: true,
   reducer: (state) => {
     let storage = <State>{
       ui: {

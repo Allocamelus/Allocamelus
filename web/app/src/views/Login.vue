@@ -8,7 +8,7 @@
           :theme="captcha.theme"
           @rendered="captcha.loaded = true"
           @verify="
-            (token) => {
+            (token: string) => {
               captcha.token = token;
               onSubmit();
             }
@@ -67,7 +67,8 @@
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
 import { redirectUrl } from "../router";
-import { useStore } from "../store";
+import { useStateStore } from "../store2";
+import { Session, useSessionStore } from "../store2/session";
 
 import CenterFormBox from "../components/form/CenterFormBox.vue";
 import TextInput from "../components/form/TextInput.vue";
@@ -110,7 +111,8 @@ export default defineComponent({
     },
   },
   setup() {
-    const store = useStore();
+    const state = useStateStore();
+    const session = useSessionStore();
     const data = reactive({
       err: {
         login: "",
@@ -129,7 +131,7 @@ export default defineComponent({
         loaded: false,
         siteKey: "",
         token: "",
-        theme: store.getters.theme,
+        theme: state.theme,
       },
     });
 
@@ -137,6 +139,7 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
+      session,
     };
   },
   computed: {
@@ -176,10 +179,12 @@ export default defineComponent({
           if (!r.success) {
             return this.handleErr(r.error, r.captcha);
           } else {
-            this.$store.dispatch("newLoginSession", {
-              user: r.user,
-              authToken: this.remember,
-            });
+            this.session.$patch(
+              new Session({
+                loggedIn: true,
+                user: r.user,
+              })
+            );
             this.$router.push(redirectUrl(this.redirect));
           }
         })

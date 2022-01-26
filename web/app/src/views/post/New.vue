@@ -16,9 +16,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "../../store";
+<script lang="ts">
+import { defineComponent, computed } from "vue";
+import { useSessionStore } from "../../store2/session";
 
 import Box from "../../components/box/Box.vue";
 import PostForm from "../../components/post/PostForm.vue";
@@ -26,15 +26,11 @@ import UserAvatar from "../../components/user/Avatar.vue";
 
 export default defineComponent({
   setup() {
-    const store = useStore(),
-      loggedIn = computed(() => store.getters.loggedIn),
-      user = computed(() => store.getters.user);
-    const data = reactive({});
+    const session = useSessionStore();
     document.title = `New Post - ${import.meta.env.VITE_SITE_NAME}`;
+
     return {
-      ...toRefs(data),
-      loggedIn,
-      user,
+      user: computed(() => session.user),
     };
   },
   components: { Box, UserAvatar, PostForm },

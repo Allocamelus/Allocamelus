@@ -16,6 +16,7 @@
     "dompurify": "^2.3.4",
     "idb-keyval": "^6.1.0",
     "localforage": "^1.10.0",
+    "pinia": "^2.0.9",
     "squire-rte": "^1.11.3",
     "throttle-debounce": "^3.0.1",
     "turndown": "^7.1.1",

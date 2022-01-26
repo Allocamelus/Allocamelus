@@ -32,8 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useStore } from "../store";
+import { defineComponent } from "vue";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";
@@ -42,12 +41,6 @@ import RadixGithub from "./icons/RadixGithub.vue";
 import ToLink from "./ToLink.vue";
 
 export default defineComponent({
-  setup() {
-    const store = useStore();
-    return {
-      loggedIn: computed(() => store.getters.loggedIn),
-    };
-  },
   components: { Box, BasicBtn, ToLink, RadixGithub, Allocamelus },
 });
 </script>

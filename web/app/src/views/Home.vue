@@ -2,7 +2,7 @@
   <div class="container flex py-5">
     <feed>
       <div v-if="err.length > 0" v-html="err"></div>
-      <new-post-text-input v-if="loggedIn"></new-post-text-input>
+      <new-post-text-input></new-post-text-input>
       <box v-if="list.total() == 0" class="rounded-xl py-3 px-4">
         Follow someone to see their post here
       </box>
@@ -12,9 +12,9 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStore } from "../store";
+<script lang="ts">
+import { defineComponent, toRefs, reactive } from "vue";
+
 import { get as getPosts } from "../api/posts/get";
 import { API_Posts } from "../models/api_post";
 import PostFeed from "../components/post/Feed.vue";
@@ -25,7 +25,6 @@ import Box from "../components/box/Box.vue";
 
 export default defineComponent({
   setup() {
-    const store = useStore();
     const data = reactive({
       list: new API_Posts(),
       page: 1,
@@ -44,7 +43,6 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      loggedIn: computed(() => store.getters.loggedIn),
     };
   },
   async beforeRouteUpdate() {

@@ -10,7 +10,7 @@
             :theme="captcha.theme"
             @rendered="captcha.loaded = true"
             @verify="
-              (token) => {
+              (token: string) => {
                 captcha.token = token;
                 onSubmit();
               }
@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
-import { useStore } from "../store";
+import { useStateStore } from "../store2";
 import { redirectUrl } from "../router";
 
 import CenterFormBox from "../components/form/CenterFormBox.vue";
@@ -157,7 +157,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const store = useStore();
+    const state = useStateStore();
     const data = reactive({
       err: {
         signUp: "",
@@ -173,7 +173,7 @@ export default defineComponent({
         loaded: false,
         siteKey: "",
         token: "",
-        theme: store.getters.theme,
+        theme: state.theme,
       },
       recoveryKey: "",
       showForm: true,
