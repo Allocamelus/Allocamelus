@@ -32,9 +32,6 @@ import { useSessionStore } from "@/store/session";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";
-import Allocamelus from "./icons/Allocamelus.vue";
-import RadixGithub from "./icons/RadixGithub.vue";
-import ToLink from "./ToLink.vue";
 import BottomLinks from "./BottomLinks.vue";
 
 export default defineComponent({
@@ -44,6 +41,6 @@ export default defineComponent({
       loggedIn: computed(() => session.loggedIn),
     };
   },
-  components: { Box, BasicBtn, ToLink, RadixGithub, Allocamelus, BottomLinks },
+  components: { Box, BasicBtn, BottomLinks },
 });
 </script>

@@ -34,13 +34,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import Box from "./box/Box.vue";
-import BasicBtn from "./button/BasicBtn.vue";
 import Allocamelus from "./icons/Allocamelus.vue";
 import RadixGithub from "./icons/RadixGithub.vue";
 import ToLink from "./ToLink.vue";
 
 export default defineComponent({
-  components: { Box, BasicBtn, ToLink, RadixGithub, Allocamelus },
+  components: { ToLink, RadixGithub, Allocamelus },
 });
 </script>

@@ -111,7 +111,6 @@ export default defineComponent({
                   content: this.comment,
                   replies: 0,
                   depth: 0,
-                  children: [],
                 })
               );
               // Clear comment text

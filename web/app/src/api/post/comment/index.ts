@@ -31,7 +31,10 @@ export class API_Comment {
   }
 
   // Methods
-  child(key: number): API_Comment {
+  child(key: number): API_Comment | null {
+    if (!Object.hasOwnProperty.call(this.children, key)) {
+      return null;
+    }
     // Convert child to API_Comment class if not
     if (!(this.children[key] instanceof API_Comment)) {
       this.children[key] = new API_Comment(this.children[key]);
@@ -42,6 +45,12 @@ export class API_Comment {
   delChild(key: number): void {
     if (Object.prototype.hasOwnProperty.call(this.children, key)) {
       delete this.children[key];
+      this.delDeep();
+    }
+  }
+
+  delDeep() {
+    if (this.replies > 0) {
       this.replies--;
     }
   }
@@ -51,7 +60,7 @@ export class API_Comment {
     for (const k in this.children) {
       const key = Number(k).valueOf();
       if (Object.prototype.hasOwnProperty.call(this.children, key)) {
-        num += this.child(key).replies;
+        num += this.child(key)!.replies;
         num++;
       }
     }

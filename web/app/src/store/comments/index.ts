@@ -39,7 +39,7 @@ export const useCommentStore = (postId: number | string) => {
       },
       missingReplies(id: number): number {
         let c = this.comment(id);
-        if (c == null) {
+        if (c === null) {
           return 0;
         }
         return c.missingReplies();
@@ -50,8 +50,6 @@ export const useCommentStore = (postId: number | string) => {
       },
       // addComment to parentId
       addComment(comment: API_Comment, isNew: boolean) {
-        console.log("1", comment);
-
         if (comment.parentId === 0) {
           this.comments.appendComment(comment);
           return;
@@ -59,22 +57,19 @@ export const useCommentStore = (postId: number | string) => {
 
         const path = GetPath(this, comment.parentId);
         let parent = GetFromPath(this.comments, path);
-        if (parent == null) {
+        if (parent === null) {
           throw pathErr(path);
         }
 
-        console.log("2", JSON.parse(JSON.stringify(this.comments)));
-
         parent.appendChild(comment, isNew);
 
-        console.log("3", JSON.parse(JSON.stringify(this.comments)));
         if (isNew) {
           path.pop();
 
           // Add reply count to all parents
           while (path.length > 0) {
-            parent = GetFromPath(comment, path);
-            if (parent == null) {
+            parent = GetFromPath(this.comments, path);
+            if (parent === null) {
               throw pathErr(path);
             } else {
               parent.replies++;
@@ -91,7 +86,7 @@ export const useCommentStore = (postId: number | string) => {
        */
       updateComment(comment: API_Comment) {
         const c = this.comment(comment.id);
-        if (c == null) {
+        if (c === null) {
           throw new Error(`Error: Missing comment by id (${comment.id})"`);
         }
         c.updated = comment.updated;
@@ -112,8 +107,6 @@ export const useCommentStore = (postId: number | string) => {
           return;
         }
 
-        console.log(key, path);
-
         // Is comment top level
         if (path.length === 0) {
           this.comments.delComment(key);
@@ -123,7 +116,7 @@ export const useCommentStore = (postId: number | string) => {
         }
 
         let parent = GetFromPath(this.comments, path);
-        if (parent == null) {
+        if (parent === null) {
           throw pathErr(path);
         }
 
@@ -133,13 +126,16 @@ export const useCommentStore = (postId: number | string) => {
           // remove comment path from cache
           delete this.pathCache[id];
 
+          // remove current parent from path
+          path.pop();
+
           // Remove reply count from all parents
           while (path.length > 0) {
             parent = GetFromPath(this.comments, path);
-            if (parent == null) {
+            if (parent === null) {
               throw pathErr(path);
             } else {
-              parent.replies--;
+              parent.delDeep();
             }
             path.pop();
           }

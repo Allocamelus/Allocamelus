@@ -9,7 +9,7 @@ import { useSessionStore } from "@/store/session";
 export function redirectUrl(
   redirect: LocationQueryValue | LocationQueryValue[]
 ) {
-  if (Array.isArray(redirect) || redirect == null) {
+  if (Array.isArray(redirect) || redirect === null) {
     redirect = "";
   }
   if (redirect.length > 0) {
