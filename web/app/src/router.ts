@@ -4,7 +4,7 @@ import {
   LocationQueryValue,
   RouteRecordRaw,
 } from "vue-router";
-import { useSessionStore } from "./store2/session";
+import { useSessionStore } from "@/store/session";
 
 export function redirectUrl(
   redirect: LocationQueryValue | LocationQueryValue[]

@@ -18,20 +18,20 @@ export class API_Comment {
 
   constructor(source: Partial<API_Comment> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    this.id = source["id"];
-    this.userId = source["userId"];
-    this.postId = source["postId"];
-    this.parentId = source["parentId"];
-    this.created = source["created"];
-    this.updated = source["updated"];
-    this.content = source["content"];
-    this.replies = source["replies"];
-    this.depth = source["depth"];
-    this.children = source["children"];
+    this.id = source["id"] || 0;
+    this.userId = source["userId"] || 0;
+    this.postId = source["postId"] || 0;
+    this.parentId = source["parentId"] || 0;
+    this.created = source["created"] || 0;
+    this.updated = source["updated"] || 0;
+    this.content = source["content"] || "";
+    this.replies = source["replies"] || 0;
+    this.depth = source["depth"] || 0;
+    this.children = source["children"] || [];
   }
 
   // Methods
-  child(key: string): API_Comment {
+  child(key: number): API_Comment {
     // Convert child to API_Comment class if not
     if (!(this.children[key] instanceof API_Comment)) {
       this.children[key] = new API_Comment(this.children[key]);
@@ -39,28 +39,17 @@ export class API_Comment {
     return this.children[key];
   }
 
-  delChild(key: string): void {
+  delChild(key: number): void {
     if (Object.prototype.hasOwnProperty.call(this.children, key)) {
       delete this.children[key];
       this.replies--;
     }
   }
 
-  // Get childKey by commentId
-  childKey(commentId: number): string {
-    for (const key in this.children) {
-      if (Object.prototype.hasOwnProperty.call(this.children, key)) {
-        const c = this.children[key];
-        if (c.id == commentId) {
-          return key;
-        }
-      }
-    }
-  }
-
   missingReplies(): number {
     let num = 0;
-    for (const key in this.children) {
+    for (const k in this.children) {
+      const key = Number(k).valueOf();
       if (Object.prototype.hasOwnProperty.call(this.children, key)) {
         num += this.child(key).replies;
         num++;
@@ -87,7 +76,11 @@ export class API_Comment {
 
   appendChild(c: API_Comment, newChild = false): void {
     c.depth = this.depth + 1;
-    this.children[this.numDirectChildren()] = c;
+    let key = 0;
+    if (this.numDirectChildren() != 0) {
+      key = Number(Object.keys(this.children).slice(-1)[0]).valueOf() + 1;
+    }
+    this.children[key] = c;
     if (newChild) {
       this.replies++;
     }

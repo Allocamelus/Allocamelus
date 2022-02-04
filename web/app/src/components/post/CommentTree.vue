@@ -162,15 +162,14 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "../../store";
-import { useSessionStore } from "../../store2/session";
+import { useCommentStore } from "@/store/comments";
+import { useSessionStore } from "@/store/session";
 
-import { API_Comment } from "../../api/post/comment";
-import { replies } from "../../api/post/comment/replies";
-import { User } from "../../models/user";
-import { AddCommentParams } from "../../store/module/comments/mutations";
+import { API_Comment } from "@/api/post/comment";
+import { replies } from "@/api/post/comment/replies";
+import { User } from "@/models/user";
 
-import { RespToError } from "../../models/responses";
+import { RespToError } from "@/models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
@@ -202,22 +201,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
     const session = useSessionStore();
-    const storeName = `p${props.postId}-comments`;
-    const comment = computed(() =>
-        store.getters[`${storeName}/comment`](props.commentId)
-      ),
-      missingReplies = computed(() =>
-        store.getters[`${storeName}/missingReplies`](props.commentId)
-      ),
-      commentUser = computed(() => store.getters[`${storeName}/user`]),
-      removeComment = (id: number) => store.commit(`${storeName}/remove`, id),
-      addComment = (c: AddCommentParams) =>
-        store.commit(`${storeName}/addComment`, c),
-      addUser = (u: User) => store.commit(`${storeName}/addUser`, u),
-      updateComment = (c: API_Comment) =>
-        store.commit(`${storeName}/updateComment`, c);
+    const commentStore = useCommentStore(props.postId);
 
     const data = reactive({
       hidden: false,
@@ -235,14 +220,19 @@ export default defineComponent({
     return {
       ...toRefs(data),
       loggedIn: computed(() => session.loggedIn),
-      comment,
-      missingReplies,
+      comment: computed(
+        () => commentStore.comment(props.commentId) || new API_Comment()
+      ),
+      missingReplies: computed(() =>
+        commentStore.missingReplies(props.commentId)
+      ),
       storeUser: computed(() => session.user),
-      addComment,
-      addUser,
-      commentUser,
-      removeComment,
-      updateComment,
+      addComment: (c: API_Comment, isNew: boolean) =>
+        commentStore.addComment(c, isNew),
+      addUser: (u: User) => commentStore.addUser(u),
+      commentUser: computed(() => commentStore.user),
+      removeComment: (id: number) => commentStore.remove(id),
+      updateComment: (c: API_Comment) => commentStore.updateComment(c),
       Fmt_Short_Time,
       API_Comment,
     };
@@ -262,11 +252,7 @@ export default defineComponent({
     newReply(c: API_Comment) {
       this.showReplyForm = false;
       this.addUser(this.storeUser);
-      this.addComment({
-        // AddCommentParams
-        newComment: true,
-        comment: c,
-      });
+      this.addComment(c, true);
     },
     deleted() {
       this.removeComment(this.comment.id);
@@ -285,12 +271,9 @@ export default defineComponent({
           }
           // Add replies
           for (const k in r.order) {
-            if (Object.hasOwnProperty.call(r.order, k)) {
-              this.addComment({
-                // AddCommentParams
-                newComment: false,
-                comment: r.comment(r.order[k]),
-              });
+            const key = Number(k).valueOf();
+            if (Object.hasOwnProperty.call(r.order, key)) {
+              this.addComment(r.comment(r.order[key])!, false);
             }
           }
         })

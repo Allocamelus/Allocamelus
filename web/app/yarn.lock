@@ -584,13 +584,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/devtools-api@npm:^6.0.0-beta.11":
-  version: 6.0.0-beta.15
-  resolution: "@vue/devtools-api@npm:6.0.0-beta.15"
-  checksum: 7769e72bd4d04d2d3e80fcdca277aa41011af6d39c82031de5bba1457ff13e01b06d04d466b660dee796846560b8a2553c88bdb76b8fe42a1e08435e4cca6a23
-  languageName: node
-  linkType: hard
-
 "@vue/devtools-api@npm:^6.0.0-beta.18":
   version: 6.0.0-beta.19
   resolution: "@vue/devtools-api@npm:6.0.0-beta.19"
@@ -1040,8 +1033,6 @@ __metadata:
     vite-svg-loader: ^3.1.1
     vue: ^3.2.26
     vue-router: ^4.0.12
-    vuex: ^4.0.2
-    vuex-persist: ^3.1.3
     zxcvbn: ^4.4.2
   languageName: unknown
   linkType: soft
@@ -1538,13 +1529,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:^4.2.2":
-  version: 4.2.2
-  resolution: "deepmerge@npm:4.2.2"
-  checksum: a8c43a1ed8d6d1ed2b5bf569fa4c8eb9f0924034baf75d5d406e47e157a451075c4db353efea7b6bcc56ec48116a8ce72fccf867b6e078e7c561904b5897530b
-  languageName: node
-  linkType: hard
-
 "defined@npm:^1.0.0":
   version: 1.0.0
   resolution: "defined@npm:1.0.0"
@@ -1942,13 +1926,6 @@ __metadata:
   dependencies:
     to-regex-range: ^5.0.1
   checksum: cc283f4e65b504259e64fd969bcf4def4eb08d85565e906b7d36516e87819db52029a76b6363d0f02d0d532f0033c9603b9e2d943d56ee3b0d4f7ad3328ff917
-  languageName: node
-  linkType: hard
-
-"flatted@npm:^3.0.5":
-  version: 3.1.1
-  resolution: "flatted@npm:3.1.1"
-  checksum: 508935e3366d95444131f0aaa801a4301f24ea5bcb900d12764e7335b46b910730cc1b5bcfcfb8eccb7c8db261ba0671c6a7ca30d10870ff7a7756dc7e731a7a
   languageName: node
   linkType: hard
 
@@ -3703,29 +3680,6 @@ resolve@^1.20.0:
     "@vue/server-renderer": 3.2.26
     "@vue/shared": 3.2.26
   checksum: e9423c5eb106b0c821f43eb4a0c8c1e2f42b78861a8b488479108641b46a19fd88cff278e9645a6e2fcaa6a2865cfe5c63044a936a4a2876963789634740230c
-  languageName: node
-  linkType: hard
-
-"vuex-persist@npm:^3.1.3":
-  version: 3.1.3
-  resolution: "vuex-persist@npm:3.1.3"
-  dependencies:
-    deepmerge: ^4.2.2
-    flatted: ^3.0.5
-  peerDependencies:
-    vuex: ">=2.5"
-  checksum: 7cd8348c114da5e7ad1ff4a310782e9c7838b5937e033fe613b3f32c3afad61a9af2109caa8e5722731e64b7e5b9dff65cd0c5297289e3800e729236eb170fdd
-  languageName: node
-  linkType: hard
-
-"vuex@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "vuex@npm:4.0.2"
-  dependencies:
-    "@vue/devtools-api": ^6.0.0-beta.11
-  peerDependencies:
-    vue: ^3.0.2
-  checksum: d7c03f0afcbad045ef58921a4baa9ec23bc12c71dbaf1317f1df94e7d8740ce839b9fac48ec775955ce7a8893dceb7217bc05e45421fc6bacc559ed3541e6052
   languageName: node
   linkType: hard
 

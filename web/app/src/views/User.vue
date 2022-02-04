@@ -79,40 +79,40 @@
 
 <script>
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useSessionStore } from "../store2/session";
+import { useSessionStore } from "@/store/session";
 
-import { get as getUser } from "../api/user/get";
-import { posts as getPosts } from "../api/user/posts";
-import { post as userFollow, remove as userUnfollow } from "../api/user/follow";
-import { API_Error } from "../models/api_error";
-import { API_Posts } from "../models/api_post";
+import { get as getUser } from "@/api/user/get";
+import { posts as getPosts } from "@/api/user/posts";
+import { post as userFollow, remove as userUnfollow } from "@/api/user/follow";
+import { API_Error } from "@/models/api_error";
+import { API_Posts } from "@/models/api_post";
 import {
   Public as PUBLIC_USER,
   Unverified as UNVERIFIED_USER,
   User,
-} from "../models/user";
+} from "@/models/user";
 import {
   InvalidCharacters,
   SomethingWentWrong,
-} from "../components/form/errors";
+} from "@/components/form/errors";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 
-import UserName from "../components/user/Name.vue";
-import ErrorBox from "../components/box/Error.vue";
-import PostFeed from "../components/post/Feed.vue";
-import Feed from "../components/Feed.vue";
-import Sidebar from "../components/Sidebar.vue";
-import Box from "../components/box/Box.vue";
-import UserAvatar from "../components/user/Avatar.vue";
-import BasicBtn from "../components/button/BasicBtn.vue";
-import Overlay from "../components/overlay/Overlay.vue";
-import ChangeAvatar from "../components/user/ChangeAvatar.vue";
-import EditOverlay from "../components/user/EditOverlay.vue";
-import SignUpOverlay from "../components/overlay/SignUpOverlay.vue";
-import NewPostTextInput from "../components/post/NewPostTextInput.vue";
-import Snackbar from "../components/box/Snackbar.vue";
-import TextSmall from "../components/text/Small.vue";
+import UserName from "@/components/user/Name.vue";
+import ErrorBox from "@/components/box/Error.vue";
+import PostFeed from "@/components/post/Feed.vue";
+import Feed from "@/components/Feed.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import Box from "@/components/box/Box.vue";
+import UserAvatar from "@/components/user/Avatar.vue";
+import BasicBtn from "@/components/button/BasicBtn.vue";
+import Overlay from "@/components/overlay/Overlay.vue";
+import ChangeAvatar from "@/components/user/ChangeAvatar.vue";
+import EditOverlay from "@/components/user/EditOverlay.vue";
+import SignUpOverlay from "@/components/overlay/SignUpOverlay.vue";
+import NewPostTextInput from "@/components/post/NewPostTextInput.vue";
+import Snackbar from "@/components/box/Snackbar.vue";
+import TextSmall from "@/components/text/Small.vue";
 
 export default defineComponent({
   props: {

@@ -84,19 +84,19 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useSessionStore } from "../../store2/session";
+import { useSessionStore } from "@/store/session";
 
-import { User } from "../../models/user";
-import { RespToError } from "../../models/responses";
+import { User } from "@/models/user";
+import { RespToError } from "@/models/responses";
 import { InvalidCharacters, SomethingWentWrong } from "../form/errors";
 
-import { bio as UpdateBio } from "../../api/user/update/bio";
-import { name as UpdateName } from "../../api/user/update/name";
+import { bio as UpdateBio } from "@/api/user/update/bio";
+import { name as UpdateName } from "@/api/user/update/name";
 import {
   type as UpdateType,
   TYPE_PRIVATE,
   TYPE_PUBLIC,
-} from "../../api/user/update/type";
+} from "@/api/user/update/type";
 
 import XIcon from "@heroicons/vue/solid/XIcon";
 

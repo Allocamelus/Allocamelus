@@ -33,13 +33,13 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { useSessionStore } from "../../../store2/session";
+import { useSessionStore } from "@/store/session";
 
-import { API_Comment } from "../../../api/post/comment";
-import CreateComment from "../../../api/post/comment/create";
+import { API_Comment } from "@/api/post/comment";
+import CreateComment from "@/api/post/comment/create";
 import { InvalidCharacters, SomethingWentWrong } from "../../form/errors";
-import { UnixTime } from "../../../pkg/time";
-import { notNull, RespToError } from "../../../models/responses";
+import { UnixTime } from "@/pkg/time";
+import { notNull, RespToError } from "@/models/responses";
 
 import InputLabel from "../../form/InputLabel.vue";
 import TextInput from "../../form/TextInput.vue";

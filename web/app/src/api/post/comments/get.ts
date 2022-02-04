@@ -15,11 +15,11 @@ export class API_Comments extends ordered_list {
   constructor(source: Partial<API_Comments> = {}) {
     super(source);
     if (typeof source === "string") source = JSON.parse(source);
-    this.comments = source["comments"];
+    this.comments = source["comments"] || [];
   }
 
   // Methods
-  comment(commentId: number): API_Comment {
+  comment(commentId: number): API_Comment | null {
     if (Object.hasOwnProperty.call(this.comments, commentId)) {
       // Convert comments to API_Comment class if not
       if (!(this.comments[commentId] instanceof API_Comment)) {
@@ -27,6 +27,7 @@ export class API_Comments extends ordered_list {
       }
       return this.comments[commentId];
     }
+    return null;
   }
 
   appendComment(c: API_Comment): void {
@@ -34,7 +35,7 @@ export class API_Comments extends ordered_list {
     this.order[this.total()] = c.id;
   }
 
-  delComment(id: number | string): void {
+  delComment(id: number): void {
     if (Object.prototype.hasOwnProperty.call(this.comments, id)) {
       delete this.comments[id];
       // Remove comment id from order
@@ -45,14 +46,14 @@ export class API_Comments extends ordered_list {
           removed = true;
         } else if (removed) {
           // Shift order by one after removed id
-          this.order[`${Number(k).valueOf() - 1}`] = this.order[k];
+          this.order[Number(k).valueOf() - 1] = this.order[k];
         }
       }
     }
   }
 }
 
-export function get(
+export async function get(
   postId: number | string,
   pageNum = 0
 ): Promise<API_Comments> {

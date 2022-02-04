@@ -121,33 +121,33 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
-import { useStateStore } from "../store2";
-import { redirectUrl } from "../router";
+import { useStateStore } from "@/store";
+import { redirectUrl } from "@/router";
 
-import CenterFormBox from "../components/form/CenterFormBox.vue";
-import TextInput from "../components/form/TextInput.vue";
-import PasswordInput from "../components/form/PasswordInput.vue";
-import Submit from "../components/form/Submit.vue";
-import InputLabel from "../components/form/InputLabel.vue";
-import TextSmall from "../components/text/Small.vue";
+import CenterFormBox from "@/components/form/CenterFormBox.vue";
+import TextInput from "@/components/form/TextInput.vue";
+import PasswordInput from "@/components/form/PasswordInput.vue";
+import Submit from "@/components/form/Submit.vue";
+import InputLabel from "@/components/form/InputLabel.vue";
+import TextSmall from "@/components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
-import InputCopy from "../components/form/InputCopy.vue";
-import EmailInput from "../components/form/EmailInput.vue";
-import BarLoader from "../components/overlay/BarLoader.vue";
+import InputCopy from "@/components/form/InputCopy.vue";
+import EmailInput from "@/components/form/EmailInput.vue";
+import BarLoader from "@/components/overlay/BarLoader.vue";
 
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
-import { genKeys } from "../pkg/crypto/userKeys";
+import { genKeys } from "@/pkg/crypto/userKeys";
 
-import { create as createAccount } from "../api/account/create";
-import ApiResp, { RespToError } from "../models/responses";
-import { siteKeys } from "../api/meta/captcha/siteKeys";
+import { create as createAccount } from "@/api/account/create";
+import ApiResp, { RespToError } from "@/models/responses";
+import { siteKeys } from "@/api/meta/captcha/siteKeys";
 import {
   HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
-} from "../components/htmlErrors";
-import ToLink from "../components/ToLink.vue";
+} from "@/components/htmlErrors";
+import ToLink from "@/components/ToLink.vue";
 
 export default defineComponent({
   props: {

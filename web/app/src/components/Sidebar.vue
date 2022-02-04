@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useSessionStore } from "../store2/session";
+import { useSessionStore } from "@/store/session";
 
 import Box from "./box/Box.vue";
 import BasicBtn from "./button/BasicBtn.vue";

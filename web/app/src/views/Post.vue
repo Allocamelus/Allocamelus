@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
 import { get as getPost } from "../api/post/get";
 import { get as getComments, API_Comments } from "../api/post/comments/get";

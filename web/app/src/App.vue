@@ -200,8 +200,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, toRefs, reactive } from "vue";
-import { useStateStore } from "./store2";
-import { useSessionStore } from "./store2/session";
+import { useStateStore } from "@/store";
+import { useSessionStore } from "@/store/session";
 
 import { MinToSec, SecToMs, UnixTime } from "./pkg/time";
 

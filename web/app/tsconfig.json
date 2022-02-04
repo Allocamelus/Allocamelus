@@ -6,7 +6,11 @@
     "allowJs": true,
     // this enables stricter inference for data properties on `this`
     "strict": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*"]
 }

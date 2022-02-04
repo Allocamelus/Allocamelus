@@ -65,16 +65,13 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useSessionStore } from "../../store2/session";
+import { useSessionStore } from "@/store/session";
 
-import { User } from "../../models/user";
-import { RespToError } from "../../models/responses";
+import { User } from "@/models/user";
+import { RespToError } from "@/models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
-import {
-  avatar as UploadAvatar,
-  removeAvatar,
-} from "../../api/user/update/avatar";
+import { avatar as UploadAvatar, removeAvatar } from "@/api/user/update/avatar";
 
 import CameraIcon from "@heroicons/vue/solid/CameraIcon";
 

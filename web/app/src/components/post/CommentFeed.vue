@@ -27,13 +27,14 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, toRefs } from "vue";
-import { useStore } from "../../store";
-import { useSessionStore } from "../../store2/session";
-import CommentsStore from "../../store/module/comments";
+<script lang="ts">
+import { computed, defineComponent } from "vue";
+import { useCommentStore } from "@/store/comments";
+import { useSessionStore } from "@/store/session";
 
-import { API_Comments } from "../../api/post/comments/get";
+import { API_Comments } from "@/api/post/comments/get";
+import { API_Comment } from "@/api/post/comment";
+import { User } from "@/models/user";
 
 import Feed from "../Feed.vue";
 import CommentTree from "./CommentTree.vue";
@@ -54,39 +55,28 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
+    const commentStore = useCommentStore(props.postId);
     const session = useSessionStore();
-    const storeName = `p${props.postId}-comments`;
-    const addComment = (c) => store.commit(`${storeName}/addComment`, c),
-      addUser = (c) => store.commit(`${storeName}/addUser`, c),
-      populateComments = (c) => store.commit(`${storeName}/populate`, c);
-
-    store.registerModule(storeName, CommentsStore);
 
     return {
-      storeName,
       loggedIn: computed(() => session.loggedIn),
       storeUser: computed(() => session.user),
-      addComment,
-      addUser,
-      populateComments,
+      addComment: (c: API_Comment, isNew: boolean) =>
+        commentStore.addComment(c, isNew),
+      addUser: (u: User) => commentStore.addUser(u),
+      populate: (nv: Partial<API_Comments>) => {
+        commentStore.populate(nv);
+      },
     };
   },
   watch: {
     list(newValue) {
-      this.populateComments(newValue);
+      this.populate(newValue);
     },
   },
-  beforeUnmount() {
-    this.$store.unregisterModule(this.storeName);
-  },
   methods: {
-    newComment(c) {
-      this.addComment({
-        // AddCommentParams
-        newComment: true,
-        comment: c,
-      });
+    newComment(c: API_Comment) {
+      this.addComment(c, true);
       this.addUser(this.storeUser);
     },
   },

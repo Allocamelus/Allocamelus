@@ -66,33 +66,33 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
-import { redirectUrl } from "../router";
-import { useStateStore } from "../store2";
-import { Session, useSessionStore } from "../store2/session";
+import { redirectUrl } from "@/router";
+import { useStateStore } from "@/store";
+import { Session, useSessionStore } from "@/store/session";
 
-import CenterFormBox from "../components/form/CenterFormBox.vue";
-import TextInput from "../components/form/TextInput.vue";
-import PasswordInput from "../components/form/PasswordInput.vue";
-import Checkbox from "../components/form/Checkbox.vue";
-import Submit from "../components/form/Submit.vue";
-import InputLabel from "../components/form/InputLabel.vue";
-import TextSmall from "../components/text/Small.vue";
+import CenterFormBox from "@/components/form/CenterFormBox.vue";
+import TextInput from "@/components/form/TextInput.vue";
+import PasswordInput from "@/components/form/PasswordInput.vue";
+import Checkbox from "@/components/form/Checkbox.vue";
+import Submit from "@/components/form/Submit.vue";
+import InputLabel from "@/components/form/InputLabel.vue";
+import TextSmall from "@/components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
-import ToLink from "../components/ToLink.vue";
+import ToLink from "@/components/ToLink.vue";
 
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
-import { auth } from "../api/account/auth";
-import ApiResp from "../models/responses";
+import { auth } from "@/api/account/auth";
+import ApiResp from "@/models/responses";
 import {
   htmlErrBuilder,
   HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
-} from "../components/htmlErrors";
-import { salt as getSalt } from "../api/account/salt";
-import { hashSalt, parse } from "../pkg/crypto/argon2id";
-import { getKeys } from "../pkg/crypto/userKeys";
+} from "@/components/htmlErrors";
+import { salt as getSalt } from "@/api/account/salt";
+import { hashSalt, parse } from "@/pkg/crypto/argon2id";
+import { getKeys } from "@/pkg/crypto/userKeys";
 
 const HtmlInvalidUsernamePassword = htmlErrBuilder(
     `Invalid Username/Email or Password`,

@@ -106,27 +106,27 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive, computed } from "vue";
-import { useStateStore } from "../../store2";
+import { useStateStore } from "@/store";
 
-import ApiResp, { RespToError } from "../../models/responses";
-import { validate } from "../../api/user/email-token/validate";
-import { create } from "../../api/user/email-token/create";
-import { siteKeys } from "../../api/meta/captcha/siteKeys";
+import ApiResp, { RespToError } from "@/models/responses";
+import { validate } from "@/api/user/email-token/validate";
+import { create } from "@/api/user/email-token/create";
+import { siteKeys } from "@/api/meta/captcha/siteKeys";
 import {
   HtmlLoadingCaptcha,
   HtmlSomethingWentWrong,
-} from "../../components/htmlErrors";
+} from "@/components/htmlErrors";
 
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
-import SpinLoader from "../../components/icons/SpinLoader.vue";
-import ToLink from "../../components/ToLink.vue";
-import TextSmall from "../../components/text/Small.vue";
-import EmailInput from "../../components/form/EmailInput.vue";
-import CenterFormBox from "../../components/form/CenterFormBox.vue";
-import Submit from "../../components/form/Submit.vue";
-import InputLabel from "../../components/form/InputLabel.vue";
+import SpinLoader from "@/components/icons/SpinLoader.vue";
+import ToLink from "@/components/ToLink.vue";
+import TextSmall from "@/components/text/Small.vue";
+import EmailInput from "@/components/form/EmailInput.vue";
+import CenterFormBox from "@/components/form/CenterFormBox.vue";
+import Submit from "@/components/form/Submit.vue";
+import InputLabel from "@/components/form/InputLabel.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 
 function hasST(selector: string, token: string) {

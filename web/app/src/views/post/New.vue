@@ -18,11 +18,11 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { useSessionStore } from "../../store2/session";
+import { useSessionStore } from "@/store/session";
 
-import Box from "../../components/box/Box.vue";
-import PostForm from "../../components/post/PostForm.vue";
-import UserAvatar from "../../components/user/Avatar.vue";
+import Box from "@/components/box/Box.vue";
+import PostForm from "@/components/post/PostForm.vue";
+import UserAvatar from "@/components/user/Avatar.vue";
 
 export default defineComponent({
   setup() {

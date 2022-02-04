@@ -1,12 +1,12 @@
 import { useStorageAsync } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { newStore } from "../../pkg/idbWrapper";
+import { newStore } from "@/pkg/idbWrapper";
 
-import { keepAlive } from "../../api/account/auth/keepAlive";
-import { status } from "../../api/account/auth/status";
-import { logout } from "../../api/account/logout";
-import { User } from "../../models/user";
-import { MinToSec, UnixTime } from "../../pkg/time";
+import { keepAlive } from "@/api/account/auth/keepAlive";
+import { status } from "@/api/account/auth/status";
+import { logout } from "@/api/account/logout";
+import { User } from "@/models/user";
+import { MinToSec, UnixTime } from "@/pkg/time";
 
 const storeName = "session";
 const idbStore = newStore(storeName);

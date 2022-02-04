@@ -37,18 +37,19 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "../../../store";
-import { useSessionStore } from "../../../store2/session";
+import { useCommentStore } from "@/store/comments";
+import { useSessionStore } from "@/store/session";
 
-import { API_Comment } from "../../../api/post/comment";
-import UpdateComment from "../../../api/post/comment/update";
+import { API_Comment } from "@/api/post/comment";
+import UpdateComment from "@/api/post/comment/update";
 import { InvalidCharacters, SomethingWentWrong } from "../../form/errors";
-import { notNull, RespToError } from "../../../models/responses";
-import { UnixTime } from "../../../pkg/time";
+import { notNull, RespToError } from "@/models/responses";
+import { UnixTime } from "@/pkg/time";
 
 import InputLabel from "../../form/InputLabel.vue";
 import TextInput from "../../form/TextInput.vue";
 import BasicBtn from "../../button/BasicBtn.vue";
+
 export default defineComponent({
   name: "comment-input",
   props: {
@@ -63,12 +64,12 @@ export default defineComponent({
   },
   emits: ["edited", "close"],
   setup(props) {
-    const store = useStore();
+    const commentStore = useCommentStore(props.postId);
     const session = useSessionStore();
-    const storeName = `p${props.postId}-comments`;
+
     const data = reactive({
       // Don't use computed value so it can be edited
-      comment: store.getters[`${storeName}/comment`](props.commentId),
+      comment: commentStore.comment(props.commentId) || new API_Comment(),
       submitted: false,
       err: {
         comment: "",
@@ -84,7 +85,7 @@ export default defineComponent({
   },
   computed: {
     commentErr() {
-      return this.err.comment.length != 0 || this.comment.length < 2;
+      return this.err.comment.length != 0 || this.comment.content.length < 2;
     },
     commentDisabled() {
       return this.commentErr || this.submitted;
