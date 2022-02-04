@@ -13,3 +13,4 @@ webfonts
 .pnp.*
 *.env
 !.example.env
+stats.html

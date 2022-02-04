@@ -7,3 +7,4 @@ webfonts
 .yarn/*
 .pnp.*
 wasm_exec.js
+stats.html
