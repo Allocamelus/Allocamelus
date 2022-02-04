@@ -23,8 +23,35 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+
+function getElements(): { h: HTMLInputElement; navS: CSSStyleDeclaration } {
+  return {
+    h: document.querySelector<HTMLInputElement>("html")!,
+    navS: document.querySelector<HTMLInputElement>("#nav")!.style,
+  };
+}
+
+function offsetWidth() {
+  let { h } = getElements();
+  return window.innerWidth - h.clientWidth;
+}
+
+function block() {
+  let { h, navS } = getElements();
+  h.classList.add("overflow-hidden");
+  h.style.marginRight = navS.paddingRight = `${offsetWidth()}px`;
+}
+function unblock() {
+  let { h, navS } = getElements();
+  if (h.classList.contains("overflow-hidden")) {
+    h.classList.remove("overflow-hidden");
+    h.style.removeProperty("marginRight");
+    navS.removeProperty("paddingRight");
+  }
+}
+
 export default defineComponent({
   name: "overlay",
   props: {
@@ -46,32 +73,23 @@ export default defineComponent({
   setup(props) {
     const data = reactive({
       show: props.modelValue,
-      offsetWidth: 0,
     });
 
     return {
       ...toRefs(data),
     };
   },
-  beforeMount() {
-    if (this.blockScroll) {
-      // Get scrollbar width
-      this.offsetWidth =
-        window.innerWidth - document.querySelector("html").clientWidth;
-    }
+  beforeUnmount() {
+    unblock();
   },
   watch: {
     modelValue(newValue) {
       this.show = newValue;
-      var h = document.querySelector("html"),
-        navS = document.querySelector("#nav").style;
       if (this.blockScroll) {
         if (this.show) {
-          h.classList.add("overflow-hidden");
-          h.style.marginRight = navS.paddingRight = `${this.offsetWidth}px`;
-        } else if (h.classList.contains("overflow-hidden")) {
-          h.classList.remove("overflow-hidden");
-          h.style.marginRight = navS.paddingRight = null;
+          block();
+        } else {
+          unblock();
         }
       }
     },
