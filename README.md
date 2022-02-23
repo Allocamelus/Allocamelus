@@ -42,18 +42,34 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
   - [x] Move crypto to client
     - [ ] Alterative to web app
 - [x] User
+  <details>
+  <summary>Click to expand</summary>
+
   - [x] Profile
     - [x] Bio
     - [x] Avatar
     - [x] Public/Private (Private by default)
     - [x] Feed (Post only)
-      - [ ] Comments?
+      - Possible
+        - [ ] Comments?
   - [x] Follow
+
+  </details>
+
 - [ ] Post
+
   - [x] Create
+    <details>
+    <summary>Click to expand</summary>
+
     - [x] Content
     - [x] Images
       - [x] Alts
+    - Possible
+      - [ ] Video
+
+    </details>
+
   - [x] Publish
   - [ ] Update
     - [ ] Content
@@ -64,6 +80,7 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
   - Possible
     - [ ] Mentions/Tagging
     - [ ] Hashtags
+
 - [ ] Feed
   - [x] Followed users'
     - [x] Posts
