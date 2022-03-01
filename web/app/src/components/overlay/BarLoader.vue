@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full h-[3px]"
-    :class="show ? 'bg-primary-100 dark:bg-primary-800' : 'bg-transparent'"
+    :class="show ? 'bg-rose-100 dark:bg-primary' : 'bg-transparent'"
   >
     <div
       v-if="show"

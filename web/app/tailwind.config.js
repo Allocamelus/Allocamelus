@@ -48,16 +48,9 @@ module.exports = {
       transparent: "transparent",
       current: "currentColor",
       primary: {
-        50: "#efeded",
-        100: "#eae6e7",
-        200: "#6a5354",
-        300: "#4a2e2f",
-        400: "#3a1b1c",
-        500: "#351516",
-        600: "#2a090a", // Base
-        700: "#260809",
-        800: "#1c0607",
-        900: "#130405",
+        lighter: "#4f051e",
+        DEFAULT: "#26020e", // Base
+        darker: "#160108",
       },
       secondary: {
         50: "#f9f3f5",

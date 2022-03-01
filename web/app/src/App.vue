@@ -2,19 +2,19 @@
   <div class="font-sans">
     <nav
       id="nav"
-      class="bg-primary-600 text-gray-50 shadow z-30 m-0 p-0 fixed top-0 w-full h-nav leading-nav"
+      class="fixed top-0 z-30 w-full p-0 m-0 shadow bg-primary text-gray-50 h-nav leading-nav"
     >
       <div class="container flex flex-row justify-between h-nav leading-nav">
         <div class="flex">
           <to-link
             :to="loggedIn ? '/home' : '/'"
-            class="pr-4 py-2 text-white text-lg font-sans truncate no-underline tracking-wide relative"
+            class="relative py-2 pr-4 font-sans text-lg tracking-wide text-white no-underline truncate"
           >
             Allocamelus
           </to-link>
         </div>
         <div class="flex">
-          <div class="flex justify-start items-center ml-1">
+          <div class="flex items-center justify-start ml-1">
             <div class="p-1 rounded-full cursor-pointer" @click="toggleTheme">
               <span class="sr-only">Toggle Theme</span>
               <component
@@ -30,7 +30,7 @@
               </div>
               <dropdown v-model="alerts.menu" class="max-w-sm w-80">
                 <div
-                  class="dark:bg-gray-800 bg-gray-100 overflow-x-hidden overflow-y-auto"
+                  class="overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-800"
                 >
                   <bar-loader :show="alerts.loading" />
                   <div
@@ -46,7 +46,7 @@
                       <div
                         v-for="(userId, index) in alerts.requests.requests"
                         :key="index"
-                        class="pb-3 flex flex-grow flex-shrink items-center"
+                        class="flex items-center flex-grow flex-shrink pb-3"
                       >
                         <user-avatar
                           :user="alerts.requests.user(userId)"
@@ -54,14 +54,14 @@
                           class="w-8 h-8"
                         ></user-avatar>
                         <div
-                          class="flex flex-grow items-center justify-between"
+                          class="flex items-center justify-between flex-grow"
                         >
-                          <div class="ml-2 flex">
+                          <div class="flex ml-2">
                             <user-name
                               :user="alerts.requests.user(userId)"
                             ></user-name>
                           </div>
-                          <div class="ml-2 flex items-center">
+                          <div class="flex items-center ml-2">
                             <div
                               class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5 text-white bg-secondary-700 hover:bg-secondary-800"
                               @click="followRequest(userId, true)"
@@ -83,8 +83,8 @@
               </dropdown>
             </div>
 
-            <div v-if="!loggedIn" class="flex justify-start items-center mx-2">
-              <basic-btn to="/signup" class="border border-white py-2 px-3">
+            <div v-if="!loggedIn" class="flex items-center justify-start mx-2">
+              <basic-btn to="/signup" class="px-3 py-2 border border-white">
                 Sign Up
               </basic-btn>
               <basic-btn to="/login" class="ml-1.5 py-2 pl-3">
@@ -93,7 +93,7 @@
             </div>
             <div v-else class="ml-1.5 relative">
               <div
-                class="p-1 cursor-pointer flex items-center"
+                class="flex items-center p-1 cursor-pointer"
                 @click="toggleUserMenu"
               >
                 <span class="sr-only">Open user menu</span>
@@ -101,7 +101,7 @@
                 <component
                   v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
-                  class="hidden md:block w-4 h-4"
+                  class="hidden w-4 h-4 md:block"
                 ></component>
               </div>
               <dropdown
@@ -134,13 +134,13 @@
                 :xsFullHeight="true"
               >
                 <Box
-                  class="h-full w-full flex flex-col flex-grow justify-between xs:mx-2 xs:rounded-lg"
+                  class="flex flex-col justify-between flex-grow w-full h-full xs:mx-2 xs:rounded-lg"
                 >
                   <div class="flex flex-col">
                     <div
-                      class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0"
+                      class="flex items-end flex-shrink-0 w-full p-3 border-b border-secondary-600"
                     >
-                      <div class="flex-1 flex justify-end">
+                      <div class="flex justify-end flex-1">
                         <basic-btn @click="userMenu = false">
                           <XIcon
                             class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
@@ -149,7 +149,7 @@
                       </div>
                     </div>
                     <div
-                      class="flex flex-col border-b border-secondary-600 py-2"
+                      class="flex flex-col py-2 border-b border-secondary-600"
                     >
                       <dropdown-item :to="`/u/${user.userName}`">
                         <user-avatar
@@ -157,7 +157,7 @@
                           class="w-11 h-11"
                         ></user-avatar>
                         <div
-                          class="ml-3 flex flex-col flex-grow justify-evenly"
+                          class="flex flex-col flex-grow ml-3 justify-evenly"
                         >
                           <user-name :user="user" :isLink="false"></user-name>
                           <div class="link">View Profile</div>
@@ -179,7 +179,7 @@
                       </dropdown-item>
                     </div>
                   </div>
-                  <BottomLinks class="justify-self-end mb-3"></BottomLinks>
+                  <BottomLinks class="mb-3 justify-self-end"></BottomLinks>
                 </Box>
               </Overlay>
             </div>
