@@ -1,65 +1,70 @@
 <template>
-  <center-form-box>
-    <div v-show="showCaptcha">
-      <div v-if="captcha.siteKey.length > 0">
-        <vue-hcaptcha
-          class="mx-auto max-w-max"
-          :sitekey="captcha.siteKey"
-          :theme="captcha.theme"
-          @rendered="captcha.loaded = true"
-          @verify="
+  <center-form-box classes="overflow-x-hidden overflow-y-auto">
+    <bar-loader :show="loading" />
+    <div class="px-5 py-4">
+      <div v-show="showCaptcha">
+        <div v-if="captcha.siteKey.length > 0">
+          <vue-hcaptcha
+            class="mx-auto max-w-max"
+            :sitekey="captcha.siteKey"
+            :theme="captcha.theme"
+            @rendered="captcha.loaded = true"
+            @verify="
             (token: string) => {
               captcha.token = token;
               onSubmit();
             }
           "
-          @expired="captcha.token = ''"
-        ></vue-hcaptcha>
-      </div>
-      <div
-        class="mt-2 link flex items-center cursor-pointer"
-        @click="captcha.show = false"
-      >
-        <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
-      </div>
-    </div>
-    <div v-show="!showCaptcha">
-      <h2 class="text-2xl font-medium">Login</h2>
-      <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
-      <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
-        <div>
-          <input-label for="name" :err="err.username">Username</input-label>
-          <text-input
-            v-model="username"
-            name="name"
-            :check="true"
-            :required="true"
-            @error="err.username = $event"
-          ></text-input>
+            @expired="captcha.token = ''"
+          ></vue-hcaptcha>
         </div>
-        <div class="mt-3">
-          <input-label for="password" :err="err.password">Password</input-label>
-          <password-input
-            v-model="password"
-            :required="true"
-            @error="err.password = $event"
-          ></password-input>
+        <div
+          class="flex items-center mt-2 cursor-pointer link"
+          @click="captcha.show = false"
+        >
+          <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
         </div>
-        <div class="flex justify-between mt-3">
-          <div class="flex flex-col">
-            <checkbox v-model="remember" name="remember">
-              <label for="remember">Remember Me</label>
-            </checkbox>
-            <text-small class="mt-2 mr-3">
-              Don't have an account?
-              <to-link class="link whitespace-nowrap" to="/signup">
-                Sign Up
-              </to-link>
-            </text-small>
+      </div>
+      <div v-show="!showCaptcha">
+        <h2 class="text-2xl font-medium">Login</h2>
+        <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
+        <form @submit.prevent="onSubmit" ref="form" class="mt-3 form">
+          <div>
+            <input-label for="name" :err="err.username">Username</input-label>
+            <text-input
+              v-model="username"
+              name="name"
+              :check="true"
+              :required="true"
+              @error="err.username = $event"
+            ></text-input>
           </div>
-          <submit class="mt-3 self-end" title="Login">Login</submit>
-        </div>
-      </form>
+          <div class="mt-3">
+            <input-label for="password" :err="err.password"
+              >Password</input-label
+            >
+            <password-input
+              v-model="password"
+              :required="true"
+              @error="err.password = $event"
+            ></password-input>
+          </div>
+          <div class="flex justify-between mt-3">
+            <div class="flex flex-col">
+              <checkbox v-model="remember" name="remember">
+                <label for="remember">Remember Me</label>
+              </checkbox>
+              <text-small class="mt-2 mr-3">
+                Don't have an account?
+                <to-link class="link whitespace-nowrap" to="/signup">
+                  Sign Up
+                </to-link>
+              </text-small>
+            </div>
+            <submit class="self-end mt-3" title="Login">Login</submit>
+          </div>
+        </form>
+      </div>
     </div>
   </center-form-box>
 </template>
@@ -79,6 +84,7 @@ import InputLabel from "@/components/form/InputLabel.vue";
 import TextSmall from "@/components/text/Small.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import ToLink from "@/components/ToLink.vue";
+import BarLoader from "@/components/overlay/BarLoader.vue";
 
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
@@ -133,6 +139,7 @@ export default defineComponent({
         token: "",
         theme: state.theme,
       },
+      loading: false,
     });
 
     document.title = `Login - ${import.meta.env.VITE_SITE_NAME}`;
@@ -152,16 +159,21 @@ export default defineComponent({
   },
   methods: {
     async onSubmit() {
+      this.loading = true;
+
       if (this.err.username.length != 0 || this.err.password.length != 0) {
+        this.loading = false;
         return;
       }
 
       if (this.keys.authKey == "" || this.keys.pgpPassphrase == "") {
         let salt = await getSalt(this.username).catch(() => {
-          this.handleErr();
-          return undefined;
+          return this.handleErr();
         });
-        if (salt == undefined) return;
+        if (salt == undefined) {
+          this.loading = false;
+          return;
+        }
         if (salt.error != undefined) {
           return this.handleErr(salt.error);
         }
@@ -189,10 +201,11 @@ export default defineComponent({
           }
         })
         .catch(() => {
-          this.handleErr();
+          return this.handleErr();
         });
     },
     handleErr(err?: string, captcha?: string) {
+      this.loading = false;
       this.captcha.show = false;
 
       switch (err) {
@@ -234,6 +247,7 @@ export default defineComponent({
     ChevronLeftIcon,
     VueHcaptcha,
     ToLink,
+    BarLoader,
   },
 });
 </script>
