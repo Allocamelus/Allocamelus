@@ -9,7 +9,10 @@ import { useSessionStore } from "@/store/session";
 export function redirectUrl(
   redirect: LocationQueryValue | LocationQueryValue[]
 ) {
-  if (Array.isArray(redirect) || redirect === null) {
+  if (Array.isArray(redirect)) {
+    redirect = redirect[0];
+  }
+  if (redirect === null) {
     redirect = "";
   }
   if (redirect.length > 0) {
@@ -44,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: (to) => {
       const session = useSessionStore();
       session.logout();
-      return { path: redirectUrl(to.query.r), query: { ref: "logout" } };
+      return { path: redirectUrl(to.query.r || "/"), query: { ref: "logout" } };
     },
   },
   {

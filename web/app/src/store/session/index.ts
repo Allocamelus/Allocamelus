@@ -66,7 +66,7 @@ export const useSessionStore = defineStore(storeName, {
 
       // State mismatched reset state
       if (!s.loggedIn && this.loggedIn) {
-        return this.$reset();
+        return this.reset();
       }
 
       if (s.loggedIn) {
@@ -95,7 +95,10 @@ export const useSessionStore = defineStore(storeName, {
     },
     async logout() {
       await logout();
-      this.$reset();
+      this.reset();
+    },
+    reset() {
+      return this.$patch(new Session());
     },
   },
 });

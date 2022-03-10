@@ -1,7 +1,7 @@
 <template>
   <center-form-box classes="overflow-x-hidden overflow-y-auto">
     <bar-loader :show="loading" />
-    <div class="py-4 px-5">
+    <div class="px-5 py-4">
       <div v-show="showCaptcha">
         <div v-if="captcha.siteKey.length > 0">
           <vue-hcaptcha
@@ -19,7 +19,7 @@
           ></vue-hcaptcha>
         </div>
         <div
-          class="mt-2 link flex items-center cursor-pointer"
+          class="flex items-center mt-2 cursor-pointer link"
           @click="captcha.show = false"
         >
           <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
@@ -33,7 +33,7 @@
             class="mt-3"
             v-html="err.signUp"
           ></div>
-          <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
+          <form @submit.prevent="onSubmit" ref="form" class="mt-3 form">
             <div>
               <input-label for="name" :err="err.userName">Username</input-label>
               <text-input
@@ -86,7 +86,7 @@
                 </text-small>
               </div>
               <submit
-                class="mt-3 self-end whitespace-nowrap"
+                class="self-end mt-3 whitespace-nowrap"
                 :title="!captcha.loaded ? 'Loading Captcha' : 'Sign Up'"
                 :disabled="!captcha.loaded"
               >
@@ -96,14 +96,14 @@
           </form>
         </div>
         <div v-show="!showForm" class="font-medium">
-          <div class="text-lg flex">
+          <div class="flex text-lg">
             Account successfully created
             <div class="text-base">*</div>
           </div>
           <text-small>
             *If an account with the email ({{ email }}) doesn't already exist
           </text-small>
-          <div class="font-normal my-2">
+          <div class="my-2 font-normal">
             Verify your account by clicking the activation link sent to your
             email
           </div>
@@ -134,6 +134,7 @@ import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import InputCopy from "@/components/form/InputCopy.vue";
 import EmailInput from "@/components/form/EmailInput.vue";
 import BarLoader from "@/components/overlay/BarLoader.vue";
+import ToLink from "@/components/ToLink.vue";
 
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
@@ -147,7 +148,6 @@ import {
   HtmlSomethingWentWrong,
   HtmlLoadingCaptcha,
 } from "@/components/htmlErrors";
-import ToLink from "@/components/ToLink.vue";
 
 export default defineComponent({
   props: {

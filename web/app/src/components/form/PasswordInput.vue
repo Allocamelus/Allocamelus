@@ -23,12 +23,16 @@
         <div class="ps-1"></div>
         <div class="ps-2"></div>
       </div>
-      <component
-        class="w5 h-5 cursor-pointer text-secondary-600 hover:text-secondary-700"
-        @click="togglePass"
-        :is="show ? 'EyeOffIcon' : 'EyeIcon'"
+      <div
         title="Toggle Visibility"
-      ></component>
+        class="cursor-pointer text-secondary-600 hover:text-secondary-700"
+      >
+        <component
+          class="h-5 w5"
+          @click="togglePass"
+          :is="show ? 'EyeOffIcon' : 'EyeIcon'"
+        ></component>
+      </div>
     </div>
   </text-input>
 </template>
