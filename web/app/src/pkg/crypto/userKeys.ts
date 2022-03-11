@@ -121,7 +121,7 @@ export function getKeys(
   saltEncoded: string
 ): Promise<{ authKey: string; pgpPassphrase: string }> {
   return new Promise(async (resolve) => {
-    let salt = await parse(saltEncoded);
+    let salt = parse(saltEncoded);
     salt.cost.FillEmpty();
 
     let hash = await hashSalt(

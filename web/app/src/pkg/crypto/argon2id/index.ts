@@ -1,8 +1,12 @@
-import { argon2id } from "hash-wasm";
+import argon2idWorker from "./worker?worker";
+import { wrap } from "comlink";
 import { Buffer } from "buffer";
 
 import { argon2idCost, argon2idEncoded } from "./argon2id";
 import { IDataType } from "hash-wasm/dist/lib/util";
+import { Argon2id } from "./worker";
+
+const argon2id = wrap<Argon2id>(new argon2idWorker());
 
 /**
  * Parse encoded argon2id hash
@@ -11,33 +15,32 @@ import { IDataType } from "hash-wasm/dist/lib/util";
  *
  * @param encodedHash Key is optional
  */
-export function parse(encodedHash: string): Promise<argon2idEncoded> {
-  return new Promise((resolve) => {
-    let slice = encodedHash.split("$");
-    let costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
+export function parse(encodedHash: string): argon2idEncoded {
+  console.log(encodedHash);
 
-    let encoded: argon2idEncoded = {
-      cost: new argon2idCost({
-        memory: parseInt(costSlice[0]),
-        time: parseInt(costSlice[1]),
-        threads: parseInt(costSlice[2]),
-        saltLen: Buffer.from(slice[4], "base64").length,
-      }),
-      encoded: "",
-      salt: slice[4],
-      version: parseInt(slice[2].replace(/[v=\s]/g, "")),
-      key: "",
-    };
+  let slice = encodedHash.split("$");
+  let costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
 
-    if (slice.length > 5) {
-      encoded.key = slice[5];
-      slice.pop();
-      encoded.cost.keyLen = Buffer.from(encoded.key, "base64").length;
-    }
-    encoded.encoded = slice.join("$");
-    resolve(encoded);
-    return;
-  });
+  let encoded: argon2idEncoded = {
+    cost: new argon2idCost({
+      memory: parseInt(costSlice[0]),
+      time: parseInt(costSlice[1]),
+      threads: parseInt(costSlice[2]),
+      saltLen: Buffer.from(slice[4], "base64").length,
+    }),
+    encoded: "",
+    salt: slice[4],
+    version: parseInt(slice[2].replace(/[v=\s]/g, "")),
+    key: "",
+  };
+
+  if (slice.length > 5) {
+    encoded.key = slice[5];
+    slice.pop();
+    encoded.cost.keyLen = Buffer.from(encoded.key, "base64").length;
+  }
+  encoded.encoded = slice.join("$");
+  return encoded;
 }
 
 /**
@@ -53,7 +56,7 @@ export function hashSalt(
   salt: IDataType,
   cost: argon2idCost
 ): Promise<argon2idEncoded> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     // Set defaults for empty cost values
     cost = new argon2idCost(cost);
     cost.FillEmpty();
@@ -62,24 +65,17 @@ export function hashSalt(
     if (typeof password === "string") {
       password = password.normalize();
     }
+    console.log(password, salt, cost);
 
-    argon2id({
-      password: password,
-      salt: salt,
-      iterations: cost.time,
-      hashLength: cost.keyLen,
-      memorySize: cost.memory,
-      parallelism: cost.threads,
-      outputType: "encoded",
-    })
-      .then(async (encodedHash) => {
-        resolve(await parse(encodedHash));
-        return;
-      })
-      .catch((e) => {
-        reject(e);
-        return;
-      });
+    let { encodedHash, err } = await argon2id.hash(password, salt, cost);
+    if (err !== null) {
+      reject(err);
+      return;
+    }
+    console.log(err);
+
+    resolve(parse(encodedHash));
+    return;
   });
 }
 

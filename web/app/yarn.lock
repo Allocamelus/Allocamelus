@@ -1019,6 +1019,7 @@ __metadata:
     autoprefixer: ^10.4.2
     axios: ^0.26.0
     buffer: ^6.0.3
+    comlink: ^4.3.1
     dompurify: ^2.3.6
     hash-wasm: ^4.9.0
     idb-keyval: ^6.1.0
@@ -1392,6 +1393,13 @@ __metadata:
   version: 1.2.2
   resolution: "colorette@npm:1.2.2"
   checksum: 69fec14ddaedd0f5b00e4bae40dc4bc61f7050ebdc82983a595d6fd64e650b9dc3c033fff378775683138e992e0ddd8717ac7c7cec4d089679dcfbe3cd921b04
+  languageName: node
+  linkType: hard
+
+"comlink@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "comlink@npm:4.3.1"
+  checksum: 557360a6558708c55aff74a25f834bfb9bfca8a42444682c4d5aead57681534a0206202be2a2760b4de124c3ba6d485b08978b6d5469cb3d26bf1438ee28a4f1
   languageName: node
   linkType: hard
 
