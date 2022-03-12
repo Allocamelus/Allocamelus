@@ -20,6 +20,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  css: {
+    modules: {
+      generateScopedName: "[hash:base64:8]",
+    },
+    preprocessorOptions: {
+      sass: { charset: false },
+      scss: { charset: false },
+    },
+  },
   build: {
     rollupOptions: {
       plugins: [visualizer()],

@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: license https://github.com/radix-ui/icons/blob/master/LICENSE -->
   <AllocamelusSVG />
 </template>
 

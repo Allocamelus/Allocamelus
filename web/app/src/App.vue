@@ -36,7 +36,9 @@
                   <div
                     class="dark:text-white text-black max-h-48 h-48 scrollbar px-3 py-2.5"
                   >
-                    <div v-if="alerts.err.length != 0">{{ alerts.err }}</div>
+                    <div v-if="alerts.err.length != 0" class="text-base">
+                      {{ alerts.err }}
+                    </div>
                     <div v-else>
                       <text-small
                         class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"

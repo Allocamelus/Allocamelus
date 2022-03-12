@@ -61,7 +61,9 @@
                 </to-link>
               </text-small>
             </div>
-            <submit class="self-end mt-3" title="Login">Login</submit>
+            <submit class="self-end mt-3" title="Login" :disabled="loading">
+              Login
+            </submit>
           </div>
         </form>
       </div>

@@ -1,8 +1,8 @@
 <template>
-  <footer id="footer">
-    <div class="footer container">
+  <footer id="footer" class="text-white bg-footer xs:h-footer">
+    <div class="container" :class="$style.footer">
       <div class="flex">
-        <div class="font-semibold self-center">
+        <div class="self-center font-semibold">
           &copy; {{ new Date().getFullYear() }}
         </div>
         <div class="dash-before">
@@ -15,10 +15,10 @@
           target="_blank"
           href="https://github.com/Allocamelus/Allocamelus"
         >
-          <radix-github class="h-5 w-5" />
+          <radix-github class="w-5 h-5" />
         </a>
         <a href="https://www.allocamelus.com/u/Allocamelus" class="ml-3">
-          <allocamelus class="h-5 w-5" />
+          <allocamelus class="w-5 h-5" />
         </a>
       </div>
       <div class="flex">
@@ -45,25 +45,18 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-@tailwind components;
-
-@layer components {
-  #footer {
-    @apply bg-footer text-white xs:h-footer;
+<style lang="scss" module>
+.footer {
+  @apply flex justify-between items-center py-3;
+  > div {
+    @apply items-center;
   }
-  .footer {
-    @apply flex justify-between items-center py-3;
-    > div {
-      @apply items-center;
-    }
-    &,
-    a {
-      @apply text-sm text-white;
-    }
-    a {
-      @apply font-semibold no-underline cursor-pointer;
-    }
+  &,
+  a {
+    @apply text-sm text-white;
+  }
+  a {
+    @apply font-semibold no-underline cursor-pointer;
   }
 }
 </style>

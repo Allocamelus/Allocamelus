@@ -11,16 +11,16 @@
       <div class="flex flex-grow flex-shrink">
         <div class="flex flex-col flex-grow">
           <div
-            class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
+            class="flex items-center justify-between text-gray-700 dark:text-gray-300"
           >
-            <div class="flex text-sm xs:text-base items-center">
+            <div class="flex items-center text-sm xs:text-base">
               <user-avatar
                 :user="user"
                 :isLink="true"
                 class="w-6 h-6 xs:w-[30px] xs:h-[30px] mr-2"
               ></user-avatar>
               <user-name :user="user"></user-name>
-              <div class="dot-before flex items-center whitespace-nowrap">
+              <div class="flex items-center dot-before whitespace-nowrap">
                 <fmt-time
                   :time="comment.created"
                   :type="Fmt_Short_Time"
@@ -29,11 +29,11 @@
               </div>
               <div
                 v-if="edited"
-                class="dot-before flex items-center whitespace-nowrap"
+                class="flex items-center dot-before whitespace-nowrap"
               >
                 <div title="Edited">
                   <PencilAltIcon
-                    class="h-4 w-4 dark:text-gray-400"
+                    class="w-4 h-4 dark:text-gray-400"
                   ></PencilAltIcon>
                 </div>
               </div>
@@ -50,7 +50,7 @@
               @click="hidden = !hidden"
             >
               <div
-                class="w-0 border-[1px] border-gray-400 dark:border-gray-700 group-hover:border-gray-700 dark:group-hover:border-gray-400"
+                class="w-0 border border-gray-400 dark:border-gray-700 group-hover:border-gray-700 dark:group-hover:border-gray-400"
               ></div>
             </div>
             <div v-if="hidden" class="flex flex-grow">
@@ -71,14 +71,14 @@
                 </div>
               </div>
               <div
-                class="flex flex-row-reverse xs:flex-row text-sm font-medium mt-2 items-center text-gray-600 dark:text-gray-400"
+                class="flex flex-row-reverse items-center mt-2 text-sm font-medium text-gray-600 xs:flex-row dark:text-gray-400"
               >
                 <small-btn
                   class="flex items-center pr-0.5 mr-1.5"
                   @click="showReplyForm = !showReplyForm"
                 >
                   <component
-                    class="h-4 w-4"
+                    class="w-4 h-4"
                     :is="
                       showReplyForm
                         ? 'OutlineAnnotationIcon'
@@ -147,7 +147,7 @@
                 </div>
               </feed>
               <div class="mt-2" v-if="missingReplies > 0">
-                <div class="link text-sm font-semibold" @click="getReplies()">
+                <div class="text-sm font-semibold link" @click="getReplies()">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
                 </div>

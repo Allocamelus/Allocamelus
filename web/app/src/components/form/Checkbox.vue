@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center min-w-max pr-1 cursor-pointer select-none"
+    class="flex items-center pr-1 cursor-pointer select-none min-w-max"
     @click="toggleCheck()"
   >
     <component :is="checked ? 'radix-checkbox' : 'radix-box'"></component>
@@ -50,18 +50,16 @@ export default defineComponent({
     content: $content;
   }
 }
-@layer components {
-  input,
-  :slotted(label),
-  :slotted(div) {
-    @apply cursor-pointer select-none;
-  }
-  input[type="checkbox"] {
-    @apply appearance-none font-normal mr-1;
-    @apply dark:text-warm-gray-50 focus:outline-none;
-    &:checked {
-      @apply appearance-none;
-    }
+input,
+:slotted(label),
+:slotted(div) {
+  @apply cursor-pointer select-none;
+}
+input[type="checkbox"] {
+  @apply appearance-none font-normal mr-1;
+  @apply dark:text-warm-gray-50 focus:outline-none;
+  &:checked {
+    @apply appearance-none;
   }
 }
 </style>

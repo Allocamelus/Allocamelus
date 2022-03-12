@@ -2,7 +2,7 @@
   <component
     :is="isLink ? 'to-link' : 'div'"
     :to="'/u/' + user.userName"
-    class="block flex-shrink-0"
+    class="flex-shrink-0 block"
   >
     <img
       :src="hasAvatar ? fullAvatarURL : gray5x5Url"
@@ -10,7 +10,7 @@
       :alt="`@${user.userName}'s Profile Image`"
       :width="500"
       :height="500"
-      class="w-full h-full rounded-full mr-2 border-none"
+      class="object-cover max-w-full mr-2 border-none rounded-full"
       :class="
         hasAvatar
           ? 'bg-gray-50 dark:bg-gray-900'

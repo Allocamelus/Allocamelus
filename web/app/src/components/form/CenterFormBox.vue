@@ -31,21 +31,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@tailwind components;
-
-@layer components {
-  .form-box {
-    @apply flex flex-col mx-auto flex-grow;
-    @apply xs-max:bg-transparent xs-max:shadow-none xs-max:dark:bg-transparent;
-    // TODO
-    max-width: 400px;
-  }
-  .form-box-wrapper {
-    @apply w-full flex justify-center items-center;
-    min-height: calc(100vh - var(--nav-height));
-    @screen xs-max {
-      min-height: calc(100vh - calc(var(--nav-height) * 1.5));
-    }
+.form-box {
+  @apply flex flex-col mx-auto flex-grow;
+  @apply xs-max:bg-transparent xs-max:shadow-none xs-max:dark:bg-transparent;
+  // TODO
+  max-width: 400px;
+}
+.form-box-wrapper {
+  @apply w-full flex justify-center items-center;
+  min-height: calc(100vh - var(--nav-height));
+  @screen xs-max {
+    min-height: calc(100vh - calc(var(--nav-height) * 1.5));
   }
 }
 </style>

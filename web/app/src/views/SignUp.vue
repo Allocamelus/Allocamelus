@@ -88,7 +88,7 @@
               <submit
                 class="self-end mt-3 whitespace-nowrap"
                 :title="!captcha.loaded ? 'Loading Captcha' : 'Sign Up'"
-                :disabled="!captcha.loaded"
+                :disabled="!captcha.loaded || loading"
               >
                 Sign Up
               </submit>

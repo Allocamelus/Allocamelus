@@ -162,38 +162,34 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@tailwind components;
-
-@layer components {
+.ps-1,
+.ps-2,
+.ps-3,
+.ps-4 {
+  @apply h-1.5 w-1.5 bg-gray-500;
+}
+.s1 {
+  .ps-1 {
+    @apply bg-red-600;
+  }
+}
+.s2 {
   .ps-1,
-  .ps-2,
-  .ps-3,
+  .ps-2 {
+    @apply bg-yellow-400;
+  }
+}
+.s3 {
+  div {
+    @apply bg-orange-600;
+  }
   .ps-4 {
-    @apply h-1.5 w-1.5 bg-gray-500;
+    @apply bg-gray-500;
   }
-  .s1 {
-    .ps-1 {
-      @apply bg-red-600;
-    }
-  }
-  .s2 {
-    .ps-1,
-    .ps-2 {
-      @apply bg-yellow-400;
-    }
-  }
-  .s3 {
-    div {
-      @apply bg-orange-600;
-    }
-    .ps-4 {
-      @apply bg-gray-500;
-    }
-  }
-  .s4 {
-    div {
-      @apply bg-green-600;
-    }
+}
+.s4 {
+  div {
+    @apply bg-green-600;
   }
 }
 </style>

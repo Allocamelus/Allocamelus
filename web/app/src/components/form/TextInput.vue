@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container my-1 p-0">
+  <div class="p-0 my-1 input-container">
     <input
       v-model.trim="text"
       @input="emiter"
@@ -144,40 +144,37 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .input-container {
-    @apply w-full rounded-sm box-border border border-solid;
-    @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
-    @apply flex justify-between items-center;
-    @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
-  }
+.input-container {
+  @apply w-full rounded-sm box-border border border-solid;
+  @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
+  @apply flex justify-between items-center;
+  @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
+}
 
-  .input {
-    @apply focus:outline-none box-content flex-1 border-none outline-none;
-    @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
-    @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
-  }
-  @layer utilities hover, focus, active {
-    .input,
-    .dark .input {
-      &:-webkit-autofill {
-        background-color: transparent !important;
-      }
-    }
-    .input:-webkit-autofill {
-      -webkit-text-fill-color: theme("colors.black.lighter");
-      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
-      @screen xs-max {
-        -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
-      }
-    }
-    .dark .input:-webkit-autofill {
-      -webkit-text-fill-color: theme("colors.white");
-      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.800") inset;
+.input {
+  @apply focus:outline-none box-content flex-1 border-none outline-none;
+  @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
+  @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
+  &:-webkit-autofill {
+    -webkit-text-fill-color: theme("colors.black.lighter");
+    -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
+    @screen xs-max {
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
     }
   }
+  &:hover,
+  &:focus,
+  &:active {
+    &:-webkit-autofill {
+      background-color: transparent !important;
+    }
+  }
+}
+
+.dark .input:-webkit-autofill {
+  -webkit-text-fill-color: theme("colors.white");
+  -webkit-box-shadow: 0 0 0 100px theme("colors.gray.800") inset;
 }
 </style>
