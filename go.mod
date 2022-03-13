@@ -4,16 +4,16 @@ go 1.17
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220113124808-70ae35bab23f // indirect
-	github.com/ProtonMail/gopenpgp/v2 v2.4.2
+	github.com/ProtonMail/gopenpgp/v2 v2.4.5
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/discord/lilliput v0.0.0-20210720001558-e1547514bd5f
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gofiber/fiber/v2 v2.27.0
-	github.com/gofiber/helmet/v2 v2.2.7
+	github.com/gofiber/fiber/v2 v2.29.0
+	github.com/gofiber/helmet/v2 v2.2.9
 	github.com/json-iterator/go v1.1.12
-	github.com/klauspost/compress v1.14.4 // indirect
+	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -22,28 +22,30 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/tinylib/msgp v1.1.6
-	github.com/valyala/fasthttp v1.33.0 // indirect
+	github.com/valyala/fasthttp v1.34.0 // indirect
 	github.com/valyala/fastjson v1.6.3
 	github.com/valyala/quicktemplate v1.7.0
-	github.com/xhit/go-simple-mail/v2 v2.10.0
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	golang.org/x/sys v0.0.0-20220223155357-96fed51e1446 // indirect
+	github.com/xhit/go-simple-mail/v2 v2.11.0
+	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
+	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	k8s.io/klog/v2 v2.40.1
 )
 
 require (
-	github.com/ProtonMail/go-mime v0.0.0-20190923161245-9b5a4261663a // indirect
+	github.com/ProtonMail/go-mime v0.0.0-20220302105931-303f85f7fe0f // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
+	github.com/go-test/deep v1.0.8 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 )
