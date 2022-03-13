@@ -1,20 +1,22 @@
 <template>
-  <div class="hidden ml-6 w-64 items-stretch md:flex flex-col flex-shrink-0">
-    <box v-if="loggedIn" class="py-3 px-4 rounded-xl">
-      <div class="w-max mx-auto">
+  <div class="flex-col items-stretch flex-shrink-0 hidden w-64 ml-6 md:flex">
+    <box v-if="loggedIn" class="px-4 py-3 rounded-xl">
+      <div class="mx-auto w-max">
         <basic-btn
           to="/post/new"
-          class="text-white bg-secondary-700 hover:bg-secondary-800 py-2 px-3.5"
+          class="py-2 px-3.5"
+          :class="buttonStyle.secondary"
         >
           New Post
         </basic-btn>
       </div>
     </box>
-    <box v-else class="py-2 px-3 rounded-xl">
-      <div class="flex w-max mx-auto">
+    <box v-else class="px-3 py-2 rounded-xl">
+      <div class="flex mx-auto w-max">
         <basic-btn
           to="/signup"
-          class="text-white bg-secondary-700 hover:bg-secondary-800 py-2 px-3.5"
+          class="py-2 px-3.5"
+          :class="buttonStyle.secondary"
         >
           Sign Up
         </basic-btn>
@@ -44,3 +46,10 @@ export default defineComponent({
   components: { Box, BasicBtn, BottomLinks },
 });
 </script>
+
+<style
+  src="@/scss/modules/button.modules.scss"
+  lang="scss"
+  module="buttonStyle"
+  scoped
+></style>

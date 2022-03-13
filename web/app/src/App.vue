@@ -65,7 +65,8 @@
                           </div>
                           <div class="flex items-center ml-2">
                             <div
-                              class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5 text-white bg-secondary-700 hover:bg-secondary-800"
+                              class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5"
+                              :class="buttonStyle.secondary"
                               @click="followRequest(userId, true)"
                             >
                               Accept
@@ -89,7 +90,7 @@
               <basic-btn to="/signup" class="px-3 py-2 border border-white">
                 Sign Up
               </basic-btn>
-              <basic-btn to="/login" class="ml-1.5 py-2 pl-3">
+              <basic-btn to="/login" class="ml-1.5 py-2 pl-3 hidden xs:block">
                 Login
               </basic-btn>
             </div>
@@ -145,7 +146,8 @@
                       <div class="flex justify-end flex-1">
                         <basic-btn @click="userMenu = false">
                           <XIcon
-                            class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
+                            class="w-5 h-5"
+                            :class="iconStyle.xIcon"
                           ></XIcon>
                         </basic-btn>
                       </div>
@@ -405,3 +407,15 @@ export default defineComponent({
 </script>
 
 <style src="./scss/App.scss" lang="scss"></style>
+<style
+  src="@/scss/modules/button.modules.scss"
+  lang="scss"
+  module="buttonStyle"
+  scoped
+></style>
+<style
+  src="@/scss/modules/icon.modules.scss"
+  lang="scss"
+  module="iconStyle"
+  scoped
+></style>

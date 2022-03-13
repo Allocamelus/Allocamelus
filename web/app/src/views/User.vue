@@ -1,7 +1,7 @@
 <template>
   <div class="container py-5">
     <error-box :error="err.user" class="p-3.5 mb-3">
-      <div class="flex flex-col xs:flex-row justify-between">
+      <div class="flex flex-col justify-between xs:flex-row">
         <div>
           <div class="flex items-center min-w-0">
             <component
@@ -17,7 +17,7 @@
             ></user-name>
             <text-small
               v-if="user.type === UNVERIFIED_USER"
-              class="font-normal flex-none ml-1"
+              class="flex-none ml-1 font-normal"
             >
               [[Unverified]]
             </text-small>
@@ -27,14 +27,11 @@
           </div>
         </div>
         <div
-          class="mt-3 xs:mt-0 xs:ml-3 flex-shrink-0 flex justify-end items-start"
+          class="flex items-start justify-end flex-shrink-0 mt-3 xs:mt-0 xs:ml-3"
         >
           <basic-btn
-            class="px-3 py-2 border whitespace-nowrap"
-            :class="[
-              'border-secondary-700 text-secondary-700 dark:text-rose-600 ',
-              'hover:bg-secondary-700 hover:text-white dark:hover:text-white',
-            ]"
+            class="px-3 py-2 whitespace-nowrap"
+            :class="buttonStyle.secondaryBorderInvert"
             @click="clickFollowEdit"
           >
             {{ followEditBtnTxt }}
@@ -63,7 +60,7 @@
       <feed>
         <new-post-text-input v-if="canEdit"></new-post-text-input>
         <error-box :error="err.posts">
-          <box v-if="postsList.total() == 0" class="rounded-xl py-3 px-4">
+          <box v-if="postsList.total() == 0" class="px-4 py-3 rounded-xl">
             No Post Here
           </box>
         </error-box>
@@ -95,8 +92,6 @@ import {
   InvalidCharacters,
   SomethingWentWrong,
 } from "@/components/form/errors";
-
-import XIcon from "@heroicons/vue/solid/XIcon";
 
 import UserName from "@/components/user/Name.vue";
 import ErrorBox from "@/components/box/Error.vue";
@@ -283,7 +278,6 @@ export default defineComponent({
     UserAvatar,
     BasicBtn,
     Overlay,
-    XIcon,
     ChangeAvatar,
     EditOverlay,
     SignUpOverlay,
@@ -293,3 +287,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style
+  src="@/scss/modules/button.modules.scss"
+  lang="scss"
+  module="buttonStyle"
+  scoped
+></style>

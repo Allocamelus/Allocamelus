@@ -1,11 +1,6 @@
 <template>
   <!-- TODO: license https://github.com/radix-ui/icons/blob/master/LICENSE -->
-  <svg
-    :class="sizeClass"
-    viewBox="0 0 15 15"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"
@@ -25,12 +20,5 @@
 import { defineComponent } from "vue";
 
 // Mixed box.svg & check.svg paths
-export default defineComponent({
-  props: {
-    sizeClass: {
-      type: String,
-      default: "w-4 h-4",
-    },
-  },
-});
+export default defineComponent({});
 </script>

@@ -22,7 +22,7 @@ export default defineConfig({
   },
   css: {
     modules: {
-      generateScopedName: "[hash:base64:8]",
+      generateScopedName: "[hash:base64:5]",
     },
     preprocessorOptions: {
       sass: { charset: false },

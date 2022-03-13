@@ -33,15 +33,16 @@ export default defineComponent({
 <style lang="scss" scoped>
 .form-box {
   @apply flex flex-col mx-auto flex-grow;
-  @apply xs-max:bg-transparent xs-max:shadow-none xs-max:dark:bg-transparent;
+  @apply bg-transparent shadow-none dark:bg-transparent;
+  @apply xs:bg-gray-50 xs:dark:bg-gray-900 xs:shadow;
   // TODO
   max-width: 400px;
 }
 .form-box-wrapper {
   @apply w-full flex justify-center items-center;
-  min-height: calc(100vh - var(--nav-height));
-  @screen xs-max {
-    min-height: calc(100vh - calc(var(--nav-height) * 1.5));
+  min-height: calc(100vh - calc(var(--nav-height) * 1.5));
+  @screen xs {
+    min-height: calc(100vh - var(--nav-height));
   }
 }
 </style>

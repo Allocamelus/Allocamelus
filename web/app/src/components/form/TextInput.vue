@@ -144,11 +144,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@tailwind utilities;
-
 .input-container {
   @apply w-full rounded-sm box-border border border-solid;
-  @apply bg-gray-200 xs-max:bg-gray-300 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
+  @apply bg-gray-300 xs:bg-gray-200 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
   @apply flex justify-between items-center;
   @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
 }
@@ -159,9 +157,9 @@ export default defineComponent({
   @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
   &:-webkit-autofill {
     -webkit-text-fill-color: theme("colors.black.lighter");
-    -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
-    @screen xs-max {
-      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
+    -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
+    @screen xs {
+      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
     }
   }
   &:hover,

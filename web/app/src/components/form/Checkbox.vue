@@ -3,7 +3,10 @@
     class="flex items-center pr-1 cursor-pointer select-none min-w-max"
     @click="toggleCheck()"
   >
-    <component :is="checked ? 'radix-checkbox' : 'radix-box'"></component>
+    <component
+      :is="checked ? 'radix-checkbox' : 'radix-box'"
+      class="w-4 h-4"
+    ></component>
     <input type="checkbox" v-model="checked" :name="name" @click.capture.stop />
     <slot>Checkbox</slot>
   </div>

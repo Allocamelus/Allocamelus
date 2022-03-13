@@ -1,11 +1,6 @@
 <template>
   <!-- TODO: license https://github.com/radix-ui/icons/blob/master/LICENSE -->
-  <svg
-    :class="sizeClass"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 15 15"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" fill="none">
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"
@@ -17,12 +12,5 @@
 
 <script>
 import { defineComponent } from "vue";
-export default defineComponent({
-  props: {
-    sizeClass: {
-      type: String,
-      default: "w-4 h-4",
-    },
-  },
-});
+export default defineComponent({});
 </script>

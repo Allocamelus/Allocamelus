@@ -1,28 +1,27 @@
 <template>
   <overlay v-model="visible">
     <box
-      class="w-full xs-max:h-full xs:m-3 rounded-none xs:rounded-md shadow-lg bg-opacity-75 dark:bg-opacity-75 focus:outline-none overflow-hidden flex flex-col"
+      class="flex flex-col w-full h-full overflow-hidden bg-opacity-75 rounded-none shadow-lg xs:h-fit xs:m-3 xs:rounded-md dark:bg-opacity-75 focus:outline-none"
     >
-      <div class="w-full p-3 border-b border-secondary-600 flex items-end">
-        <div
-          class="flex-1 flex justify-end text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
-        >
+      <div class="flex items-end w-full p-3 border-b border-secondary-600">
+        <div class="flex justify-end flex-1" :class="iconStyle.xIcon">
           <basic-btn @click="visible = false">
             <XIcon class="w-5 h-5"></XIcon>
           </basic-btn>
         </div>
       </div>
-      <div class="flex-grow flex items-center justify-center">
-        <div class="text-center flex flex-col py-8 px-6 xs:px-8">
+      <div class="flex items-center justify-center flex-grow">
+        <div class="flex flex-col px-6 py-8 text-center xs:px-8">
           <div
-            class="text-xl font-medium flex flex-wrap items-center justify-evenly"
+            class="flex flex-wrap items-center text-xl font-medium justify-evenly"
           >
             <slot></slot>
           </div>
           <div class="flex flex-col items-center mt-8">
             <basic-btn
               to="/signup"
-              class="w-full text-white bg-secondary-700 hover:bg-secondary-800 py-2.5 px-3.5 mb-4"
+              class="w-full py-2.5 px-3.5 mb-4"
+              :class="buttonStyle.secondary"
             >
               Sign Up
             </basic-btn>
@@ -94,3 +93,16 @@ export default defineComponent({
   },
 });
 </script>
+
+<style
+  src="@/scss/modules/button.modules.scss"
+  lang="scss"
+  module="buttonStyle"
+  scoped
+></style>
+<style
+  src="@/scss/modules/icon.modules.scss"
+  lang="scss"
+  module="iconStyle"
+  scoped
+></style>

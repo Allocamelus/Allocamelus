@@ -1,34 +1,32 @@
 <template>
   <overlay v-model="visable">
     <box
-      class="w-full xs-max:h-full xs:m-3 max-h-screen rounded-none xs:rounded-md shadow-lg bg-secondary-800 focus:outline-none flex flex-col"
+      class="flex flex-col w-full h-full max-h-screen rounded-none shadow-lg xs:h-fit xs:m-3 xs:rounded-md bg-secondary-800 focus:outline-none"
     >
       <snackbar v-model="err.snackbar.show" :closeBtn="true">
         {{ err.snackbar.msg }}
       </snackbar>
       <div
-        class="w-full p-3 border-b border-secondary-600 flex items-end flex-shrink-0"
+        class="flex items-end flex-shrink-0 w-full p-3 border-b border-secondary-600"
       >
-        <div class="flex-1 flex justify-start">
+        <div class="flex justify-start flex-1">
           <basic-btn @click="visable = false">
-            <XIcon
-              class="w-5 h-5 text-black dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300"
-            ></XIcon>
+            <XIcon class="w-5 h-5" :class="iconStyle.xIcon"></XIcon>
           </basic-btn>
         </div>
-        <div class="flex-1 flex justify-center">
+        <div class="flex justify-center flex-1">
           <div
-            class="font-medium text-base leading-4 text-gray-900 dark:text-gray-100"
+            class="text-base font-medium leading-4 text-gray-900 dark:text-gray-100"
           >
             Edit Profile
           </div>
         </div>
-        <div class="flex-1 flex justify-end">
+        <div class="flex justify-end flex-1">
           <basic-btn @click="submit" class="link">Save</basic-btn>
         </div>
       </div>
-      <div class="flex-grow flex flex-col overflow-y-auto">
-        <div class="flex flex-grow flex-shrink-0 flex-col py-6 px-6 xs:px-8">
+      <div class="flex flex-col flex-grow overflow-y-auto">
+        <div class="flex flex-col flex-grow flex-shrink-0 px-6 py-6 xs:px-8">
           <div class="flex items-center">
             <user-avatar
               class="h-11 w-11"
@@ -258,3 +256,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style
+  src="@/scss/modules/icon.modules.scss"
+  lang="scss"
+  module="iconStyle"
+  scoped
+></style>
