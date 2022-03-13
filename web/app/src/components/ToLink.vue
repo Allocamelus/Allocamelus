@@ -1,15 +1,25 @@
 <template>
-  <router-link :to="to" @click="userEvent">
+  <component
+    :is="local ? 'router-link' : 'a'"
+    v-bind="attributes"
+    @click="userEvent"
+  >
     <slot></slot>
-  </router-link>
+  </component>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script lang="ts">
+import { defineComponent, PropType } from "vue";
+import { RouteLocationRaw } from "vue-router";
 import { useStateStore } from "@/store";
 
 export default defineComponent({
-  props: ["to"],
+  props: {
+    to: {
+      type: [Object, String] as PropType<RouteLocationRaw | String>,
+      default: "",
+    },
+  },
   setup() {
     const state = useStateStore();
 
@@ -21,10 +31,40 @@ export default defineComponent({
     userEvent() {
       if (
         this.to == this.$route.path ||
-        (this.to.path != undefined && this.to.path == this.$route.path)
+        (typeof this.to !== "string" &&
+          "path" in this.to &&
+          this.to.path == this.$route.path)
       ) {
         this.updateViewKey();
       }
+    },
+  },
+  computed: {
+    local() {
+      if (typeof this.to !== "string") {
+        return true;
+      }
+      try {
+        let url = new URL(this.to, window.location.origin);
+        if (url.host === window.location.host) {
+          return true;
+        }
+      } catch (_) {
+        return true;
+      }
+      return false;
+    },
+    attributes() {
+      if (this.local) {
+        return {
+          ["to"]: this.to,
+        };
+      }
+      return {
+        ["href"]: this.to,
+        ["rel"]: "noopener noreferrer",
+        ["target"]: "_blank",
+      };
     },
   },
 });

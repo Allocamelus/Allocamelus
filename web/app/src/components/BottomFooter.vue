@@ -10,16 +10,12 @@
         </div>
       </div>
       <div class="hidden xs:flex">
-        <a
-          rel="noopener noreferrer"
-          target="_blank"
-          href="https://github.com/Allocamelus/Allocamelus"
-        >
+        <to-link to="https://github.com/Allocamelus/Allocamelus">
           <radix-github class="w-5 h-5" />
-        </a>
-        <a href="https://www.allocamelus.com/u/Allocamelus" class="ml-3">
+        </to-link>
+        <to-link to="https://www.allocamelus.com/u/Allocamelus" class="ml-3">
           <allocamelus class="w-5 h-5" />
-        </a>
+        </to-link>
       </div>
       <div class="flex">
         <!-- TODO -->

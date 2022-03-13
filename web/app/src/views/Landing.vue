@@ -19,7 +19,7 @@
             Sign Up
           </basic-btn>
           <basic-btn
-            to="/signup"
+            to="https://github.com/Allocamelus/Allocamelus"
             class="px-4 py-2.5 text-base leading-4"
             :class="buttonStyle.secondaryBorder"
           >
