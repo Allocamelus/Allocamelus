@@ -4,10 +4,10 @@ qtpl:
 run:
 	go run ./cmd/allocamelus
 
-build-npm:
-	cd ./web/app; npm run build;
+build-yarn:
+	cd ./web/app; yarn run build;
 
 build-go:
 	go build -ldflags="-s -w" -o ./cmd/allocamelus/allocamelus ./cmd/allocamelus
 
-build: build-go build-npm
+build: build-go build-yarn

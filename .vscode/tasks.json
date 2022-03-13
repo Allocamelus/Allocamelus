@@ -1,42 +1,29 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558
-	// for the documentation about the tasks.json format
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Build",
-			"group": "build",
-			"problemMatcher": [],	  
-			"dependsOn": [
-				"go: build - cmd/allocamelus",
-				"npm: build - web/app"
-			]
-		},
-		{
-			"label": "npm: build - web/app",
-			"group": "build",
-			"command": "make",
-			"args": [
-				"build-npm",
-			],
-			"problemMatcher": [
-				"$eslint-compact",
-				"$jshint",
-				"$tsc"
-			],
-			"detail": "npm run build"
-		},
-		{
-			"label": "go: build - cmd/allocamelus",
-			"group": "build",
-			"command": "make",
-			"args": [
-				"build-go",
-			],
-			"problemMatcher": [
-				"$go"
-			],
-			"detail": "go build -ldflags=\"-s -w\" -o ./application.so ."
-		}
-	]
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "group": "build",
+      "problemMatcher": [],
+      "dependsOn": ["go: build - cmd/allocamelus", "yarn: build - web/app"]
+    },
+    {
+      "label": "yarn: build - web/app",
+      "group": "build",
+      "command": "make",
+      "args": ["build-yarn"],
+      "problemMatcher": ["$eslint-compact", "$jshint", "$tsc"],
+      "detail": "yarn run build"
+    },
+    {
+      "label": "go: build - cmd/allocamelus",
+      "group": "build",
+      "command": "make",
+      "args": ["build-go"],
+      "problemMatcher": ["$go"],
+      "detail": "go build -ldflags=\"-s -w\" -o ./application.so ."
+    }
+  ]
 }

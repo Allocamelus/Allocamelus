@@ -1,6 +1,6 @@
 import { expose } from "comlink";
 import { argon2id as argon2idHash } from "hash-wasm";
-import { argon2idCost } from "./argon2id";
+import { argon2idCost } from "../argon2id";
 import { IDataType } from "hash-wasm/dist/lib/util";
 
 export interface Argon2id {
