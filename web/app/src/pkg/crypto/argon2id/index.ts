@@ -1,4 +1,4 @@
-import argon2idWorker from "./worker?worker";
+import argon2idWorker from "./worker?worker&inline";
 import { wrap } from "comlink";
 import { Buffer } from "buffer";
 
@@ -16,8 +16,6 @@ const argon2id = wrap<Argon2id>(new argon2idWorker());
  * @param encodedHash Key is optional
  */
 export function parse(encodedHash: string): argon2idEncoded {
-  console.log(encodedHash);
-
   let slice = encodedHash.split("$");
   let costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
 
@@ -65,14 +63,12 @@ export function hashSalt(
     if (typeof password === "string") {
       password = password.normalize();
     }
-    console.log(password, salt, cost);
 
     let { encodedHash, err } = await argon2id.hash(password, salt, cost);
     if (err !== null) {
       reject(err);
       return;
     }
-    console.log(err);
 
     resolve(parse(encodedHash));
     return;
