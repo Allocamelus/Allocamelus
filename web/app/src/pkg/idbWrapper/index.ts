@@ -1,9 +1,9 @@
 import { StorageLikeAsync } from "@vueuse/core";
-import { get, set, del, createStore, UseStore } from "idb-keyval";
+import { get, set, del, UseStore, promisifyRequest } from "idb-keyval";
 
 export interface IDBStore extends StorageLikeAsync {}
 
-const store = createStore("allocamelus", "keyValueStore");
+const store = createStore("allocamelus", "keyValueStore", 2);
 
 export class IDBStore {
   prefix: string;
@@ -37,4 +37,19 @@ export class IDBStore {
 
 export function newStore(prefix: string): IDBStore {
   return new IDBStore(prefix);
+}
+
+function createStore(
+  dbName: string,
+  storeName: string,
+  version: number
+): UseStore {
+  const request = indexedDB.open(dbName, version);
+  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+  const dbp = promisifyRequest(request);
+
+  return (txMode, callback) =>
+    dbp.then((db) =>
+      callback(db.transaction(storeName, txMode).objectStore(storeName))
+    );
 }

@@ -3,7 +3,7 @@ import { argon2id as argon2idHash } from "hash-wasm";
 import { argon2idCost } from "../argon2id";
 import { IDataType } from "hash-wasm/dist/lib/util";
 
-export interface Argon2id {
+export interface Argon2idWorker {
   hash: typeof hash;
 }
 
@@ -12,7 +12,7 @@ export interface hashReturn {
   err: any;
 }
 
-const argon2id: Argon2id = {
+const argon2id: Argon2idWorker = {
   hash,
 };
 

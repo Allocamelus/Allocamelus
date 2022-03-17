@@ -4,9 +4,9 @@ import { Buffer } from "buffer";
 
 import { argon2idCost, argon2idEncoded } from "./argon2id";
 import { IDataType } from "hash-wasm/dist/lib/util";
-import { Argon2id } from "./worker";
+import { Argon2idWorker } from "./worker";
 
-const argon2id = wrap<Argon2id>(new argon2idWorker());
+const argon2id = wrap<Argon2idWorker>(new argon2idWorker());
 
 /**
  * Parse encoded argon2id hash
