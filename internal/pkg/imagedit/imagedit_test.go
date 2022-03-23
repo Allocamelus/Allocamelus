@@ -36,7 +36,7 @@ func TestWriteToPath(t *testing.T) {
 	}
 	defer img.Close()
 
-	err = img.WriteToPath(a9s_jpg)
+	err = img.WriteToPath(a9s_test_jpg)
 	if err != nil {
 		t.Fatal(err)
 	}

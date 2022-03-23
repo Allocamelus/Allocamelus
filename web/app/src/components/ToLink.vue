@@ -56,6 +56,16 @@ export default defineComponent({
     },
     attributes() {
       if (this.local) {
+        if (typeof this.to === "string") {
+          try {
+            let url = new URL(this.to, window.location.origin);
+            if (url.host === window.location.host) {
+              return {
+                ["to"]: url.pathname,
+              };
+            }
+          } catch (_) {}
+        }
         return {
           ["to"]: this.to,
         };

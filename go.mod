@@ -8,10 +8,10 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/discord/lilliput v0.0.0-20210720001558-e1547514bd5f
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
-	github.com/go-redis/redis/v8 v8.11.4
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gofiber/fiber/v2 v2.29.0
-	github.com/gofiber/helmet/v2 v2.2.9
+	github.com/gofiber/fiber/v2 v2.30.0
+	github.com/gofiber/helmet/v2 v2.2.10
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.18
@@ -26,11 +26,11 @@ require (
 	github.com/valyala/fastjson v1.6.3
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.11.0
-	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
+	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
-	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
+	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	k8s.io/klog/v2 v2.40.1
+	k8s.io/klog/v2 v2.60.1
 )
 
 require (
@@ -39,7 +39,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/go-logr/logr v1.2.2 // indirect
+	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-test/deep v1.0.8 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect
