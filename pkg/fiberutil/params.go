@@ -11,11 +11,11 @@ import (
 func ParamsInt64(c *fiber.Ctx, key string, defaultValue ...int64) int64 {
 	intStr := c.Params(key)
 	if intStr == "" {
-		return defInt64(defaultValue)
+		return defaultV(defaultValue)
 	}
 	paramInt, err := strconv.Atoi(intStr)
 	if err != nil {
-		return defInt64(defaultValue)
+		return defaultV(defaultValue)
 	}
 	return int64(paramInt)
 }
@@ -24,7 +24,7 @@ func ParamsInt64(c *fiber.Ctx, key string, defaultValue ...int64) int64 {
 func ParamsBool(c *fiber.Ctx, key string, defaultValue ...bool) bool {
 	boolStr := c.Params(key)
 	if boolStr == "" {
-		return defBool(defaultValue)
+		return defaultV(defaultValue)
 	}
 	switch boolStr {
 	case "true", "t", "yes", "y":
@@ -32,20 +32,15 @@ func ParamsBool(c *fiber.Ctx, key string, defaultValue ...bool) bool {
 	case "false", "f", "no", "n":
 		return false
 	default:
-		return defBool(defaultValue)
+		return defaultV(defaultValue)
 	}
 }
 
-func defInt64(defaultValue []int64) int64 {
-	if len(defaultValue) > 0 {
-		return defaultValue[0]
+// defaultV return default value of type V if v[] is empty
+func defaultV[V any](v []V) V {
+	if len(v) > 0 {
+		return v[0]
 	}
-	return 0
-}
-
-func defBool(defaultValue []bool) bool {
-	if len(defaultValue) > 0 {
-		return defaultValue[0]
-	}
-	return false
+	var defVal V
+	return defVal
 }
