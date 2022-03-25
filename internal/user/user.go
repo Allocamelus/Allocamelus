@@ -4,6 +4,7 @@ package user
 
 import (
 	"database/sql"
+	_ "embed"
 	"time"
 
 	"github.com/allocamelus/allocamelus/internal/data"
@@ -48,14 +49,17 @@ func New(userName, name, email string) *User {
 }
 
 var (
-	preInsert    *sql.Stmt
+	//go:embed sql/insert.sql
+	qInsert   string
+	preInsert *sql.Stmt
+	//go:embed sql/get/public.sql
+	qGetPublic   string
 	preGetPublic *sql.Stmt
 )
 
-func initUser(p data.Prepare) {
-	preInsert = p(`INSERT INTO Users (userName, name, email, bio, type, permissions, created)
-		VALUES (?, '', ?, '', ?, ?, ?)`)
-	preGetPublic = p(`SELECT userName, name, bio, type, created FROM Users WHERE userId = ? LIMIT 1`)
+func init() {
+	data.PrepareQueuer.Add(&preInsert, qInsert)
+	data.PrepareQueuer.Add(&preGetPublic, qGetPublic)
 }
 
 // Insert new user into database

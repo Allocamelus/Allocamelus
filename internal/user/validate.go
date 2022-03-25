@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	_ "embed"
 	"errors"
 	"regexp"
 
@@ -13,9 +14,9 @@ import (
 	"github.com/nbutton23/zxcvbn-go"
 )
 
-func initValidate(p data.Prepare) {
-	preCheckUserName = p(`SELECT EXISTS(SELECT * FROM Users WHERE userName=?)`)
-	preCheckEmail = p(`SELECT EXISTS(SELECT * FROM Users WHERE email=?)`)
+func init() {
+	data.PrepareQueuer.Add(&preCheckUserName, qCheckUserName)
+	data.PrepareQueuer.Add(&preCheckEmail, qCheckEmail)
 }
 
 const (
@@ -89,6 +90,8 @@ var (
 	// ErrUserNameTaken characters
 	ErrUserNameTaken = errors.New(taken)
 	regexUserName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
+	//go:embed sql/validate/userName.sql
+	qCheckUserName   string
 	preCheckUserName *sql.Stmt
 )
 
@@ -148,6 +151,8 @@ var (
 	ErrEmailInvalid = errors.New("invalid-email")
 	// ErrEmailTaken characters
 	ErrEmailTaken = errors.New(taken)
+	//go:embed sql/validate/email.sql
+	qCheckEmail   string
 	preCheckEmail *sql.Stmt
 )
 

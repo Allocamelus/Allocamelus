@@ -2,8 +2,9 @@ package user
 
 import (
 	"database/sql"
+	_ "embed"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 )
 
 const (
@@ -12,24 +13,28 @@ const (
 	Public
 )
 
-var preGetType *sql.Stmt
+var (
+	//go:embed sql/get/type.sql
+	qGetType   string
+	preGetType *sql.Stmt
+	//go:embed sql/update/type.sql
+	qUpdateType   string
+	preUpdateType *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preGetType, qGetType)
+	data.PrepareQueuer.Add(&preUpdateType, qUpdateType)
+}
 
 // GetType get user's type
 func GetType(userID int64) (t Types, err error) {
-	if preGetType == nil {
-		preGetType = g.Data.Prepare(`SELECT type FROM Users WHERE userId = ? LIMIT 1`)
-	}
 	err = preGetType.QueryRow(userID).Scan(&t)
 	return
 }
 
-var preUpdateType *sql.Stmt
-
 // UpdateType update user's type
 func UpdateType(userID int64, t Types) error {
-	if preUpdateType == nil {
-		preUpdateType = g.Data.Prepare(`UPDATE Users SET type = ? WHERE userId = ?`)
-	}
 	_, err := preUpdateType.Exec(t, userID)
 	return err
 }

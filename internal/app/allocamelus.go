@@ -11,7 +11,6 @@ import (
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/allocamelus/allocamelus/internal/router/routes"
-	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -34,8 +33,6 @@ func New(configPath string) *Allocamelus {
 	g.Data = data.New(configPath)
 	g.Session = g.Data.NewSessionStore()
 	g.Config = g.Data.Config
-
-	user.Init(g.Data.Prepare)
 
 	app := fiber.New(fiber.Config{
 		Prefork:     g.Data.Config.Site.Prefork,

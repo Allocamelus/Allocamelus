@@ -3,6 +3,7 @@ package token
 import (
 	"crypto/subtle"
 	"database/sql"
+	_ "embed"
 	"errors"
 	"time"
 
@@ -18,16 +19,22 @@ var (
 	// ErrExpiredToken Error Expired Token
 	ErrExpiredToken = errors.New("token/check: Error Expired Token")
 	// ErrInvalid Error Invalid
-	ErrInvalid         = errors.New("token/check: Error Invalid")
-	preGet             *sql.Stmt
-	preDelete          *sql.Stmt
+	ErrInvalid = errors.New("token/check: Error Invalid")
+	//go:embed sql/get.sql
+	qGet   string
+	preGet *sql.Stmt
+	//go:embed sql/delete.sql
+	qDelete   string
+	preDelete *sql.Stmt
+	//go:embed sql/delByUIDAndType.sql
+	qDelByUIDAndType   string
 	preDelByUIDAndType *sql.Stmt
 )
 
-func initCheck(p data.Prepare) {
-	preGet = p(`SELECT userTokenId, userId,	tokenType, token, expiration FROM UserTokens WHERE selector = ? LIMIT 1`)
-	preDelete = p(`DELETE FROM UserTokens WHERE userTokenId=?`)
-	preDelByUIDAndType = p(`DELETE FROM UserTokens WHERE userId=? AND tokenType = ?`)
+func init() {
+	data.PrepareQueuer.Add(&preGet, qGet)
+	data.PrepareQueuer.Add(&preDelete, qDelete)
+	data.PrepareQueuer.Add(&preDelByUIDAndType, qDelByUIDAndType)
 }
 
 // Check Selector Token and Type

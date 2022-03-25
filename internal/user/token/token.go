@@ -5,6 +5,7 @@ package token
 import (
 	"crypto/sha512"
 	"database/sql"
+	_ "embed"
 	"encoding/base64"
 	"time"
 
@@ -83,13 +84,17 @@ func NewAndInsert(t Types, userID int64) (*Token, error) {
 }
 
 var (
+	//go:embed sql/selectorExist.sql
+	qSelectorExist   string
 	preSelectorExist *sql.Stmt
-	preInsert        *sql.Stmt
+	//go:embed sql/insert.sql
+	qInsert   string
+	preInsert *sql.Stmt
 )
 
-func initToken(p data.Prepare) {
-	preSelectorExist = p(`SELECT EXISTS(SELECT * FROM UserTokens WHERE selector = ?)`)
-	preInsert = p(`INSERT INTO UserTokens (userId, tokenType, selector, token, created, expiration) VALUES (?, ?, ?, ?, ?, ?)`)
+func init() {
+	data.PrepareQueuer.Add(&preSelectorExist, qSelectorExist)
+	data.PrepareQueuer.Add(&preInsert, qInsert)
 }
 
 // Insert token into database

@@ -2,22 +2,31 @@ package user
 
 import (
 	"database/sql"
+	_ "embed"
 
 	"github.com/allocamelus/allocamelus/internal/data"
 )
 
 var (
-	preIDByEmail    *sql.Stmt
-	preEmailByID    *sql.Stmt
+	//go:embed sql/idByEmail.sql
+	qIDByEmail   string
+	preIDByEmail *sql.Stmt
+	//go:embed sql/emailByID.sql
+	qEmailByID   string
+	preEmailByID *sql.Stmt
+	//go:embed sql/userNameByID.sql
+	qUserNameByID   string
 	preUserNameByID *sql.Stmt
+	//go:embed sql/idByUserName.sql
+	qIDByUserName   string
 	preIDByUserName *sql.Stmt
 )
 
-func initID(p data.Prepare) {
-	preIDByEmail = p(`SELECT userId FROM Users WHERE email = ? LIMIT 1`)
-	preEmailByID = p(`SELECT email FROM Users WHERE userId = ? LIMIT 1`)
-	preUserNameByID = p(`SELECT userName FROM Users WHERE userId = ? LIMIT 1`)
-	preIDByUserName = p(`SELECT userId FROM Users WHERE userName = ? LIMIT 1`)
+func init() {
+	data.PrepareQueuer.Add(&preIDByEmail, qIDByEmail)
+	data.PrepareQueuer.Add(&preEmailByID, qEmailByID)
+	data.PrepareQueuer.Add(&preUserNameByID, qUserNameByID)
+	data.PrepareQueuer.Add(&preIDByUserName, qIDByUserName)
 }
 
 // GetIDByEmail get user id by email

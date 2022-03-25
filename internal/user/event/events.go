@@ -4,6 +4,7 @@ package event
 
 import (
 	"database/sql"
+	_ "embed"
 	"errors"
 	"time"
 
@@ -47,16 +48,21 @@ type Info struct {
 }
 
 var (
-	preEvents    *sql.Stmt
-	preInsert    *sql.Stmt
+	//go:embed sql/events.sql
+	qEvents   string
+	preEvents *sql.Stmt
+	//go:embed sql/insert.sql
+	qInsert   string
+	preInsert *sql.Stmt
+	//go:embed sql/insertKey.sql
+	qInsertKey   string
 	preInsertKey *sql.Stmt
 )
 
-func initEvents(p data.Prepare) {
-	preEvents = p(`SELECT COUNT(userEventId) FROM UserEvents WHERE eventType = ? AND userId = ? AND created > ?`)
-	preInsert = p(`INSERT INTO UserEvents (userId, eventType, created, info)
-		VALUES (?, ?, ?, ?)`)
-	preInsertKey = p(`INSERT INTO UserEventKeys (userEventId, userKeyId, infoKey) VALUES (?, ?, ?)`)
+func init() {
+	data.PrepareQueuer.Add(&preEvents, qEvents)
+	data.PrepareQueuer.Add(&preInsert, qInsert)
+	data.PrepareQueuer.Add(&preInsertKey, qInsertKey)
 }
 
 // New User Event

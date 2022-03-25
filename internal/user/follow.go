@@ -2,20 +2,57 @@ package user
 
 import (
 	"database/sql"
+	_ "embed"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 )
 
-var preFollowing *sql.Stmt
+var (
+	//go:embed sql/follow/following.sql
+	qFollowing   string
+	preFollowing *sql.Stmt
+	//go:embed sql/follow/listFollowing.sql
+	qListFollowing   string
+	preListFollowing *sql.Stmt
+	//go:embed sql/follow/follow.sql
+	qFollow   string
+	preFollow *sql.Stmt
+	//go:embed sql/follow/accept.sql
+	qAccept   string
+	preAccept *sql.Stmt
+	//go:embed sql/follow/acceptAll.sql
+	qAcceptAll   string
+	preAcceptAll *sql.Stmt
+	//go:embed sql/follow/unfollow.sql
+	qUnfollow   string
+	preUnfollow *sql.Stmt
+	//go:embed sql/follow/followers.sql
+	qFollowers   string
+	preFollowers *sql.Stmt
+	//go:embed sql/follow/followers.sql
+	qListFollowers   string
+	preListFollowers *sql.Stmt
+	//go:embed sql/follow/listRequests.sql
+	qListRequests   string
+	preListRequests *sql.Stmt
+)
+
+func init() {
+	data.PrepareQueuer.Add(&preFollowing, qFollowing)
+	data.PrepareQueuer.Add(&preListFollowing, qListFollowing)
+	data.PrepareQueuer.Add(&preFollow, qFollow)
+	data.PrepareQueuer.Add(&preAccept, qAccept)
+	data.PrepareQueuer.Add(&preAcceptAll, qAcceptAll)
+	data.PrepareQueuer.Add(&preUnfollow, qUnfollow)
+	data.PrepareQueuer.Add(&preFollowers, qFollowers)
+	data.PrepareQueuer.Add(&preListFollowers, qListFollowers)
+	data.PrepareQueuer.Add(&preListRequests, qListRequests)
+}
 
 // Following is userId following followUserId
 func Following(userId, followUserId int64) (follow FollowStruct, err error) {
-	if preFollowing == nil {
-		preFollowing = g.Data.Prepare(`SELECT accepted FROM UserFollows WHERE userId = ? AND followUserId = ?`)
-	}
-
 	if compare.EqualInt64(userId, followUserId) {
 		follow.Following = true
 		return
@@ -33,14 +70,8 @@ func Following(userId, followUserId int64) (follow FollowStruct, err error) {
 	return follow, nil
 }
 
-var preListFollowing *sql.Stmt
-
 // ListFollowing return a slice of userId(s) that userId follows
 func ListFollowing(userId int64) ([]int64, error) {
-	if preListFollowing == nil {
-		preListFollowing = g.Data.Prepare(`SELECT followUserId FROM UserFollows WHERE userId = ? AND accepted = 1`)
-	}
-
 	rows, err := preListFollowing.Query(userId)
 	if err != nil {
 		return nil, err
@@ -60,13 +91,7 @@ func ListFollowing(userId int64) ([]int64, error) {
 	return following, nil
 }
 
-var preFollow *sql.Stmt
-
 func FollowExt(userId int64, followUserId int64, accepted bool) error {
-	if preFollow == nil {
-		preFollow = g.Data.Prepare(`INSERT INTO UserFollows (userId, followUserId, accepted, created) VALUES (?, ?, ?, ?)`)
-	}
-
 	following, err := Following(userId, followUserId)
 	if err != nil || following.Following {
 		// return if following silently
@@ -101,14 +126,8 @@ func Follow(userId int64, followUserId int64) error {
 	return FollowExt(userId, followUserId, false)
 }
 
-var preAccept *sql.Stmt
-
 // Accept userId Accept followerUserId request
 func Accept(userId, followerUserId int64) error {
-	if preAccept == nil {
-		preAccept = g.Data.Prepare(`UPDATE UserFollows SET accepted = 1 WHERE userId = ? AND followUserId = ?`)
-	}
-
 	// Is follower following already
 	follow, err := Following(followerUserId, userId)
 	if err != nil || follow.Following {
@@ -145,27 +164,15 @@ func Decline(userId, followerUserId int64) error {
 	return unfollowDB(followerUserId, userId)
 }
 
-var preAcceptAll *sql.Stmt
-
 // AcceptAll userId Accept all follow request
 // Called when accounts goes from private to public
 func AcceptAll(userId int64) error {
-	if preAcceptAll == nil {
-		preAcceptAll = g.Data.Prepare(`UPDATE UserFollows SET accepted = 1 WHERE followUserId = ? AND accepted = 0`)
-	}
-
 	_, err := preAcceptAll.Exec(userId)
 	return err
 }
 
-var preUnfollow *sql.Stmt
-
 // unfollowDB userId unfollow followUserId
 func unfollowDB(userId, followUserId int64) error {
-	if preUnfollow == nil {
-		preUnfollow = g.Data.Prepare(`DELETE FROM UserFollows WHERE userId = ? AND followUserId = ?`)
-	}
-
 	follow, err := Following(userId, followUserId)
 	if err != nil || (!follow.Following && !follow.Requested) {
 		// return if !following silently
@@ -177,7 +184,6 @@ func unfollowDB(userId, followUserId int64) error {
 }
 
 func Unfollow(userId, unfollowId int64) error {
-
 	if err := unfollowDB(userId, unfollowId); err != nil {
 		return err
 	}
@@ -193,25 +199,14 @@ func Unfollow(userId, unfollowId int64) error {
 	return unfollowDB(unfollowId, userId)
 }
 
-var preFollowers *sql.Stmt
-
 // Followers count userId followers
 func Followers(userId int64) (followers int64, err error) {
-	if preFollowers == nil {
-		preFollowers = g.Data.Prepare(`SELECT COUNT(userFollowId) FROM UserFollows WHERE followUserId = ? AND accepted = 1`)
-	}
 	err = preFollowers.QueryRow(userId).Scan(&followers)
 	return
 }
 
-var preListFollowers *sql.Stmt
-
 // ListFollows return a slice of userId(s) that follow userId
 func ListFollowers(userId int64) ([]int64, error) {
-	if preListFollowers == nil {
-		preListFollowers = g.Data.Prepare(`SELECT userId FROM UserFollows WHERE followUserId = ? AND accepted = 1`)
-	}
-
 	rows, err := preListFollowing.Query(userId)
 	if err != nil {
 		return nil, err
@@ -231,15 +226,9 @@ func ListFollowers(userId int64) ([]int64, error) {
 	return followers, nil
 }
 
-var preListRequests *sql.Stmt
-
 // ListRequests return a ordered map of userId(s) that request to follow userId
 // TODO limit
 func ListRequests(userId int64) (map[int64]int64, error) {
-	if preListRequests == nil {
-		preListRequests = g.Data.Prepare(`SELECT userId FROM UserFollows WHERE followUserId = ? AND accepted = 0`)
-	}
-
 	rows, err := preListRequests.Query(userId)
 	if err != nil {
 		return nil, err

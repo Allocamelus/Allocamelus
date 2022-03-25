@@ -2,47 +2,38 @@ package avatar
 
 import (
 	"database/sql"
+	_ "embed"
 	"os"
 
-	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 )
 
 var (
+	//go:embed sql/deactivateOld.sql
+	qDeactivateOld   string
 	preDeactivateOld *sql.Stmt
-	preGetOld        *sql.Stmt
-	preDelete        *sql.Stmt
+	//go:embed sql/getOld.sql
+	qGetOld   string
+	preGetOld *sql.Stmt
+	//go:embed sql/delete.sql
+	qDelete   string
+	preDelete *sql.Stmt
 )
 
+func init() {
+	data.PrepareQueuer.Add(&preDeactivateOld, qDeactivateOld)
+	data.PrepareQueuer.Add(&preGetOld, qGetOld)
+	data.PrepareQueuer.Add(&preDelete, qDelete)
+}
+
 func deactivateOld(userId int64) error {
-	if preDeactivateOld == nil {
-		preDeactivateOld = g.Data.Prepare(`UPDATE UserAvatars
-			SET active = 0
-			WHERE userAvatarId IN (
-				SELECT userAvatarId FROM (
-					SELECT userAvatarId FROM UserAvatars 
-					ORDER BY userAvatarId DESC
-					LIMIT 1, 18446744073709551615
-				) tmp
-			) AND userId = ? AND active = 1
-			`) // Deactivate all but the latest
-	}
 	_, err := preDeactivateOld.Exec(userId)
 	return err
 }
 
 // CleanupOld removes deactivated avatars from file store by userId
 func CleanupOld(userId int64) error {
-	if preGetOld == nil {
-		preGetOld = g.Data.Prepare(`SELECT UA.fileType, UA.hash
-			FROM UserAvatars UA
-			WHERE userId = ? AND active = 0
-				AND NOT EXISTS (
-					SELECT *
-					FROM UserAvatars
-					WHERE UA.hash = hash AND active = 1
-				)`)
-	}
 	rows, err := preGetOld.Query(userId)
 	if err != nil {
 		return err
@@ -66,9 +57,7 @@ func CleanupOld(userId int64) error {
 // remove avatar file and db entry
 func remove(b58hash string, fileType fileutil.Format) error {
 	os.RemoveAll(fileutil.FilePath(selectorPath(b58hash, true)))
-	if preDelete == nil {
-		preDelete = g.Data.Prepare(`DELETE FROM UserAvatars WHERE fileType=? AND hash=?`)
-	}
+
 	_, err := preDelete.Exec(fileType, b58hash)
 	return err
 }
