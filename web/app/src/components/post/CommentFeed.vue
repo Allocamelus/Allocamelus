@@ -1,6 +1,6 @@
 <template>
   <div>
-    <box class="mt-5 mb-3 px-4 py-3 rounded-xl">
+    <box class="px-4 py-3 mt-5 mb-3 rounded-xl">
       <div v-if="loggedIn">
         <comment-input
           :postId="postId"
@@ -67,7 +67,13 @@ export default defineComponent({
       populate: (nv: Partial<API_Comments>) => {
         commentStore.populate(nv);
       },
+      disposeComment: () => {
+        commentStore.$dispose();
+      },
     };
+  },
+  beforeUnmount() {
+    this.disposeComment();
   },
   watch: {
     list(newValue) {

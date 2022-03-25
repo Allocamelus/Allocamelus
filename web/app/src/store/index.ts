@@ -1,9 +1,10 @@
 import { useStorageAsync } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { newStore } from "@/pkg/idbWrapper";
+import { IDBStore } from "@/pkg/idbWrapper";
+import { A9sDatabase } from "@/pkg/idbWrapper/allocamelus";
 
 const storeName = "state";
-const idbStore = newStore(storeName);
+const idbStore = new IDBStore(A9sDatabase, storeName);
 
 export interface State {
   theme: string;

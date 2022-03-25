@@ -1,6 +1,7 @@
 import { useStorageAsync } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { newStore } from "@/pkg/idbWrapper";
+import { IDBStore } from "@/pkg/idbWrapper";
+import { A9sDatabase } from "@/pkg/idbWrapper/allocamelus";
 
 import { keepAlive } from "@/api/account/auth/keepAlive";
 import { status } from "@/api/account/auth/status";
@@ -9,7 +10,7 @@ import { User } from "@/models/user";
 import { MinToSec, UnixTime } from "@/pkg/time";
 
 const storeName = "session";
-const idbStore = newStore(storeName);
+const idbStore = new IDBStore(A9sDatabase, storeName);
 
 export interface Session {
   loggedIn: boolean;
