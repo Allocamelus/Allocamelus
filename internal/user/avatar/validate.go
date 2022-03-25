@@ -10,10 +10,7 @@ const (
 	MaxAvatarSize int64 = 1024 * 1024 * 5 // 5Mb
 )
 
-var (
-	ContentTypes  = []string{"image/png", "image/jpeg", "image/gif", "image/webp"}
-	fileValidator = fileutil.NewVaidateConfig(MaxAvatarSize, ContentTypes...)
-)
+var fileValidator = fileutil.NewVaidateConfig(MaxAvatarSize, fileutil.ImageContentTypes...)
 
 // ValidateMpFileHeader multipart.FileHeader
 func ValidateMpFileHeader(fileHead *multipart.FileHeader) error {

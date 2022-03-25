@@ -21,6 +21,10 @@ var (
 	ErrFileSize           = errors.New("invalid-file-size")
 )
 
+var (
+	ImageContentTypes = []string{"image/png", "image/jpeg", "image/gif", "image/webp"}
+)
+
 func NewVaidateConfig(maxSize int64, contentTypes ...string) *VaidateConfig {
 	vc := new(VaidateConfig)
 	vc.MaxSize = maxSize
