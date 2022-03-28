@@ -16,6 +16,7 @@ func V1(app *fiber.App) {
 	// /api/v1
 	api := app.Group("/api/v1",
 		middleware.CacheControl,
+		middleware.NoIndex,
 		limiter.New(limiter.Config{
 			Max:               690,               // 690 request / 420 sec = 1.64 rps
 			Expiration:        420 * time.Second, // 7 min

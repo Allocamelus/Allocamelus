@@ -1,0 +1,8 @@
+user-agent: *
+disallow: /media/
+disallow: /account/
+disallow: /home
+disallow: /post/new
+
+user-agent: *
+allow: /
