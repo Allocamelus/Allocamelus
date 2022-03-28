@@ -6,6 +6,7 @@
     "allowJs": true,
     // this enables stricter inference for data properties on `this`
     "strict": true,
+    "allowSyntheticDefaultImports": true,
     "types": ["vite/client"],
     "baseUrl": "./",
     "paths": {

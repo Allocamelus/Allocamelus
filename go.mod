@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220113124808-70ae35bab23f // indirect
-	github.com/ProtonMail/gopenpgp/v2 v2.4.5
+	github.com/ProtonMail/gopenpgp/v2 v2.4.6
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/discord/lilliput v0.0.0-20210720001558-e1547514bd5f
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
@@ -27,8 +27,8 @@ require (
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/xhit/go-simple-mail/v2 v2.11.0
 	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
-	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
+	golang.org/x/net v0.0.0-20220325170049-de3da57026de // indirect
+	golang.org/x/sys v0.0.0-20220327210214-530d0810a4d0 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	k8s.io/klog/v2 v2.60.1
 )
