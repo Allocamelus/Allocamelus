@@ -13,7 +13,7 @@ export function redirectUrl(
     redirect = redirect[0];
   }
   if (redirect === null) {
-    redirect = "";
+    redirect = "/";
   }
   if (redirect.length > 0) {
     return redirect;
@@ -116,7 +116,11 @@ router.beforeResolve((to) => {
       case "Login":
       case "Signup":
       case "Account Verify Email":
-        return redirectUrl(to.query.r);
+        let rdr = redirectUrl(to.query.r);
+        if (rdr === "/") {
+          return "/home";
+        }
+        return rdr;
       case "Landing":
         return "/home";
       default:

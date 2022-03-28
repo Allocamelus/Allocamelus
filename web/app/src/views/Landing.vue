@@ -42,7 +42,7 @@
       >
         <div class="flex w-full">
           <allocamelus
-            class="object-cover w-full h-full opacity-50 dark:opacity-50 sm:opacity-100 text-primary-lighter"
+            class="object-cover w-full h-full opacity-50 dark:opacity-70 sm:opacity-100 text-primary-lighter"
           ></allocamelus>
         </div>
       </div>

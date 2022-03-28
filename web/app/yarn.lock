@@ -841,12 +841,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:^8.1.2":
-  version: 8.1.2
-  resolution: "@vueuse/core@npm:8.1.2"
+"@vueuse/core@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@vueuse/core@npm:8.2.0"
   dependencies:
-    "@vueuse/metadata": 8.1.2
-    "@vueuse/shared": 8.1.2
+    "@vueuse/metadata": 8.2.0
+    "@vueuse/shared": 8.2.0
     vue-demi: "*"
   peerDependencies:
     "@vue/composition-api": ^1.1.0
@@ -856,20 +856,20 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 3fe0ea7883ac7cf513ab5149de234ca779097d8c920aa95973ae4d2b46613b7ca88c4e75fffa13d9e91a6c9943ad88965527ecd2974085a5e4afc361c088278b
+  checksum: 7646ac663fd1c2fc7d24bf1355a3077a0e9fc854b84b9de52562905262cf08f3562f417f646c68f275ee3076fe579c17a1533ed18c5f13d08437534d1a612286
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:8.1.2":
-  version: 8.1.2
-  resolution: "@vueuse/metadata@npm:8.1.2"
-  checksum: 84c42f893bf16504b33ec33e8b58cc1f2bb982d03889c6259d5ad51054aeab6136e3913e5954152a67c45579fbd1556c681efef9121c886d09ec4c6a64c80878
+"@vueuse/metadata@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@vueuse/metadata@npm:8.2.0"
+  checksum: 2f11d2c0408beaffed317a5f418b85e867e8512cc303166915bc2eeee596f0be46d2012e932ce70727dfed7cfa18cdc9e18ae6943ed94710bf50abbc6783ec7d
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:8.1.2":
-  version: 8.1.2
-  resolution: "@vueuse/shared@npm:8.1.2"
+"@vueuse/shared@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@vueuse/shared@npm:8.2.0"
   dependencies:
     vue-demi: "*"
   peerDependencies:
@@ -880,7 +880,7 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 45ecac2c4aada45aec2568411e95a39cb5797395bb3d8315c113863c7ffde563e467bd23a6ee3b8e834980217609354b992231c98dc148528bc352cfe98e7eb7
+  checksum: d95e53d5b1d0d2fbc55d1e9b1adeb5908cb93a91c93e43524e254fd69d76c328fe3f544c2b38bec14122baaf863731c0a8d3c3fa1e56df74c238bc158927e64b
   languageName: node
   linkType: hard
 
@@ -1023,7 +1023,7 @@ __metadata:
     "@vitejs/plugin-vue": ^2.2.4
     "@vue/compiler-sfc": ^3.2.31
     "@vuedx/typescript-plugin-vue": ^0.7.4
-    "@vueuse/core": ^8.1.2
+    "@vueuse/core": ^8.2.0
     autoprefixer: ^10.4.4
     axios: ^0.26.1
     buffer: ^6.0.3
@@ -1038,14 +1038,14 @@ __metadata:
     pinia: ^2.0.12
     postcss: ^8.4.12
     postcss-csso: ^6.0.0
-    prettier: ^2.6.0
+    prettier: ^2.6.1
     rollup-plugin-visualizer: ^5.6.0
     sass: ^1.49.9
     squire-rte: ^1.11.3
     tailwindcss: ^3.0.23
     throttle-debounce: ^3.0.1
     turndown: ^7.1.1
-    typescript: ^4.6.2
+    typescript: ^4.6.3
     vite: ^2.8.6
     vite-svg-loader: ^3.1.2
     vue: ^3.2.31
@@ -3520,12 +3520,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "prettier@npm:2.6.0"
+"prettier@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "prettier@npm:2.6.1"
   bin:
     prettier: bin-prettier.js
-  checksum: 3e527ad62279676778a8404d18174d7ca2365ada4caba6eebbcdd9907d1187afd3bc6ade5b4e5f5d4549bb9fb71e45ca8930d71500017635524f8fc05bc52e93
+  checksum: 78be1f8a3ddfad7c3d8a854b6c8941a3bb1ddfca4225c38d778e0fe1029a55368f71b3bbefff82c689015fbb4d391ec44add957f01308ad2725e01a7c1f37cb6
   languageName: node
   linkType: hard
 
@@ -4111,23 +4111,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.2":
-  version: 4.6.2
-  resolution: "typescript@npm:4.6.2"
+"typescript@npm:^4.6.3":
+  version: 4.6.3
+  resolution: "typescript@npm:4.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 8a44ed7e6f6c4cb1ebe8cf236ecda2fb119d84dcf0fbd77e707b2dfea1bbcfc4e366493a143513ce7f57203c75da9d4e20af6fe46de89749366351046be7577c
+  checksum: 255bb26c8cb846ca689dd1c3a56587af4f69055907aa2c154796ea28ee0dea871535b1c78f85a6212c77f2657843a269c3a742d09d81495b97b914bf7920415b
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.2#~builtin<compat/typescript>":
-  version: 4.6.2
-  resolution: "typescript@patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=493e53"
+"typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>":
+  version: 4.6.3
+  resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=493e53"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: efb83260a22ee49d4c8bdc59b3cefe54fdf51d6f563f5c3a35aa3d5e46fb12f3f1d33a36d6f9f64171e567ead1847e99cb612d0a9a74e7d44e16cad9d0bbc937
+  checksum: fe6bdc1afb2f145ddb7b0a3a31f96352209f6a5704d97f038414ea22ff9d8dd42f32cfb6652e30458d7d958d2d4e85de2df11c574899c6f750a6b3c0e90a3a76
   languageName: node
   linkType: hard
 
