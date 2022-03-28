@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import FullURL from "../../pkg/fullUrl";
 
@@ -48,11 +48,11 @@ export default defineComponent({
     },
     width: {
       type: Number,
-      default: 0,
+      default: undefined,
     },
     height: {
       type: Number,
-      default: 0,
+      default: undefined,
     },
   },
   computed: {
