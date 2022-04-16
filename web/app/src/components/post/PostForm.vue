@@ -1,21 +1,10 @@
 <template>
-  <div class="flex flex-col flex-grow">
-    <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
+  <div class="flex flex-grow flex-col">
     <div class="flex flex-col">
       <div class="flex flex-row">
-        <div
-          v-if="hasNoText && !focused"
-          class="absolute select-none cursor-text text-lg opacity-90 p-1.5"
-          @click="editor.focus()"
-        >
-          The Text...
-        </div>
-        <div
-          ref="editor-div"
-          class="flex-grow text-lg p-1.5 outline-none"
-        ></div>
+        <editor-content :editor="editor" class="flex-grow" />
       </div>
-      <div class="flex flex-wrap mt-1 overflow-hidden rounded-lg">
+      <div class="mt-1 flex flex-wrap overflow-hidden rounded-lg">
         <image-box
           v-for="(url, key) in imageUrls"
           :key="key"
@@ -24,10 +13,10 @@
           :totalNumber="images.length"
         >
           <div
-            class="absolute flex-col justify-between hidden w-full h-full p-2 text-white bg-black bg-opacity-50 group-hover:flex"
+            class="absolute hidden h-full w-full flex-col justify-between bg-black bg-opacity-50 p-2 text-white group-hover:flex"
           >
             <circle-bg
-              class="self-end w-6 h-6 hover:bg-white"
+              class="h-6 w-6 self-end hover:bg-white"
               @click="removeImage(key)"
             >
               <XIcon></XIcon>
@@ -50,50 +39,67 @@
         </image-box>
       </div>
     </div>
-    <div
-      class="sticky bottom-3 flex justify-between mt-2 bg-warm-gray-200 dark:bg-black-lighter p-1.5 rounded"
-    >
-      <div class="flex items-center">
-        <circle-bg
-          v-for="(isActive, key, index) in active"
-          :key="index"
-          @click="btnClick(key)"
-          class="hover:bg-rose-800"
-          :class="[
-            isActive ? 'bg-secondary-700 text-warm-gray-200' : '',
-            index != 0 ? 'ml-1.5' : '',
-          ]"
-        >
-          <component
-            :is="`radix-${key != 'underline' ? 'font-' : ''}${key}`"
-            class="w-5 h-5"
-          />
-        </circle-bg>
-        <circle-bg class="ml-1.5 hover:bg-rose-800">
-          <file-input
-            accept="image/png,image/jpeg,image/gif,image/webp"
-            :check="true"
-            :maxSize="10485760 /* 10MB */"
-            :maxFiles="4"
-            :multiple="true"
-            :fileCount="images.length"
-            @filesChange="imagesUpload"
-            @error="onErr"
+    <div class="sticky bottom-3 mt-2 overflow-hidden rounded">
+      <div
+        class="flex w-full justify-between bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
+        v-if="editor !== undefined"
+      >
+        <div class="flex items-center">
+          <circle-bg
+            @click="editor.chain().focus().toggleBold().run()"
+            class="hover:bg-rose-800"
+            :class="{
+              'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
+            }"
           >
-            <radix-image class="w-5 h-5" />
-          </file-input>
-        </circle-bg>
-      </div>
-      <div class="flex items-center">
-        <basic-btn
-          class="text-secondary-700 dark:text-rose-600 p-1.5"
-          @click="onPost"
-          :disabled="submitted"
-        >
-          Post
-        </basic-btn>
+            <RadixFontBold class="h-5 w-5" />
+          </circle-bg>
+          <circle-bg
+            @click="editor.chain().focus().toggleItalic().run()"
+            class="ml-1.5 hover:bg-rose-800"
+            :class="{
+              'bg-secondary-700 text-warm-gray-200': editor.isActive('italic'),
+            }"
+          >
+            <RadixFontItalic class="h-5 w-5" />
+          </circle-bg>
+          <circle-bg
+            @click="editor.chain().focus().toggleUnderline().run()"
+            class="ml-1.5 hover:bg-rose-800"
+            :class="{
+              'bg-secondary-700 text-warm-gray-200':
+                editor.isActive('underline'),
+            }"
+          >
+            <RadixUnderline class="h-5 w-5" />
+          </circle-bg>
+          <circle-bg class="ml-1.5 hover:bg-rose-800">
+            <file-input
+              accept="image/png,image/jpeg,image/gif,image/webp"
+              :check="true"
+              :maxSize="10485760 /* 10MB */"
+              :maxFiles="4"
+              :multiple="true"
+              :fileCount="images.length"
+              @filesChange="imagesUpload"
+              @error="onErr"
+            >
+              <radix-image class="h-5 w-5" />
+            </file-input>
+          </circle-bg>
+        </div>
+        <div class="flex items-center">
+          <basic-btn
+            class="p-1.5 text-secondary-700 dark:text-rose-600"
+            @click="onPost"
+            :disabled="submitted"
+          >
+            Post
+          </basic-btn>
+        </div>
       </div>
     </div>
+    <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
   </div>
 </template>
 
@@ -106,7 +112,11 @@ import { create as CreatePost, MediaFile } from "../../api/post/create";
 import { notNull, RespToError } from "../../models/responses";
 
 import sanitize from "../../pkg/sanitize";
-import Squire from "squire-rte";
+
+import { EditorContent, useEditor } from "@tiptap/vue-3";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline";
 
 import RadixFontBold from "../icons/RadixFontBold.vue";
 import RadixFontItalic from "../icons/RadixFontItalic.vue";
@@ -121,37 +131,16 @@ import ImageBox from "../box/ImageBox.vue";
 import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
 import { SomethingWentWrong } from "../form/errors";
-function getValidator(str: string) {
-  return new RegExp(`>${str}\\b`, "u");
-}
-Squire.prototype.testState = function (format: string) {
-  let path = this.getPath();
-  return getValidator(format).test(path) || this.hasFormat(format);
-};
-
-Squire.prototype.hasActionSelection = function (
-  name: string,
-  action: string,
-  format: string
-) {
-  let test = this.testState(format);
-  return name == action && test ? true : false;
-};
 
 const turndownService = new Turndown().keep("u");
 
 export default defineComponent({
   setup() {
     const altRegex = /^[^<>\[\]"&]*$/u;
+
     const data = reactive({
-      editor: new Squire(),
       richText: "",
       focused: false,
-      active: {
-        bold: false,
-        italic: false,
-        underline: false,
-      },
       images: [] as MediaFile[],
       imageAltErrs: [] as string[],
       imageUrls: [] as string[],
@@ -161,9 +150,30 @@ export default defineComponent({
         show: false,
       },
     });
+
+    const editor = useEditor({
+      editorProps: {
+        attributes: {
+          class: "text-lg p-1.5 outline-none",
+        },
+      },
+      onUpdate: ({ editor }) => {
+        data.richText = editor.getHTML();
+      },
+      extensions: [
+        StarterKit,
+        Underline,
+        Placeholder.configure({
+          emptyEditorClass: "placeholder-empty",
+          placeholder: "The Text...",
+        }),
+      ],
+    });
+
     return {
       ...toRefs(data),
       altRegex,
+      editor,
     };
   },
   computed: {
@@ -173,83 +183,6 @@ export default defineComponent({
     },
   },
   methods: {
-    btnClick(action: string) {
-      var test = {
-        value: action,
-        testBold: this.editor.hasActionSelection("bold", action, "B"),
-        testItalic: this.editor.hasActionSelection("italic", action, "I"),
-        testUnderline: this.editor.hasActionSelection("underline", action, "U"),
-        testOrderedList: this.editor.hasActionSelection(
-          "makeOrderedList",
-          action,
-          "OL"
-        ),
-        testLink: this.editor.hasActionSelection("makeLink", action, "A"),
-        testQuote: this.editor.hasActionSelection(
-          "increaseQuoteLevel",
-          action,
-          "blockquote"
-        ),
-        isNotValue: (a: string) => {
-          return a == action && this.richText !== "";
-        },
-      };
-
-      this.editor.alignRight = () => {
-        this.editor.setTextAlignment("right");
-      };
-      this.editor.alignCenter = () => {
-        this.editor.setTextAlignment("center");
-      };
-      this.editor.alignLeft = () => {
-        this.editor.setTextAlignment("left");
-      };
-      this.editor.alignJustify = () => {
-        this.editor.setTextAlignment("justify");
-      };
-      this.editor.makeHeading = () => {
-        this.editor.setFontSize("2em");
-        this.editor.bold();
-      };
-
-      if (
-        test.testBold |
-        test.testItalic |
-        test.testUnderline |
-        test.testOrderedList |
-        test.testLink |
-        test.testQuote
-      ) {
-        if (test.testBold) {
-          this.editor.removeBold();
-          this.active.bold = false;
-        }
-        if (test.testItalic) {
-          this.editor.removeItalic();
-          this.active.italic = false;
-        }
-        if (test.testUnderline) {
-          this.editor.removeUnderline();
-          this.active.underline = false;
-        }
-        if (test.testLink) this.editor.removeLink();
-        if (test.testOrderedList) this.editor.removeList();
-        if (test.testQuote) this.editor.decreaseQuoteLevel();
-      } else if (
-        test.isNotValue("makeLink") ||
-        test.isNotValue("insertImage") ||
-        test.isNotValue("selectFont")
-      ) {
-        // do nothing these are dropdowns.
-      } else {
-        this.active[action] = true;
-        this.editor[action]();
-        this.editor.focus();
-      }
-    },
-    onInput() {
-      this.richText = this.editor.getHTML();
-    },
     imagesUpload(images: File[]) {
       for (let i = 0; i < images.length; i++) {
         if (Object.hasOwnProperty.call(images, i)) {
@@ -286,7 +219,7 @@ export default defineComponent({
       // TODO Limit content in browser
       CreatePost(turndownService.turndown(this.richText), this.images, true)
         .then((r) => {
-          if (r.success) {
+          if ("id" in r) {
             return this.$router.push(`/post/${r.id}`);
           }
           this.onPostErr(r.error);
@@ -305,21 +238,6 @@ export default defineComponent({
       }
     },
   },
-  mounted() {
-    this.editor.destroy();
-    this.editor = new Squire(this.$refs["editor-div"]);
-    this.editor.addEventListener("input", this.onInput);
-    this.editor.addEventListener("focus", () => (this.focused = true));
-    this.editor.addEventListener("blur", () => (this.focused = false));
-    this.editor.addEventListener("cursor", () => {
-      console.log(this.editor.getPath());
-      console.log(this.editor.focus());
-    });
-    // TODO: finish addEventListener s
-  },
-  beforeUnmount() {
-    this.editor.destroy();
-  },
   components: {
     RadixFontBold,
     RadixFontItalic,
@@ -333,6 +251,14 @@ export default defineComponent({
     ImageBox,
     TextInput,
     InputLabel,
+    EditorContent,
   },
 });
 </script>
+
+<style scoped lang="scss">
+:deep(.ProseMirror) p.placeholder-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 opacity-90;
+}
+</style>

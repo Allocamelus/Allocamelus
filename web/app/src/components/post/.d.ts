@@ -1,1 +1,0 @@
-declare module "squire-rte";

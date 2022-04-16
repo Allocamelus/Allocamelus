@@ -1,12 +1,12 @@
 <template>
-  <div class="container py-5">
-    <box class="py-3 px-3.5 max-w-prose mx-auto rounded-xl">
+  <div class="container px-1 py-5 xs:px-2">
+    <box class="mx-auto max-w-prose rounded-xl px-2 py-3 xs:px-3.5">
       <div class="flex">
-        <div class="flex-shrink-0">
-          <user-avatar :user="user" class="w-11 h-11"></user-avatar>
+        <div class="hidden flex-shrink-0 xs:block">
+          <user-avatar :user="user" class="h-11 w-11"></user-avatar>
         </div>
-        <div class="ml-3 flex-grow flex flex-col">
-          <h2 class="text-xl font-medium">New Post</h2>
+        <div class="flex flex-grow flex-col xs:ml-3">
+          <h2 class="px-1 text-xl font-medium">New Post</h2>
           <form @submit.prevent ref="form" class="mt-2">
             <post-form></post-form>
           </form>
