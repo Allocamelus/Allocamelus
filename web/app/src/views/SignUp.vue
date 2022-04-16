@@ -74,7 +74,7 @@
               <div class="flex flex-col justify-end">
                 <text-small class="mr-3">
                   By Signing Up, you agree to the
-                  <to-link class="link whitespace-nowrap" to="/tos">
+                  <to-link class="link whitespace-nowrap" to="/terms">
                     Terms of Service
                   </to-link>
                 </text-small>

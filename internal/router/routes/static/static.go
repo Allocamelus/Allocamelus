@@ -18,7 +18,7 @@ var sendIndex = func(c *fiber.Ctx) error {
 	return c.SendFile(filepath.Join(g.Config.Path.PublicDir, "index.html"), true)
 }
 
-var routes = []string{"/about", "/login", "/signup", "/logout", "/account/verify-email", "/post/*", "/", "/home", "/u/*"}
+var routes = []string{"/about", "/login", "/signup", "/logout", "/account/verify-email", "/post/*", "/", "/home", "/terms", "/privacy", "/u/*"}
 
 // Static routes
 func Static(app *fiber.App) {

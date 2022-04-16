@@ -19,7 +19,7 @@
       </div>
       <div class="flex">
         <!-- TODO -->
-        <to-link to="/tos">Terms</to-link>
+        <to-link to="/terms">Terms</to-link>
         <div class="dash-before">
           <to-link to="/privacy">Privacy</to-link>
         </div>

@@ -7,7 +7,7 @@
         &copy; {{ new Date().getFullYear() }}
       </div>
       <div class="dash-before">
-        <to-link to="/tos" class="link">Terms</to-link>
+        <to-link to="/terms" class="link">Terms</to-link>
       </div>
       <div class="dash-before">
         <to-link to="/privacy" class="link">Privacy</to-link>

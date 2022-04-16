@@ -84,6 +84,18 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("./views/Home.vue"),
   },
   {
+    path: "/terms",
+    name: "Terms",
+    component: () => import("./views/Terms.vue"),
+    meta: { footer: true },
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: () => import("./views/Privacy.vue"),
+    meta: { footer: true },
+  },
+  {
     path: "/u/:userName(.*)",
     name: "User",
     component: () => import("./views/User.vue"),
