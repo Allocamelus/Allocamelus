@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grow flex flex-col">
+  <div class="flex flex-col flex-grow">
     <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
     <div class="flex flex-col">
       <div class="flex flex-row">
@@ -15,7 +15,7 @@
           class="flex-grow text-lg p-1.5 outline-none"
         ></div>
       </div>
-      <div class="flex mt-1 flex-wrap rounded-lg overflow-hidden">
+      <div class="flex flex-wrap mt-1 overflow-hidden rounded-lg">
         <image-box
           v-for="(url, key) in imageUrls"
           :key="key"
@@ -24,10 +24,10 @@
           :totalNumber="images.length"
         >
           <div
-            class="absolute w-full h-full hidden group-hover:flex flex-col justify-between p-2 bg-black bg-opacity-50 text-white"
+            class="absolute flex-col justify-between hidden w-full h-full p-2 text-white bg-black bg-opacity-50 group-hover:flex"
           >
             <circle-bg
-              class="hover:bg-white w-6 h-6 self-end"
+              class="self-end w-6 h-6 hover:bg-white"
               @click="removeImage(key)"
             >
               <XIcon></XIcon>
@@ -97,13 +97,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 // TODO: Drag and drop & reorder images
 import { defineComponent, toRefs, reactive } from "vue";
 import Turndown from "turndown";
 
 import { create as CreatePost, MediaFile } from "../../api/post/create";
-import { notNull } from "../../models/responses";
+import { notNull, RespToError } from "../../models/responses";
 
 import sanitize from "../../pkg/sanitize";
 import Squire from "squire-rte";
@@ -120,17 +120,22 @@ import XIcon from "@heroicons/vue/solid/XIcon";
 import ImageBox from "../box/ImageBox.vue";
 import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
-function getValidator(str) {
+import { SomethingWentWrong } from "../form/errors";
+function getValidator(str: string) {
   return new RegExp(`>${str}\\b`, "u");
 }
-
-Squire.prototype.hasActionSelection = function (name, action, format) {
-  var path = this.getPath(),
-    test = getValidator(format).test(path) | this.hasFormat(format);
-  return name == action && test ? true : false;
+Squire.prototype.testState = function (format: string) {
+  let path = this.getPath();
+  return getValidator(format).test(path) || this.hasFormat(format);
 };
-Squire.prototype.thePath = () => {
-  return this.getPath();
+
+Squire.prototype.hasActionSelection = function (
+  name: string,
+  action: string,
+  format: string
+) {
+  let test = this.testState(format);
+  return name == action && test ? true : false;
 };
 
 const turndownService = new Turndown().keep("u");
@@ -139,7 +144,7 @@ export default defineComponent({
   setup() {
     const altRegex = /^[^<>\[\]"&]*$/u;
     const data = reactive({
-      editor: null,
+      editor: new Squire(),
       richText: "",
       focused: false,
       active: {
@@ -147,9 +152,9 @@ export default defineComponent({
         italic: false,
         underline: false,
       },
-      images: [],
-      imageAltErrs: [],
-      imageUrls: [],
+      images: [] as MediaFile[],
+      imageAltErrs: [] as string[],
+      imageUrls: [] as string[],
       submitted: false,
       err: {
         msg: "",
@@ -168,7 +173,7 @@ export default defineComponent({
     },
   },
   methods: {
-    btnClick(action) {
+    btnClick(action: string) {
       var test = {
         value: action,
         testBold: this.editor.hasActionSelection("bold", action, "B"),
@@ -185,8 +190,8 @@ export default defineComponent({
           action,
           "blockquote"
         ),
-        isNotValue: (a) => {
-          return a == action && this.value !== "";
+        isNotValue: (a: string) => {
+          return a == action && this.richText !== "";
         },
       };
 
@@ -231,8 +236,8 @@ export default defineComponent({
         if (test.testOrderedList) this.editor.removeList();
         if (test.testQuote) this.editor.decreaseQuoteLevel();
       } else if (
-        test.isNotValue("makeLink") |
-        test.isNotValue("insertImage") |
+        test.isNotValue("makeLink") ||
+        test.isNotValue("insertImage") ||
         test.isNotValue("selectFont")
       ) {
         // do nothing these are dropdowns.
@@ -245,20 +250,22 @@ export default defineComponent({
     onInput() {
       this.richText = this.editor.getHTML();
     },
-    imagesUpload(images) {
+    imagesUpload(images: File[]) {
       for (let i = 0; i < images.length; i++) {
-        this.images.push(MediaFile.createFrom({ media: images[i], alt: "" }));
+        if (Object.hasOwnProperty.call(images, i)) {
+          this.images.push(MediaFile.createFrom({ media: images[i], alt: "" }));
+        }
       }
       this.imagesToUrl();
     },
-    onErr(err) {
+    onErr(err: string) {
       this.err.msg = "";
       if (err.length > 0) {
         this.err.msg = err;
         this.err.show = true;
       }
     },
-    removeImage(key) {
+    removeImage(key: number) {
       this.images.splice(key, 1);
       this.imagesToUrl();
     },
@@ -288,7 +295,7 @@ export default defineComponent({
           this.onPostErr(e);
         });
     },
-    onPostErr(e) {
+    onPostErr(e?: string | any) {
       this.submitted = false;
       if (notNull(e)) {
         let errText = RespToError(e);
@@ -299,10 +306,15 @@ export default defineComponent({
     },
   },
   mounted() {
+    this.editor.destroy();
     this.editor = new Squire(this.$refs["editor-div"]);
     this.editor.addEventListener("input", this.onInput);
     this.editor.addEventListener("focus", () => (this.focused = true));
     this.editor.addEventListener("blur", () => (this.focused = false));
+    this.editor.addEventListener("cursor", () => {
+      console.log(this.editor.getPath());
+      console.log(this.editor.focus());
+    });
     // TODO: finish addEventListener s
   },
   beforeUnmount() {
