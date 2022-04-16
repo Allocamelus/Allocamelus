@@ -111,7 +111,7 @@ import Turndown from "turndown";
 import { create as CreatePost, MediaFile } from "../../api/post/create";
 import { notNull, RespToError } from "../../models/responses";
 
-import sanitize from "../../pkg/sanitize";
+import { textContent } from "@/pkg/sanitize";
 
 import { EditorContent, useEditor } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
@@ -174,13 +174,8 @@ export default defineComponent({
       ...toRefs(data),
       altRegex,
       editor,
+      hasNoText: computed(() => textContent(data.richText).length == 0),
     };
-  },
-  computed: {
-    hasNoText() {
-      var sanitized = sanitize(this.richText);
-      return sanitized.length == 0;
-    },
   },
   methods: {
     imagesUpload(images: File[]) {

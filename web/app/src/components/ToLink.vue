@@ -12,6 +12,7 @@
 import { defineComponent, PropType } from "vue";
 import { RouteLocationRaw } from "vue-router";
 import { useStateStore } from "@/store";
+import { local } from "@/pkg/url";
 
 export default defineComponent({
   props: {
@@ -44,15 +45,7 @@ export default defineComponent({
       if (typeof this.to !== "string") {
         return true;
       }
-      try {
-        let url = new URL(this.to, window.location.origin);
-        if (url.host === window.location.host) {
-          return true;
-        }
-      } catch (_) {
-        return true;
-      }
-      return false;
+      return local(this.to);
     },
     attributes() {
       if (this.local) {

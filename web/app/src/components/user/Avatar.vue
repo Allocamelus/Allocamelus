@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 import { User } from "../../models/user";
 import gray5x5Url from "../../assets/gray5x5.jpg";
-import FullURL from "../../pkg/fullUrl";
+import { FullURL } from "@/pkg/url";
 
 import ToLink from "../ToLink.vue";
 

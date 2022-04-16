@@ -1,4 +1,4 @@
-import sanitizeHtml from "../pkg/sanitize";
+import { textContent } from "../pkg/sanitize";
 
 export function htmlErrBuilder(first: string, second = ""): string {
   let err = `<strong>`;
@@ -19,7 +19,7 @@ function getPath(path = ""): string {
   if (path.length == 0) {
     path = window.location.pathname;
   }
-  return sanitizeHtml(path) + " ";
+  return textContent(path) + " ";
 }
 
 export function Html403Func(path = ""): string {

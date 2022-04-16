@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FullURL from "../../pkg/fullUrl";
+import { FullURL } from "@/pkg/url";
 
 export default defineComponent({
   props: {

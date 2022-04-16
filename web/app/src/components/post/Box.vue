@@ -81,9 +81,11 @@
   </article>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
-import DOMPurify from "dompurify";
+import { sanitize } from "@/pkg/sanitize";
+
+import { local } from "@/pkg/url";
 
 import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
 import RadixEyeNone from "../icons/RadixEyeNone.vue";
@@ -95,8 +97,8 @@ import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
 import DotsDropdown from "../menu/DotsDropdown.vue";
 
-import { User } from "../../models/user";
-import { Post } from "../../models/post";
+import { User } from "@/models/user";
+import { Post } from "@/models/post";
 
 export default defineComponent({
   name: "post-box",
@@ -142,16 +144,22 @@ export default defineComponent({
       return false;
     },
     purifiedContent() {
-      return DOMPurify.sanitize(this.post.content);
+      return sanitize(this.post.content);
     },
   },
   methods: {
-    toPost(e) {
-      if (e.srcElement.tagName == "A") {
-        if (e.srcElement.href.length > 0) {
-          window.open(e.srcElement.href, "_blank");
-          e.preventDefault();
-          return;
+    toPost(e: PointerEvent) {
+      // Open L
+      if (e.target !== null) {
+        let el = e.target as HTMLElement;
+        if (el instanceof HTMLAnchorElement) {
+          if (el.href.length > 0) {
+            if (!local(el.href)) {
+              window.open(el.href, "_blank");
+              e.preventDefault();
+              return;
+            }
+          }
         }
       }
       if (this.isLink) {

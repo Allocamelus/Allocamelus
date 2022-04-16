@@ -16,14 +16,14 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, reactive } from "vue";
-import { get as getPost } from "../api/post/get";
-import { get as getComments, API_Comments } from "../api/post/comments/get";
-import { API_Post } from "../models/api_post";
-import { API_Error } from "../models/api_error";
-import ErrorBox from "../components/box/Error.vue";
-import sanitize from "../pkg/sanitize";
-import PostBox from "../components/post/Box.vue";
-import CommentFeed from "../components/post/CommentFeed.vue";
+import { get as getPost } from "@/api/post/get";
+import { get as getComments, API_Comments } from "@/api/post/comments/get";
+import { API_Post } from "@/models/api_post";
+import { API_Error } from "@/models/api_error";
+import ErrorBox from "@/components/box/Error.vue";
+import { textContent } from "@/pkg/sanitize";
+import PostBox from "@/components/post/Box.vue";
+import CommentFeed from "@/components/post/CommentFeed.vue";
 
 export default defineComponent({
   props: {
@@ -64,10 +64,10 @@ export default defineComponent({
   },
   watch: {
     apiPost(newPost) {
-      var sanitizedContent = sanitize(newPost.post.content).trim(),
-        truncatedContent = sanitizedContent.substring(0, 256).trim();
+      let text = textContent(newPost.post.content).trim(),
+        truncatedContent = text.substring(0, 256).trim();
 
-      if (sanitizedContent.length > truncatedContent.length) {
+      if (text.length > truncatedContent.length) {
         truncatedContent += "...";
       }
 
