@@ -1,13 +1,13 @@
 <template>
   <div class="container py-5">
-    <error-box :error="err.user" class="p-3.5 mb-3">
+    <error-box :error="err.user" class="mb-3 p-3.5">
       <div class="flex flex-col justify-between xs:flex-row">
         <div>
-          <div class="flex items-center min-w-0">
+          <div class="flex min-w-0 items-center">
             <component
               :is="canEdit ? 'change-avatar' : 'user-avatar'"
               :user="canEdit ? storeUser : user"
-              class="flex-shrink-0 w-14 h-14 xs:w-16 xs:h-16 md:w-20 md:h-20"
+              class="h-14 w-14 flex-shrink-0 xs:h-16 xs:w-16 md:h-20 md:w-20"
             ></component>
             <user-name
               class="ml-3"
@@ -17,7 +17,7 @@
             ></user-name>
             <text-small
               v-if="user.type === UNVERIFIED_USER"
-              class="flex-none ml-1 font-normal"
+              class="ml-1 flex-none font-normal"
             >
               [[Unverified]]
             </text-small>
@@ -27,10 +27,10 @@
           </div>
         </div>
         <div
-          class="flex items-start justify-end flex-shrink-0 mt-3 xs:mt-0 xs:ml-3"
+          class="mt-3 flex flex-shrink-0 items-start justify-end xs:mt-0 xs:ml-3"
         >
           <basic-btn
-            class="px-3 py-2 whitespace-nowrap"
+            class="whitespace-nowrap px-3 py-2"
             :class="buttonStyle.secondaryBorderInvert"
             @click="clickFollowEdit"
           >
@@ -60,7 +60,7 @@
       <feed>
         <new-post-text-input v-if="canEdit"></new-post-text-input>
         <error-box :error="err.posts">
-          <box v-if="postsList.total() == 0" class="px-4 py-3 rounded-xl">
+          <box v-if="postsList.total() == 0" class="rounded-xl px-4 py-3">
             No Post Here
           </box>
         </error-box>

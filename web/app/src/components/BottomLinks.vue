@@ -16,11 +16,11 @@
         <to-link to="/about" class="link">About</to-link>
       </div>
     </div>
-    <div class="flex justify-center mt-3">
+    <div class="mt-3 flex justify-center">
       <to-link to="https://github.com/Allocamelus/Allocamelus">
         <radix-github class="h-5.5 w-5.5" />
       </to-link>
-      <to-link to="https://www.allocamelus.com/u/Allocamelus" class="ml-3 link">
+      <to-link to="https://www.allocamelus.com/u/Allocamelus" class="link ml-3">
         <allocamelus class="h-5.5 w-5.5" />
       </to-link>
     </div>

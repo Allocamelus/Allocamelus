@@ -8,16 +8,16 @@
       {{ err.msg }}
     </snackbar>
     <box
-      class="w-full xs:m-3 rounded-t-lg xs:rounded-md shadow-lg focus:outline-none overflow-hidden flex flex-col self-end"
+      class="flex w-full flex-col self-end overflow-hidden rounded-t-lg shadow-lg focus:outline-none xs:m-3 xs:rounded-md"
     >
-      <div class="text-gray-800 dark:text-gray-200 py-4 px-5">
+      <div class="py-4 px-5 text-gray-800 dark:text-gray-200">
         <h3 class="text-xl">Delete Comment</h3>
         <h4 class="text-base text-rose-800 dark:text-red-600">
           This action is irreversible
         </h4>
       </div>
-      <div class="bg-gray-200 dark:bg-gray-800 flex justify-end py-2 px-3">
-        <basic-btn class="py-2 px-1.5 mr-1.5" @click="visible = false">
+      <div class="flex justify-end bg-gray-200 py-2 px-3 dark:bg-gray-800">
+        <basic-btn class="mr-1.5 py-2 px-1.5" @click="visible = false">
           Cancel
         </basic-btn>
         <basic-btn

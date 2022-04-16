@@ -1,8 +1,8 @@
 <template>
   <center-form-box>
     <div v-if="hasSelectorToken">
-      <div v-if="loading" class="flex justify-center items-center">
-        <spin-loader class="w-5 h-5 mr-1.5" />
+      <div v-if="loading" class="flex items-center justify-center">
+        <spin-loader class="mr-1.5 h-5 w-5" />
         <div class="font-medium">Checking...</div>
       </div>
       <div v-else>
@@ -21,8 +21,8 @@
           </div>
           <div v-else>
             <text-small>Invalid Email Token</text-small>
-            <div class="font-medium mt-1.5">Why am I seeing this?</div>
-            <ul class="list-disc list-inside">
+            <div class="mt-1.5 font-medium">Why am I seeing this?</div>
+            <ul class="list-inside list-disc">
               <text-small>
                 <li>You may have already verified your email</li>
                 <li>Something Went Wrong</li>
@@ -58,10 +58,10 @@
           ></vue-hcaptcha>
         </div>
         <div
-          class="mt-2 link flex items-center cursor-pointer"
+          class="link mt-2 flex cursor-pointer items-center"
           @click="captcha.show = false"
         >
-          <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
+          <ChevronLeftIcon class="h-5 w-5"></ChevronLeftIcon> Back
         </div>
       </div>
       <div v-show="!showCaptcha">
@@ -81,7 +81,7 @@
               @error="err.email = $event"
             ></email-input>
 
-            <div class="flex justify-end mt-4">
+            <div class="mt-4 flex justify-end">
               <submit
                 class="whitespace-nowrap"
                 :title="!captcha.loaded ? 'Loading Captcha' : 'Sign Up'"

@@ -1447,6 +1447,7 @@ __metadata:
     postcss: ^8.4.12
     postcss-csso: ^6.0.0
     prettier: ^2.6.1
+    prettier-plugin-tailwindcss: ^0.1.8
     rollup-plugin-visualizer: ^5.6.0
     sass: ^1.49.9
     tailwindcss: ^3.0.23
@@ -3931,6 +3932,15 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 60e7808f39c4a9d0fa067bfd5eb906168c4eb6d3ff0093f7d314d1979b001a16363deedccd368a7df869c63ad4ae350d27da439c94ff3fb0f8fc93d49fe38a90
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-tailwindcss@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "prettier-plugin-tailwindcss@npm:0.1.8"
+  peerDependencies:
+    prettier: ">=2.2.0"
+  checksum: b183f061dfd07dd6faee5244c1d1f9efe39ec58b4b8382bb6de379e2a831484bd9b59baca1cb58b46872de40c63d7958cdb2adc953706019b0929843b3406228
   languageName: node
   linkType: hard
 

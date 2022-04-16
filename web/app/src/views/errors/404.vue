@@ -1,7 +1,7 @@
 <template>
   <div class="container py-5">
     <box
-      class="py-3 px-4 rounded-xl max-w-prose mx-auto"
+      class="mx-auto max-w-prose rounded-xl py-3 px-4"
       v-html="errorHtml"
     ></box>
   </div>

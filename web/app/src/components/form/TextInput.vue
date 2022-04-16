@@ -1,5 +1,5 @@
 <template>
-  <div class="p-0 my-1 input-container">
+  <div class="input-container my-1 p-0">
     <input
       v-model.trim="text"
       @input="emiter"
@@ -145,15 +145,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .input-container {
-  @apply w-full rounded-sm box-border border border-solid;
-  @apply bg-gray-300 xs:bg-gray-200 border-warm-gray-400 focus-within:border-secondary-600 text-black-lighter;
-  @apply flex justify-between items-center;
-  @apply dark:bg-gray-800 dark:border-warm-gray-500 dark:focus-within:border-secondary-600 dark:text-white;
+  @apply box-border w-full rounded-sm border border-solid;
+  @apply border-warm-gray-400 bg-gray-300 text-black-lighter focus-within:border-secondary-600 xs:bg-gray-200;
+  @apply flex items-center justify-between;
+  @apply dark:border-warm-gray-500 dark:bg-gray-800 dark:text-white dark:focus-within:border-secondary-600;
 }
 
 .input {
-  @apply focus:outline-none box-content flex-1 border-none outline-none;
-  @apply py-1.5 pl-2.5 mr-2.5 rounded-l-sm bg-transparent shadow-none;
+  @apply box-content flex-1 border-none outline-none focus:outline-none;
+  @apply mr-2.5 rounded-l-sm bg-transparent py-1.5 pl-2.5 shadow-none;
   @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
   &:-webkit-autofill {
     -webkit-text-fill-color: theme("colors.black.lighter");

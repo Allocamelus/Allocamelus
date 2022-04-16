@@ -2,39 +2,39 @@
   <div class="font-sans">
     <nav
       id="nav"
-      class="fixed top-0 z-30 w-full p-0 m-0 shadow bg-primary text-gray-50 h-nav leading-nav"
+      class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-gray-50 shadow"
     >
-      <div class="container flex flex-row justify-between h-nav leading-nav">
+      <div class="container flex h-nav flex-row justify-between leading-nav">
         <div class="flex">
           <to-link
             :to="loggedIn ? '/home' : '/'"
-            class="relative py-2 pr-4 font-sans text-lg tracking-wide text-white no-underline truncate"
+            class="relative truncate py-2 pr-4 font-sans text-lg tracking-wide text-white no-underline"
           >
             Allocamelus
           </to-link>
         </div>
         <div class="flex">
-          <div class="flex items-center justify-start ml-1">
-            <div class="p-1 rounded-full cursor-pointer" @click="toggleTheme">
+          <div class="ml-1 flex items-center justify-start">
+            <div class="cursor-pointer rounded-full p-1" @click="toggleTheme">
               <span class="sr-only">Toggle Theme</span>
               <component
                 :is="theme != 'dark' ? 'MoonIcon' : 'SunIcon'"
-                class="w-5.5 h-5.5"
+                class="h-5.5 w-5.5"
               ></component>
             </div>
 
-            <div v-if="loggedIn" class="ml-1.5 relative">
-              <div class="p-1 rounded-full cursor-pointer" @click="clickAlerts">
+            <div v-if="loggedIn" class="relative ml-1.5">
+              <div class="cursor-pointer rounded-full p-1" @click="clickAlerts">
                 <span class="sr-only">Open User Alerts</span>
-                <BellIcon class="w-5.5 h-5.5"></BellIcon>
+                <BellIcon class="h-5.5 w-5.5"></BellIcon>
               </div>
-              <dropdown v-model="alerts.menu" class="max-w-sm w-80">
+              <dropdown v-model="alerts.menu" class="w-80 max-w-sm">
                 <div
-                  class="overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-800"
+                  class="overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-800"
                 >
                   <bar-loader :show="alerts.loading" />
                   <div
-                    class="dark:text-white text-black max-h-48 h-48 scrollbar px-3 py-2.5"
+                    class="scrollbar h-48 max-h-48 px-3 py-2.5 text-black dark:text-white"
                   >
                     <div v-if="alerts.err.length != 0" class="text-base">
                       {{ alerts.err }}
@@ -48,31 +48,31 @@
                       <div
                         v-for="(userId, index) in alerts.requests.requests"
                         :key="index"
-                        class="flex items-center flex-grow flex-shrink pb-3"
+                        class="flex flex-shrink flex-grow items-center pb-3"
                       >
                         <user-avatar
                           :user="alerts.requests.user(userId)"
                           :isLink="true"
-                          class="w-8 h-8"
+                          class="h-8 w-8"
                         ></user-avatar>
                         <div
-                          class="flex items-center justify-between flex-grow"
+                          class="flex flex-grow items-center justify-between"
                         >
-                          <div class="flex ml-2">
+                          <div class="ml-2 flex">
                             <user-name
                               :user="alerts.requests.user(userId)"
                             ></user-name>
                           </div>
-                          <div class="flex items-center ml-2">
+                          <div class="ml-2 flex items-center">
                             <div
-                              class="text-sm font-semibold leading-4 rounded cursor-pointer px-2 py-1.5"
+                              class="cursor-pointer rounded px-2 py-1.5 text-sm font-semibold leading-4"
                               :class="buttonStyle.secondary"
                               @click="followRequest(userId, true)"
                             >
                               Accept
                             </div>
                             <div
-                              class="text-sm font-semibold leading-4 rounded cursor-pointer ml-1.5 p-1 link"
+                              class="link ml-1.5 cursor-pointer rounded p-1 text-sm font-semibold leading-4"
                               @click="followRequest(userId, false)"
                             >
                               Decline
@@ -86,25 +86,25 @@
               </dropdown>
             </div>
 
-            <div v-if="!loggedIn" class="flex items-center justify-start mx-2">
-              <basic-btn to="/signup" class="px-3 py-2 border border-white">
+            <div v-if="!loggedIn" class="mx-2 flex items-center justify-start">
+              <basic-btn to="/signup" class="border border-white px-3 py-2">
                 Sign Up
               </basic-btn>
-              <basic-btn to="/login" class="ml-1.5 py-2 pl-3 hidden xs:block">
+              <basic-btn to="/login" class="ml-1.5 hidden py-2 pl-3 xs:block">
                 Login
               </basic-btn>
             </div>
-            <div v-else class="ml-1.5 relative">
+            <div v-else class="relative ml-1.5">
               <div
-                class="flex items-center p-1 cursor-pointer"
+                class="flex cursor-pointer items-center p-1"
                 @click="toggleUserMenu"
               >
                 <span class="sr-only">Open user menu</span>
-                <user-avatar :user="user" class="w-6 h-6"></user-avatar>
+                <user-avatar :user="user" class="h-6 w-6"></user-avatar>
                 <component
                   v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
-                  class="hidden w-4 h-4 md:block"
+                  class="hidden h-4 w-4 md:block"
                 ></component>
               </div>
               <dropdown
@@ -117,15 +117,15 @@
                     :to="`/u/${user.userName}`"
                     class="hover:bg-secondary-700"
                   >
-                    <UserCircleIcon class="w-5 h-5 mr-2"></UserCircleIcon>
+                    <UserCircleIcon class="mr-2 h-5 w-5"></UserCircleIcon>
                     <div>Profile</div>
                   </dropdown-item>
                   <dropdown-item class="hover:bg-secondary-700">
-                    <CogIcon class="w-5 h-5 mr-2"></CogIcon>
+                    <CogIcon class="mr-2 h-5 w-5"></CogIcon>
                     <div>Settings (TODO)</div>
                   </dropdown-item>
                   <dropdown-item to="/logout" class="hover:bg-secondary-700">
-                    <LogoutIcon class="w-5 h-5 mr-2"></LogoutIcon>
+                    <LogoutIcon class="mr-2 h-5 w-5"></LogoutIcon>
                     <div>Logout</div>
                   </dropdown-item>
                 </div>
@@ -137,48 +137,48 @@
                 :xsFullHeight="true"
               >
                 <Box
-                  class="flex flex-col justify-between flex-grow w-full h-full xs:mx-2 xs:rounded-lg"
+                  class="flex h-full w-full flex-grow flex-col justify-between xs:mx-2 xs:rounded-lg"
                 >
                   <div class="flex flex-col">
                     <div
-                      class="flex items-end flex-shrink-0 w-full p-3 border-b border-secondary-600"
+                      class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
                     >
-                      <div class="flex justify-end flex-1">
+                      <div class="flex flex-1 justify-end">
                         <basic-btn @click="userMenu = false">
                           <XIcon
-                            class="w-5 h-5"
+                            class="h-5 w-5"
                             :class="iconStyle.xIcon"
                           ></XIcon>
                         </basic-btn>
                       </div>
                     </div>
                     <div
-                      class="flex flex-col py-2 border-b border-secondary-600"
+                      class="flex flex-col border-b border-secondary-600 py-2"
                     >
                       <dropdown-item :to="`/u/${user.userName}`">
                         <user-avatar
                           :user="user"
-                          class="w-11 h-11"
+                          class="h-11 w-11"
                         ></user-avatar>
                         <div
-                          class="flex flex-col flex-grow ml-3 justify-evenly"
+                          class="ml-3 flex flex-grow flex-col justify-evenly"
                         >
                           <user-name :user="user" :isLink="false"></user-name>
                           <div class="link">View Profile</div>
                         </div>
                       </dropdown-item>
                       <dropdown-item to="/post/new">
-                        <PlusIcon class="w-5 h-5 mr-2"></PlusIcon>
+                        <PlusIcon class="mr-2 h-5 w-5"></PlusIcon>
                         <div>New Post</div>
                       </dropdown-item>
                     </div>
                     <div class="flex flex-col py-2">
                       <dropdown-item>
-                        <CogIcon class="w-5 h-5 mr-2"></CogIcon>
+                        <CogIcon class="mr-2 h-5 w-5"></CogIcon>
                         <div>Settings (TODO)</div>
                       </dropdown-item>
                       <dropdown-item to="/logout">
-                        <LogoutIcon class="w-5 h-5 mr-2"></LogoutIcon>
+                        <LogoutIcon class="mr-2 h-5 w-5"></LogoutIcon>
                         <div class="flex items-center">Logout</div>
                       </dropdown-item>
                     </div>

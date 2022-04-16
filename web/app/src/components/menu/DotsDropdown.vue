@@ -1,8 +1,8 @@
 <template>
-  <div class="flex-shrink-0 relative">
+  <div class="relative flex-shrink-0">
     <circle-bg class="hover:bg-rose-800" @click="show = !show">
       <DotsVerticalIcon
-        class="h-4.5 w-4.5 text-gray-800 dark:text-gray-200 group-hover:text-rose-700"
+        class="h-4.5 w-4.5 text-gray-800 group-hover:text-rose-700 dark:text-gray-200"
       ></DotsVerticalIcon>
     </circle-bg>
     <dropdown v-model="show" class="w-44">

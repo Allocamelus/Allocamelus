@@ -10,14 +10,14 @@
   >
     <div
       v-show="show"
-      class="origin-top-right absolute flex flex-col right-0 pt-0.5"
+      class="absolute right-0 flex origin-top-right flex-col pt-0.5"
     >
       <div
-        class="top-0 bottom-0 right-0 left-0 fixed z-30"
+        class="fixed top-0 bottom-0 right-0 left-0 z-30"
         @click="toggleShow"
       ></div>
       <div
-        class="w-full z-40 relative rounded-md shadow-lg focus:outline-none overflow-hidden"
+        class="relative z-40 w-full overflow-hidden rounded-md shadow-lg focus:outline-none"
       >
         <slot></slot>
       </div></div

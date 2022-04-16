@@ -9,7 +9,7 @@
     // md	768px
     @apply md:px-5;
     // lg	1024px
-    @apply lg:px-14 lg:max-w-4.5xl;
+    @apply lg:max-w-4.5xl lg:px-14;
     // xl	1280px
     @apply xl:max-w-6xl;
     // 2xl 1536px
@@ -40,8 +40,8 @@
       @apply bg-warm-gray-300 dark:bg-warm-gray-900;
     }
     &::-webkit-scrollbar-thumb {
-      @apply border-solid rounded-3xl border-warm-gray-300 bg-warm-gray-600 hover:bg-warm-gray-700 opacity-25;
-      @apply dark:bg-warm-gray-400 dark:border-warm-gray-900 dark:hover:bg-warm-gray-300;
+      @apply rounded-3xl border-solid border-warm-gray-300 bg-warm-gray-600 opacity-25 hover:bg-warm-gray-700;
+      @apply dark:border-warm-gray-900 dark:bg-warm-gray-400 dark:hover:bg-warm-gray-300;
       border-width: 3px;
     }
   }

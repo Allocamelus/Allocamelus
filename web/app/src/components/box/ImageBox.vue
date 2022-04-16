@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex group"
+    class="group relative flex"
     :class="[
       totalNumber == 1 ? 'w-full' : '',
       totalNumber == 2 ? (index == 0 || index == 1 ? 'w-1/2' : '') : '',
@@ -14,7 +14,7 @@
       :alt="alt"
       :width="width"
       :height="height"
-      class="object-cover max-w-full"
+      class="max-w-full object-cover"
       :loading="loading"
     />
   </div>

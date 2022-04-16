@@ -13,9 +13,9 @@
       :regexMsg="InvalidCharacters"
       @error="err.comment = $event"
     >
-      <div class="flex items-center mr-1.5">
+      <div class="mr-1.5 flex items-center">
         <basic-btn
-          class="text-gray-700 dark:text-gray-300 p-1 mr-1.5"
+          class="mr-1.5 p-1 text-gray-700 dark:text-gray-300"
           title="Close"
           @click="close()"
         >

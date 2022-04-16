@@ -1,14 +1,14 @@
 <template>
   <div class="container flex py-5">
-    <div class="grid grid-cols-5 pt-10 mx-auto">
+    <div class="mx-auto grid grid-cols-5 pt-10">
       <div
-        class="z-10 flex flex-col col-start-1 col-end-6 row-start-1 sm:col-start-3"
+        class="z-10 col-start-1 col-end-6 row-start-1 flex flex-col sm:col-start-3"
       >
         <h1 class="text-center" :class="textStyle.h1">Allocamelus</h1>
         <h2 class="mt-5 text-center" :class="textStyle.h2">
           A social media platform
         </h2>
-        <div class="flex justify-center mt-6 space-x-3">
+        <div class="mt-6 flex justify-center space-x-3">
           <basic-btn
             to="/signup"
             class="px-4 py-2.5 leading-4"
@@ -22,25 +22,25 @@
             :class="buttonStyle.secondaryBorder"
           >
             <div class="flex items-center">
-              <CodeIcon class="w-4 h-4 mr-1" />
+              <CodeIcon class="mr-1 h-4 w-4" />
               <div>Open Source</div>
             </div>
           </basic-btn>
         </div>
-        <div class="flex items-baseline justify-center mt-3 text-sm">
+        <div class="mt-3 flex items-baseline justify-center text-sm">
           <div class="text-gray-800 dark:text-gray-200">Have an account</div>
-          <div class="flex ml-1">
+          <div class="ml-1 flex">
             <to-link to="/login" class="link">Login</to-link>
           </div>
         </div>
         <div class="flex"></div>
       </div>
       <div
-        class="col-start-1 col-end-6 row-start-2 mt-6 sm:mt-0 sm:col-end-3 sm:row-start-1"
+        class="col-start-1 col-end-6 row-start-2 mt-6 sm:col-end-3 sm:row-start-1 sm:mt-0"
       >
         <div class="flex w-full">
           <allocamelus
-            class="object-cover w-full h-full opacity-50 dark:opacity-70 sm:opacity-100 text-primary-lighter"
+            class="h-full w-full object-cover text-primary-lighter opacity-50 dark:opacity-70 sm:opacity-100"
           ></allocamelus>
         </div>
       </div>

@@ -19,16 +19,16 @@
           ></vue-hcaptcha>
         </div>
         <div
-          class="flex items-center mt-2 cursor-pointer link"
+          class="link mt-2 flex cursor-pointer items-center"
           @click="captcha.show = false"
         >
-          <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
+          <ChevronLeftIcon class="h-5 w-5"></ChevronLeftIcon> Back
         </div>
       </div>
       <div v-show="!showCaptcha">
         <h2 class="text-2xl font-medium">Login</h2>
         <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
-        <form @submit.prevent="onSubmit" ref="form" class="mt-3 form">
+        <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
           <div>
             <input-label for="name" :err="err.username">Username</input-label>
             <text-input
@@ -49,7 +49,7 @@
               @error="err.password = $event"
             ></password-input>
           </div>
-          <div class="flex justify-between mt-3">
+          <div class="mt-3 flex justify-between">
             <div class="flex flex-col">
               <checkbox v-model="remember" name="remember">
                 <label for="remember">Remember Me</label>
@@ -61,7 +61,7 @@
                 </to-link>
               </text-small>
             </div>
-            <submit class="self-end mt-3" title="Login" :disabled="loading">
+            <submit class="mt-3 self-end" title="Login" :disabled="loading">
               Login
             </submit>
           </div>

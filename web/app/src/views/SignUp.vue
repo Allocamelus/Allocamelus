@@ -19,10 +19,10 @@
           ></vue-hcaptcha>
         </div>
         <div
-          class="flex items-center mt-2 cursor-pointer link"
+          class="link mt-2 flex cursor-pointer items-center"
           @click="captcha.show = false"
         >
-          <ChevronLeftIcon class="w-5 h-5"></ChevronLeftIcon> Back
+          <ChevronLeftIcon class="h-5 w-5"></ChevronLeftIcon> Back
         </div>
       </div>
       <div v-show="!showCaptcha">
@@ -33,7 +33,7 @@
             class="mt-3"
             v-html="err.signUp"
           ></div>
-          <form @submit.prevent="onSubmit" ref="form" class="mt-3 form">
+          <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
             <div>
               <input-label for="name" :err="err.userName">Username</input-label>
               <text-input
@@ -70,7 +70,7 @@
               ></password-input>
             </div>
 
-            <div class="flex justify-between mt-3">
+            <div class="mt-3 flex justify-between">
               <div class="flex flex-col justify-end">
                 <text-small class="mr-3">
                   By Signing Up, you agree to the
@@ -86,7 +86,7 @@
                 </text-small>
               </div>
               <submit
-                class="self-end mt-3 whitespace-nowrap"
+                class="mt-3 self-end whitespace-nowrap"
                 :title="!captcha.loaded ? 'Loading Captcha' : 'Sign Up'"
                 :disabled="!captcha.loaded || loading"
               >

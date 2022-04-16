@@ -6,11 +6,11 @@
     :name="name"
     :minlength="minLenC"
     :maxlength="maxLenC + 1"
-    class="box-border w-full border border-solid rounded-sm"
+    class="box-border w-full rounded-sm border border-solid"
     :class="[
-      'py-1.5 px-2.5 my-1',
-      'xs:bg-gray-200 bg-gray-300 border-warm-gray-400 focus:border-secondary-600 text-black-lighter',
-      'dark:bg-gray-800 dark:border-warm-gray-500 dark:focus:border-secondary-600 dark:text-white',
+      'my-1 py-1.5 px-2.5',
+      'border-warm-gray-400 bg-gray-300 text-black-lighter focus:border-secondary-600 xs:bg-gray-200',
+      'dark:border-warm-gray-500 dark:bg-gray-800 dark:text-white dark:focus:border-secondary-600',
       'placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80',
     ]"
     :required="requiredC"

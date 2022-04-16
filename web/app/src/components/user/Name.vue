@@ -1,7 +1,7 @@
 <template>
   <component
     :is="isLink ? 'to-link' : 'div'"
-    class="text-gray-800 dark:text-gray-200 truncate flex"
+    class="flex truncate text-gray-800 dark:text-gray-200"
     :class="[
       isLink ? 'group no-underline' : '',
       twoLine ? 'flex-col' : 'items-center',
@@ -10,15 +10,15 @@
   >
     <div
       v-if="!noName"
-      class="truncate flex-shrink font-semibold"
+      class="flex-shrink truncate font-semibold"
       :class="[
         isLink ? 'group-hover:underline' : '',
-        twoLine ? 'text-xl mb-0.5' : '',
+        twoLine ? 'mb-0.5 text-xl' : '',
       ]"
     >
       {{ user.name }}
     </div>
-    <text-small class="font-normal flex-none" :class="!twoLine ? 'ml-1' : ''">
+    <text-small class="flex-none font-normal" :class="!twoLine ? 'ml-1' : ''">
       @{{ user.userName }}
     </text-small>
   </component>

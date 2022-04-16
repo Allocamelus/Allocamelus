@@ -11,10 +11,10 @@
     :maxLen="maxLenC"
     :required="required"
   >
-    <div class="flex items-center mr-1.5">
+    <div class="mr-1.5 flex items-center">
       <div
         v-if="check"
-        class="justify-between mr-1.5 grid grid-rows-2 grid-flow-col gap-0.5"
+        class="mr-1.5 grid grid-flow-col grid-rows-2 justify-between gap-0.5"
         :class="strengthClass"
         title="Password Strength"
       >
@@ -28,7 +28,7 @@
         class="cursor-pointer text-secondary-600 hover:text-secondary-700"
       >
         <component
-          class="h-5 w5"
+          class="w5 h-5"
           @click="togglePass"
           :is="show ? 'EyeOffIcon' : 'EyeIcon'"
         ></component>

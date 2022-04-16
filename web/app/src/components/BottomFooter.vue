@@ -1,5 +1,5 @@
 <template>
-  <footer id="footer" class="text-white bg-footer xs:h-footer">
+  <footer id="footer" class="bg-footer text-white xs:h-footer">
     <div class="container" :class="$style.footer">
       <div class="flex">
         <div class="self-center font-semibold">
@@ -11,10 +11,10 @@
       </div>
       <div class="hidden xs:flex">
         <to-link to="https://github.com/Allocamelus/Allocamelus">
-          <radix-github class="w-5 h-5" />
+          <radix-github class="h-5 w-5" />
         </to-link>
         <to-link to="https://www.allocamelus.com/u/Allocamelus" class="ml-3">
-          <allocamelus class="w-5 h-5" />
+          <allocamelus class="h-5 w-5" />
         </to-link>
       </div>
       <div class="flex">
@@ -43,7 +43,7 @@ export default defineComponent({
 
 <style lang="scss" module>
 .footer {
-  @apply flex justify-between items-center py-3;
+  @apply flex items-center justify-between py-3;
   > div {
     @apply items-center;
   }
@@ -52,7 +52,7 @@ export default defineComponent({
     @apply text-sm text-white;
   }
   a {
-    @apply font-semibold no-underline cursor-pointer;
+    @apply cursor-pointer font-semibold no-underline;
   }
 }
 </style>

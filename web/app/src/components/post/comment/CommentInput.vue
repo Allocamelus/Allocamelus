@@ -17,7 +17,7 @@
       :regexMsg="InvalidCharacters"
       @error="err.comment = $event"
     >
-      <div class="flex items-center mr-1.5">
+      <div class="mr-1.5 flex items-center">
         <basic-btn
           class="link p-1"
           :title="`Submit ${theType}`"

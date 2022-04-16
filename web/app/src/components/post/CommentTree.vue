@@ -7,9 +7,9 @@
     >
       {{ err.msg }}
     </snackbar>
-    <article class="flex flex-col flex-grow flex-shrink">
-      <div class="flex flex-grow flex-shrink">
-        <div class="flex flex-col flex-grow">
+    <article class="flex flex-shrink flex-grow flex-col">
+      <div class="flex flex-shrink flex-grow">
+        <div class="flex flex-grow flex-col">
           <div
             class="flex items-center justify-between text-gray-700 dark:text-gray-300"
           >
@@ -17,10 +17,10 @@
               <user-avatar
                 :user="user"
                 :isLink="true"
-                class="w-6 h-6 xs:w-[30px] xs:h-[30px] mr-2"
+                class="mr-2 h-6 w-6 xs:h-[30px] xs:w-[30px]"
               ></user-avatar>
               <user-name :user="user"></user-name>
-              <div class="flex items-center dot-before whitespace-nowrap">
+              <div class="dot-before flex items-center whitespace-nowrap">
                 <fmt-time
                   :time="comment.created"
                   :type="Fmt_Short_Time"
@@ -29,11 +29,11 @@
               </div>
               <div
                 v-if="edited"
-                class="flex items-center dot-before whitespace-nowrap"
+                class="dot-before flex items-center whitespace-nowrap"
               >
                 <div title="Edited">
                   <PencilAltIcon
-                    class="w-4 h-4 dark:text-gray-400"
+                    class="h-4 w-4 dark:text-gray-400"
                   ></PencilAltIcon>
                 </div>
               </div>
@@ -41,7 +41,7 @@
           </div>
           <div class="flex">
             <div
-              class="mt-1 pt-1.5 flex xs:w-[30px] mr-2 flex-grow-0 group cursor-pointer"
+              class="group mt-1 mr-2 flex flex-grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'
@@ -50,13 +50,13 @@
               @click="hidden = !hidden"
             >
               <div
-                class="w-0 border border-gray-400 dark:border-gray-700 group-hover:border-gray-700 dark:group-hover:border-gray-400"
+                class="w-0 border border-gray-400 group-hover:border-gray-700 dark:border-gray-700 dark:group-hover:border-gray-400"
               ></div>
             </div>
             <div v-if="hidden" class="flex flex-grow">
               <small-text class="pt-1.5">[[hidden]]</small-text>
             </div>
-            <div v-else class="flex flex-col flex-grow">
+            <div v-else class="flex flex-grow flex-col">
               <div class="py-1.5">
                 <div v-if="!showEdit" class="leading-5">
                   {{ comment.content }}
@@ -71,14 +71,14 @@
                 </div>
               </div>
               <div
-                class="flex flex-row-reverse items-center mt-2 text-sm font-medium text-gray-600 xs:flex-row dark:text-gray-400"
+                class="mt-2 flex flex-row-reverse items-center text-sm font-medium text-gray-600 dark:text-gray-400 xs:flex-row"
               >
                 <small-btn
-                  class="flex items-center pr-0.5 mr-1.5"
+                  class="mr-1.5 flex items-center pr-0.5"
                   @click="showReplyForm = !showReplyForm"
                 >
                   <component
-                    class="w-4 h-4"
+                    class="h-4 w-4"
                     :is="
                       showReplyForm
                         ? 'OutlineAnnotationIcon'
@@ -95,13 +95,13 @@
                   class="flex flex-row-reverse xs:flex-row"
                 >
                   <small-btn
-                    class="flex items-center pr-0.5 mr-1.5"
+                    class="mr-1.5 flex items-center pr-0.5"
                     @click="showEdit = !showEdit"
                   >
                     <div class="px-0.5">Edit</div>
                   </small-btn>
                   <small-btn
-                    class="flex items-center pr-0.5 mr-1.5"
+                    class="mr-1.5 flex items-center pr-0.5"
                     @click="showDelete = !showDelete"
                   >
                     <div class="px-0.5">Delete</div>
@@ -147,7 +147,7 @@
                 </div>
               </feed>
               <div class="mt-2" v-if="missingReplies > 0">
-                <div class="text-sm font-semibold link" @click="getReplies()">
+                <div class="link text-sm font-semibold" @click="getReplies()">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
                 </div>

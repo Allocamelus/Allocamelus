@@ -2,7 +2,7 @@
   <component
     :is="to.length > 0 ? 'to-link' : 'div'"
     :to="to"
-    class="flex px-4 py-2.5 text-sm leading-4 font-semibold items-center"
+    class="flex items-center px-4 py-2.5 text-sm font-semibold leading-4"
   >
     <slot></slot>
   </component>

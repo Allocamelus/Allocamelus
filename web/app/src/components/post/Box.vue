@@ -1,17 +1,17 @@
 <template>
   <article
-    class="flex flex-col flex-grow flex-shrink"
+    class="flex flex-shrink flex-grow flex-col"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <div class="flex flex-grow flex-shrink py-3 px-3.5" @click.self="toPost">
-      <user-avatar :user="user" :isLink="true" class="w-11 h-11"></user-avatar>
+    <div class="flex flex-shrink flex-grow py-3 px-3.5" @click.self="toPost">
+      <user-avatar :user="user" :isLink="true" class="h-11 w-11"></user-avatar>
       <div
-        class="ml-3 flex flex-col flex-grow"
+        class="ml-3 flex flex-grow flex-col"
         :class="post.content?.length == 0 ? 'justify-center' : ''"
         @click.self="toPost"
       >
         <div
-          class="text-gray-700 dark:text-gray-300 flex items-center justify-between"
+          class="flex items-center justify-between text-gray-700 dark:text-gray-300"
           @click.self="toPost"
         >
           <div class="flex">
@@ -20,7 +20,7 @@
               v-if="published"
               class="dot-before flex items-center whitespace-nowrap"
             >
-              <to-link :to="link" class="no-underline group">
+              <to-link :to="link" class="group no-underline">
                 <fmt-time
                   :time="post.published"
                   :type="Fmt_Short_Time"
@@ -60,7 +60,7 @@
         <div
           v-if="post.media"
           @click="toPost"
-          class="flex flex-wrap mt-2 rounded-lg overflow-hidden"
+          class="mt-2 flex flex-wrap overflow-hidden rounded-lg"
         >
           <image-box
             v-for="(media, key) in post.mediaList"

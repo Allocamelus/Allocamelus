@@ -1,32 +1,32 @@
 <template>
   <overlay v-model="visable">
     <box
-      class="flex flex-col w-full h-full max-h-screen rounded-none shadow-lg xs:h-fit xs:m-3 xs:rounded-md bg-secondary-800 focus:outline-none"
+      class="flex h-full max-h-screen w-full flex-col rounded-none bg-secondary-800 shadow-lg focus:outline-none xs:m-3 xs:h-fit xs:rounded-md"
     >
       <snackbar v-model="err.snackbar.show" :closeBtn="true">
         {{ err.snackbar.msg }}
       </snackbar>
       <div
-        class="flex items-end flex-shrink-0 w-full p-3 border-b border-secondary-600"
+        class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
       >
-        <div class="flex justify-start flex-1">
+        <div class="flex flex-1 justify-start">
           <basic-btn @click="visable = false">
-            <XIcon class="w-5 h-5" :class="iconStyle.xIcon"></XIcon>
+            <XIcon class="h-5 w-5" :class="iconStyle.xIcon"></XIcon>
           </basic-btn>
         </div>
-        <div class="flex justify-center flex-1">
+        <div class="flex flex-1 justify-center">
           <div
             class="text-base font-medium leading-4 text-gray-900 dark:text-gray-100"
           >
             Edit Profile
           </div>
         </div>
-        <div class="flex justify-end flex-1">
+        <div class="flex flex-1 justify-end">
           <basic-btn @click="submit" class="link">Save</basic-btn>
         </div>
       </div>
-      <div class="flex flex-col flex-grow overflow-y-auto">
-        <div class="flex flex-col flex-grow flex-shrink-0 px-6 py-6 xs:px-8">
+      <div class="flex flex-grow flex-col overflow-y-auto">
+        <div class="flex flex-shrink-0 flex-grow flex-col px-6 py-6 xs:px-8">
           <div class="flex items-center">
             <user-avatar
               class="h-11 w-11"
@@ -34,7 +34,7 @@
               :isLink="false"
             ></user-avatar>
             <change-avatar
-              class="w-full ml-2"
+              class="ml-2 w-full"
               :user="user"
               :blockScroll="false"
             >

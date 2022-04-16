@@ -1,5 +1,5 @@
 <template>
-  <box class="p-3.5 mb-3 rounded-xl">
+  <box class="mb-3 rounded-xl p-3.5">
     <text-input
       placeholder="New Post"
       :readonly="true"

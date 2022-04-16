@@ -2,7 +2,7 @@
   <component
     :is="notNull(to) ? 'to-link' : 'button'"
     :to="to"
-    class="font-medium text-base leading-4 rounded cursor-pointer disabled:opacity-50 disabled:cursor-auto"
+    class="cursor-pointer rounded text-base font-medium leading-4 disabled:cursor-auto disabled:opacity-50"
   >
     <slot></slot>
   </component>

@@ -1,17 +1,17 @@
 <template>
   <div
     v-show="show"
-    class="top-0 bottom-0 right-0 left-0 fixed w-full h-full z-30"
+    class="fixed top-0 bottom-0 right-0 left-0 z-30 h-full w-full"
   >
     <div
-      class="flex justify-center items-center m-auto h-full w-full xs:max-w-md"
+      class="m-auto flex h-full w-full items-center justify-center xs:max-w-md"
     >
       <div
-        class="top-0 bottom-0 right-0 left-0 opacity-75 bg-black fixed"
+        class="fixed top-0 bottom-0 right-0 left-0 bg-black opacity-75"
         @click="toggleShow"
       ></div>
       <div
-        class="relative flex items-center justify-center w-full"
+        class="relative flex w-full items-center justify-center"
         :class="[
           xsFullHeight ? 'h-full xs:h-auto' : '',
           xsSelfEnd ? 'self-end xs:self-center' : '',

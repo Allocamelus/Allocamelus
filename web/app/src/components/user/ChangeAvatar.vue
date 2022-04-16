@@ -5,11 +5,11 @@
       <slot>
         <div class="group relative cursor-pointer">
           <div
-            class="absolute w-full h-full rounded-full hidden group-hover:flex items-center justify-center bg-black bg-opacity-50"
+            class="absolute hidden h-full w-full items-center justify-center rounded-full bg-black bg-opacity-50 group-hover:flex"
           >
-            <CameraIcon class="opacity-80 text-white w-5 h-5"></CameraIcon>
+            <CameraIcon class="h-5 w-5 text-white opacity-80"></CameraIcon>
           </div>
-          <user-avatar :user="user" class="min-w-full min-h-full"></user-avatar>
+          <user-avatar :user="user" class="min-h-full min-w-full"></user-avatar>
         </div>
       </slot>
     </div>
@@ -20,17 +20,17 @@
       :xsSelfEnd="true"
     >
       <box
-        class="w-full xs:m-3 self-end xs:self-center rounded-t-lg xs:rounded-md text-center"
+        class="w-full self-end rounded-t-lg text-center xs:m-3 xs:self-center xs:rounded-md"
       >
         <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
         <div
-          class="w-full p-4 border-b text-black-lighter dark:text-white border-secondary-300 dark:border-secondary-700 text-2xl font-medium"
+          class="w-full border-b border-secondary-300 p-4 text-2xl font-medium text-black-lighter dark:border-secondary-700 dark:text-white"
         >
           Change Avatar
         </div>
         <div class="font-semibold">
           <div
-            class="cursor-pointer p-3 border-b border-secondary-300 dark:border-secondary-700 text-blue-500"
+            class="cursor-pointer border-b border-secondary-300 p-3 text-blue-500 dark:border-secondary-700"
           >
             <file-input
               class="w-full"
@@ -45,7 +45,7 @@
             </file-input>
           </div>
           <div
-            class="cursor-pointer p-3 border-b border-secondary-300 dark:border-secondary-700 text-red-500"
+            class="cursor-pointer border-b border-secondary-300 p-3 text-red-500 dark:border-secondary-700"
             v-if="user.avatar"
             @click="avatarRemove"
           >

@@ -1,11 +1,11 @@
 <template>
   <div
-    class="w-full h-[3px]"
+    class="h-[3px] w-full"
     :class="show ? 'bg-rose-100 dark:bg-primary' : 'bg-transparent'"
   >
     <div
       v-if="show"
-      class="w-1/4 h-[3px] bg-rose-900 dark:bg-rose-600 animate-slide"
+      class="h-[3px] w-1/4 animate-slide bg-rose-900 dark:bg-rose-600"
     ></div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-1 rounded-full flex-shrink-0 group hover:bg-opacity-30 cursor-pointer"
+    class="group flex-shrink-0 cursor-pointer rounded-full p-1 hover:bg-opacity-30"
   >
     <slot></slot>
   </div>

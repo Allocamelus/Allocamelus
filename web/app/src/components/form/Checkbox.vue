@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex items-center pr-1 cursor-pointer select-none min-w-max"
+    class="flex min-w-max cursor-pointer select-none items-center pr-1"
     @click="toggleCheck()"
   >
     <component
       :is="checked ? 'radix-checkbox' : 'radix-box'"
-      class="w-4 h-4"
+      class="h-4 w-4"
     ></component>
     <input type="checkbox" v-model="checked" :name="name" @click.capture.stop />
     <slot>Checkbox</slot>
@@ -59,8 +59,8 @@ input,
   @apply cursor-pointer select-none;
 }
 input[type="checkbox"] {
-  @apply appearance-none font-normal mr-1;
-  @apply dark:text-warm-gray-50 focus:outline-none;
+  @apply mr-1 appearance-none font-normal;
+  @apply focus:outline-none dark:text-warm-gray-50;
   &:checked {
     @apply appearance-none;
   }
