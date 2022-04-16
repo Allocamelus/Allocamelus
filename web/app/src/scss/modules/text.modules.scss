@@ -1,0 +1,35 @@
+.h1 {
+  font-size: theme("fontSize.4xl");
+  line-height: theme("fontSize.4xl");
+  font-weight: theme("fontWeight.semibold");
+}
+@media (min-width: theme("screens.sm")) {
+  .h1 {
+    font-size: theme("fontSize.5xl");
+    line-height: theme("fontSize.5xl");
+  }
+}
+
+.h2 {
+  font-size: theme("fontSize.2xl");
+  line-height: theme("fontSize.2xl");
+  font-weight: theme("fontWeight.semibold");
+}
+@media (min-width: theme("screens.sm")) {
+  .h2 {
+    font-size: theme("fontSize.3xl");
+    line-height: theme("fontSize.3xl");
+  }
+}
+
+.h3 {
+  font-size: theme("fontSize.lg");
+  line-height: theme("fontSize.lg");
+  font-weight: theme("fontWeight.semibold");
+}
+@media (min-width: theme("screens.sm")) {
+  .h3 {
+    font-size: theme("fontSize.xl");
+    line-height: theme("fontSize.xl");
+  }
+}

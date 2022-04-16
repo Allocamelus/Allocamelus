@@ -4,10 +4,8 @@
       <div
         class="z-10 flex flex-col col-start-1 col-end-6 row-start-1 sm:col-start-3"
       >
-        <h1 class="text-4xl font-semibold text-center sm:text-5xl">
-          Allocamelus
-        </h1>
-        <h2 class="mt-5 text-2xl font-semibold text-center sm:text-3xl">
+        <h1 class="text-center" :class="textStyle.h1">Allocamelus</h1>
+        <h2 class="mt-5 text-center" :class="textStyle.h2">
           A social media platform
         </h2>
         <div class="flex justify-center mt-6 space-x-3">
@@ -77,5 +75,11 @@ export default defineComponent({
   src="@/scss/modules/button.modules.scss"
   lang="scss"
   module="buttonStyle"
+  scoped
+></style>
+<style
+  src="@/scss/modules/text.modules.scss"
+  lang="scss"
+  module="textStyle"
   scoped
 ></style>
