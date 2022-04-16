@@ -5,7 +5,7 @@
     :check="checkC"
     :required="required"
     :maxLen="254"
-    @input="emiter"
+    @input="emitter"
     type="email"
     name="email"
     :regex="/.+@.+\..+/"
@@ -67,7 +67,7 @@ export default defineComponent({
     },
   },
   methods: {
-    emiter() {
+    emitter() {
       this.$emit("update:modelValue", this.email);
     },
   },

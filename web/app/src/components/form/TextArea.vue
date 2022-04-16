@@ -1,7 +1,7 @@
 <template>
   <textarea
     v-model.trim="text"
-    @input="emiter"
+    @input="emitter"
     :type="type"
     :name="name"
     :minlength="minLenC"
@@ -136,7 +136,7 @@ export default defineComponent({
       }
       return "";
     },
-    emiter() {
+    emitter() {
       this.$emit("update:modelValue", this.text);
       if (this.check) {
         this.$emit("error", this.validate());

@@ -3,7 +3,7 @@
     v-model="password"
     :watchModel="watchModel"
     :check="checkC"
-    @input="emiter"
+    @input="emitter"
     @error="$emit('error', $event)"
     :type="show ? 'text' : 'password'"
     name="password"
@@ -149,7 +149,7 @@ export default defineComponent({
     togglePass() {
       this.show = !this.show;
     },
-    emiter() {
+    emitter() {
       this.$emit("update:modelValue", this.password);
     },
   },
