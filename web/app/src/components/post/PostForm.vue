@@ -41,61 +41,92 @@
     </div>
     <div class="sticky bottom-3 mt-2 overflow-hidden rounded">
       <div
-        class="flex w-full justify-between bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
-        v-if="editor !== undefined"
+        class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
+        v-if="editor !== null"
       >
-        <div class="flex items-center">
-          <circle-bg
-            @click="editor.chain().focus().toggleBold().run()"
-            class="hover:bg-rose-800"
-            :class="{
-              'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
-            }"
+        <div class="mb-1.5" v-if="editor.isActive('link')">
+          <text-input
+            v-model="link"
+            :watchModel="true"
+            type="url"
+            name="link"
+            placeholder="https://www.allocamelus.com"
           >
-            <RadixFontBold class="h-5 w-5" />
-          </circle-bg>
-          <circle-bg
-            @click="editor.chain().focus().toggleItalic().run()"
-            class="ml-1.5 hover:bg-rose-800"
-            :class="{
-              'bg-secondary-700 text-warm-gray-200': editor.isActive('italic'),
-            }"
-          >
-            <RadixFontItalic class="h-5 w-5" />
-          </circle-bg>
-          <circle-bg
-            @click="editor.chain().focus().toggleUnderline().run()"
-            class="ml-1.5 hover:bg-rose-800"
-            :class="{
-              'bg-secondary-700 text-warm-gray-200':
-                editor.isActive('underline'),
-            }"
-          >
-            <RadixUnderline class="h-5 w-5" />
-          </circle-bg>
-          <circle-bg class="ml-1.5 hover:bg-rose-800">
-            <file-input
-              accept="image/png,image/jpeg,image/gif,image/webp"
-              :check="true"
-              :maxSize="10485760 /* 10MB */"
-              :maxFiles="4"
-              :multiple="true"
-              :fileCount="images.length"
-              @filesChange="imagesUpload"
-              @error="onErr"
-            >
-              <radix-image class="h-5 w-5" />
-            </file-input>
-          </circle-bg>
+            <div class="mr-1.5 flex items-center">
+              <basic-btn
+                class="link p-1"
+                title="Update Link"
+                @click="updateLink"
+              >
+                Update
+              </basic-btn>
+            </div>
+          </text-input>
         </div>
-        <div class="flex items-center">
-          <basic-btn
-            class="p-1.5 text-secondary-700 dark:text-rose-600"
-            @click="onPost"
-            :disabled="submitted"
-          >
-            Post
-          </basic-btn>
+        <div class="flex justify-between">
+          <div class="flex items-center">
+            <circle-bg
+              @click="editor.chain().focus().toggleBold().run()"
+              class="hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
+              }"
+            >
+              <RadixFontBold class="h-5 w-5" />
+            </circle-bg>
+            <circle-bg
+              @click="editor.chain().focus().toggleItalic().run()"
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200':
+                  editor.isActive('italic'),
+              }"
+            >
+              <RadixFontItalic class="h-5 w-5" />
+            </circle-bg>
+            <circle-bg
+              @click="editor.chain().focus().toggleUnderline().run()"
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200':
+                  editor.isActive('underline'),
+              }"
+            >
+              <RadixUnderline class="h-5 w-5" />
+            </circle-bg>
+            <circle-bg
+              @click="editor.chain().focus().toggleLink().run()"
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200': editor.isActive('link'),
+              }"
+            >
+              <RadixLink2 class="h-5 w-5" />
+            </circle-bg>
+            <circle-bg class="ml-1.5 hover:bg-rose-800">
+              <file-input
+                accept="image/png,image/jpeg,image/gif,image/webp"
+                :check="true"
+                :maxSize="10485760 /* 10MB */"
+                :maxFiles="4"
+                :multiple="true"
+                :fileCount="images.length"
+                @filesChange="imagesUpload"
+                @error="onErr"
+              >
+                <radix-image class="h-5 w-5" />
+              </file-input>
+            </circle-bg>
+          </div>
+          <div class="flex items-center">
+            <basic-btn
+              class="p-1.5 text-secondary-700 dark:text-rose-600"
+              @click="onPost"
+              :disabled="submitted"
+            >
+              Post
+            </basic-btn>
+          </div>
         </div>
       </div>
     </div>
@@ -105,17 +136,24 @@
 
 <script lang="ts">
 // TODO: Drag and drop & reorder images
-import { defineComponent, toRefs, reactive } from "vue";
+import { defineComponent, toRefs, reactive, computed } from "vue";
 import Turndown from "turndown";
 
-import { create as CreatePost, MediaFile } from "../../api/post/create";
-import { notNull, RespToError } from "../../models/responses";
+import { create as CreatePost, MediaFile } from "@/api/post/create";
+import { notNull, RespToError } from "@/models/responses";
+import { SomethingWentWrong } from "../form/errors";
 
 import { textContent } from "@/pkg/sanitize";
 
-import { EditorContent, useEditor } from "@tiptap/vue-3";
-import StarterKit from "@tiptap/starter-kit";
+import { Editor, EditorContent } from "@tiptap/vue-3";
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import History from "@tiptap/extension-history";
+import Italic from "@tiptap/extension-italic";
+import Link from "@tiptap/extension-link";
+import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
+import Text from "@tiptap/extension-text";
 import Underline from "@tiptap/extension-underline";
 
 import RadixFontBold from "../icons/RadixFontBold.vue";
@@ -130,7 +168,7 @@ import XIcon from "@heroicons/vue/solid/XIcon";
 import ImageBox from "../box/ImageBox.vue";
 import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
-import { SomethingWentWrong } from "../form/errors";
+import RadixLink2 from "../icons/RadixLink2.vue";
 
 const turndownService = new Turndown().keep("u");
 
@@ -139,7 +177,9 @@ export default defineComponent({
     const altRegex = /^[^<>\[\]"&]*$/u;
 
     const data = reactive({
+      editor: null as Editor | null,
       richText: "",
+      link: "",
       focused: false,
       images: [] as MediaFile[],
       imageAltErrs: [] as string[],
@@ -151,33 +191,34 @@ export default defineComponent({
       },
     });
 
-    const editor = useEditor({
-      editorProps: {
-        attributes: {
-          class: "text-lg p-1.5 outline-none",
-        },
-      },
-      onUpdate: ({ editor }) => {
-        data.richText = editor.getHTML();
-      },
-      extensions: [
-        StarterKit,
-        Underline,
-        Placeholder.configure({
-          emptyEditorClass: "placeholder-empty",
-          placeholder: "The Text...",
-        }),
-      ],
-    });
-
     return {
       ...toRefs(data),
       altRegex,
-      editor,
       hasNoText: computed(() => textContent(data.richText).length == 0),
     };
   },
   methods: {
+    updateLink() {
+      if (this.editor === null) {
+        return;
+      }
+      let newLink = this.link;
+      console.log(newLink);
+
+      if (newLink == "") {
+        this.editor.chain().focus().extendMarkRange("link").unsetLink().run();
+        return;
+      }
+
+      this.editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .updateAttributes("link", {
+          href: newLink,
+        })
+        .run();
+    },
     imagesUpload(images: File[]) {
       for (let i = 0; i < images.length; i++) {
         if (Object.hasOwnProperty.call(images, i)) {
@@ -233,6 +274,52 @@ export default defineComponent({
       }
     },
   },
+  mounted() {
+    this.editor = new Editor({
+      editorProps: {
+        attributes: {
+          class: "text-lg p-1.5 outline-none",
+        },
+      },
+      onUpdate: ({ editor }) => {
+        this.richText = editor.getHTML();
+        console.log("html", editor.getHTML());
+      },
+      onSelectionUpdate: ({ editor }) => {
+        if (editor.isActive("link")) {
+          this.link = editor.getAttributes("link").href;
+        } else {
+          this.link = "";
+        }
+      },
+      extensions: [
+        Bold,
+        Document,
+        History,
+        Italic,
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            class: "link cursor-auto",
+          },
+        }),
+        Paragraph.extend({
+          name: "p",
+        }),
+        Placeholder.configure({
+          emptyEditorClass: "placeholder-empty",
+          placeholder: "The Text...",
+        }),
+        Text,
+        Underline,
+      ],
+    });
+  },
+  beforeUnmount() {
+    if (this.editor !== null) {
+      this.editor.destroy();
+    }
+  },
   components: {
     RadixFontBold,
     RadixFontItalic,
@@ -247,6 +334,7 @@ export default defineComponent({
     TextInput,
     InputLabel,
     EditorContent,
+    RadixLink2,
   },
 });
 </script>
