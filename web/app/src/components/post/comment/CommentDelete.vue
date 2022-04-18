@@ -1,8 +1,8 @@
 <template>
-  <overlay v-model="visible" :xsFullHeight="false" :xsSelfEnd="true">
+  <overlay v-model="visible" :xs-full-height="false" :xs-self-end="true">
     <snackbar
       v-model="err.show"
-      :closeBtn="true"
+      :close-btn="true"
       class="text-gray-800 dark:text-gray-200"
     >
       {{ err.msg }}
@@ -22,8 +22,8 @@
         </basic-btn>
         <basic-btn
           class="py-2 px-1.5 text-rose-800 dark:text-red-600"
-          @click="deleteComment"
           :disabled="submitted"
+          @click="deleteComment"
         >
           Delete
         </basic-btn>

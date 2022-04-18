@@ -1,16 +1,16 @@
 <template>
   <text-input
     v-model="email"
-    :watchModel="watchModel"
+    :watch-model="watchModel"
     :check="checkC"
     :required="required"
-    :maxLen="254"
-    @input="emitter"
+    :max-len="254"
     type="email"
     name="email"
     :regex="/.+@.+\..+/"
-    regexMsg="Invalid Email"
+    regex-msg="Invalid Email"
     placeholder="mary@example.com"
+    @input="emitter"
     @error="$emit('error', $event)"
   >
     <slot></slot>
@@ -22,7 +22,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import TextInput from "./TextInput.vue";
 
 export default defineComponent({
-  name: "email-input",
+  name: "EmailInput",
   props: {
     modelValue: {
       type: String,
@@ -51,19 +51,19 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  watch: {
-    modelValue(newValue) {
-      if (this.watchModel) {
-        this.email = newValue;
-      }
-    },
-  },
   computed: {
     checkC() {
       if (this.required) {
         return true;
       }
       return this.check;
+    },
+  },
+  watch: {
+    modelValue(newValue) {
+      if (this.watchModel) {
+        this.email = newValue;
+      }
     },
   },
   methods: {

@@ -19,13 +19,13 @@ export default defineComponent({
       default: new API_Error(),
     },
   },
-  components: {
-    Box,
-  },
   computed: {
     htmlErr() {
       return RespToHtml(this.error.error);
     },
+  },
+  components: {
+    Box,
   },
 });
 </script>

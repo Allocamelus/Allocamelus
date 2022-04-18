@@ -33,7 +33,7 @@
             class="mt-3"
             v-html="err.signUp"
           ></div>
-          <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
+          <form ref="form" class="form mt-3" @submit.prevent="onSubmit">
             <div>
               <input-label for="name" :err="err.userName">Username</input-label>
               <text-input
@@ -41,11 +41,11 @@
                 name="name"
                 :check="true"
                 :required="true"
-                :minLen="5"
-                :maxLen="64"
+                :min-len="5"
+                :max-len="64"
                 placeholder="mary-smith"
                 :regex="/^[a-zA-Z0-9_-]*$/"
-                :regexMsg="errMsgUserName"
+                :regex-msg="errMsgUserName"
                 @error="err.userName = $event"
               ></text-input>
             </div>

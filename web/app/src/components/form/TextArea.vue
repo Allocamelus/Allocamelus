@@ -1,7 +1,7 @@
 <template>
   <textarea
+    ref="input"
     v-model.trim="text"
-    @input="emitter"
     :type="type"
     :name="name"
     :minlength="minLenC"
@@ -17,7 +17,7 @@
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
-    ref="input"
+    @input="emitter"
   />
 </template>
 
@@ -86,13 +86,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  watch: {
-    modelValue(newValue) {
-      if (this.watchModel) {
-        this.text = newValue;
-      }
-    },
-  },
   computed: {
     minLenC() {
       if (this.check) {
@@ -111,6 +104,13 @@ export default defineComponent({
         return this.required;
       }
       return false;
+    },
+  },
+  watch: {
+    modelValue(newValue) {
+      if (this.watchModel) {
+        this.text = newValue;
+      }
     },
   },
   methods: {

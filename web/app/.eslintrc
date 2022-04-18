@@ -1,0 +1,64 @@
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "env": {
+    "browser": true,
+    "amd": true,
+    "node": true
+  },
+  "rules": {
+    "no-console": 1, // Means warning
+    "prettier/prettier": 2, // Means error
+    "vue/order-in-components": [
+      "error",
+      {
+        "order": [
+          "el",
+          "name",
+          "key",
+          "parent",
+          "functional",
+          ["delimiters", "comments"],
+          "extends",
+          "mixins",
+          ["provide", "inject"],
+          "layout",
+          "middleware",
+          "validate",
+          "scrollToTop",
+          "transition",
+          "loading",
+          "inheritAttrs",
+          "model",
+          ["props", "propsData"],
+          "emits",
+          "setup",
+          "asyncData",
+          "data",
+          "fetch",
+          "head",
+          "computed",
+          "watch",
+          "watchQuery",
+          "LIFECYCLE_HOOKS",
+          "methods",
+          ["template", "render"],
+          "renderError",
+          "ROUTER_GUARDS",
+          ["components", "directives", "filters"]
+        ]
+      }
+    ]
+  }
+}

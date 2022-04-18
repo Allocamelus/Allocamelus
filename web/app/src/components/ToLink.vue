@@ -17,7 +17,7 @@ import { local } from "@/pkg/url";
 export default defineComponent({
   props: {
     to: {
-      type: [Object, String] as PropType<RouteLocationRaw | String>,
+      type: [Object, String] as PropType<RouteLocationRaw | string>,
       default: "",
     },
   },
@@ -27,18 +27,6 @@ export default defineComponent({
     return {
       updateViewKey: () => state.updateViewKey(),
     };
-  },
-  methods: {
-    userEvent() {
-      if (
-        this.to == this.$route.path ||
-        (typeof this.to !== "string" &&
-          "path" in this.to &&
-          this.to.path == this.$route.path)
-      ) {
-        this.updateViewKey();
-      }
-    },
   },
   computed: {
     local() {
@@ -68,6 +56,18 @@ export default defineComponent({
         ["rel"]: "noopener noreferrer",
         ["target"]: "_blank",
       };
+    },
+  },
+  methods: {
+    userEvent() {
+      if (
+        this.to == this.$route.path ||
+        (typeof this.to !== "string" &&
+          "path" in this.to &&
+          this.to.path == this.$route.path)
+      ) {
+        this.updateViewKey();
+      }
     },
   },
 });

@@ -8,7 +8,7 @@
       <post-box
         :post="list.post(postId)"
         :user="list.user(list.post(postId).userId)"
-        :isLink="true"
+        :is-link="true"
       ></post-box>
     </box>
   </feed>

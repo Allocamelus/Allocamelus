@@ -11,7 +11,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import Box from "../box/Box.vue";
 
 export default defineComponent({
-  name: "center-form-box",
+  name: "CenterFormBox",
   props: {
     classes: {
       type: String,

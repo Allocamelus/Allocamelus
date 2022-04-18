@@ -5,11 +5,11 @@
         <post-box
           :post="apiPost.post"
           :user="apiPost.user"
-          :dynamicContent="true"
+          :dynamic-content="true"
         ></post-box>
       </error-box>
       <div></div>
-      <comment-feed :list="comments" :postId="id"></comment-feed>
+      <comment-feed :list="comments" :post-id="id"></comment-feed>
     </div>
   </div>
 </template>

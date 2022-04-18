@@ -1,12 +1,11 @@
 import { StorageLikeAsync } from "@vueuse/core";
 import { DBSchema, IDBPDatabase, StoreNames, StoreValue } from "idb";
-import { A9sDatabase } from "./allocamelus";
 
-export interface IDBStore<
+export type IDBStore<
   DBType extends DBSchema | unknown,
   Key extends StoreValue<DBType, StoreNames<DBType>>,
   Value extends StoreValue<DBType, StoreNames<DBType>>
-> extends StorageLikeAsync {}
+> = StorageLikeAsync;
 
 export class IDBStore<
   DBType extends DBSchema | unknown,
@@ -22,7 +21,7 @@ export class IDBStore<
   }
   getItem(key: string) {
     return new Promise<string | null>(async (resolve) => {
-      let v = await (await this.db).get(this.store, key as Key);
+      const v = await (await this.db).get(this.store, key as Key);
       if (typeof v == "undefined") {
         return resolve(null);
       }

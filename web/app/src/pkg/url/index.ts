@@ -1,6 +1,3 @@
-import { PropType } from "vue";
-import { RouteLocationRaw } from "vue-router";
-
 export function FullURL(url: string, base?: string | URL): string {
   try {
     // Try building url with base
@@ -14,7 +11,7 @@ export function FullURL(url: string, base?: string | URL): string {
 
 export function local(url: string) {
   try {
-    let testUrl = new URL(url, window.location.origin);
+    const testUrl = new URL(url, window.location.origin);
     if (testUrl.host === window.location.host) {
       return true;
     }

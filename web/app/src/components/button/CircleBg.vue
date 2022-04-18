@@ -9,6 +9,6 @@
 <script>
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "circle-bg",
+  name: "CircleBg",
 });
 </script>

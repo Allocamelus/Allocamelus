@@ -27,7 +27,7 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 export default defineComponent({
-  name: "dropdown",
+  name: "Dropdown",
   props: {
     modelValue: Boolean,
   },

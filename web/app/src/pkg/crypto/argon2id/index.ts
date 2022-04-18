@@ -16,10 +16,10 @@ const argon2id = wrap<Argon2idWorker>(new argon2idWorker());
  * @param encodedHash Key is optional
  */
 export function parse(encodedHash: string): argon2idEncoded {
-  let slice = encodedHash.split("$");
-  let costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
+  const slice = encodedHash.split("$");
+  const costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
 
-  let encoded: argon2idEncoded = {
+  const encoded: argon2idEncoded = {
     cost: new argon2idCost({
       memory: parseInt(costSlice[0]),
       time: parseInt(costSlice[1]),
@@ -49,7 +49,7 @@ export function parse(encodedHash: string): argon2idEncoded {
  * @param salt
  * @param cost
  */
-export function hashSalt(
+export async function hashSalt(
   password: IDataType,
   salt: IDataType,
   cost: argon2idCost
@@ -64,7 +64,7 @@ export function hashSalt(
       password = password.normalize();
     }
 
-    let { encodedHash, err } = await argon2id.hash(password, salt, cost);
+    const { encodedHash, err } = await argon2id.hash(password, salt, cost);
     if (err !== null) {
       reject(err);
       return;

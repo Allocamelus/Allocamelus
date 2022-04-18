@@ -10,7 +10,7 @@ export interface Comments {
   pathCache: { [id: number]: number[] };
 }
 
-export interface State extends Comments {}
+export type State = Comments;
 
 const pathErr = (path: number[]) =>
   new Error(`Error: Missing comment at path (${path})`);
@@ -38,7 +38,7 @@ export const useCommentStore = (postId: number | string) => {
         return GetFromPath(this.comments, path);
       },
       missingReplies(id: number): number {
-        let c = this.comment(id);
+        const c = this.comment(id);
         if (c === null) {
           return 0;
         }
@@ -99,7 +99,7 @@ export const useCommentStore = (postId: number | string) => {
       },
       // remove comment
       remove(id: number) {
-        let path = GetPath(this, id);
+        const path = GetPath(this, id);
 
         // Get parent path and child key
         const key = path.pop();

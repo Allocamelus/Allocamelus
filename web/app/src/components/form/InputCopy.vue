@@ -1,10 +1,10 @@
 <template>
   <text-input
+    ref="input"
     v-model="value"
-    :watchModel="true"
+    :watch-model="true"
     :readonly="true"
     class="py-0.5"
-    ref="input"
   >
     <div class="mr-0.5 flex items-center">
       <circle-bg class="p-1.5 hover:bg-rose-800" title="Copy" @click="doCopy">
@@ -24,7 +24,7 @@ import TextInput from "./TextInput.vue";
 import CircleBg from "../button/CircleBg.vue";
 
 export default defineComponent({
-  name: "button-copy",
+  name: "ButtonCopy",
   props: {
     modelValue: {
       type: String,

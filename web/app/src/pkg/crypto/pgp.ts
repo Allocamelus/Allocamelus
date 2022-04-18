@@ -52,7 +52,7 @@ export function encryptKey(
   passphrase: string
 ): Promise<string> {
   return new Promise(async (resolve) => {
-    let armoredKey = await reformatKey({
+    const armoredKey = await reformatKey({
       privateKey: key,
       userIDs: [{ name: name }],
       passphrase,

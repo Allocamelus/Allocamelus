@@ -3,7 +3,7 @@
     <box
       class="flex h-full max-h-screen w-full flex-col rounded-none bg-secondary-800 shadow-lg focus:outline-none xs:m-3 xs:h-fit xs:rounded-md"
     >
-      <snackbar v-model="err.snackbar.show" :closeBtn="true">
+      <snackbar v-model="err.snackbar.show" :close-btn="true">
         {{ err.snackbar.msg }}
       </snackbar>
       <div
@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="flex flex-1 justify-end">
-          <basic-btn @click="submit" class="link">Save</basic-btn>
+          <basic-btn class="link" @click="submit">Save</basic-btn>
         </div>
       </div>
       <div class="flex flex-grow flex-col overflow-y-auto">
@@ -31,12 +31,12 @@
             <user-avatar
               class="h-11 w-11"
               :user="user"
-              :isLink="false"
+              :is-link="false"
             ></user-avatar>
             <change-avatar
               class="ml-2 w-full"
               :user="user"
-              :blockScroll="false"
+              :block-scroll="false"
             >
               <basic-btn class="link">Change Avatar</basic-btn>
             </change-avatar>
@@ -52,11 +52,11 @@
               v-model="name"
               name="name"
               :check="true"
-              :minLen="0"
-              :maxLen="128"
+              :min-len="0"
+              :max-len="128"
               placeholder="Mary Smith"
               :regex="/^[^<>\[\]]*$/"
-              :regexMsg="InvalidCharacters"
+              :regex-msg="InvalidCharacters"
               @error="err.name = $event"
             ></text-input>
           </div>
@@ -66,11 +66,11 @@
               v-model="bio"
               name="bio"
               :check="true"
-              :minLen="0"
-              :maxLen="255"
+              :min-len="0"
+              :max-len="255"
               placeholder="Say Something?"
               :regex="/^[^<>\[\]]*$/"
-              :regexMsg="InvalidCharacters"
+              :regex-msg="InvalidCharacters"
               @error="err.bio = $event"
             ></text-area>
           </div>

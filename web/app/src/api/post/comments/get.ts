@@ -40,7 +40,7 @@ export class API_Comments extends ordered_list {
       delete this.comments[id];
       // Remove comment id from order
       let removed = false;
-      for (let k in this.order) {
+      for (const k in this.order) {
         if (this.order[k] == id) {
           delete this.order[k];
           removed = true;

@@ -18,7 +18,7 @@
           :class="closeBtn ? 'px-3 py-2' : 'px2.5 py-1.5 xs:py-3 xs:px-4'"
         >
           <slot></slot>
-          <basic-btn class="ml-1.5" v-if="closeBtn" @click="close">
+          <basic-btn v-if="closeBtn" class="ml-1.5" @click="close">
             <XIcon class="h-5 w-5"></XIcon>
           </basic-btn>
         </box>

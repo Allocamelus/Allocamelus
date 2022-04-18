@@ -12,17 +12,13 @@ export interface hashReturn {
   err: any;
 }
 
-const argon2id: Argon2idWorker = {
-  hash,
-};
-
-function hash(
+async function hash(
   password: IDataType,
   salt: IDataType,
   cost: argon2idCost
 ): Promise<hashReturn> {
   return new Promise(async (resolve) => {
-    let out: hashReturn = { encodedHash: "", err: null };
+    const out: hashReturn = { encodedHash: "", err: null };
     try {
       out.encodedHash = await argon2idHash({
         password: password,
@@ -41,5 +37,9 @@ function hash(
     return;
   });
 }
+
+const argon2id: Argon2idWorker = {
+  hash,
+};
 
 expose(argon2id);

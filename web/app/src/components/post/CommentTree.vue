@@ -2,7 +2,7 @@
   <div class="">
     <snackbar
       v-model="err.show"
-      :closeBtn="true"
+      :close-btn="true"
       class="text-gray-800 dark:text-gray-200"
     >
       {{ err.msg }}
@@ -16,7 +16,7 @@
             <div class="flex items-center text-sm xs:text-base">
               <user-avatar
                 :user="user"
-                :isLink="true"
+                :is-link="true"
                 class="mr-2 h-6 w-6 xs:h-[30px] xs:w-[30px]"
               ></user-avatar>
               <user-name :user="user"></user-name>
@@ -63,8 +63,8 @@
                 </div>
                 <div v-else>
                   <comment-edit
-                    :postId="comment.postId"
-                    :commentId="comment.id"
+                    :post-id="comment.postId"
+                    :comment-id="comment.id"
                     @edited="updated($event)"
                     @close="showEdit = false"
                   ></comment-edit>
@@ -78,12 +78,12 @@
                   @click="showReplyForm = !showReplyForm"
                 >
                   <component
-                    class="h-4 w-4"
                     :is="
                       showReplyForm
                         ? 'OutlineAnnotationIcon'
                         : 'SolidAnnotationIcon'
                     "
+                    class="h-4 w-4"
                   ></component>
                   <div class="pl-1">Reply</div>
                 </small-btn>
@@ -108,8 +108,8 @@
                   </small-btn>
                   <comment-delete
                     :show="showDelete"
-                    :postId="comment.postId"
-                    :commentId="comment.id"
+                    :post-id="comment.postId"
+                    :comment-id="comment.id"
                     @close="showDelete = false"
                     @deleted="deleted()"
                   ></comment-delete>
@@ -121,8 +121,8 @@
               <div v-if="loggedIn" class="pt-3">
                 <comment-input
                   v-if="showReplyForm"
-                  :postId="String(comment.postId)"
-                  :replyTo="comment.id"
+                  :post-id="String(comment.postId)"
+                  :reply-to="comment.id"
                   @commented="newReply($event)"
                 ></comment-input>
               </div>
@@ -141,12 +141,12 @@
                   class="pt-3"
                 >
                   <comment-tree
-                    :commentId="child.id"
-                    :postId="postId"
+                    :comment-id="child.id"
+                    :post-id="postId"
                   ></comment-tree>
                 </div>
               </feed>
-              <div class="mt-2" v-if="missingReplies > 0">
+              <div v-if="missingReplies > 0" class="mt-2">
                 <div class="link text-sm font-semibold" @click="getReplies()">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
@@ -189,7 +189,7 @@ import SignUpOverlay from "../overlay/SignUpOverlay.vue";
 import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
-  name: "comment-tree",
+  name: "CommentTree",
   props: {
     commentId: {
       type: Number,

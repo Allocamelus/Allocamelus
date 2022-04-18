@@ -3,14 +3,14 @@
     <text-input
       v-model="comment.content"
       name="comment"
-      :watchModel="true"
+      :watch-model="true"
       :check="true"
       :required="true"
-      :minLen="2"
-      :maxLen="4096"
+      :min-len="2"
+      :max-len="4096"
       :placeholder="`Editing...`"
       :regex="/^[^<>\[\]]*$/"
-      :regexMsg="InvalidCharacters"
+      :regex-msg="InvalidCharacters"
       @error="err.comment = $event"
     >
       <div class="mr-1.5 flex items-center">
@@ -51,7 +51,7 @@ import TextInput from "../../form/TextInput.vue";
 import BasicBtn from "../../button/BasicBtn.vue";
 
 export default defineComponent({
-  name: "comment-input",
+  name: "CommentInput",
   props: {
     postId: {
       type: Number,

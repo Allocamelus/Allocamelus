@@ -10,7 +10,7 @@
 <script>
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "input-label",
+  name: "InputLabel",
   props: {
     label: {
       type: String,

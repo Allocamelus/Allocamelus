@@ -10,7 +10,7 @@
           :key="key"
           :index="key"
           :url="url"
-          :totalNumber="images.length"
+          :total-number="images.length"
         >
           <div
             class="absolute hidden h-full w-full flex-col justify-between bg-black bg-opacity-50 p-2 text-white group-hover:flex"
@@ -29,9 +29,9 @@
                 v-model="images[key].alt"
                 :name="`imageAlt${key}`"
                 :check="true"
-                :maxLen="512"
+                :max-len="512"
                 :regex="altRegex"
-                regexMsg="Some Characters will be escaped"
+                regex-msg="Some Characters will be escaped"
                 @error="imageAltErrs[key] = $event"
               ></text-input>
             </div>
@@ -41,13 +41,13 @@
     </div>
     <div class="sticky bottom-3 mt-2 overflow-hidden rounded">
       <div
-        class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
         v-if="editor !== null"
+        class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
       >
-        <div class="mb-1.5" v-if="editor.isActive('link')">
+        <div v-if="editor.isActive('link')" class="mb-1.5">
           <text-input
             v-model="link"
-            :watchModel="true"
+            :watch-model="true"
             type="url"
             name="link"
             placeholder="https://www.allocamelus.com"
@@ -66,40 +66,40 @@
         <div class="flex justify-between">
           <div class="flex items-center">
             <circle-bg
-              @click="editor.chain().focus().toggleBold().run()"
               class="hover:bg-rose-800"
               :class="{
                 'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
               }"
+              @click="editor.chain().focus().toggleBold().run()"
             >
               <RadixFontBold class="h-5 w-5" />
             </circle-bg>
             <circle-bg
-              @click="editor.chain().focus().toggleItalic().run()"
               class="ml-1.5 hover:bg-rose-800"
               :class="{
                 'bg-secondary-700 text-warm-gray-200':
                   editor.isActive('italic'),
               }"
+              @click="editor.chain().focus().toggleItalic().run()"
             >
               <RadixFontItalic class="h-5 w-5" />
             </circle-bg>
             <circle-bg
-              @click="editor.chain().focus().toggleUnderline().run()"
               class="ml-1.5 hover:bg-rose-800"
               :class="{
                 'bg-secondary-700 text-warm-gray-200':
                   editor.isActive('underline'),
               }"
+              @click="editor.chain().focus().toggleUnderline().run()"
             >
               <RadixUnderline class="h-5 w-5" />
             </circle-bg>
             <circle-bg
-              @click="editor.chain().focus().toggleLink().run()"
               class="ml-1.5 hover:bg-rose-800"
               :class="{
                 'bg-secondary-700 text-warm-gray-200': editor.isActive('link'),
               }"
+              @click="editor.chain().focus().toggleLink().run()"
             >
               <RadixLink2 class="h-5 w-5" />
             </circle-bg>
@@ -107,10 +107,10 @@
               <file-input
                 accept="image/png,image/jpeg,image/gif,image/webp"
                 :check="true"
-                :maxSize="10485760 /* 10MB */"
-                :maxFiles="4"
+                :max-size="10485760 /* 10MB */"
+                :max-files="4"
                 :multiple="true"
-                :fileCount="images.length"
+                :file-count="images.length"
                 @filesChange="imagesUpload"
                 @error="onErr"
               >
@@ -121,8 +121,8 @@
           <div class="flex items-center">
             <basic-btn
               class="p-1.5 text-secondary-700 dark:text-rose-600"
-              @click="onPost"
               :disabled="submitted"
+              @click="onPost"
             >
               Post
             </basic-btn>
@@ -130,7 +130,7 @@
         </div>
       </div>
     </div>
-    <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
+    <snackbar v-model="err.show" :close-btn="true">{{ err.msg }}</snackbar>
   </div>
 </template>
 
@@ -196,6 +196,52 @@ export default defineComponent({
       altRegex,
       hasNoText: computed(() => textContent(data.richText).length == 0),
     };
+  },
+  mounted() {
+    this.editor = new Editor({
+      editorProps: {
+        attributes: {
+          class: "text-lg p-1.5 outline-none",
+        },
+      },
+      onUpdate: ({ editor }) => {
+        this.richText = editor.getHTML();
+        console.log("html", editor.getHTML());
+      },
+      onSelectionUpdate: ({ editor }) => {
+        if (editor.isActive("link")) {
+          this.link = editor.getAttributes("link").href;
+        } else {
+          this.link = "";
+        }
+      },
+      extensions: [
+        Bold,
+        Document,
+        History,
+        Italic,
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            class: "link cursor-auto",
+          },
+        }),
+        Paragraph.extend({
+          name: "p",
+        }),
+        Placeholder.configure({
+          emptyEditorClass: "placeholder-empty",
+          placeholder: "The Text...",
+        }),
+        Text,
+        Underline,
+      ],
+    });
+  },
+  beforeUnmount() {
+    if (this.editor !== null) {
+      this.editor.destroy();
+    }
   },
   methods: {
     updateLink() {
@@ -273,52 +319,6 @@ export default defineComponent({
         this.onErr(SomethingWentWrong);
       }
     },
-  },
-  mounted() {
-    this.editor = new Editor({
-      editorProps: {
-        attributes: {
-          class: "text-lg p-1.5 outline-none",
-        },
-      },
-      onUpdate: ({ editor }) => {
-        this.richText = editor.getHTML();
-        console.log("html", editor.getHTML());
-      },
-      onSelectionUpdate: ({ editor }) => {
-        if (editor.isActive("link")) {
-          this.link = editor.getAttributes("link").href;
-        } else {
-          this.link = "";
-        }
-      },
-      extensions: [
-        Bold,
-        Document,
-        History,
-        Italic,
-        Link.configure({
-          openOnClick: false,
-          HTMLAttributes: {
-            class: "link cursor-auto",
-          },
-        }),
-        Paragraph.extend({
-          name: "p",
-        }),
-        Placeholder.configure({
-          emptyEditorClass: "placeholder-empty",
-          placeholder: "The Text...",
-        }),
-        Text,
-        Underline,
-      ],
-    });
-  },
-  beforeUnmount() {
-    if (this.editor !== null) {
-      this.editor.destroy();
-    }
   },
   components: {
     RadixFontBold,

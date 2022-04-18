@@ -72,7 +72,7 @@
             class="mt-3"
             v-html="err.create /* skipcq: JS-0693 */"
           ></div>
-          <form @submit.prevent="onSubmit" ref="form" class="mt-3">
+          <form ref="form" class="mt-3" @submit.prevent="onSubmit">
             <input-label for="email" :err="err.email">Email</input-label>
             <email-input
               v-model="email"
@@ -117,6 +117,7 @@ import {
   HtmlSomethingWentWrong,
 } from "@/components/htmlErrors";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 

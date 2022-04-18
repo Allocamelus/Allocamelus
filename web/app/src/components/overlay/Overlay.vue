@@ -53,7 +53,7 @@ function unblock() {
 }
 
 export default defineComponent({
-  name: "overlay",
+  name: "Overlay",
   props: {
     modelValue: Boolean,
     blockScroll: {
@@ -79,9 +79,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  beforeUnmount() {
-    unblock();
-  },
   watch: {
     modelValue(newValue) {
       this.show = newValue;
@@ -93,6 +90,9 @@ export default defineComponent({
         }
       }
     },
+  },
+  beforeUnmount() {
+    unblock();
   },
   methods: {
     toggleShow() {

@@ -52,7 +52,7 @@
                       >
                         <user-avatar
                           :user="alerts.requests.user(userId)"
-                          :isLink="true"
+                          :is-link="true"
                           class="h-8 w-8"
                         ></user-avatar>
                         <div
@@ -102,8 +102,8 @@
                 <span class="sr-only">Open user menu</span>
                 <user-avatar :user="user" class="h-6 w-6"></user-avatar>
                 <component
-                  v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
+                  v-if="!user.avatar"
                   class="hidden h-4 w-4 md:block"
                 ></component>
               </div>
@@ -133,8 +133,8 @@
               <Overlay
                 v-else
                 v-model="userMenu"
-                :blockScroll="true"
-                :xsFullHeight="true"
+                :block-scroll="true"
+                :xs-full-height="true"
               >
                 <Box
                   class="flex h-full w-full flex-grow flex-col justify-between xs:mx-2 xs:rounded-lg"
@@ -163,7 +163,7 @@
                         <div
                           class="ml-3 flex flex-grow flex-col justify-evenly"
                         >
-                          <user-name :user="user" :isLink="false"></user-name>
+                          <user-name :user="user" :is-link="false"></user-name>
                           <div class="link">View Profile</div>
                         </div>
                       </dropdown-item>
@@ -193,7 +193,7 @@
     </nav>
     <div id="bodyContent" class="mt-nav">
       <router-view :key="viewKey" />
-      <snackbar v-model="snackbar.show" :closeBtn="true">
+      <snackbar v-model="snackbar.show" :close-btn="true">
         {{ snackbar.msg }}
       </snackbar>
     </div>
@@ -256,7 +256,9 @@ export default defineComponent({
       session = useSessionStore();
     const theme = computed(() => state.theme);
     const data = reactive({
-      sesKeepAliveInterval: setInterval(() => {}, SecToMs(MinToSec(10))),
+      sesKeepAliveInterval: setInterval(() => {
+        return;
+      }, SecToMs(MinToSec(10))),
       userMenu: false,
       footer: false,
       alerts: {

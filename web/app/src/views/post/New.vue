@@ -7,7 +7,7 @@
         </div>
         <div class="flex flex-grow flex-col xs:ml-3">
           <h2 class="px-1 text-xl font-medium">New Post</h2>
-          <form @submit.prevent ref="form" class="mt-2">
+          <form ref="form" class="mt-2" @submit.prevent>
             <post-form></post-form>
           </form>
         </div>

@@ -12,8 +12,8 @@
             <user-name
               class="ml-3"
               :user="canEdit ? storeUser : user"
-              :twoLine="true"
-              :isLink="false"
+              :two-line="true"
+              :is-link="false"
             ></user-name>
             <text-small
               v-if="user.type === UNVERIFIED_USER"
@@ -65,7 +65,7 @@
           </box>
         </error-box>
         <post-feed :list="postsList"></post-feed>
-        <snackbar v-model="err.snackbar.show" :closeBtn="true">
+        <snackbar v-model="err.snackbar.show" :close-btn="true">
           {{ err.snackbar.msg }}
         </snackbar>
       </feed>

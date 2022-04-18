@@ -1,18 +1,18 @@
 <template>
   <div class="">
     <input
-      @input="emitter"
+      ref="input"
       type="file"
       :name="name"
       :accept="accept"
       :required="required"
       :disabled="disabled"
       :readonly="readonly"
-      ref="input"
       class="hidden"
-      @change="emitter"
       :multiple="multiple"
       hidden
+      @input="emitter"
+      @change="emitter"
     />
     <div @click="onClick">
       <slot></slot>

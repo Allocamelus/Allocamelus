@@ -28,7 +28,7 @@
       <div v-show="!showCaptcha">
         <h2 class="text-2xl font-medium">Login</h2>
         <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
-        <form @submit.prevent="onSubmit" ref="form" class="form mt-3">
+        <form ref="form" class="form mt-3" @submit.prevent="onSubmit">
           <div>
             <input-label for="name" :err="err.username">Username</input-label>
             <text-input

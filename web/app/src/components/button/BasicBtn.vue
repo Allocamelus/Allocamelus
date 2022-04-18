@@ -16,13 +16,13 @@ import { notNull } from "../../models/responses";
 import ToLink from "../ToLink.vue";
 
 export default defineComponent({
-  components: { ToLink },
-  name: "basic-button",
+  name: "BasicButton",
   props: ["to"],
   setup() {
     return {
       notNull,
     };
   },
+  components: { ToLink },
 });
 </script>

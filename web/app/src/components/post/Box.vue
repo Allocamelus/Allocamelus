@@ -4,7 +4,7 @@
     :class="isLink ? 'cursor-pointer' : ''"
   >
     <div class="flex flex-shrink flex-grow py-3 px-3.5" @click.self="toPost">
-      <user-avatar :user="user" :isLink="true" class="h-11 w-11"></user-avatar>
+      <user-avatar :user="user" :is-link="true" class="h-11 w-11"></user-avatar>
       <div
         class="ml-3 flex flex-grow flex-col"
         :class="post.content?.length == 0 ? 'justify-center' : ''"
@@ -50,17 +50,17 @@
           </dots-dropdown>
         </div>
         <div
-          @click="toPost"
           :class="[
             isLink ? 'cursor-pointer' : '',
             dynamicContent ? ['text-lg', 'sm:text-xl'] : '',
           ]"
+          @click="toPost"
           v-html="purifiedContent /* skipcq: JS-0693 */"
         ></div>
         <div
           v-if="post.media"
-          @click="toPost"
           class="mt-2 flex flex-wrap overflow-hidden rounded-lg"
+          @click="toPost"
         >
           <image-box
             v-for="(media, key) in post.mediaList"
@@ -70,7 +70,7 @@
             :alt="media.meta.alt"
             :width="media.meta.width"
             :height="media.meta.height"
-            :totalNumber="post.mediaList.length"
+            :total-number="post.mediaList.length"
             :rounded="false"
             loading="lazy"
           >
@@ -101,7 +101,7 @@ import { User } from "@/models/user";
 import { Post } from "@/models/post";
 
 export default defineComponent({
-  name: "post-box",
+  name: "PostBox",
   props: {
     post: {
       type: Post,

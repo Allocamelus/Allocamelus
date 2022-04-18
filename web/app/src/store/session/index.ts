@@ -36,11 +36,11 @@ export class Session {
     this.expires = source["expires"] || UnixTime(MinToSec(10));
   }
 }
-export interface State extends Session {}
+export type State = Session;
 
 export const useSessionStore = defineStore(storeName, {
   state: () => {
-    let s = new Session();
+    const s = new Session();
     return {
       loggedIn: useStorageAsync("loggedIn", s.loggedIn, idbStore),
       user: useStorageAsync("user", s.user, idbStore, {
@@ -63,7 +63,7 @@ export const useSessionStore = defineStore(storeName, {
     // Get & Update session status
     async getStatus() {
       // Get auth status from server
-      let s = await status();
+      const s = await status();
 
       // State mismatched reset state
       if (!s.loggedIn && this.loggedIn) {

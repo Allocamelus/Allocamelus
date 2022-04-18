@@ -7,7 +7,7 @@
       :is="checked ? 'radix-checkbox' : 'radix-box'"
       class="h-4 w-4"
     ></component>
-    <input type="checkbox" v-model="checked" :name="name" @click.capture.stop />
+    <input v-model="checked" type="checkbox" :name="name" @click.capture.stop />
     <slot>Checkbox</slot>
   </div>
 </template>

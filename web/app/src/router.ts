@@ -128,7 +128,7 @@ router.beforeResolve((to) => {
       case "Login":
       case "Signup":
       case "Account Verify Email":
-        let rdr = redirectUrl(to.query.r);
+        const rdr = redirectUrl(to.query.r);
         if (rdr === "/") {
           return "/home";
         }

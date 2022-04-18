@@ -12,13 +12,13 @@
 import { defineComponent } from "vue";
 import ToLink from "../ToLink.vue";
 export default defineComponent({
-  components: { ToLink },
-  name: "dropdown-item",
+  name: "DropdownItem",
   props: {
     to: {
       type: String,
       default: "",
     },
   },
+  components: { ToLink },
 });
 </script>

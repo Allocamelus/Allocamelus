@@ -1,15 +1,15 @@
 <template>
   <text-input
     v-model="password"
-    :watchModel="watchModel"
+    :watch-model="watchModel"
     :check="checkC"
-    @input="emitter"
-    @error="$emit('error', $event)"
     :type="show ? 'text' : 'password'"
     name="password"
-    :minLen="minLenC"
-    :maxLen="maxLenC"
+    :min-len="minLenC"
+    :max-len="maxLenC"
     :required="required"
+    @input="emitter"
+    @error="$emit('error', $event)"
   >
     <div class="mr-1.5 flex items-center">
       <div
@@ -28,9 +28,9 @@
         class="cursor-pointer text-secondary-600 hover:text-secondary-700"
       >
         <component
+          :is="show ? 'EyeOffIcon' : 'EyeIcon'"
           class="w5 h-5"
           @click="togglePass"
-          :is="show ? 'EyeOffIcon' : 'EyeIcon'"
         ></component>
       </div>
     </div>
@@ -45,7 +45,7 @@ import EyeIcon from "@heroicons/vue/solid/EyeIcon";
 import EyeOffIcon from "@heroicons/vue/solid/EyeOffIcon";
 
 export default defineComponent({
-  name: "password-input",
+  name: "PasswordInput",
   props: {
     modelValue: {
       type: String,
@@ -86,28 +86,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  watch: {
-    password() {
-      if (this.check) {
-        this.debouncedCheck();
-      }
-    },
-    modelValue(newValue) {
-      if (this.watchModel) {
-        this.password = newValue;
-      }
-    },
-  },
-  created() {
-    this.password = this.modelValue;
-    if (this.check) {
-      import("zxcvbn").then((zxcvbn) => {
-        this.zxcvbn = zxcvbn.default;
-      });
-
-      this.debouncedCheck = debounce(200, true, this.scoreDeb);
-    }
-  },
   computed: {
     checkC() {
       if (this.required) {
@@ -141,6 +119,28 @@ export default defineComponent({
       }
       return "";
     },
+  },
+  watch: {
+    password() {
+      if (this.check) {
+        this.debouncedCheck();
+      }
+    },
+    modelValue(newValue) {
+      if (this.watchModel) {
+        this.password = newValue;
+      }
+    },
+  },
+  created() {
+    this.password = this.modelValue;
+    if (this.check) {
+      import("zxcvbn").then((zxcvbn) => {
+        this.zxcvbn = zxcvbn.default;
+      });
+
+      this.debouncedCheck = debounce(200, true, this.scoreDeb);
+    }
   },
   methods: {
     scoreDeb() {

@@ -44,9 +44,9 @@ export function encrypt(
   message: Uint8Array
 ): Promise<Uint8Array> {
   return new Promise(async (resolve) => {
-    let iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
-    let cipherText = new Uint8Array(
+    const cipherText = new Uint8Array(
       await window.crypto.subtle.encrypt(
         {
           name: "AES-GCM",
@@ -57,7 +57,7 @@ export function encrypt(
       )
     );
 
-    let cipher = new Uint8Array(iv.length + cipherText.length);
+    const cipher = new Uint8Array(iv.length + cipherText.length);
     cipher.set(iv, 0);
     cipher.set(cipherText, iv.length);
 
@@ -71,9 +71,9 @@ export function decrypt(
   cipherText: Uint8Array
 ): Promise<Uint8Array> {
   return new Promise(async (resolve) => {
-    let iv = cipherText.slice(0, 12);
+    const iv = cipherText.slice(0, 12);
 
-    let plainText = new Uint8Array(
+    const plainText = new Uint8Array(
       await window.crypto.subtle.decrypt(
         {
           name: "AES-GCM",

@@ -12,13 +12,13 @@
 import { defineComponent } from "vue";
 import ToLink from "../ToLink.vue";
 export default defineComponent({
-  components: { ToLink },
-  name: "small-button",
+  name: "SmallButton",
   props: {
     to: {
       type: String,
       default: "",
     },
   },
+  components: { ToLink },
 });
 </script>

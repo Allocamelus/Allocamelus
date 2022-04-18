@@ -2,19 +2,19 @@
   <div>
     <input-label for="comment" class="flex" :err="err.comment">
       {{ theType }}ing as
-      <user-name :user="storeUser" :isLink="true" :noName="true"></user-name>
+      <user-name :user="storeUser" :is-link="true" :no-name="true"></user-name>
     </input-label>
     <text-input
       v-model="comment"
       name="comment"
-      :watchModel="true"
+      :watch-model="true"
       :check="true"
       :required="true"
-      :minLen="2"
-      :maxLen="4096"
+      :min-len="2"
+      :max-len="4096"
       :placeholder="`Post a ${theType}`"
       :regex="/^[^<>\[\]]*$/"
-      :regexMsg="InvalidCharacters"
+      :regex-msg="InvalidCharacters"
       @error="err.comment = $event"
     >
       <div class="mr-1.5 flex items-center">
@@ -47,7 +47,7 @@ import BasicBtn from "../../button/BasicBtn.vue";
 import UserName from "../../user/Name.vue";
 
 export default defineComponent({
-  name: "comment-input",
+  name: "CommentInput",
   props: {
     postId: {
       type: String,
