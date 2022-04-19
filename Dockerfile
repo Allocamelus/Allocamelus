@@ -1,4 +1,7 @@
-FROM golang:latest AS builderGo
+FROM golang:alpine AS builderGo
+RUN apk --no-cache -U upgrade && \
+    apk --no-cache add --upgrade make build-base 
+RUN apk --no-cache add --upgrade vips-dev
 WORKDIR /go/src/github.com/allocamelus/allocamelus
 COPY go.* ./
 RUN go mod download
@@ -20,14 +23,14 @@ COPY ./web/app/ ./
 RUN ["yarn", "build"]
 
 # Docker build
-FROM ubuntu:latest
-ARG DEBIAN_FRONTEND=noninteractive
+FROM alpine:latest
 
-RUN apt-get update -y \
-    && apt-get install -y ca-certificates wget \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apk --no-cache -U upgrade \
+    && apk --no-cache add --upgrade ca-certificates \
     && wget -O /bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 \
     && chmod +x /bin/dumb-init
+
+RUN apk --no-cache add --upgrade libjpeg-turbo vips libpng libwebp orc
 
 COPY --from=builderGo /go/src/github.com/allocamelus/allocamelus/cmd/allocamelus/allocamelus /bin/allocamelus
 WORKDIR /etc/allocamelus/
