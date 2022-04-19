@@ -6,7 +6,6 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220407094043-a94812496cf5 // indirect
 	github.com/ProtonMail/gopenpgp/v2 v2.4.6
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/discord/lilliput v0.0.0-20210720001558-e1547514bd5f
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
@@ -33,6 +32,8 @@ require (
 	k8s.io/klog/v2 v2.60.1
 )
 
+require github.com/davidbyttow/govips/v2 v2.11.0
+
 require (
 	github.com/ProtonMail/go-mime v0.0.0-20220302105931-303f85f7fe0f // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
@@ -48,4 +49,5 @@ require (
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
 )

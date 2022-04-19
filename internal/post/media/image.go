@@ -10,8 +10,7 @@ import (
 )
 
 const (
-	MaxHightWidth int = 8192
-	SubPath           = "posts/images"
+	SubPath = "posts/images"
 )
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
@@ -30,22 +29,6 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
-		width, height := img.WH()
-		if err != nil {
-			return err
-		}
-		var newWidth, newHeight int
-		if width > MaxHightWidth || height > MaxHightWidth {
-			newWidth, newHeight = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
-			if err != nil {
-				return err
-			}
-		} else {
-			newWidth = width
-			newHeight = height
-		}
-		img.Resize(newWidth, newHeight)
-
 		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, false))))
 
 		err = img.WriteToPath(fileImagePath)

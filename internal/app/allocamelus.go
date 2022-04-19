@@ -12,6 +12,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/allocamelus/allocamelus/internal/router/routes"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
@@ -53,6 +54,8 @@ func New(configPath string) *Allocamelus {
 
 	routes.Register(app)
 
+	vips.Startup(nil)
+
 	return &Allocamelus{
 		Fiber: app,
 	}
@@ -66,6 +69,8 @@ func (c *Allocamelus) AwaitAndClose(serverClosed chan struct{}) {
 
 	log.Println("Shutting down Fiber")
 	logger.Error(c.Fiber.Shutdown())
+	log.Println("Shutting down vips")
+	vips.Shutdown()
 	log.Println("Flushing klog")
 	klog.Flush()
 
