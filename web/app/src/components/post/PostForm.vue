@@ -206,7 +206,6 @@ export default defineComponent({
       },
       onUpdate: ({ editor }) => {
         this.richText = editor.getHTML();
-        console.log("html", editor.getHTML());
       },
       onSelectionUpdate: ({ editor }) => {
         if (editor.isActive("link")) {
@@ -249,7 +248,6 @@ export default defineComponent({
         return;
       }
       let newLink = this.link;
-      console.log(newLink);
 
       if (newLink == "") {
         this.editor.chain().focus().extendMarkRange("link").unsetLink().run();
