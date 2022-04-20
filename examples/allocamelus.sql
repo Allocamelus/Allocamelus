@@ -35,17 +35,28 @@ CREATE TABLE `PostComments` (
 CREATE TABLE `PostMedia` (
   `postMediaId` bigint(20) NOT NULL AUTO_INCREMENT,
   `postId` bigint(20) NOT NULL,
-  `created` int(11) NOT NULL COMMENT 'Time',
+  `added` int(11) NOT NULL COMMENT 'Time',
   `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Bool',
-  `fileType` int(11) NOT NULL,
-  `meta` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `hash` varchar(128) NOT NULL,
+  `alt` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `postMediaFileId` bigint(20) NOT NULL DEFAULT 1,
   PRIMARY KEY (`postMediaId`),
   KEY `postId` (`postId`),
   KEY `active` (`active`),
-  KEY `hash` (`hash`),
-  KEY `fileType` (`fileType`),
-  CONSTRAINT `PostMedia_ibfk_7` FOREIGN KEY (`postId`) REFERENCES `Posts` (`postId`)
+  KEY `postMediaFileId` (`postMediaFileId`),
+  CONSTRAINT `PostMedia_ibfk_7` FOREIGN KEY (`postId`) REFERENCES `Posts` (`postId`),
+  CONSTRAINT `PostMedia_ibfk_8` FOREIGN KEY (`postMediaFileId`) REFERENCES `PostMediaFiles` (`postMediaFileId`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+CREATE TABLE `PostMediaFiles` (
+  `postMediaFileId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created` int(11) NOT NULL COMMENT 'Time',
+  `fileType` int(11) NOT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `hash` varchar(128) NOT NULL,
+  `newHash` varchar(128) NOT NULL COMMENT 'Hash after imagedit',
+  PRIMARY KEY (`postMediaFileId`),
+  UNIQUE KEY `hash` (`hash`),
+  UNIQUE KEY `newHash` (`newHash`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 CREATE TABLE `Posts` (
   `postId` bigint(20) NOT NULL AUTO_INCREMENT,
