@@ -10,7 +10,7 @@ COPY ./pkg/ ./pkg/
 COPY ./Makefile ./Makefile
 COPY ./web/template/ ./web/template/
 COPY ./internal/ ./internal/
-RUN --mount=type=cache,target=/root/.cache/go-build make build-go
+RUN --mount=type=cache,target=/root/.cache/go-build make build-go-alpine
 
 FROM node:alpine AS builderNode
 WORKDIR /usr/src/allocamelus

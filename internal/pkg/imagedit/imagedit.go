@@ -63,8 +63,12 @@ func (img *Image) BlobToImg(blob []byte) (err error) {
 	return
 }
 
-func (img *Image) WriteToPath(imagePath string) (err error) {
+func (img *Image) Export() ([]byte, error) {
+	var err error
 	var outputImg []byte
+
+	img.Fix()
+
 	switch img.options.FileType {
 	case fileutil.GIF:
 		ep := vips.NewGifExportParams()
@@ -88,16 +92,21 @@ func (img *Image) WriteToPath(imagePath string) (err error) {
 		outputImg, _, err = img.img.ExportWebp(ep)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
-
 	if outputImg == nil {
-		err = ErrNilOutput
-		return
+		return nil, ErrNilOutput
 	}
 
-	err = ioutil.WriteFile(imagePath, outputImg, 0644)
-	return
+	return outputImg, nil
+}
+
+func (img *Image) WriteToPath(imagePath string) error {
+	outputImg, err := img.Export()
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(imagePath, outputImg, 0644)
 }
 
 func (img *Image) Close() {

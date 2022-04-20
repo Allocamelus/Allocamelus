@@ -26,10 +26,14 @@ func MPHtoImg(fileHead *multipart.FileHeader) (img *Image, b58hash string, err e
 		return
 	}
 
-	rawHash := blake2b.Sum384(imageBytes)
-	b58hash = base58.Encode(rawHash[:])
+	b58hash = HashEncode(imageBytes)
 
 	return
+}
+
+func HashEncode(bytes []byte) string {
+	rawHash := blake2b.Sum384(bytes)
+	return base58.Encode(rawHash[:])
 }
 
 // transformPages apply modifier to page(s)
