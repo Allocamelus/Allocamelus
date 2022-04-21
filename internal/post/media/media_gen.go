@@ -33,43 +33,55 @@ func (z *Media) DecodeMsg(dc *msgp.Reader) (err error) {
 				return
 			}
 		case "meta":
-			var zb0002 uint32
-			zb0002, err = dc.ReadMapHeader()
-			if err != nil {
-				err = msgp.WrapError(err, "Meta")
-				return
-			}
-			for zb0002 > 0 {
-				zb0002--
-				field, err = dc.ReadMapKeyPtr()
+			if dc.IsNil() {
+				err = dc.ReadNil()
 				if err != nil {
 					err = msgp.WrapError(err, "Meta")
 					return
 				}
-				switch msgp.UnsafeString(field) {
-				case "alt":
-					z.Meta.Alt, err = dc.ReadString()
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Alt")
-						return
-					}
-				case "width":
-					z.Meta.Width, err = dc.ReadInt64()
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Width")
-						return
-					}
-				case "height":
-					z.Meta.Height, err = dc.ReadInt64()
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Height")
-						return
-					}
-				default:
-					err = dc.Skip()
+				z.Meta = nil
+			} else {
+				if z.Meta == nil {
+					z.Meta = new(Meta)
+				}
+				var zb0002 uint32
+				zb0002, err = dc.ReadMapHeader()
+				if err != nil {
+					err = msgp.WrapError(err, "Meta")
+					return
+				}
+				for zb0002 > 0 {
+					zb0002--
+					field, err = dc.ReadMapKeyPtr()
 					if err != nil {
 						err = msgp.WrapError(err, "Meta")
 						return
+					}
+					switch msgp.UnsafeString(field) {
+					case "alt":
+						z.Meta.Alt, err = dc.ReadString()
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Alt")
+							return
+						}
+					case "width":
+						z.Meta.Width, err = dc.ReadInt64()
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Width")
+							return
+						}
+					case "height":
+						z.Meta.Height, err = dc.ReadInt64()
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Height")
+							return
+						}
+					default:
+						err = dc.Skip()
+						if err != nil {
+							err = msgp.WrapError(err, "Meta")
+							return
+						}
 					}
 				}
 			}
@@ -108,36 +120,43 @@ func (z *Media) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	// map header, size 3
-	// write "alt"
-	err = en.Append(0x83, 0xa3, 0x61, 0x6c, 0x74)
-	if err != nil {
-		return
-	}
-	err = en.WriteString(z.Meta.Alt)
-	if err != nil {
-		err = msgp.WrapError(err, "Meta", "Alt")
-		return
-	}
-	// write "width"
-	err = en.Append(0xa5, 0x77, 0x69, 0x64, 0x74, 0x68)
-	if err != nil {
-		return
-	}
-	err = en.WriteInt64(z.Meta.Width)
-	if err != nil {
-		err = msgp.WrapError(err, "Meta", "Width")
-		return
-	}
-	// write "height"
-	err = en.Append(0xa6, 0x68, 0x65, 0x69, 0x67, 0x68, 0x74)
-	if err != nil {
-		return
-	}
-	err = en.WriteInt64(z.Meta.Height)
-	if err != nil {
-		err = msgp.WrapError(err, "Meta", "Height")
-		return
+	if z.Meta == nil {
+		err = en.WriteNil()
+		if err != nil {
+			return
+		}
+	} else {
+		// map header, size 3
+		// write "alt"
+		err = en.Append(0x83, 0xa3, 0x61, 0x6c, 0x74)
+		if err != nil {
+			return
+		}
+		err = en.WriteString(z.Meta.Alt)
+		if err != nil {
+			err = msgp.WrapError(err, "Meta", "Alt")
+			return
+		}
+		// write "width"
+		err = en.Append(0xa5, 0x77, 0x69, 0x64, 0x74, 0x68)
+		if err != nil {
+			return
+		}
+		err = en.WriteInt64(z.Meta.Width)
+		if err != nil {
+			err = msgp.WrapError(err, "Meta", "Width")
+			return
+		}
+		// write "height"
+		err = en.Append(0xa6, 0x68, 0x65, 0x69, 0x67, 0x68, 0x74)
+		if err != nil {
+			return
+		}
+		err = en.WriteInt64(z.Meta.Height)
+		if err != nil {
+			err = msgp.WrapError(err, "Meta", "Height")
+			return
+		}
 	}
 	// write "url"
 	err = en.Append(0xa3, 0x75, 0x72, 0x6c)
@@ -165,16 +184,20 @@ func (z *Media) MarshalMsg(b []byte) (o []byte, err error) {
 	}
 	// string "meta"
 	o = append(o, 0xa4, 0x6d, 0x65, 0x74, 0x61)
-	// map header, size 3
-	// string "alt"
-	o = append(o, 0x83, 0xa3, 0x61, 0x6c, 0x74)
-	o = msgp.AppendString(o, z.Meta.Alt)
-	// string "width"
-	o = append(o, 0xa5, 0x77, 0x69, 0x64, 0x74, 0x68)
-	o = msgp.AppendInt64(o, z.Meta.Width)
-	// string "height"
-	o = append(o, 0xa6, 0x68, 0x65, 0x69, 0x67, 0x68, 0x74)
-	o = msgp.AppendInt64(o, z.Meta.Height)
+	if z.Meta == nil {
+		o = msgp.AppendNil(o)
+	} else {
+		// map header, size 3
+		// string "alt"
+		o = append(o, 0x83, 0xa3, 0x61, 0x6c, 0x74)
+		o = msgp.AppendString(o, z.Meta.Alt)
+		// string "width"
+		o = append(o, 0xa5, 0x77, 0x69, 0x64, 0x74, 0x68)
+		o = msgp.AppendInt64(o, z.Meta.Width)
+		// string "height"
+		o = append(o, 0xa6, 0x68, 0x65, 0x69, 0x67, 0x68, 0x74)
+		o = msgp.AppendInt64(o, z.Meta.Height)
+	}
 	// string "url"
 	o = append(o, 0xa3, 0x75, 0x72, 0x6c)
 	o = msgp.AppendString(o, z.Url)
@@ -206,43 +229,54 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				return
 			}
 		case "meta":
-			var zb0002 uint32
-			zb0002, bts, err = msgp.ReadMapHeaderBytes(bts)
-			if err != nil {
-				err = msgp.WrapError(err, "Meta")
-				return
-			}
-			for zb0002 > 0 {
-				zb0002--
-				field, bts, err = msgp.ReadMapKeyZC(bts)
+			if msgp.IsNil(bts) {
+				bts, err = msgp.ReadNilBytes(bts)
+				if err != nil {
+					return
+				}
+				z.Meta = nil
+			} else {
+				if z.Meta == nil {
+					z.Meta = new(Meta)
+				}
+				var zb0002 uint32
+				zb0002, bts, err = msgp.ReadMapHeaderBytes(bts)
 				if err != nil {
 					err = msgp.WrapError(err, "Meta")
 					return
 				}
-				switch msgp.UnsafeString(field) {
-				case "alt":
-					z.Meta.Alt, bts, err = msgp.ReadStringBytes(bts)
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Alt")
-						return
-					}
-				case "width":
-					z.Meta.Width, bts, err = msgp.ReadInt64Bytes(bts)
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Width")
-						return
-					}
-				case "height":
-					z.Meta.Height, bts, err = msgp.ReadInt64Bytes(bts)
-					if err != nil {
-						err = msgp.WrapError(err, "Meta", "Height")
-						return
-					}
-				default:
-					bts, err = msgp.Skip(bts)
+				for zb0002 > 0 {
+					zb0002--
+					field, bts, err = msgp.ReadMapKeyZC(bts)
 					if err != nil {
 						err = msgp.WrapError(err, "Meta")
 						return
+					}
+					switch msgp.UnsafeString(field) {
+					case "alt":
+						z.Meta.Alt, bts, err = msgp.ReadStringBytes(bts)
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Alt")
+							return
+						}
+					case "width":
+						z.Meta.Width, bts, err = msgp.ReadInt64Bytes(bts)
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Width")
+							return
+						}
+					case "height":
+						z.Meta.Height, bts, err = msgp.ReadInt64Bytes(bts)
+						if err != nil {
+							err = msgp.WrapError(err, "Meta", "Height")
+							return
+						}
+					default:
+						bts, err = msgp.Skip(bts)
+						if err != nil {
+							err = msgp.WrapError(err, "Meta")
+							return
+						}
 					}
 				}
 			}
@@ -266,7 +300,13 @@ func (z *Media) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Media) Msgsize() (s int) {
-	s = 1 + 9 + z.FileType.Msgsize() + 5 + 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size + 4 + msgp.StringPrefixSize + len(z.Url)
+	s = 1 + 9 + z.FileType.Msgsize() + 5
+	if z.Meta == nil {
+		s += msgp.NilSize
+	} else {
+		s += 1 + 4 + msgp.StringPrefixSize + len(z.Meta.Alt) + 6 + msgp.Int64Size + 7 + msgp.Int64Size
+	}
+	s += 4 + msgp.StringPrefixSize + len(z.Url)
 	return
 }
 

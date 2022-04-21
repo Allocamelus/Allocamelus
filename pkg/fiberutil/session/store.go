@@ -61,7 +61,7 @@ type Store struct {
 // New Store w/ value checking
 //
 // TODO: finish checking for all values
-func New(store Store) *Store {
+func New(store *Store) *Store {
 	// Min key length check
 	if store.Key.Length < 16 {
 		// No or Zero key length set
@@ -81,7 +81,7 @@ func New(store Store) *Store {
 		// Use default key generator
 		store.Key.Generator = random.StringBase64
 	}
-	return &store
+	return store
 }
 
 // Get session from store if no session is found

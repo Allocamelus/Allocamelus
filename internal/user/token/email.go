@@ -55,5 +55,5 @@ func (t *Token) SendEmail(emailAddress string) error {
 		Subject: subject,
 		Body:    mailBody,
 	}
-	return mail.Send(g.Config.Mail)
+	return mail.Send(&g.Config.Mail)
 }

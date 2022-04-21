@@ -8,7 +8,7 @@ import (
 
 // NewSessionStore initializes the Session handler
 func (d *Data) NewSessionStore() *session.Store {
-	return session.New(session.Store{
+	return session.New(&session.Store{
 		MaxLife:    d.Config.Session.Duration.MaxLife,
 		Expiration: d.Config.Session.Duration.Expiration,
 		Cookie: session.Cookie{
