@@ -2,6 +2,8 @@ version = 1
 
 test_patterns = ["**/*_test.go"]
 
+exclude_patterns = ["**/*_gen.go"]
+
 [[analyzers]]
 name = "go"
 enabled = true
