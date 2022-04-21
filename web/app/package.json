@@ -5,8 +5,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "serve": "vite preview --host",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.vue,.html .",
-    "lint:fix": "eslint --ignore-path .gitignore --ext .js,.ts,.vue,.html --fix .",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.vue .",
+    "lint:fix": "eslint --ignore-path .gitignore --ext .js,.ts,.vue --fix .",
     "lint:prettier": "prettier --write ."
   },
   "dependencies": {

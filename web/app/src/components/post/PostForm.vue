@@ -111,7 +111,7 @@
                 :max-files="4"
                 :multiple="true"
                 :file-count="images.length"
-                @filesChange="imagesUpload"
+                @files-change="imagesUpload"
                 @error="onErr"
               >
                 <radix-image class="h-5 w-5" />
@@ -174,7 +174,7 @@ const turndownService = new Turndown().keep("u");
 
 export default defineComponent({
   setup() {
-    const altRegex = /^[^<>\[\]"&]*$/u;
+    const altRegex = /^[^<>[\]"&]*$/u;
 
     const data = reactive({
       editor: null as Editor | null,

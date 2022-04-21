@@ -31,35 +31,27 @@ export function genKey(name: string, passphrase: string): Promise<pgpKey> {
   });
 }
 
-export function decryptKey(
+export async function decryptKey(
   key: string,
   passphrase: string
 ): Promise<PrivateKey> {
-  return new Promise(async (resolve) => {
-    resolve(
-      await decryptPrivateKey({
-        privateKey: await readPrivateKey({ armoredKey: key }),
-        passphrase,
-      })
-    );
-    return;
+  return await decryptPrivateKey({
+    privateKey: await readPrivateKey({ armoredKey: key }),
+    passphrase,
   });
 }
 
-export function encryptKey(
+export async function encryptKey(
   key: PrivateKey,
   name: string,
   passphrase: string
 ): Promise<string> {
-  return new Promise(async (resolve) => {
-    const armoredKey = await reformatKey({
-      privateKey: key,
-      userIDs: [{ name: name }],
-      passphrase,
-      format: "armored",
-    });
-
-    resolve(armoredKey.privateKey);
-    return;
+  const armoredKey = await reformatKey({
+    privateKey: key,
+    userIDs: [{ name: name }],
+    passphrase,
+    format: "armored",
   });
+
+  return armoredKey.privateKey;
 }

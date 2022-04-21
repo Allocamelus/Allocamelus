@@ -10,11 +10,11 @@
             :theme="captcha.theme"
             @rendered="captcha.loaded = true"
             @verify="
-            (token: string) => {
-              captcha.token = token;
-              onSubmit();
-            }
-          "
+              (token: string) => {
+                captcha.token = token;
+                onSubmit();
+              }
+            "
             @expired="captcha.token = ''"
           ></vue-hcaptcha>
         </div>
@@ -27,7 +27,27 @@
       </div>
       <div v-show="!showCaptcha">
         <h2 class="text-2xl font-medium">Login</h2>
-        <div v-if="err.login.length > 0" class="mt-3" v-html="err.login"></div>
+        <html-errors
+          v-if="err.login.length > 0"
+          class="mt-3"
+          :error="err.login"
+        >
+          <div v-if="err.loginType !== ''">
+            <div v-if="err.loginType === 'Email'">
+              Don't see the verification email?
+              <to-link class="link" to="/account/verify-email"
+                >Resend It</to-link
+              >
+            </div>
+            <div v-else>
+              Forgot your password?
+              <to-link to="/account/reset_password" class="link"
+                >Click Here</to-link
+              >
+              to reset it.
+            </div>
+          </div>
+        </html-errors>
         <form ref="form" class="form mt-3" @submit.prevent="onSubmit">
           <div>
             <input-label for="name" :err="err.username">Username</input-label>
@@ -37,7 +57,8 @@
               :check="true"
               :required="true"
               @error="err.username = $event"
-            ></text-input>
+            >
+            </text-input>
           </div>
           <div class="mt-3">
             <input-label for="password" :err="err.password"
@@ -88,28 +109,22 @@ import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
 import ToLink from "@/components/ToLink.vue";
 import BarLoader from "@/components/overlay/BarLoader.vue";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
 import { auth } from "@/api/account/auth";
 import ApiResp from "@/models/responses";
-import {
-  htmlErrBuilder,
-  HtmlSomethingWentWrong,
-  HtmlLoadingCaptcha,
-} from "@/components/htmlErrors";
 import { salt as getSalt } from "@/api/account/salt";
-import { hashSalt, parse } from "@/pkg/crypto/argon2id";
 import { getKeys } from "@/pkg/crypto/userKeys";
+import { NullError } from "@/models/Error";
+import HtmlErrors, {
+  LoadingCaptcha,
+  SomethingWentWrong,
+} from "@/components/HtmlErrors.vue";
 
-const HtmlInvalidUsernamePassword = htmlErrBuilder(
-    `Invalid Username/Email or Password`,
-    `Forgot your password? <a href="/account/reset_password" class="link">Click Here</a> to reset it.`
-  ),
-  HtmlUnverifiedEmail = htmlErrBuilder(
-    `Please verify your email to login`,
-    `Don't see the verification email? <a class="link" href="/account/verify-email">Resend It</a>`
-  );
+const HtmlInvalidUsernamePassword = [`Invalid Username/Email or Password`],
+  HtmlUnverifiedEmail = [`Please verify your email to login`];
 
 export default defineComponent({
   props: {
@@ -123,7 +138,8 @@ export default defineComponent({
     const session = useSessionStore();
     const data = reactive({
       err: {
-        login: "",
+        login: "" as string | string[],
+        loginType: "" as "" | "Email" | "UsernamePassword",
         username: "",
         password: "",
       },
@@ -132,6 +148,7 @@ export default defineComponent({
       keys: {
         authKey: "",
         pgpPassphrase: "",
+        err: null as NullError<any>,
       },
       remember: false,
       captcha: {
@@ -181,6 +198,9 @@ export default defineComponent({
         }
 
         this.keys = await getKeys(this.password, salt.salt);
+        if (this.keys.err !== null) {
+          return this.handleErr(String(this.keys.err));
+        }
       }
 
       auth({
@@ -209,28 +229,31 @@ export default defineComponent({
     handleErr(err?: string, captcha?: string) {
       this.loading = false;
       this.captcha.show = false;
+      this.err.loginType = "";
 
       switch (err) {
         case ApiResp.Account.Auth.InvalidUsernamePassword:
           this.resetSensitive();
           this.err.login = HtmlInvalidUsernamePassword;
+          this.err.loginType = "UsernamePassword";
           return;
         case ApiResp.Account.Auth.UnverifiedEmail:
           this.resetSensitive();
           this.err.login = HtmlUnverifiedEmail;
+          this.err.loginType = "Email";
           return;
         case ApiResp.Shared.InvalidCaptcha:
           if (captcha == undefined) {
-            this.err.login = HtmlSomethingWentWrong;
+            this.err.login = SomethingWentWrong;
             throw new Error("login: Error missing captcha siteKey");
           }
           this.captcha.show = true;
           this.captcha.siteKey = captcha;
-          this.err.login = HtmlLoadingCaptcha;
+          this.err.login = LoadingCaptcha;
           return;
         default:
           this.resetSensitive();
-          this.err.login = HtmlSomethingWentWrong;
+          this.err.login = SomethingWentWrong;
           throw new Error(err);
       }
     },
@@ -250,6 +273,7 @@ export default defineComponent({
     VueHcaptcha,
     ToLink,
     BarLoader,
+    HtmlErrors,
   },
 });
 </script>

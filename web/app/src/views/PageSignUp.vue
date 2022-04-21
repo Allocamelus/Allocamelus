@@ -28,11 +28,11 @@
       <div v-show="!showCaptcha">
         <div v-show="showForm">
           <h2 class="text-2xl font-medium">Sign Up</h2>
-          <div
+          <html-errors
             v-if="err.signUp.length > 0"
             class="mt-3"
-            v-html="err.signUp"
-          ></div>
+            :error="err.signUp"
+          ></html-errors>
           <form ref="form" class="form mt-3" @submit.prevent="onSubmit">
             <div>
               <input-label for="name" :err="err.userName">Username</input-label>
@@ -135,7 +135,12 @@ import InputCopy from "@/components/form/InputCopy.vue";
 import EmailInput from "@/components/form/EmailInput.vue";
 import BarLoader from "@/components/overlay/BarLoader.vue";
 import ToLink from "@/components/ToLink.vue";
+import HtmlErrors, {
+  LoadingCaptcha,
+  SomethingWentWrong,
+} from "@/components/HtmlErrors.vue";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import VueHcaptcha from "@hcaptcha/vue3-hcaptcha";
 
@@ -144,10 +149,6 @@ import { genKeys } from "@/pkg/crypto/userKeys";
 import { create as createAccount } from "@/api/account/create";
 import ApiResp, { RespToError } from "@/models/responses";
 import { siteKeys } from "@/api/meta/captcha/siteKeys";
-import {
-  HtmlSomethingWentWrong,
-  HtmlLoadingCaptcha,
-} from "@/components/htmlErrors";
 
 export default defineComponent({
   props: {
@@ -223,6 +224,13 @@ export default defineComponent({
       this.captcha.show = false;
 
       let keys = await genKeys(this.userName, this.password);
+      if (keys.err !== null) {
+        this.loading = false;
+        this.captcha.show = false;
+        this.err.signUp = SomethingWentWrong;
+        throw new Error(String(keys.err));
+      }
+
       let userKey = keys.userKey;
       this.recoveryKey = keys.recoveryKey;
 
@@ -254,7 +262,7 @@ export default defineComponent({
                     case ApiResp.Shared.InvalidCaptcha:
                       this.loading = true;
                       this.captcha.siteKey = "";
-                      this.err.signUp = HtmlLoadingCaptcha;
+                      this.err.signUp = LoadingCaptcha;
                       siteKeys().then((sk) => {
                         this.captcha.siteKey = sk.siteKey(
                           sk.difficulties.user.create
@@ -265,7 +273,7 @@ export default defineComponent({
                       this.err.signUp = "";
                       return;
                     default:
-                      this.err.signUp = HtmlSomethingWentWrong;
+                      this.err.signUp = SomethingWentWrong;
                       return;
                   }
                 });
@@ -287,7 +295,7 @@ export default defineComponent({
                 }
               }
             } else {
-              this.err.signUp = HtmlSomethingWentWrong;
+              this.err.signUp = SomethingWentWrong;
             }
           } else {
             this.captcha.show = false;
@@ -297,7 +305,7 @@ export default defineComponent({
         .catch(() => {
           this.loading = false;
           this.captcha.show = false;
-          this.err.signUp = HtmlSomethingWentWrong;
+          this.err.signUp = SomethingWentWrong;
         });
     },
   },
@@ -314,6 +322,7 @@ export default defineComponent({
     ToLink,
     EmailInput,
     BarLoader,
+    HtmlErrors,
   },
 });
 </script>

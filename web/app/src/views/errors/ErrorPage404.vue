@@ -1,16 +1,15 @@
 <template>
   <div class="container py-5">
-    <box
-      class="mx-auto max-w-prose rounded-xl py-3 px-4"
-      v-html="errorHtml"
-    ></box>
+    <box class="mx-auto max-w-prose rounded-xl py-3 px-4">
+      <html-errors :error="404"></html-errors>
+    </box>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import Box from "../../components/box/Box.vue";
-import { Html404Func } from "../../components/htmlErrors";
+import HtmlErrors from "@/components/HtmlErrors.vue";
 
 export default defineComponent({
   setup() {
@@ -18,11 +17,6 @@ export default defineComponent({
       import.meta.env.VITE_SITE_NAME
     }`;
   },
-  computed: {
-    errorHtml() {
-      return Html404Func(this.$route.fullPath);
-    },
-  },
-  components: { Box },
+  components: { Box, HtmlErrors },
 });
 </script>

@@ -1,90 +1,71 @@
-export function newKey(length?: number): Promise<CryptoKey> {
-  return new Promise(async (resolve) => {
-    if (
-      length === undefined ||
-      (length != 128 && length != 192 && length != 256)
-    ) {
-      length = 256;
-    }
-    resolve(
-      await window.crypto.subtle.generateKey(
-        {
-          name: "AES-GCM",
-          length: length,
-        },
-        true,
-        ["encrypt", "decrypt"]
-      )
-    );
-    return;
-  });
+export async function newKey(length?: number): Promise<CryptoKey> {
+  if (
+    length === undefined ||
+    (length != 128 && length != 192 && length != 256)
+  ) {
+    length = 256;
+  }
+  return await window.crypto.subtle.generateKey(
+    {
+      name: "AES-GCM",
+      length: length,
+    },
+    true,
+    ["encrypt", "decrypt"]
+  );
 }
 
-export function exportKey(key: CryptoKey): Promise<Uint8Array> {
-  return new Promise(async (resolve) => {
-    resolve(new Uint8Array(await window.crypto.subtle.exportKey("raw", key)));
-    return;
-  });
+export async function exportKey(key: CryptoKey): Promise<Uint8Array> {
+  return new Uint8Array(await window.crypto.subtle.exportKey("raw", key));
 }
 
-export function importKey(key: ArrayBuffer): Promise<CryptoKey> {
-  return new Promise(async (resolve) => {
-    resolve(
-      await window.crypto.subtle.importKey("raw", key, "AES-GCM", true, [
-        "encrypt",
-        "decrypt",
-      ])
-    );
-    return;
-  });
+export async function importKey(key: ArrayBuffer): Promise<CryptoKey> {
+  return await window.crypto.subtle.importKey("raw", key, "AES-GCM", true, [
+    "encrypt",
+    "decrypt",
+  ]);
 }
 
-export function encrypt(
+export async function encrypt(
   key: CryptoKey,
   message: Uint8Array
 ): Promise<Uint8Array> {
-  return new Promise(async (resolve) => {
-    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
-    const cipherText = new Uint8Array(
-      await window.crypto.subtle.encrypt(
-        {
-          name: "AES-GCM",
-          iv: iv,
-        },
-        key,
-        message
-      )
-    );
+  const cipherText = new Uint8Array(
+    await window.crypto.subtle.encrypt(
+      {
+        name: "AES-GCM",
+        iv: iv,
+      },
+      key,
+      message
+    )
+  );
 
-    const cipher = new Uint8Array(iv.length + cipherText.length);
-    cipher.set(iv, 0);
-    cipher.set(cipherText, iv.length);
+  const cipher = new Uint8Array(iv.length + cipherText.length);
+  cipher.set(iv, 0);
+  cipher.set(cipherText, iv.length);
 
-    resolve(cipher);
-    return;
-  });
+  return cipher;
 }
 
-export function decrypt(
+export async function decrypt(
   key: CryptoKey,
   cipherText: Uint8Array
 ): Promise<Uint8Array> {
-  return new Promise(async (resolve) => {
-    const iv = cipherText.slice(0, 12);
+  const iv = cipherText.slice(0, 12);
 
-    const plainText = new Uint8Array(
-      await window.crypto.subtle.decrypt(
-        {
-          name: "AES-GCM",
-          iv: iv,
-        },
-        key,
-        cipherText.slice(12)
-      )
-    );
+  const plainText = new Uint8Array(
+    await window.crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: iv,
+      },
+      key,
+      cipherText.slice(12)
+    )
+  );
 
-    resolve(plainText);
-    return;
-  });
+  return plainText;
 }

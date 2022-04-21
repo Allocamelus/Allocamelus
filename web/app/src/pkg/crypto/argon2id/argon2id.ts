@@ -66,3 +66,24 @@ export interface argon2idEncoded {
   // Key (Base64 encoded)
   key: string;
 }
+export class argon2idEncoded {
+  // Argon2id version v=
+  version: number;
+  // Cost
+  cost: argon2idCost;
+  // Encoded with no key $argon2id$v={version}$m={memory},t={time},p={threads}${base64(salt)}
+  encoded: string;
+  // Salt (Base64 encoded)
+  salt: string;
+  // Key (Base64 encoded)
+  key: string;
+
+  constructor(source: Partial<argon2idEncoded> = {}) {
+    if (typeof source === "string") source = JSON.parse(source);
+    this.version = source["version"] || 0;
+    this.cost = new argon2idCost(source["cost"]);
+    this.encoded = source["encoded"] || "";
+    this.salt = source["salt"] || "";
+    this.key = source["key"] || "";
+  }
+}

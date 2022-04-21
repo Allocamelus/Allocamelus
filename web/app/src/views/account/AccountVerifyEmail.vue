@@ -67,11 +67,11 @@
       <div v-show="!showCaptcha">
         <div v-if="showForm">
           <h2 class="text-2xl font-medium">Resend Verification Email</h2>
-          <div
+          <html-errors
             v-if="err.create.length > 0"
             class="mt-3"
-            v-html="err.create /* skipcq: JS-0693 */"
-          ></div>
+            :error="err.create /* skipcq: JS-0693 */"
+          ></html-errors>
           <form ref="form" class="mt-3" @submit.prevent="onSubmit">
             <input-label for="email" :err="err.email">Email</input-label>
             <email-input
@@ -112,10 +112,6 @@ import ApiResp, { RespToError } from "@/models/responses";
 import { validate } from "@/api/user/email-token/validate";
 import { create } from "@/api/user/email-token/create";
 import { siteKeys } from "@/api/meta/captcha/siteKeys";
-import {
-  HtmlLoadingCaptcha,
-  HtmlSomethingWentWrong,
-} from "@/components/htmlErrors";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -129,6 +125,10 @@ import CenterFormBox from "@/components/form/CenterFormBox.vue";
 import Submit from "@/components/form/Submit.vue";
 import InputLabel from "@/components/form/InputLabel.vue";
 import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
+import HtmlErrors, {
+  LoadingCaptcha,
+  SomethingWentWrong,
+} from "@/components/HtmlErrors.vue";
 
 function hasST(selector: string, token: string) {
   if (selector.length != 0 || token.length != 0) {
@@ -228,7 +228,7 @@ export default defineComponent({
                 return;
               case ApiResp.Shared.InvalidCaptcha:
                 this.captcha.siteKey = "";
-                this.err.create = HtmlLoadingCaptcha;
+                this.err.create = LoadingCaptcha;
                 siteKeys().then((sk) => {
                   this.captcha.siteKey = sk.siteKey(
                     sk.difficulties.user.emailToken
@@ -238,14 +238,14 @@ export default defineComponent({
                 this.err.create = "";
                 return;
               default:
-                this.err.create = HtmlSomethingWentWrong;
+                this.err.create = SomethingWentWrong;
                 return;
             }
           }
         })
         .catch(() => {
           this.captcha.show = false;
-          this.err.create = HtmlSomethingWentWrong;
+          this.err.create = SomethingWentWrong;
         });
     },
   },
@@ -278,6 +278,7 @@ export default defineComponent({
     InputLabel,
     VueHcaptcha,
     ChevronLeftIcon,
+    HtmlErrors,
   },
 });
 </script>

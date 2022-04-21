@@ -10,7 +10,6 @@
 import { defineComponent, toRefs, reactive } from "vue";
 
 import Box from "@/components/box/Box.vue";
-import ToLink from "@/components/ToLink.vue";
 
 export default defineComponent({
   setup() {
@@ -20,7 +19,7 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  components: { Box, ToLink },
+  components: { Box },
 });
 </script>
 

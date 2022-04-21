@@ -4,9 +4,10 @@ export function FullURL(url: string, base?: string | URL): string {
     // base must be a valid see new URL(url [, base])
     // @ https://developer.mozilla.org/en-US/docs/Web/API/URL/URL
     url = new URL(url, base).href;
-  } finally {
+  } catch (_) {
     return url;
   }
+  return url;
 }
 
 export function local(url: string) {

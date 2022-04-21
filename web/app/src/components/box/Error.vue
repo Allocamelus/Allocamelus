@@ -1,6 +1,10 @@
 <template>
   <box class="rounded-xl">
-    <div v-if="error.error?.length > 0" class="p-3.5" v-html="htmlErr"></div>
+    <html-errors
+      v-if="error.error?.length > 0"
+      class="p-3.5"
+      :error="htmlErr"
+    ></html-errors>
     <slot v-else></slot>
   </box>
 </template>
@@ -11,6 +15,7 @@ import { defineComponent } from "vue";
 import Box from "./Box.vue";
 import { API_Error } from "../../models/api_error";
 import { RespToHtml } from "../../models/responses";
+import HtmlErrors from "../HtmlErrors.vue";
 
 export default defineComponent({
   props: {
@@ -26,6 +31,7 @@ export default defineComponent({
   },
   components: {
     Box,
+    HtmlErrors,
   },
 });
 </script>

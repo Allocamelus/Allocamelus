@@ -1,7 +1,7 @@
 <template>
   <div class="container flex py-5">
     <feed>
-      <div v-if="err.length > 0" v-html="err"></div>
+      <error v-if="err.error?.length > 0" class="mb-3" :error="err"></error>
       <new-post-text-input></new-post-text-input>
       <box v-if="list.total() == 0" class="rounded-xl py-3 px-4">
         Follow someone to see their post here
@@ -22,6 +22,8 @@ import Feed from "../components/Feed.vue";
 import Sidebar from "../components/Sidebar.vue";
 import NewPostTextInput from "../components/post/NewPostTextInput.vue";
 import Box from "../components/box/Box.vue";
+import Error from "@/components/box/Error.vue";
+import { API_Error } from "@/models/api_error";
 
 export default defineComponent({
   setup() {
@@ -29,14 +31,18 @@ export default defineComponent({
       list: new API_Posts(),
       page: 1,
       // TODO Better Errors
-      err: "",
+      err: new API_Error(),
     });
     getPosts(data.page)
       .then((r) => {
-        data.list = r;
+        if ("error" in r) {
+          data.err = r;
+        } else {
+          data.list = r;
+        }
       })
       .catch((e) => {
-        data.err = String(e);
+        data.err = new API_Error({ error: String(e) });
       });
 
     document.title = `Home - ${import.meta.env.VITE_SITE_NAME}`;
@@ -50,10 +56,14 @@ export default defineComponent({
 
     getPosts(this.page)
       .then((r) => {
-        this.list = r;
+        if ("error" in r) {
+          this.err = r;
+        } else {
+          this.list = r;
+        }
       })
       .catch((e) => {
-        this.err = String(e);
+        this.err = new API_Error({ error: String(e) });
       });
   },
   components: {
@@ -62,6 +72,7 @@ export default defineComponent({
     Sidebar,
     NewPostTextInput,
     Box,
+    Error,
   },
 });
 </script>
