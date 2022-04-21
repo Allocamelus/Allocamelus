@@ -15,3 +15,11 @@ enabled = true
 
   [analyzers.meta]
   plugins = ["vue"]
+
+[[transformers]]
+name = "gofmt"
+enabled = true
+
+[[transformers]]
+name = "prettier"
+enabled = true
