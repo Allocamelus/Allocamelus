@@ -95,8 +95,8 @@ export const useSessionStore = defineStore(storeName, {
       this.used();
     },
     async logout() {
-      await logout();
       this.reset();
+      await logout();
     },
     reset() {
       return this.$patch(new Session());
