@@ -47,7 +47,7 @@ func (img *Image) BlobToImg(blob []byte) (err error) {
 	}
 
 	// SetPages to one if not animation
-	if img.img.Pages() == 1 {
+	if img.Pages() == 1 {
 		img.img.SetPages(1)
 	}
 
@@ -117,10 +117,15 @@ func (img *Image) Close() {
 //  return width, height int, err error
 func (img *Image) WH() (width, height int) {
 	width = img.img.Width()
-	if img.img.Pages() == 1 {
+	if img.Pages() == 1 {
 		height = img.img.Height()
 	} else {
 		height = img.img.PageHeight()
 	}
 	return
+}
+
+// Pages returns number of pages
+func (img *Image) Pages() (pages int) {
+	return img.img.Pages()
 }

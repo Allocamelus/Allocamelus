@@ -38,7 +38,7 @@ func HashEncode(bytes []byte) string {
 
 // transformPages apply modifier to page(s)
 func (img *Image) transformPages(modifier func(img *vips.ImageRef) error) error {
-	pages := img.img.Pages()
+	pages := img.Pages()
 
 	// Skip unneeded steps
 	if pages == 1 {
