@@ -44,13 +44,16 @@ export class API_Comment {
 
   delChild(key: number): void {
     if (Object.prototype.hasOwnProperty.call(this.children, key)) {
+      const replies = this.children[key].replies;
       delete this.children[key];
-      this.delDeep();
+      // Remove reply count of child
+      this.delDeep(replies);
     }
   }
 
-  delDeep() {
+  delDeep(replies = 0) {
     if (this.replies > 0) {
+      this.replies -= replies;
       this.replies--;
     }
   }
@@ -60,7 +63,7 @@ export class API_Comment {
     for (const k in this.children) {
       const key = Number(k).valueOf();
       if (Object.prototype.hasOwnProperty.call(this.children, key)) {
-        num += this.child(key)!.replies;
+        num += (this.child(key) as API_Comment).replies;
         num++;
       }
     }

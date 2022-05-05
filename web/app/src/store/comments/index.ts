@@ -122,6 +122,9 @@ export const useCommentStore = (postId: number | string) => {
 
         // delete comment
         if (Object.hasOwnProperty.call(parent.children, key)) {
+          // Get reply count of child
+          const replies = parent.children[key].replies;
+
           parent.delChild(key);
           // remove comment path from cache
           delete this.pathCache[id];
@@ -135,7 +138,7 @@ export const useCommentStore = (postId: number | string) => {
             if (parent === null) {
               throw pathErr(path);
             } else {
-              parent.delDeep();
+              parent.delDeep(replies);
             }
             path.pop();
           }
