@@ -19,7 +19,7 @@
               class="h-6 w-6 self-end hover:bg-white"
               @click="removeImage(key)"
             >
-              <XIcon></XIcon>
+              <XMarkIcon></XMarkIcon>
             </circle-bg>
             <div class="flex flex-col">
               <input-label :label="`imageAlt${key}`" :err="imageAltErrs[key]">
@@ -164,7 +164,7 @@ import RadixImage from "../icons/RadixImage.vue";
 import CircleBg from "../button/CircleBg.vue";
 import BasicBtn from "../button/BasicBtn.vue";
 import Snackbar from "../box/Snackbar.vue";
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 import ImageBox from "../box/ImageBox.vue";
 import TextInput from "../form/TextInput.vue";
 import InputLabel from "../form/InputLabel.vue";
@@ -327,7 +327,7 @@ export default defineComponent({
     CircleBg,
     BasicBtn,
     Snackbar,
-    XIcon,
+    XMarkIcon,
     ImageBox,
     TextInput,
     InputLabel,

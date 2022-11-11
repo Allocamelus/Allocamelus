@@ -38,9 +38,9 @@
               class="dot-before flex items-center whitespace-nowrap"
             >
               <div title="Edited">
-                <PencilAltIcon
+                <PencilSquareIcon
                   class="h-4 w-4 dark:text-gray-400"
-                ></PencilAltIcon>
+                ></PencilSquareIcon>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ import { sanitize } from "@/pkg/sanitize";
 
 import { local } from "@/pkg/url";
 
-import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
+import { PencilSquareIcon } from "@heroicons/vue/20/solid";
 import RadixEyeNone from "../icons/RadixEyeNone.vue";
 
 import UserName from "../user/Name.vue";
@@ -171,7 +171,7 @@ export default defineComponent({
     FmtTime,
     UserName,
     UserAvatar,
-    PencilAltIcon,
+    PencilSquareIcon,
     RadixEyeNone,
     ToLink,
     ImageBox,

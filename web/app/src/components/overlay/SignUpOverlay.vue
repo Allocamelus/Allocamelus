@@ -6,7 +6,7 @@
       <div class="flex w-full items-end border-b border-secondary-600 p-3">
         <div class="flex flex-1 justify-end" :class="iconStyle.xIcon">
           <basic-btn @click="visible = false">
-            <XIcon class="h-5 w-5"></XIcon>
+            <XMarkIcon class="h-5 w-5"></XMarkIcon>
           </basic-btn>
         </div>
       </div>
@@ -41,7 +41,7 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 import Box from "../box/Box.vue";
 import BasicBtn from "../button/BasicBtn.vue";
@@ -86,7 +86,7 @@ export default defineComponent({
     },
   },
   components: {
-    XIcon,
+    XMarkIcon,
     Box,
     BasicBtn,
     Overlay,

@@ -28,7 +28,7 @@
         class="cursor-pointer text-secondary-600 hover:text-secondary-700"
       >
         <component
-          :is="show ? 'EyeOffIcon' : 'EyeIcon'"
+          :is="show ? 'EyeSlashIcon' : 'EyeIcon'"
           class="w5 h-5"
           @click="togglePass"
         ></component>
@@ -41,8 +41,7 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { debounce } from "throttle-debounce";
 import TextInput from "./TextInput.vue";
-import EyeIcon from "@heroicons/vue/solid/EyeIcon";
-import EyeOffIcon from "@heroicons/vue/solid/EyeOffIcon";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/20/solid";
 
 export default defineComponent({
   name: "PasswordInput",
@@ -156,7 +155,7 @@ export default defineComponent({
   components: {
     TextInput,
     EyeIcon,
-    EyeOffIcon,
+    EyeSlashIcon,
   },
 });
 </script>

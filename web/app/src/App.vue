@@ -145,10 +145,10 @@
                     >
                       <div class="flex flex-1 justify-end">
                         <basic-btn @click="userMenu = false">
-                          <XIcon
+                          <XMarkIcon
                             class="h-5 w-5"
                             :class="iconStyle.xIcon"
-                          ></XIcon>
+                          ></XMarkIcon>
                         </basic-btn>
                       </div>
                     </div>
@@ -217,16 +217,21 @@ import {
 } from "./api/user/follow";
 import { SomethingWentWrong } from "./components/form/errors";
 
-import SunIcon from "@heroicons/vue/solid/SunIcon";
-import MoonIcon from "@heroicons/vue/solid/MoonIcon";
-import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
-import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
-import BellIcon from "@heroicons/vue/outline/BellIcon";
-import XIcon from "@heroicons/vue/solid/XIcon";
-import UserCircleIcon from "@heroicons/vue/outline/UserCircleIcon";
-import CogIcon from "@heroicons/vue/outline/CogIcon";
-import LogoutIcon from "@heroicons/vue/outline/LogoutIcon";
-import PlusIcon from "@heroicons/vue/outline/PlusIcon";
+import {
+  SunIcon,
+  MoonIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+  ArrowRightOnRectangleIcon as LogoutIcon,
+} from "@heroicons/vue/20/solid";
+
+import {
+  BellIcon,
+  UserCircleIcon,
+  CogIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/outline";
 
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
@@ -388,7 +393,7 @@ export default defineComponent({
     BellIcon,
     ChevronDownIcon,
     ChevronUpIcon,
-    XIcon,
+    XMarkIcon,
     UserCircleIcon,
     CogIcon,
     LogoutIcon,

@@ -130,7 +130,7 @@ import PasswordInput from "@/components/form/PasswordInput.vue";
 import Submit from "@/components/form/Submit.vue";
 import InputLabel from "@/components/form/InputLabel.vue";
 import TextSmall from "@/components/text/Small.vue";
-import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
+import { ChevronLeftIcon } from "@heroicons/vue/20/solid";
 import InputCopy from "@/components/form/InputCopy.vue";
 import EmailInput from "@/components/form/EmailInput.vue";
 import BarLoader from "@/components/overlay/BarLoader.vue";

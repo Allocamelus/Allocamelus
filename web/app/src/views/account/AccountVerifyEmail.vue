@@ -124,7 +124,7 @@ import EmailInput from "@/components/form/EmailInput.vue";
 import CenterFormBox from "@/components/form/CenterFormBox.vue";
 import Submit from "@/components/form/Submit.vue";
 import InputLabel from "@/components/form/InputLabel.vue";
-import ChevronLeftIcon from "@heroicons/vue/solid/ChevronLeftIcon";
+import { ChevronLeftIcon } from "@heroicons/vue/20/solid";
 import HtmlErrors, {
   LoadingCaptcha,
   SomethingWentWrong,

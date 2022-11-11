@@ -11,7 +11,7 @@
       >
         <div class="flex flex-1 justify-start">
           <basic-btn @click="visable = false">
-            <XIcon class="h-5 w-5" :class="iconStyle.xIcon"></XIcon>
+            <XMarkIcon class="h-5 w-5" :class="iconStyle.xIcon"></XMarkIcon>
           </basic-btn>
         </div>
         <div class="flex flex-1 justify-center">
@@ -96,7 +96,7 @@ import {
   TYPE_PUBLIC,
 } from "@/api/user/update/type";
 
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 import Box from "../box/Box.vue";
 import BasicBtn from "../button/BasicBtn.vue";
@@ -242,7 +242,7 @@ export default defineComponent({
     },
   },
   components: {
-    XIcon,
+    XMarkIcon,
     Box,
     BasicBtn,
     InputLabel,

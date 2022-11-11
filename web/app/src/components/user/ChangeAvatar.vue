@@ -73,7 +73,7 @@ import { SomethingWentWrong } from "../form/errors";
 
 import { avatar as UploadAvatar, removeAvatar } from "@/api/user/update/avatar";
 
-import CameraIcon from "@heroicons/vue/solid/CameraIcon";
+import { CameraIcon } from "@heroicons/vue/20/solid";
 
 import Box from "../box/Box.vue";
 import Overlay from "../overlay/Overlay.vue";

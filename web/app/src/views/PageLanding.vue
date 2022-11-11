@@ -22,7 +22,7 @@
             :class="buttonStyle.secondaryBorder"
           >
             <div class="flex items-center">
-              <CodeIcon class="mr-1 h-4 w-4" />
+              <CodeBracketIcon class="mr-1 h-4 w-4" />
               <div>Open Source</div>
             </div>
           </basic-btn>
@@ -51,7 +51,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 
-import { CodeIcon } from "@heroicons/vue/solid";
+import { CodeBracketIcon } from "@heroicons/vue/20/solid";
 
 import Allocamelus from "@/components/icons/Allocamelus.vue";
 import BasicBtn from "@/components/button/BasicBtn.vue";
@@ -67,7 +67,7 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  components: { Allocamelus, BasicBtn, CodeIcon, ToLink },
+  components: { Allocamelus, BasicBtn, CodeBracketIcon, ToLink },
 });
 </script>
 

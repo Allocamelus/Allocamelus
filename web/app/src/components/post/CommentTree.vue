@@ -32,9 +32,9 @@
                 class="dot-before flex items-center whitespace-nowrap"
               >
                 <div title="Edited">
-                  <PencilAltIcon
+                  <PencilSquareIcon
                     class="h-4 w-4 dark:text-gray-400"
-                  ></PencilAltIcon>
+                  ></PencilSquareIcon>
                 </div>
               </div>
             </div>
@@ -172,9 +172,9 @@ import { User } from "@/models/user";
 import { RespToError } from "@/models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
-import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
-import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
-import OutlineAnnotationIcon from "@heroicons/vue/outline/AnnotationIcon";
+import { PencilSquareIcon } from "@heroicons/vue/20/solid";
+import { ChatBubbleBottomCenterIcon as SolidAnnotationIcon } from "@heroicons/vue/24/solid";
+import { ChatBubbleBottomCenterIcon as OutlineAnnotationIcon } from "@heroicons/vue/24/outline";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
@@ -292,7 +292,7 @@ export default defineComponent({
     FmtTime,
     UserName,
     UserAvatar,
-    PencilAltIcon,
+    PencilSquareIcon,
     SolidAnnotationIcon,
     OutlineAnnotationIcon,
     SmallBtn,

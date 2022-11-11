@@ -19,7 +19,7 @@
         >
           <slot></slot>
           <basic-btn v-if="closeBtn" class="ml-1.5" @click="close">
-            <XIcon class="h-5 w-5"></XIcon>
+            <XMarkIcon class="h-5 w-5"></XMarkIcon>
           </basic-btn>
         </box>
       </div>
@@ -29,7 +29,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 import Box from "./Box.vue";
 import BasicBtn from "../button/BasicBtn.vue";
 
@@ -73,7 +73,7 @@ export default defineComponent({
   },
   components: {
     Box,
-    XIcon,
+    XMarkIcon,
     BasicBtn,
   },
 });
