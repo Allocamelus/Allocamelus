@@ -261,9 +261,12 @@ export default defineComponent({
       session = useSessionStore();
     const theme = computed(() => state.theme);
     const data = reactive({
-      sesKeepAliveInterval: setInterval(() => {
-        return;
-      }, SecToMs(MinToSec(10))),
+      sesKeepAliveInterval: setInterval(
+        () => {
+          return;
+        },
+        SecToMs(MinToSec(10))
+      ),
       userMenu: false,
       footer: false,
       alerts: {

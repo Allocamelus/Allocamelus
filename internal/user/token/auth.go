@@ -36,6 +36,7 @@ func SetAuth(c *fiber.Ctx, userID int64) error {
 }
 
 // GetAuth get and check auth token
+//
 //	return *Token || error
 func GetAuth(c *fiber.Ctx) (*Token, error) {
 	cookie := c.Cookies(g.Config.Cookie.PreFix+authNamePostfix, "")
