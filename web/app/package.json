@@ -67,9 +67,5 @@
     "vite": "^3.2.3",
     "vite-svg-loader": "^3.6.0"
   },
-  "workspaces": [
-    "client"
-  ],
-  "private": true,
-  "packageManager": "yarn@3.2.4"
+  "private": true
 }

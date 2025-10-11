@@ -1,4 +1,4 @@
-FROM golang:alpine AS builderGo
+FROM golang:alpine AS buildergo
 RUN apk --no-cache -U upgrade && \
     apk --no-cache add --upgrade make build-base 
 RUN apk --no-cache add --upgrade vips-dev
@@ -12,15 +12,15 @@ COPY ./web/template/ ./web/template/
 COPY ./internal/ ./internal/
 RUN --mount=type=cache,target=/root/.cache/go-build make build-go-alpine
 
-FROM node:alpine AS builderNode
+FROM oven/bun:alpine AS buildernode
 WORKDIR /usr/src/allocamelus
 COPY ./web/app/package.json ./package.json
-COPY ./web/app/yarn.lock ./yarn.lock
-RUN ["yarn", "install"]
+COPY ./web/app/bun.lock ./bun.lock
+RUN ["bun", "install"]
 
 COPY ./web/app/ ./
 
-RUN ["yarn", "build"]
+RUN ["bun", "run", "build"]
 
 # Docker build
 FROM alpine:latest
@@ -32,10 +32,10 @@ RUN apk --no-cache -U upgrade \
 
 RUN apk --no-cache add --upgrade libjpeg-turbo vips libpng libwebp orc
 
-COPY --from=builderGo /go/src/github.com/allocamelus/allocamelus/cmd/allocamelus/allocamelus /bin/allocamelus
+COPY --from=buildergo /go/src/github.com/allocamelus/allocamelus/cmd/allocamelus/allocamelus /bin/allocamelus
 WORKDIR /etc/allocamelus/
 
-COPY --from=builderNode /usr/src/allocamelus/dist/ ./public/
+COPY --from=buildernode /usr/src/allocamelus/dist/ ./public/
 
 # Use dumb-init to prevent gofiber prefork from failing as PID 1
 ENTRYPOINT ["/bin/dumb-init", "--"]
