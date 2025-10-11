@@ -114,7 +114,8 @@ func (img *Image) Close() {
 }
 
 // WH returns image width & height
-//  return width, height int, err error
+//
+//	return width, height int, err error
 func (img *Image) WH() (width, height int) {
 	width = img.img.Width()
 	if img.Pages() == 1 {

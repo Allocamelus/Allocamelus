@@ -4,7 +4,7 @@ import { DBSchema, IDBPDatabase, StoreNames, StoreValue } from "idb";
 export class IDBStore<
   DBType extends DBSchema | unknown,
   Key extends StoreValue<DBType, StoreNames<DBType>>,
-  Value extends StoreValue<DBType, StoreNames<DBType>>
+  Value extends StoreValue<DBType, StoreNames<DBType>>,
 > {
   store: StoreNames<DBType>;
   db: Promise<IDBPDatabase<DBType>>;

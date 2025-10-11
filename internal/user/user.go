@@ -63,7 +63,8 @@ func init() {
 }
 
 // Insert new user into database
-// 	returns nil and sets user.ID on success
+//
+//	returns nil and sets user.ID on success
 func (u *User) Insert() error {
 	// Insert user into database
 	r, err := preInsert.Exec(
