@@ -2,11 +2,7 @@
   <div class="container py-5">
     <div class="max-w-full sm:mx-2 md:mx-4 lg:mx-8 xl:mx-12">
       <error-box :error="err">
-        <post-box
-          :post="apiPost.post"
-          :user="apiPost.user"
-          :dynamic-content="true"
-        ></post-box>
+        <post-box :post="apiPost.post" :user="apiPost.user" :dynamic-content="true"></post-box>
       </error-box>
       <div></div>
       <comment-feed :list="comments" :post-id="id"></comment-feed>
@@ -38,25 +34,25 @@ export default defineComponent({
       comments: new API_Comments(),
       err: new API_Error(),
       commentErr: new API_Error(),
+      async getPost(id: string) {
+        getPost(id)
+          .then(async (r) => {
+            this.apiPost = r;
+            // Get Comments once post is fetched
+            let [comments, err] = await getComments(id)
+            if (err != null) {
+              this.err = err
+              return
+            }
+            this.comments = comments
+          })
+          .catch((e) => {
+            this.err = e;
+          });
+      }
     });
 
-    getPost(props.id)
-      .then((r) => {
-        data.apiPost = r;
-        // Get Comments once post is fetched
-        (async () => {
-          getComments(props.id)
-            .then((r) => {
-              data.comments = r;
-            })
-            .catch((e) => {
-              data.err = e;
-            });
-        })();
-      })
-      .catch((e) => {
-        data.err = e;
-      });
+    data.getPost(props.id);
 
     return {
       ...toRefs(data),
@@ -80,23 +76,11 @@ export default defineComponent({
   async beforeRouteUpdate(to) {
     this.apiPost = new API_Post();
 
-    getPost(to.params.id)
-      .then((r) => {
-        this.apiPost = r;
-        // Get Comments once post is fetched
-        (async () => {
-          getComments(to.params.id)
-            .then((r) => {
-              this.comments = r;
-            })
-            .catch((e) => {
-              this.err = e;
-            });
-        })();
-      })
-      .catch((e) => {
-        this.err = e;
-      });
+    const id = Array.isArray(to.params.id)
+      ? to.params.id[0]
+      : to.params.id;
+
+    await this.getPost(id);
   },
   components: {
     ErrorBox,

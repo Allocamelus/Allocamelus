@@ -74,14 +74,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs, reactive, computed } from "vue";
 import { useSessionStore } from "@/store/session";
 
 import { get as getUser } from "@/api/user/get";
 import { posts as getPosts } from "@/api/user/posts";
 import { post as userFollow, remove as userUnfollow } from "@/api/user/follow";
-import { API_Error } from "@/models/api_error";
+import { API_Error, API_Success_Error } from "@/models/api_error";
 import { API_Posts } from "@/models/api_post";
 import {
   Public as PUBLIC_USER,
@@ -145,7 +145,7 @@ export default defineComponent({
       .then((r) => {
         data.postsList = r;
         if (Object.keys(r.posts).length == 0) {
-          data.err.posts = "No posts here";
+          data.err.posts.error = "No posts here";
         }
       })
       .catch((e) => {
@@ -200,20 +200,19 @@ export default defineComponent({
       if (this.canEdit || !this.loggedIn) {
         this.overlay = true;
       } else {
-        (() => {
+        (async () => {
+          let r: API_Success_Error;
           if (
             this.user.selfFollow.following ||
             this.user.selfFollow.requested
           ) {
-            return userUnfollow(this.user.userName).then((r) => {
-              if (r.success) {
-                this.user.selfFollow.requested =
-                  this.user.selfFollow.following = false;
-              }
-              return r;
-            });
-          }
-          return userFollow(this.user.userName).then((r) => {
+            r = await userUnfollow(this.user.userName);
+            if (r.success) {
+              this.user.selfFollow.requested =
+                this.user.selfFollow.following = false;
+            }
+          } else {
+            r = await userFollow(this.user.userName);
             if (r.success) {
               if (this.user.type !== PUBLIC_USER) {
                 this.user.selfFollow.requested = true;
@@ -221,8 +220,8 @@ export default defineComponent({
                 this.user.selfFollow.following = true;
               }
             }
-            return r;
-          });
+          }
+          return r;
         })()
           .then((r) => {
             if (!r.success) {
@@ -236,7 +235,7 @@ export default defineComponent({
           });
       }
     },
-    snackbarErr(err) {
+    snackbarErr(err: string) {
       this.err.snackbar.msg = "";
       if (err.length > 0) {
         this.err.snackbar.msg = err;
@@ -249,7 +248,11 @@ export default defineComponent({
     this.postsList = new API_Posts();
     this.page = 1;
 
-    getUser(to.params.userName)
+    const userName = Array.isArray(to.params.userName)
+      ? to.params.userName[0]
+      : to.params.userName;
+
+    getUser(userName)
       .then((r) => {
         this.user = r;
       })
@@ -257,11 +260,11 @@ export default defineComponent({
         this.err.user = e;
       });
 
-    getPosts(to.params.userName, this.page)
+    getPosts(userName, this.page)
       .then((r) => {
         this.postsList = r;
         if (Object.keys(r.posts).length == 0) {
-          this.err.posts = "No posts here";
+          this.err.posts.error = "No posts here";
         }
       })
       .catch((e) => {

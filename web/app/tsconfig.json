@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "ES6",
+    "target": "es2020",
     "module": "es2020",
     "allowJs": true,
     // this enables stricter inference for data properties on `this`

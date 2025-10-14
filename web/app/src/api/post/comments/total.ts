@@ -10,7 +10,7 @@ export class API_Total {
 
   constructor(source: Partial<API_Total> = {}) {
     if (typeof source === "string") source = JSON.parse(source);
-    this.total = source["total"];
+    this.total = source["total"] || 0;
   }
 }
 

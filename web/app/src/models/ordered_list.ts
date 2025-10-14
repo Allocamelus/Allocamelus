@@ -19,7 +19,7 @@ export class user_list {
   }
 
   // Methods
-  user(userId: number): User {
+  user(userId: number): User | undefined {
     if (Object.hasOwnProperty.call(this.users, userId)) {
       // Convert users to User class if not
       if (!(this.users[userId] instanceof User)) {
