@@ -3,7 +3,7 @@
 package passwordreset
 
 import (
-	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -16,6 +16,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -56,7 +57,7 @@ func CreateToken(c *fiber.Ctx) error {
 
 	userID, err := user.GetIDByUserName(request.Identifier)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}
@@ -66,7 +67,7 @@ func CreateToken(c *fiber.Ctx) error {
 
 		userID, err = user.GetIDByEmail(request.Identifier)
 		if err != nil {
-			if err != sql.ErrNoRows {
+			if !errors.Is(err, pgx.ErrNoRows) {
 				logger.Error(err)
 				return apierr.ErrSomethingWentWrong(c)
 			}

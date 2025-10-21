@@ -1,7 +1,7 @@
 package follow
 
 import (
-	"database/sql"
+	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -9,6 +9,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 // requestsResp
@@ -21,7 +22,7 @@ type requestsResp struct {
 func Requests(c *fiber.Ctx) error {
 	r, err := user.ListRequests(session.Context(c).UserID)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}

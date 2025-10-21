@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"database/sql"
+	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post"
@@ -13,6 +13,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 // Protected from non logged in users
@@ -148,7 +149,7 @@ func ProtectedCommenterOnly(c *fiber.Ctx) error {
 
 func sessionIdCheck(c *fiber.Ctx, userId int64, err error) error {
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}

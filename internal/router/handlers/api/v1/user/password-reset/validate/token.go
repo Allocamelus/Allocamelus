@@ -4,7 +4,7 @@
 package validate
 
 import (
-	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
@@ -16,6 +16,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/fiberutil"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -56,7 +57,7 @@ func Token(c *fiber.Ctx) error {
 	// Get userID
 	userID, err := user.GetIDByUserName(request.UserName)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}
