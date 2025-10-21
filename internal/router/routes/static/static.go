@@ -22,7 +22,7 @@ var routes = []string{"/about", "/login", "/signup", "/logout", "/account/verify
 
 // Static routes
 func Static(app *fiber.App) {
-	Media(app)
+
 	static := app.Group("/")
 	static.Static("/", g.Config.Path.PublicDir, fiber.Static{
 		Compress:      true,
@@ -33,6 +33,7 @@ func Static(app *fiber.App) {
 	for _, r := range routes {
 		static.Get(r, sendIndex)
 	}
+	Media(static)
 
 	static.Get("/*", middleware.NoIndex, func(c *fiber.Ctx) error {
 		c.Status(404)

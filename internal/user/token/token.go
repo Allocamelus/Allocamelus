@@ -3,15 +3,18 @@
 package token
 
 import (
+	"context"
 	"crypto/sha512"
-	"database/sql"
 	_ "embed"
 	"encoding/base64"
+	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/allocamelus/allocamelus/pkg/random"
+	"github.com/jackc/pgx/v5"
 	"k8s.io/klog/v2"
 )
 
@@ -83,28 +86,12 @@ func NewAndInsert(t Types, userID int64) (*Token, error) {
 	return token, nil
 }
 
-var (
-	//go:embed sql/selectorExist.sql
-	qSelectorExist   string
-	preSelectorExist *sql.Stmt
-	//go:embed sql/insert.sql
-	qInsert   string
-	preInsert *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preSelectorExist, qSelectorExist)
-	data.PrepareQueuer.Add(&preInsert, qInsert)
-}
-
 // Insert token into database
 func (t *Token) Insert() error {
-	_, err := preInsert.Exec(
-		t.UserID, t.Type,
-		t.Selector, t.TokenHash,
-		t.Created, t.Expiration,
-	)
-	return err
+	return g.Data.Queries.InsertUserToken(context.Background(), db.InsertUserTokenParams{
+		Userid: t.UserID, Tokentype: int16(t.Type), Selector: t.Selector,
+		Token: t.TokenHash, Created: t.Created, Expiration: t.Expiration,
+	})
 }
 
 // GetToken return token string
@@ -121,9 +108,8 @@ func genSelector() (selector string) {
 	for {
 		selector = random.StringBase64(selectorBytes)
 
-		var exist bool
-		err := preSelectorExist.QueryRow(selector).Scan(&exist)
-		if err != sql.ErrNoRows {
+		exist, err := g.Data.Queries.UserTokenSelectorExist(context.Background(), selector)
+		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 		}
 

@@ -3,12 +3,13 @@
 package event
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/clientip"
 	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/allocamelus/allocamelus/pkg/aesgcm"
@@ -47,24 +48,6 @@ type Info struct {
 	UserAgent string `msg:"userAgent"`
 }
 
-var (
-	//go:embed sql/events.sql
-	qEvents   string
-	preEvents *sql.Stmt
-	//go:embed sql/insert.sql
-	qInsert   string
-	preInsert *sql.Stmt
-	//go:embed sql/insertKey.sql
-	qInsertKey   string
-	preInsertKey *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preEvents, qEvents)
-	data.PrepareQueuer.Add(&preInsert, qInsert)
-	data.PrepareQueuer.Add(&preInsertKey, qInsertKey)
-}
-
 // New User Event
 func New(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Public) (*Event, error) {
 	event := new(Event)
@@ -95,21 +78,12 @@ func InsertNew(c *fiber.Ctx, t Types, userID int64, pubKeys ...*key.Public) (*Ev
 
 // Insert event and encrypted info into db
 func (e *Event) Insert() error {
-	r, err := preInsert.Exec(
-		e.UserID, e.Type,
-		e.Created, e.EncInfo,
-	)
+	eventID, err := g.Data.Queries.InsertUserEvent(context.Background(), db.InsertUserEventParams{Userid: e.UserID, Eventtype: int16(e.Type), Created: e.Created, Info: e.EncInfo})
 	if err != nil {
 		return err
 	}
-	eventID, err := r.LastInsertId()
-	if err != nil {
-		return err
-	}
-
 	for keyID, infoKey := range e.EncInfoKeys {
-		_, err = preInsertKey.Exec(eventID, keyID, infoKey)
-		if err != nil {
+		if err = g.Data.Queries.InsertUserEventKey(context.Background(), db.InsertUserEventKeyParams{Usereventid: eventID, Userkeyid: keyID, Infokey: infoKey}); err != nil {
 			return err
 		}
 	}

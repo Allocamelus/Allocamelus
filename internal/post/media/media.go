@@ -3,12 +3,13 @@
 package media
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"html"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -27,24 +28,6 @@ type Meta struct {
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-var (
-	//go:embed sql/get/get.sql
-	qGet   string
-	preGet *sql.Stmt
-	//go:embed sql/insert/media.sql
-	qInsertMedia   string
-	preInsertMedia *sql.Stmt
-	//go:embed sql/insert/mediaFile.sql
-	qInsertMediaFile   string
-	preInsertMediaFile *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGet, qGet)
-	data.PrepareQueuer.Add(&preInsertMediaFile, qInsertMediaFile)
-	data.PrepareQueuer.Add(&preInsertMedia, qInsertMedia)
-}
-
 func New() *Media {
 	media := new(Media)
 	media.Meta = new(Meta)
@@ -52,21 +35,21 @@ func New() *Media {
 }
 
 func Get(postID int64) ([]*Media, error) {
-	rows, err := preGet.Query(postID)
+	rows, err := g.Data.Queries.GetPostMedia(context.Background(), postID)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	mediaList := []*Media{}
 
-	for rows.Next() {
+	for _, r := range rows {
 		media := New()
 		var hash string
-		if err := rows.Scan(&media.Meta.Alt, &media.Meta.Width, &media.Meta.Height, &hash); err != nil {
-			return nil, err
-		}
-		media.Meta.Alt = html.EscapeString(media.Meta.Alt)
+		media.Meta.Alt = html.EscapeString(r.Alt)
+		media.Meta.Width = int64(r.Width)
+		media.Meta.Height = int64(r.Height)
+		hash = r.Hash
+
 		media.Url = fileutil.PublicPath(selectorPath(hash, true))
 		mediaList = append(mediaList, media)
 	}
@@ -75,23 +58,18 @@ func Get(postID int64) ([]*Media, error) {
 }
 
 func Insert(postId int64, alt string, fileId int64) error {
-	_, err := preInsertMedia.Exec(postId, time.Now().Unix(), alt, fileId)
-	if err != nil {
-		return err
-	}
-	return nil
+	return g.Data.Queries.InsertPostMedia(context.Background(), db.InsertPostMediaParams{Postid: postId, Added: time.Now().Unix(), Alt: alt, Postmediafileid: fileId})
 }
 
 func InsertFile(media *Media, hash string, newHash string) (int64, error) {
-	n, err := preInsertMediaFile.Exec(time.Now().Unix(), media.FileType, media.Meta.Width, media.Meta.Height, hash, newHash)
-	if err != nil {
-		return 0, err
-	}
-	id, err := n.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-	return id, nil
+	return g.Data.Queries.InsertPostMediaFile(context.Background(), db.InsertPostMediaFileParams{
+		Created:  time.Now().Unix(),
+		Filetype: int32(media.FileType),
+		Width:    int32(media.Meta.Width),
+		Height:   int32(media.Meta.Height),
+		Hash:     hash,
+		Newhash:  newHash,
+	})
 }
 
 func selectorPath(b58hash string, includeFile bool) string {

@@ -1,24 +1,14 @@
 package comment
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 )
-
-var (
-	//go:embed sql/updateContent.sql
-	qUpdateContent   string
-	preUpdateContent *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preUpdateContent, qUpdateContent)
-}
 
 func UpdateContent(commentID int64, content string) error {
-	_, err := preUpdateContent.Exec(time.Now().Unix(), content, commentID)
-	return err
+	return g.Data.Queries.UpdatePostCommentContent(context.Background(), db.UpdatePostCommentContentParams{Updated: time.Now().Unix(), Content: content, Postcommentid: commentID})
 }

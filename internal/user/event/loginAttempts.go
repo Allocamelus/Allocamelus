@@ -1,6 +1,10 @@
 package event
 
 import (
+	"context"
+
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/user/key"
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,6 +17,5 @@ func InsertLoginAttempt(c *fiber.Ctx, userID int64, pk ...*key.Public) error {
 
 // GetLoginAttempts for user
 func GetLoginAttempts(userID, afterTime int64) (attempts int64, err error) {
-	err = preEvents.QueryRow(LoginAttempt, userID, afterTime).Scan(&attempts)
-	return
+	return g.Data.Queries.CountUserEvents(context.Background(), db.CountUserEventsParams{Eventtype: int16(LoginAttempt), Userid: userID, Created: afterTime})
 }

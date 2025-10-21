@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/allocamelus/allocamelus/internal/app"
+	"github.com/allocamelus/allocamelus/internal/version"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
@@ -22,7 +23,7 @@ func init() {
 	v := flag.Bool("version", false, "Returns version")
 	flag.Parse()
 	if *v {
-		fmt.Println(app.Version)
+		fmt.Println(version.Version)
 		os.Exit(0)
 	}
 }

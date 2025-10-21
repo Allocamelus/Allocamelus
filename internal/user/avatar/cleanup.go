@@ -1,54 +1,35 @@
 package avatar
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"os"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 )
 
-var (
-	//go:embed sql/deactivateOld.sql
-	qDeactivateOld   string
-	preDeactivateOld *sql.Stmt
-	//go:embed sql/getOld.sql
-	qGetOld   string
-	preGetOld *sql.Stmt
-	//go:embed sql/delete.sql
-	qDelete   string
-	preDelete *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preDeactivateOld, qDeactivateOld)
-	data.PrepareQueuer.Add(&preGetOld, qGetOld)
-	data.PrepareQueuer.Add(&preDelete, qDelete)
-}
-
 func deactivateOld(userId int64) error {
-	_, err := preDeactivateOld.Exec(userId)
-	return err
+	return g.Data.Queries.DeactivateOldUserAvatars(context.Background(), userId)
 }
 
 // CleanupOld removes deactivated avatars from file store by userId
 func CleanupOld(userId int64) error {
-	rows, err := preGetOld.Query(userId)
+	rows, err := g.Data.Queries.GetOldUserAvatars(context.Background(), userId)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 
-	for rows.Next() {
+	for _, r := range rows {
 		var (
 			fileType fileutil.Format
 			b58hash  string
 		)
-		err := rows.Scan(&fileType, &b58hash)
-		if err != nil {
-			return err
-		}
+
+		fileType = fileutil.Format(r.Filetype)
+		b58hash = r.Hash
+
 		remove(b58hash, fileType)
 	}
 	return nil
@@ -58,6 +39,5 @@ func CleanupOld(userId int64) error {
 func remove(b58hash string, fileType fileutil.Format) error {
 	os.RemoveAll(fileutil.FilePath(selectorPath(b58hash, true)))
 
-	_, err := preDelete.Exec(fileType, b58hash)
-	return err
+	return g.Data.Queries.DeleteUserAvatarByFile(context.Background(), db.DeleteUserAvatarByFileParams{Filetype: int32(fileType), Hash: b58hash})
 }

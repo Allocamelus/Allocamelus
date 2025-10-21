@@ -1,36 +1,23 @@
 package media
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
-	"io/ioutil"
+	"errors"
 	"mime/multipart"
+	"os"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/jackc/pgx/v5"
 )
 
 const (
 	SubPath = "posts/images"
 )
-
-var (
-	//go:embed sql/get/hashCheck.sql
-	qGetHashCheck   string
-	preGetHashCheck *sql.Stmt
-	//go:embed sql/get/fileId.sql
-	qGetFileId   string
-	preGetFileId *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetHashCheck, qGetHashCheck)
-	data.PrepareQueuer.Add(&preGetFileId, qGetFileId)
-	//data.PrepareQueuer.Add(&preInsert, qInsert)
-}
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
 	img, b58hash, err := imagedit.MPHtoImg(imageMPH)
@@ -58,12 +45,13 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 		err = fileutil.ErrContentType
 		return
 	}
+	ctx := context.Background()
 
 	fileImagePath := fileutil.FilePath(selectorPath(imgHash, true))
 	if fileutil.Exist(fileImagePath) {
-		err = preGetFileId.QueryRow(imgHash).Scan(&fileId)
+		fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, imgHash)
 		// Not missing file in db
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return
 		}
 	}
@@ -71,8 +59,8 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 	// Check for reupload
 	var dbHash string
 	// Check for imgHash in db
-	err = preGetHashCheck.QueryRow(imgHash, imgHash).Scan(&dbHash)
-	if err != nil && err != sql.ErrNoRows {
+	dbHash, err = g.Data.Queries.PostMediaHashCheck(ctx, imgHash)
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return
 	}
 	// Missing file OR imgHash is newHash
@@ -80,9 +68,9 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 		// imgHash is newHash
 		if imgHash != dbHash {
 			if fileutil.Exist(fileutil.FilePath(selectorPath(dbHash, true))) {
-				err = preGetFileId.QueryRow(dbHash).Scan(&fileId)
+				fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
 				// Not missing file in db
-				if err != sql.ErrNoRows {
+				if !errors.Is(err, pgx.ErrNoRows) {
 					return
 				}
 			}
@@ -100,7 +88,7 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 		return
 	}
 
-	err = ioutil.WriteFile(fileImagePath, imgOut, 0644)
+	err = os.WriteFile(fileImagePath, imgOut, 0644)
 	if err != nil {
 		return
 	}
@@ -121,6 +109,6 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 		return
 	}
 
-	err = preGetFileId.QueryRow(imgHash).Scan(&fileId)
+	fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
 	return
 }

@@ -3,16 +3,18 @@
 package post
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/session"
+	"github.com/jackc/pgx/v5"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 )
@@ -41,38 +43,20 @@ func New(userID int64, content string, publish bool) *Post { // skipcq: RVV-A000
 	return p
 }
 
-var (
-	//go:embed sql/insert.sql
-	qInsert   string
-	preInsert *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preInsert, qInsert)
-}
-
 // Insert into database
 func (p *Post) Insert() error {
-	r, err := preInsert.Exec(
-		p.UserID, p.Created,
-		p.Published, p.Content,
-	)
+	id, err := g.Data.Queries.InsertPost(context.Background(), db.InsertPostParams{
+		Userid:    p.UserID,
+		Created:   p.Created,
+		Published: p.Published,
+		Content:   p.Content,
+	})
 	if err != nil {
 		return err
 	}
 
-	p.ID, err = r.LastInsertId()
-	return err
-}
-
-var (
-	//go:embed sql/get/get.sql
-	qGet   string
-	preGet *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGet, qGet)
+	p.ID = id
+	return nil
 }
 
 // Get Post
@@ -80,15 +64,21 @@ func init() {
 func Get(postID int64) (*Post, error) {
 	p := new(Post)
 	p.ID = postID
-	err := preGet.QueryRow(postID).Scan(&p.UserID, &p.Created, &p.Published, &p.Updated, &p.Content)
+	dbP, err := g.Data.Queries.GetPost(context.Background(), postID)
 	if err != nil {
 		return nil, err
 	}
 
+	p.UserID = dbP.Userid
+	p.Created = int64(dbP.Created)
+	p.Published = int64(dbP.Published)
+	p.Updated = int64(dbP.Updated)
+	p.Content = dbP.Content
+
 	// Get Media
 	p.MediaList, err = media.Get(postID)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, err
 		}
 	}
@@ -106,7 +96,7 @@ var (
 func GetForUser(postID int64, u *session.Session) (*Post, error) {
 	p, err := Get(postID)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrNoPost
 		}
 		return p, err
@@ -124,16 +114,6 @@ func GetForUser(postID int64, u *session.Session) (*Post, error) {
 	return p, err
 }
 
-var (
-	//go:embed sql/get/canView.sql
-	qGetCanView   string
-	preGetCanView *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetCanView, qGetCanView)
-}
-
 func CanView(postID int64, u *session.Session, postCache ...*Post) error {
 	var p *Post
 	// Check postCache
@@ -144,13 +124,15 @@ func CanView(postID int64, u *session.Session, postCache ...*Post) error {
 		// Get post from store
 		p = new(Post)
 		p.ID = postID
-		err := preGetCanView.QueryRow(postID).Scan(&p.UserID, &p.Published)
+		dbP, err := g.Data.Queries.GetPostCanView(context.Background(), postID)
 		if err != nil {
-			if err != sql.ErrNoRows {
+			if !errors.Is(err, pgx.ErrNoRows) {
 				return err
 			}
 			return ErrNoPost
 		}
+		p.UserID = dbP.Userid
+		p.Published = int64(dbP.Published)
 	}
 
 	// Check if user can view post
@@ -167,53 +149,26 @@ func CanView(postID int64, u *session.Session, postCache ...*Post) error {
 	return nil
 }
 
-var (
-	//go:embed sql/get/userID.sql
-	qGetUserID   string
-	preGetUserID *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetUserID, qGetUserID)
-}
-
 func GetUserId(postID int64) (int64, error) {
-	var userId int64
-	err := preGetUserID.QueryRow(postID).Scan(&userId)
-	return userId, err
-}
-
-var (
-	//go:embed sql/get/published.sql
-	qGetPublished   string
-	preGetPublished *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPublished, qGetPublished)
+	return g.Data.Queries.GetPostUserID(context.Background(), postID)
 }
 
 func Published(postID int64) (bool, error) {
+	p, err := g.Data.Queries.GetPostPublishedStatus(context.Background(), postID)
+	if err != nil {
+		return false, err
+	}
 	var published bool
-	err := preGetPublished.QueryRow(postID).Scan(&published)
-	return published, err
-}
-
-var (
-	//go:embed sql/publish.sql
-	qPublish   string
-	prePublish *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&prePublish, qPublish)
+	if p > 0 {
+		published = true
+	}
+	return published, nil
 }
 
 // Publish post if not already
 func (p *Post) Publish() error {
 	if !p.IsPublished() {
-		_, err := prePublish.Exec(time.Now().Unix(), p.ID)
-		return err
+		return g.Data.Queries.PublishPost(context.Background(), db.PublishPostParams{Published: time.Now().Unix(), Postid: p.ID})
 	}
 	return nil
 }
@@ -227,9 +182,9 @@ func (p *Post) MDtoHTMLContent() {
 
 // IsPublished is post draft
 func (p *Post) IsPublished() bool {
-	return (p.Published != 0)
+	return (p.Published > 0)
 }
 
 func (p *Post) IsPoster(userID int64) bool {
-	return compare.EqualInt64(p.UserID, userID)
+	return compare.EqualInt(p.UserID, userID)
 }

@@ -129,7 +129,7 @@ func ProtectedCommentPost(c *fiber.Ctx) error {
 	}
 
 	// Check url id with comment post id
-	if compare.EqualInt64(postID, cPostID) {
+	if compare.EqualInt(postID, cPostID) {
 		return c.Next()
 	}
 
@@ -159,7 +159,7 @@ func sessionIdCheck(c *fiber.Ctx, userId int64, err error) error {
 }
 
 func checkIdWithSelf(c *fiber.Ctx, userId int64) error {
-	if compare.EqualInt64(userId, session.Context(c).UserID) {
+	if compare.EqualInt(userId, session.Context(c).UserID) {
 		return c.Next()
 	}
 	return apierr.ErrUnauthorized403(c)

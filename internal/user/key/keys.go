@@ -1,21 +1,13 @@
 package key
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPublicKeys, qGetPublicKeys)
-}
-
-var (
-	//go:embed sql/getPublicKeys.sql
-	qGetPublicKeys   string
-	preGetPublicKeys *sql.Stmt
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 )
 
 // keyRecoveryTime 30 Days
@@ -24,19 +16,17 @@ const keyRecoveryTime time.Duration = time.Hour * 24 * 30
 // GetPublicKeys get user's encrypted publicKey
 func GetPublicKeys(userID int64) (publicKeys []*Public, err error) {
 	notBefore := time.Now().Add(-keyRecoveryTime).Unix()
-	rows, err := preGetPublicKeys.Query(userID, notBefore)
+	rows, err := g.Data.Queries.GetUserPublicKeys(context.Background(), db.GetUserPublicKeysParams{Userid: userID, Replaced: notBefore})
 	if err != nil {
 		return
 	}
-	defer rows.Close()
 
-	for rows.Next() {
+	for _, r := range rows {
 		key := new(Public)
 		key.UserID = userID
-		err = rows.Scan(&key.ID, &key.PublicArmored)
-		if err != nil {
-			return
-		}
+		key.ID = r.Userkeyid
+		key.PublicArmored = pgp.PublicKey(r.Publicarmored)
+
 		publicKeys = append(publicKeys, key)
 	}
 	return

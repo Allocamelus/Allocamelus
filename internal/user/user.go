@@ -3,14 +3,17 @@
 package user
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
+	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/user/avatar"
 	"github.com/allocamelus/allocamelus/internal/user/perms"
 	"github.com/allocamelus/allocamelus/internal/user/session"
+	"github.com/jackc/pgx/v5"
 )
 
 // User Types
@@ -48,55 +51,40 @@ func New(userName, name, email string) *User {
 	return user
 }
 
-var (
-	//go:embed sql/insert.sql
-	qInsert   string
-	preInsert *sql.Stmt
-	//go:embed sql/get/public.sql
-	qGetPublic   string
-	preGetPublic *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preInsert, qInsert)
-	data.PrepareQueuer.Add(&preGetPublic, qGetPublic)
-}
-
 // Insert new user into database
-// 	returns nil and sets user.ID on success
+//
+//	returns nil and sets user.ID on success
 func (u *User) Insert() error {
+	var err error
 	// Insert user into database
-	r, err := preInsert.Exec(
-		u.UserName, u.Email, u.Type,
-		u.Permissions, u.Created,
-	)
-	if err != nil {
-		return err
-	}
+	u.ID, err = g.Data.Queries.InsertUser(context.Background(), db.InsertUserParams{
+		Username:    u.UserName,
+		Email:       u.Email,
+		Type:        int16(u.Type),
+		Permissions: int64(u.Permissions),
+		Created:     u.Created,
+	})
 
-	u.ID, err = r.LastInsertId()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 // GetPublic user info for session user
 // TODO: Cache
 func GetPublic(s *session.Session, userID int64) (user User, err error) {
 	user.ID = userID
-	err = preGetPublic.QueryRow(userID).Scan(&user.UserName, &user.Name, &user.Bio, &user.Type, &user.Created)
+	r, err := g.Data.Queries.GetPublicUser(context.Background(), userID)
 	if err != nil {
 		return
 	}
+	user.UserName = r.Username
+	user.Name = r.Name
+	user.Bio = r.Bio
+	user.Type = Types(r.Type)
+	user.Created = r.Created
 
 	user.Avatar, err = avatar.GetUrl(userID)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			return
-		}
-		err = nil
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return
 	}
 
 	if s.LoggedIn {

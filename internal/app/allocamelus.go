@@ -27,8 +27,6 @@ type Allocamelus struct {
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-const Version = "0.0.0-alpha"
-
 // New Allocamelus server
 func New(configPath string) *Allocamelus {
 	g.Data = data.New(configPath)
@@ -69,6 +67,8 @@ func (c *Allocamelus) AwaitAndClose(serverClosed chan struct{}) {
 
 	log.Println("Shutting down Fiber")
 	logger.Error(c.Fiber.Shutdown())
+	log.Println("Closing datastores")
+	g.Data.Close()
 	log.Println("Shutting down vips")
 	vips.Shutdown()
 	log.Println("Flushing klog")

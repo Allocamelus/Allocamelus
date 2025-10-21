@@ -1,10 +1,11 @@
 package user
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 )
 
 const (
@@ -13,30 +14,16 @@ const (
 	Public
 )
 
-var (
-	//go:embed sql/get/type.sql
-	qGetType   string
-	preGetType *sql.Stmt
-	//go:embed sql/update/type.sql
-	qUpdateType   string
-	preUpdateType *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetType, qGetType)
-	data.PrepareQueuer.Add(&preUpdateType, qUpdateType)
-}
-
 // GetType get user's type
 func GetType(userID int64) (t Types, err error) {
-	err = preGetType.QueryRow(userID).Scan(&t)
+	tUn, err := g.Data.Queries.GetUserType(context.Background(), userID)
+	t = Types(tUn)
 	return
 }
 
 // UpdateType update user's type
 func UpdateType(userID int64, t Types) error {
-	_, err := preUpdateType.Exec(t, userID)
-	return err
+	return g.Data.Queries.UpdateUserType(context.Background(), db.UpdateUserTypeParams{Type: int16(t), Userid: userID})
 }
 
 // IsVerified is user type != Unverified

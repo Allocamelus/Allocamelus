@@ -60,5 +60,6 @@ func (d *Data) Reset() error {
 
 // Close redis store
 func (d *Data) Close() error {
+	d.database.Close()
 	return d.redis.Close()
 }

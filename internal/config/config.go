@@ -25,7 +25,6 @@ type Config struct {
 		PreFix string
 	}
 	Db struct {
-		Net      string
 		Server   string
 		Name     string
 		UserName string
@@ -163,10 +162,6 @@ func (c *Config) Validate() error {
 		klog.Warning("Warning - Config: Missing Cookie Prefix")
 	}
 
-	if c.Db.Net == "" {
-		klog.Error("Error - Config: Missing Database Network Protocol")
-		hasErr = true
-	}
 	if c.Db.Server == "" {
 		klog.Error("Error - Config: Missing Database Server")
 		hasErr = true
@@ -299,4 +294,8 @@ func (c *Config) Validate() error {
 		return ErrBadConfig
 	}
 	return nil
+}
+
+func (c *Config) DBconnStr() string {
+	return "postgresql://" + c.Db.UserName + ":" + c.Db.Password + "@" + c.Db.Server + "/" + c.Db.Name + "?sslmode=disable"
 }

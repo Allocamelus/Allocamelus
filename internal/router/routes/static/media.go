@@ -1,6 +1,8 @@
 package static
 
 import (
+	"log"
+
 	"github.com/allocamelus/allocamelus/internal/g"
 	postMedia "github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
@@ -9,8 +11,9 @@ import (
 )
 
 // Media routes
-func Media(app *fiber.App) {
+func Media(app fiber.Router) {
 	media := app.Group("/media", middleware.NoIndex)
+	log.Println("logged")
 	media.Static("/"+postMedia.SubPath, g.Config.Path.MediaDir+postMedia.SubPath,
 		fiber.Static{
 			CacheDuration: cacheDuration,
