@@ -315,7 +315,7 @@ INSERT INTO PostMedia (
     alt,
     postMediaFileId
   )
-VALUES ($1, $2, 1, $3, $4);
+VALUES ($1, $2, true, $3, $4);
 
 -- name: GetPostPublishedStatus :one
 SELECT published
@@ -402,13 +402,13 @@ FROM PostComments PC
   JOIN PostCommentClosures PCC ON (PC.postCommentId = PCC.parent)
 WHERE PC.postId = $1
   AND PCC.depth <= $2
-  AND PC.parent = false;
+  AND PC.parent = 0;
 
 -- name: CountPostCommentsTopLevel :one
 SELECT COUNT(*)
 FROM PostComments
 WHERE postId = $1
-  AND parent = false;
+  AND parent = 0;
 
 -- name: GetPostCommentPostID :one
 SELECT postId
@@ -436,7 +436,7 @@ WHERE PCC.parent IN (
         SELECT postCommentId
         FROM PostComments
         WHERE PostComments.postId = $1
-          AND parent = false
+          AND parent = 0
         ORDER BY postCommentId DESC -- Newest first
         LIMIT $3 OFFSET $2
       ) tmp
@@ -574,3 +574,38 @@ WHERE userAvatarId IN (
     )
   AND UserAvatars.userId = $1
   AND active = true;
+
+-- name: InsertSession :exec
+INSERT INTO Sessions (
+  key,
+  data,
+  expiration
+)
+VALUES ($1, $2, $3);
+
+-- name: GetSession :one
+SELECT data, expiration
+FROM Sessions
+WHERE key = $1
+LIMIT 1;
+
+-- name: SessionExist :one
+SELECT EXISTS(
+    SELECT *
+    FROM Sessions
+    WHERE key = $1
+  );
+
+-- name: UpdateSession :exec
+UPDATE Sessions
+SET data = $1,
+  expiration = $2
+WHERE key = $3;
+
+-- name: DeleteSession :exec
+DELETE FROM Sessions
+WHERE key = $1;
+
+-- name: DeleteOldSessions :exec
+DELETE FROM Sessions
+WHERE expiration < $1;

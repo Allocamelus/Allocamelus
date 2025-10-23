@@ -22,6 +22,7 @@ type Data interface {
 	Get(key string) (*Session, error)
 	Set(session *Session) error
 	Delete(key string) error
+	Cleanup() error
 }
 
 // Cookie struct

@@ -93,7 +93,7 @@ const countPostCommentsTopLevel = `-- name: CountPostCommentsTopLevel :one
 SELECT COUNT(*)
 FROM PostComments
 WHERE postId = $1
-  AND parent = false
+  AND parent = 0
 `
 
 func (q *Queries) CountPostCommentsTopLevel(ctx context.Context, postid int64) (int64, error) {
@@ -122,7 +122,7 @@ FROM PostComments PC
   JOIN PostCommentClosures PCC ON (PC.postCommentId = PCC.parent)
 WHERE PC.postId = $1
   AND PCC.depth <= $2
-  AND PC.parent = false
+  AND PC.parent = 0
 `
 
 type CountPostCommentsTotalDepthParams struct {
@@ -228,6 +228,16 @@ func (q *Queries) DeactivateUserAvatar(ctx context.Context, userid int64) error 
 	return err
 }
 
+const deleteOldSessions = `-- name: DeleteOldSessions :exec
+DELETE FROM Sessions
+WHERE expiration < $1
+`
+
+func (q *Queries) DeleteOldSessions(ctx context.Context, expiration int64) error {
+	_, err := q.db.Exec(ctx, deleteOldSessions, expiration)
+	return err
+}
+
 const deletePostComment = `-- name: DeletePostComment :exec
 DELETE FROM PostComments AS PC
 USING PostCommentClosures AS PCC
@@ -237,6 +247,16 @@ WHERE PC.postCommentId = PCC.child
 
 func (q *Queries) DeletePostComment(ctx context.Context, parent int64) error {
 	_, err := q.db.Exec(ctx, deletePostComment, parent)
+	return err
+}
+
+const deleteSession = `-- name: DeleteSession :exec
+DELETE FROM Sessions
+WHERE key = $1
+`
+
+func (q *Queries) DeleteSession(ctx context.Context, key string) error {
+	_, err := q.db.Exec(ctx, deleteSession, key)
 	return err
 }
 
@@ -654,7 +674,7 @@ WHERE PCC.parent IN (
         SELECT postCommentId
         FROM PostComments
         WHERE PostComments.postId = $1
-          AND parent = false
+          AND parent = 0
         ORDER BY postCommentId DESC -- Newest first
         LIMIT $3 OFFSET $2
       ) tmp
@@ -828,6 +848,25 @@ func (q *Queries) GetPublicUser(ctx context.Context, userid int64) (GetPublicUse
 		&i.Type,
 		&i.Created,
 	)
+	return i, err
+}
+
+const getSession = `-- name: GetSession :one
+SELECT data, expiration
+FROM Sessions
+WHERE key = $1
+LIMIT 1
+`
+
+type GetSessionRow struct {
+	Data       []byte
+	Expiration int64
+}
+
+func (q *Queries) GetSession(ctx context.Context, key string) (GetSessionRow, error) {
+	row := q.db.QueryRow(ctx, getSession, key)
+	var i GetSessionRow
+	err := row.Scan(&i.Data, &i.Expiration)
 	return i, err
 }
 
@@ -1147,7 +1186,7 @@ INSERT INTO PostMedia (
     alt,
     postMediaFileId
   )
-VALUES ($1, $2, 1, $3, $4)
+VALUES ($1, $2, true, $3, $4)
 `
 
 type InsertPostMediaParams struct {
@@ -1200,6 +1239,26 @@ func (q *Queries) InsertPostMediaFile(ctx context.Context, arg InsertPostMediaFi
 	var postmediafileid int64
 	err := row.Scan(&postmediafileid)
 	return postmediafileid, err
+}
+
+const insertSession = `-- name: InsertSession :exec
+INSERT INTO Sessions (
+  key,
+  data,
+  expiration
+)
+VALUES ($1, $2, $3)
+`
+
+type InsertSessionParams struct {
+	Key        string
+	Data       []byte
+	Expiration int64
+}
+
+func (q *Queries) InsertSession(ctx context.Context, arg InsertSessionParams) error {
+	_, err := q.db.Exec(ctx, insertSession, arg.Key, arg.Data, arg.Expiration)
+	return err
 }
 
 const insertUser = `-- name: InsertUser :one
@@ -1509,6 +1568,21 @@ func (q *Queries) PublishPost(ctx context.Context, arg PublishPostParams) error 
 	return err
 }
 
+const sessionExist = `-- name: SessionExist :one
+SELECT EXISTS(
+    SELECT key, data, expiration
+    FROM Sessions
+    WHERE key = $1
+  )
+`
+
+func (q *Queries) SessionExist(ctx context.Context, key string) (bool, error) {
+	row := q.db.QueryRow(ctx, sessionExist, key)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const unfollowUser = `-- name: UnfollowUser :exec
 DELETE FROM UserFollows
 WHERE userId = $1
@@ -1558,6 +1632,24 @@ type UpdatePostContentParams struct {
 
 func (q *Queries) UpdatePostContent(ctx context.Context, arg UpdatePostContentParams) error {
 	_, err := q.db.Exec(ctx, updatePostContent, arg.Updated, arg.Content, arg.Postid)
+	return err
+}
+
+const updateSession = `-- name: UpdateSession :exec
+UPDATE Sessions
+SET data = $1,
+  expiration = $2
+WHERE key = $3
+`
+
+type UpdateSessionParams struct {
+	Data       []byte
+	Expiration int64
+	Key        string
+}
+
+func (q *Queries) UpdateSession(ctx context.Context, arg UpdateSessionParams) error {
+	_, err := q.db.Exec(ctx, updateSession, arg.Data, arg.Expiration, arg.Key)
 	return err
 }
 

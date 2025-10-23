@@ -48,6 +48,12 @@ type Postmedium struct {
 	Postmediafileid int64
 }
 
+type Session struct {
+	Key        string
+	Data       []byte
+	Expiration int64
+}
+
 type User struct {
 	Userid      int64
 	Username    string

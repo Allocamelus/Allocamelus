@@ -20,6 +20,8 @@ func InitKlog(v int8, isDir bool, path string) {
 		} else {
 			flag.Set("log_file", path)
 		}
+	} else {
+		flag.Set("logtostderr", "true")
 	}
 	flag.Parse()
 }

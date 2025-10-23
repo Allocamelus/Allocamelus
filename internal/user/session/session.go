@@ -99,10 +99,11 @@ func Get(c *fiber.Ctx) *Session {
 		if err != nil {
 			if !errors.Is(err, pgx.ErrNoRows) &&
 				err != token.ErrAuthCookie &&
+				err != token.ErrEmptyCookie &&
 				err != token.ErrInvalid {
 				logger.Error(err)
 			} else if klog.V(5).Enabled() {
-				logger.Error(err)
+				logger.Info(err)
 			}
 			// empty session
 			session = new(Session)
