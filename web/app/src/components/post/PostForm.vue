@@ -5,31 +5,59 @@
         <editor-content :editor="editor" class="flex-grow" />
       </div>
       <div class="mt-1 flex flex-wrap overflow-hidden rounded-lg">
-        <image-box v-for="(url, key) in imageUrls" :key="key" :index="key" :url="url" :total-number="images.length">
+        <image-box
+          v-for="(url, key) in imageUrls"
+          :key="key"
+          :index="key"
+          :url="url"
+          :total-number="images.length"
+        >
           <div
-            class="absolute hidden h-full w-full flex-col justify-between bg-black bg-opacity-50 p-2 text-white group-hover:flex">
-            <circle-bg class="h-6 w-6 self-end hover:bg-white" @click="removeImage(key)">
+            class="absolute hidden h-full w-full flex-col justify-between bg-black bg-opacity-50 p-2 text-white group-hover:flex"
+          >
+            <circle-bg
+              class="h-6 w-6 self-end hover:bg-white"
+              @click="removeImage(key)"
+            >
               <XMarkIcon></XMarkIcon>
             </circle-bg>
             <div class="flex flex-col">
               <input-label :label="`imageAlt${key}`" :err="imageAltErrs[key]">
                 Alt/Description
               </input-label>
-              <text-input v-model="images[key].alt" :name="`imageAlt${key}`" :check="true" :max-len="512"
-                :regex="altRegex" regex-msg="Some Characters will be escaped"
-                @error="imageAltErrs[key] = $event"></text-input>
+              <text-input
+                v-model="images[key].alt"
+                :name="`imageAlt${key}`"
+                :check="true"
+                :max-len="512"
+                :regex="altRegex"
+                regex-msg="Some Characters will be escaped"
+                @error="imageAltErrs[key] = $event"
+              ></text-input>
             </div>
           </div>
         </image-box>
       </div>
     </div>
     <div class="sticky bottom-3 mt-2 overflow-hidden rounded">
-      <div v-if="editor !== undefined" class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter">
+      <div
+        v-if="editor !== undefined"
+        class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
+      >
         <div v-if="editor.isActive('link')" class="mb-1.5">
-          <text-input v-model="link" :watch-model="true" type="url" name="link"
-            placeholder="https://www.allocamelus.com">
+          <text-input
+            v-model="link"
+            :watch-model="true"
+            type="url"
+            name="link"
+            placeholder="https://www.allocamelus.com"
+          >
             <div class="mr-1.5 flex items-center">
-              <basic-btn class="link p-1" title="Update Link" @click="updateLink">
+              <basic-btn
+                class="link p-1"
+                title="Update Link"
+                @click="updateLink"
+              >
                 Update
               </basic-btn>
             </div>
@@ -37,38 +65,65 @@
         </div>
         <div class="flex justify-between">
           <div class="flex items-center">
-            <circle-bg class="hover:bg-rose-800" :class="{
-              'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
-            }" @click="editor.commands.toggleBold()">
+            <circle-bg
+              class="hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
+              }"
+              @click="editor.commands.toggleBold()"
+            >
               <RadixFontBold class="h-5 w-5" />
             </circle-bg>
-            <circle-bg class="ml-1.5 hover:bg-rose-800" :class="{
-              'bg-secondary-700 text-warm-gray-200':
-                editor.isActive('italic'),
-            }" @click="editor.commands.toggleItalic()">
+            <circle-bg
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200':
+                  editor.isActive('italic'),
+              }"
+              @click="editor.commands.toggleItalic()"
+            >
               <RadixFontItalic class="h-5 w-5" />
             </circle-bg>
-            <circle-bg class="ml-1.5 hover:bg-rose-800" :class="{
-              'bg-secondary-700 text-warm-gray-200':
-                editor.isActive('underline'),
-            }" @click="editor.commands.toggleUnderline()">
+            <circle-bg
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200':
+                  editor.isActive('underline'),
+              }"
+              @click="editor.commands.toggleUnderline()"
+            >
               <RadixUnderline class="h-5 w-5" />
             </circle-bg>
-            <circle-bg class="ml-1.5 hover:bg-rose-800" :class="{
-              'bg-secondary-700 text-warm-gray-200': editor.isActive('link'),
-            }" @click="editor.commands.toggleLink()">
+            <circle-bg
+              class="ml-1.5 hover:bg-rose-800"
+              :class="{
+                'bg-secondary-700 text-warm-gray-200': editor.isActive('link'),
+              }"
+              @click="editor.commands.toggleLink()"
+            >
               <RadixLink2 class="h-5 w-5" />
             </circle-bg>
             <circle-bg class="ml-1.5 hover:bg-rose-800">
-              <file-input accept="image/png,image/jpeg,image/gif,image/webp" :check="true"
-                :max-size="10485760 /* 10MB */" :max-files="4" :multiple="true" :file-count="images.length"
-                @files-change="imagesUpload" @error="onErr">
+              <file-input
+                accept="image/png,image/jpeg,image/gif,image/webp"
+                :check="true"
+                :max-size="10485760 /* 10MB */"
+                :max-files="4"
+                :multiple="true"
+                :file-count="images.length"
+                @files-change="imagesUpload"
+                @error="onErr"
+              >
                 <radix-image class="h-5 w-5" />
               </file-input>
             </circle-bg>
           </div>
           <div class="flex items-center">
-            <basic-btn class="p-1.5 text-secondary-700 dark:text-rose-600" :disabled="submitted" @click="onPost">
+            <basic-btn
+              class="p-1.5 text-secondary-700 dark:text-rose-600"
+              :disabled="submitted"
+              @click="onPost"
+            >
               Post
             </basic-btn>
           </div>
@@ -118,18 +173,18 @@ import router from "@/router";
 
 const turndownService = new Turndown().keep("u");
 const altRegex = /^[^<>[\]"&]*$/u;
-const richText = ref("")
-const link = ref("")
-const focused = ref(false)
-const images = reactive([] as MediaFile[])
-const imageAltErrs = reactive([] as string[])
-const imageUrls = reactive([] as string[])
-const submitted = ref(false)
+const richText = ref("");
+const link = ref("");
+const focused = ref(false);
+const images = reactive([] as MediaFile[]);
+const imageAltErrs = reactive([] as string[]);
+const imageUrls = reactive([] as string[]);
+const submitted = ref(false);
 const err = reactive({
   msg: "",
   show: false,
-})
-const hasNoText = computed(() => textContent(richText.value).length == 0)
+});
+const hasNoText = computed(() => textContent(richText.value).length == 0);
 
 const editor = useEditor({
   editorProps: {
@@ -139,7 +194,6 @@ const editor = useEditor({
   },
   onUpdate: ({ editor }) => {
     richText.value = editor.getHTML();
-
   },
   onSelectionUpdate: ({ editor }) => {
     if (editor.isActive("link")) {
@@ -169,8 +223,7 @@ const editor = useEditor({
     Text,
     Underline,
   ],
-})
-
+});
 
 function updateLink() {
   if (editor.value === undefined) {
@@ -212,7 +265,7 @@ function removeImage(key: number) {
   imagesToUrl();
 }
 function imagesToUrl() {
-  imageUrls.splice(0)
+  imageUrls.splice(0);
   for (let i = 0; i < images.length; i++) {
     imageUrls.push(URL.createObjectURL(images[i].media));
   }

@@ -4,10 +4,21 @@
       <div class="flex flex-col justify-between xs:flex-row">
         <div>
           <div class="flex min-w-0 items-center">
-            <component :is="canEdit ? 'change-avatar' : 'user-avatar'" :user="canEdit ? storeUser : user"
-              class="h-14 w-14 flex-shrink-0 xs:h-16 xs:w-16 md:h-20 md:w-20"></component>
-            <user-name class="ml-3" :user="canEdit ? storeUser : user" :two-line="true" :is-link="false"></user-name>
-            <text-small v-if="user.type === UNVERIFIED_USER" class="ml-1 flex-none font-normal">
+            <component
+              :is="canEdit ? 'change-avatar' : 'user-avatar'"
+              :user="canEdit ? storeUser : user"
+              class="h-14 w-14 flex-shrink-0 xs:h-16 xs:w-16 md:h-20 md:w-20"
+            ></component>
+            <user-name
+              class="ml-3"
+              :user="canEdit ? storeUser : user"
+              :two-line="true"
+              :is-link="false"
+            ></user-name>
+            <text-small
+              v-if="user.type === UNVERIFIED_USER"
+              class="ml-1 flex-none font-normal"
+            >
               [[Unverified]]
             </text-small>
           </div>
@@ -15,14 +26,29 @@
             {{ canEdit ? storeUser.bio : user.bio }}
           </div>
         </div>
-        <div class="mt-3 flex flex-shrink-0 items-start justify-end xs:mt-0 xs:ml-3">
-          <basic-btn class="whitespace-nowrap px-3 py-2" :class="buttonStyle.secondaryBorderInvert"
-            @click="clickFollowEdit">
+        <div
+          class="mt-3 flex flex-shrink-0 items-start justify-end xs:mt-0 xs:ml-3"
+        >
+          <basic-btn
+            class="whitespace-nowrap px-3 py-2"
+            :class="buttonStyle.secondaryBorderInvert"
+            @click="clickFollowEdit"
+          >
             {{ followEditBtnTxt }}
           </basic-btn>
         </div>
-        <edit-overlay v-if="canEdit" :show="overlay" :user="storeUser" @close="overlay = false"></edit-overlay>
-        <sign-up-overlay v-if="!loggedIn" :show="overlay" :redirect="`/u/${user.name}`" @close="overlay = false">
+        <edit-overlay
+          v-if="canEdit"
+          :show="overlay"
+          :user="storeUser"
+          @close="overlay = false"
+        ></edit-overlay>
+        <sign-up-overlay
+          v-if="!loggedIn"
+          :show="overlay"
+          :redirect="`/u/${user.name}`"
+          @close="overlay = false"
+        >
           <div>Sign Up or Login to Follow {{ user.name }}</div>
           <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
             @{{ user.userName }}
@@ -160,8 +186,9 @@ export default defineComponent({
   },
   watch: {
     user(newUser) {
-      document.title = `${newUser.name} (@${newUser.userName}) - ${import.meta.env.VITE_SITE_NAME
-        }`;
+      document.title = `${newUser.name} (@${newUser.userName}) - ${
+        import.meta.env.VITE_SITE_NAME
+      }`;
     },
   },
   methods: {
@@ -258,4 +285,9 @@ export default defineComponent({
 });
 </script>
 
-<style src="@/scss/modules/button.modules.scss" lang="scss" module="buttonStyle" scoped></style>
+<style
+  src="@/scss/modules/button.modules.scss"
+  lang="scss"
+  module="buttonStyle"
+  scoped
+></style>
