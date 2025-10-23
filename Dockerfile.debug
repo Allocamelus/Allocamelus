@@ -1,0 +1,43 @@
+
+FROM oven/bun:alpine AS buildernode
+WORKDIR /usr/src/allocamelus
+COPY ./web/app/package.json ./package.json
+COPY ./web/app/bun.lock ./bun.lock
+RUN ["bun", "install"]
+
+COPY ./web/app/ ./
+
+RUN ["bun", "run", "build"]
+
+FROM golang:alpine AS buildergo
+RUN apk --no-cache -U upgrade && \
+    apk --no-cache add --upgrade make build-base 
+RUN apk --no-cache add --upgrade vips-dev \
+    libjpeg-turbo vips libpng libwebp orc ca-certificates \
+    && wget -O /bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 \
+    && chmod +x /bin/dumb-init
+WORKDIR /go/src/github.com/allocamelus/allocamelus
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest && \
+    go install github.com/tinylib/msgp@latest && \
+    go install github.com/go-delve/delve/cmd/dlv@latest
+COPY go.* ./
+RUN go mod download
+COPY ./cmd/ ./cmd/
+COPY ./pkg/ ./pkg/
+COPY ./Makefile ./Makefile
+COPY ./sqlc.yaml ./sqlc.yaml
+COPY ./web/template/ ./web/template/
+COPY ./db ./db
+COPY ./internal/ ./internal/
+RUN make generate
+
+RUN --mount=type=cache,target=/root/.cache/go-build make build-go-alpine-debug
+RUN --mount=type=cache,target=/root/.cache/go-build make build-setup
+RUN cp /go/src/github.com/allocamelus/allocamelus/cmd/allocamelus/allocamelus /bin/allocamelus
+RUN cp /go/src/github.com/allocamelus/allocamelus/cmd/allocamelus-setup/allocamelus-setup /bin/allocamelus-setup
+
+WORKDIR /etc/allocamelus/
+COPY --from=buildernode /usr/src/allocamelus/dist/ ./public/
+
+COPY ./cmd/init-debug.sh /bin/allocamelus-init.sh
+ENTRYPOINT ["/bin/dumb-init", "--" , "/bin/allocamelus-init.sh"]

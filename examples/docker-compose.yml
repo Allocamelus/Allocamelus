@@ -1,10 +1,6 @@
 services:
   allocamelus:
     image: allocamelus:latest
-    command:
-      - /bin/allocamelus
-      - -c
-      - /etc/allocamelus/config.json
     volumes:
       - "./data/allocamelus/config.json:/etc/allocamelus/config.json:ro"
       - "./data/allocamelus/log:/var/log/allocamelus"
@@ -12,6 +8,11 @@ services:
     restart: always
     ports:
       - 8080:80
+    depends_on:
+      - db
+      - redis
+    environment:
+      CONFIG_PATH: "/etc/allocamelus/config.json"
   db:
     image: postgres:alpine
     env_file:

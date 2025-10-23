@@ -2,13 +2,13 @@
 NEW_CONTAINER="RAN_CONTAINER_SETUP"
 if [ ! -e $NEW_CONTAINER ]; then
     echo "-- First Start --"
-    /bin/allocamelus-setup $@
+    /bin/allocamelus-setup
     if [ $? -eq 0 ]; then
       touch $NEW_CONTAINER
-      /bin/allocamelus $@
+      /bin/allocamelus
       else
       echo "Setup failed. Please check the logs."
     fi
 else
-/bin/allocamelus $@
+/bin/allocamelus
 fi

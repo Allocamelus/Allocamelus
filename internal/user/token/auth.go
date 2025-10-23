@@ -18,6 +18,7 @@ const (
 
 // ErrAuthCookie Invalid Auth Cookie
 var ErrAuthCookie = errors.New("token/auth: Error Invalid Auth Cookie Value")
+var ErrEmptyCookie = errors.New("token/auth: Error Empty Auth Cookie Value")
 
 // SetAuth create, insert and add to cookies auth token
 func SetAuth(c *fiber.Ctx, userID int64) error {
@@ -42,6 +43,9 @@ func SetAuth(c *fiber.Ctx, userID int64) error {
 //	return *Token || error
 func GetAuth(c *fiber.Ctx) (*Token, error) {
 	cookie := c.Cookies(g.Config.Cookie.PreFix+authNamePostfix, "")
+	if cookie != "" {
+		return nil, ErrEmptyCookie
+	}
 	// check if cookie len(value) is at least
 	// selectorMinLen + authValueSepLen + tokenMinLen
 	if len(cookie) < selectorBytes+len(authValueSep)+tokenBytes {

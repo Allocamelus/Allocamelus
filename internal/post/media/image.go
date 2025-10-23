@@ -36,7 +36,7 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 		return err
 	}
 
-	return err
+	return nil
 }
 
 func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err error) {
@@ -60,9 +60,13 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 	var dbHash string
 	// Check for imgHash in db
 	dbHash, err = g.Data.Queries.PostMediaHashCheck(ctx, imgHash)
-	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
-		return
+	if err != nil {
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return
+		}
+		dbHash = ""
 	}
+
 	// Missing file OR imgHash is newHash
 	if dbHash != "" {
 		// imgHash is newHash
@@ -93,22 +97,22 @@ func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err 
 		return
 	}
 
-	if dbHash == "" {
-		newHash := imagedit.HashEncode(imgOut)
-		width, height := img.WH()
-		fileId, err = InsertFile(
-			&Media{
-				FileType: imgType,
-				Meta: &Meta{
-					Width:  int64(width),
-					Height: int64(height),
-				}},
-			imgHash,
-			newHash,
-		)
+	if dbHash != "" {
+		fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
 		return
 	}
 
-	fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
+	newHash := imagedit.HashEncode(imgOut)
+	width, height := img.WH()
+	fileId, err = InsertFile(
+		&Media{
+			FileType: imgType,
+			Meta: &Meta{
+				Width:  int64(width),
+				Height: int64(height),
+			}},
+		imgHash,
+		newHash,
+	)
 	return
 }

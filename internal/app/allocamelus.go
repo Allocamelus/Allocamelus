@@ -90,7 +90,7 @@ func (c *Allocamelus) InitListener() error {
 		tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
 
 		// Create custom listener
-		ln, err := tls.Listen("tcp", "127.0.0.1:"+strconv.Itoa(int(g.Data.Config.Ssl.Port)), tlsConfig)
+		ln, err := tls.Listen("tcp", ":"+strconv.Itoa(int(g.Data.Config.Ssl.Port)), tlsConfig)
 		if err != nil {
 			return err
 		}
