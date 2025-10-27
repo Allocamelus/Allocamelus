@@ -1,6 +1,6 @@
 <template>
   <div>
-    <box class="mt-5 mb-3 rounded-xl px-4 py-3">
+    <box class="mb-3 mt-5 rounded-xl px-4 py-3">
       <div v-if="loggedIn">
         <comment-input
           :post-id="postId"

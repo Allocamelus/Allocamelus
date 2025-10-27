@@ -223,7 +223,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   XMarkIcon,
-  ArrowRightOnRectangleIcon as LogoutIcon,
+  ArrowRightStartOnRectangleIcon as LogoutIcon,
 } from "@heroicons/vue/20/solid";
 
 import {

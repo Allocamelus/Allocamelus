@@ -4,7 +4,7 @@
       <div class="mx-auto w-max">
         <basic-btn
           to="/post/new"
-          class="py-2 px-3.5"
+          class="px-3.5 py-2"
           :class="buttonStyle.secondary"
         >
           New Post
@@ -15,12 +15,12 @@
       <div class="mx-auto flex w-max">
         <basic-btn
           to="/signup"
-          class="py-2 px-3.5"
+          class="px-3.5 py-2"
           :class="buttonStyle.secondary"
         >
           Sign Up
         </basic-btn>
-        <basic-btn to="/login" class="link ml-1.5 py-2 px-3"> Login </basic-btn>
+        <basic-btn to="/login" class="link ml-1.5 px-3 py-2"> Login </basic-btn>
       </div>
     </box>
     <slot></slot>

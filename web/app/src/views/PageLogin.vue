@@ -75,7 +75,7 @@
               <checkbox v-model="remember" name="remember">
                 <label for="remember">Remember Me</label>
               </checkbox>
-              <text-small class="mt-2 mr-3">
+              <text-small class="mr-3 mt-2">
                 Don't have an account?
                 <to-link class="link whitespace-nowrap" to="/signup">
                   Sign Up

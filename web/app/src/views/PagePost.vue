@@ -2,7 +2,11 @@
   <div class="container py-5">
     <div class="max-w-full sm:mx-2 md:mx-4 lg:mx-8 xl:mx-12">
       <error-box :error="err">
-        <post-box :post="apiPost.post" :user="apiPost.user" :dynamic-content="true"></post-box>
+        <post-box
+          :post="apiPost.post"
+          :user="apiPost.user"
+          :dynamic-content="true"
+        ></post-box>
       </error-box>
       <div></div>
       <comment-feed :list="comments" :post-id="id"></comment-feed>
@@ -39,17 +43,17 @@ export default defineComponent({
           .then(async (r) => {
             this.apiPost = r;
             // Get Comments once post is fetched
-            let [comments, err] = await getComments(id)
+            let [comments, err] = await getComments(id);
             if (err != null) {
-              this.err = err
-              return
+              this.err = err;
+              return;
             }
-            this.comments = comments
+            this.comments = comments;
           })
           .catch((e) => {
             this.err = e;
           });
-      }
+      },
     });
 
     data.getPost(props.id);
@@ -76,9 +80,7 @@ export default defineComponent({
   async beforeRouteUpdate(to) {
     this.apiPost = new API_Post();
 
-    const id = Array.isArray(to.params.id)
-      ? to.params.id[0]
-      : to.params.id;
+    const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id;
 
     await this.getPost(id);
   },

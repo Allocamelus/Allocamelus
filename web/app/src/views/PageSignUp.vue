@@ -78,7 +78,7 @@
                     Terms of Service
                   </to-link>
                 </text-small>
-                <text-small class="mt-1 mr-3">
+                <text-small class="mr-3 mt-1">
                   Have an account?
                   <to-link class="link whitespace-nowrap" to="/login">
                     Login

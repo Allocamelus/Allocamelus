@@ -3,7 +3,7 @@
     <feed>
       <error v-if="err.error?.length > 0" class="mb-3" :error="err"></error>
       <new-post-text-input></new-post-text-input>
-      <box v-if="list.total() == 0" class="rounded-xl py-3 px-4">
+      <box v-if="list.total() == 0" class="rounded-xl px-4 py-3">
         Follow someone to see their post here
       </box>
       <post-feed :list="list"></post-feed>

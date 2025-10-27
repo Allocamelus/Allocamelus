@@ -41,7 +41,7 @@
           </div>
           <div class="flex">
             <div
-              class="group mt-1 mr-2 flex flex-grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
+              class="group mr-2 mt-1 flex flex-grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'

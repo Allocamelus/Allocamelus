@@ -3,7 +3,7 @@
     class="flex flex-shrink flex-grow flex-col"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <div class="flex flex-shrink flex-grow py-3 px-3.5" @click.self="toPost">
+    <div class="flex flex-shrink flex-grow px-3.5 py-3" @click.self="toPost">
       <user-avatar :user="user" :is-link="true" class="h-11 w-11"></user-avatar>
       <div
         class="ml-3 flex flex-grow flex-col"

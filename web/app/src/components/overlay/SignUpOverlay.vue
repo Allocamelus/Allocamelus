@@ -20,14 +20,14 @@
           <div class="mt-8 flex flex-col items-center">
             <basic-btn
               to="/signup"
-              class="mb-4 w-full py-2.5 px-3.5"
+              class="mb-4 w-full px-3.5 py-2.5"
               :class="buttonStyle.secondary"
             >
               Sign Up
             </basic-btn>
             <basic-btn
               :to="{ path: '/login', query: { r: redirect } }"
-              class="link w-full border border-rose-800 py-2.5 px-3 hover:border-rose-900 dark:border-rose-500 dark:hover:border-rose-600"
+              class="link w-full border border-rose-800 px-3 py-2.5 hover:border-rose-900 dark:border-rose-500 dark:hover:border-rose-600"
             >
               Login
             </basic-btn>

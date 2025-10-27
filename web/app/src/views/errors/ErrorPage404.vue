@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <box class="mx-auto max-w-prose rounded-xl py-3 px-4">
+    <box class="mx-auto max-w-prose rounded-xl px-4 py-3">
       <html-errors :error="404"></html-errors>
     </box>
   </div>

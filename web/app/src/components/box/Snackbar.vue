@@ -10,12 +10,12 @@
   >
     <div
       v-show="modelValue"
-      class="fixed right-0 left-0 bottom-0 z-auto w-full xs:bottom-4"
+      class="fixed bottom-0 left-0 right-0 z-auto w-full xs:bottom-4"
     >
       <div class="m-auto w-full xs:w-max">
         <box
           class="flex items-center justify-between rounded-t-lg xs:rounded-md"
-          :class="closeBtn ? 'px-3 py-2' : 'px2.5 py-1.5 xs:py-3 xs:px-4'"
+          :class="closeBtn ? 'px-3 py-2' : 'px2.5 py-1.5 xs:px-4 xs:py-3'"
         >
           <slot></slot>
           <basic-btn v-if="closeBtn" class="ml-1.5" @click="close">
