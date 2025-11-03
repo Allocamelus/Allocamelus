@@ -1,16 +1,16 @@
 <template>
   <overlay v-model="visible">
     <box
-      class="flex h-full w-full flex-col overflow-hidden rounded-none bg-opacity-75 shadow-lg focus:outline-none dark:bg-opacity-75 xs:m-3 xs:h-fit xs:rounded-md"
+      class="bg-opacity-75 dark:bg-opacity-75 flex h-full w-full flex-col overflow-hidden rounded-none shadow-lg focus:outline-none xs:m-3 xs:h-fit xs:rounded-md"
     >
       <div class="flex w-full items-end border-b border-secondary-600 p-3">
-        <div class="flex flex-1 justify-end" :class="iconStyle.xIcon">
+        <div class="xIcon flex flex-1 justify-end">
           <basic-btn @click="visible = false">
             <XMarkIcon class="h-5 w-5"></XMarkIcon>
           </basic-btn>
         </div>
       </div>
-      <div class="flex flex-grow items-center justify-center">
+      <div class="flex grow items-center justify-center">
         <div class="flex flex-col px-6 py-8 text-center xs:px-8">
           <div
             class="flex flex-wrap items-center justify-evenly text-xl font-medium"
@@ -20,8 +20,7 @@
           <div class="mt-8 flex flex-col items-center">
             <basic-btn
               to="/signup"
-              class="mb-4 w-full px-3.5 py-2.5"
-              :class="buttonStyle.secondary"
+              class="btn-secondary mb-4 w-full px-3.5 py-2.5"
             >
               Sign Up
             </basic-btn>
@@ -93,16 +92,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>
-<style
-  src="@/scss/modules/icon.modules.scss"
-  lang="scss"
-  module="iconStyle"
-  scoped
-></style>

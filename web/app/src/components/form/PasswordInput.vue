@@ -18,10 +18,10 @@
         :class="strengthClass"
         title="Password Strength"
       >
-        <div class="ps-4"></div>
-        <div class="ps-3"></div>
-        <div class="ps-1"></div>
-        <div class="ps-2"></div>
+        <div class="pass-4"></div>
+        <div class="pass-3"></div>
+        <div class="pass-1"></div>
+        <div class="pass-2"></div>
       </div>
       <div
         title="Toggle Visibility"
@@ -42,6 +42,10 @@ import { defineComponent, toRefs, reactive } from "vue";
 import { debounce } from "throttle-debounce";
 import TextInput from "./TextInput.vue";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/20/solid";
+
+import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
+import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
+import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
 
 export default defineComponent({
   name: "PasswordInput",
@@ -78,7 +82,15 @@ export default defineComponent({
       show: false,
       score: 0,
       debouncedCheck: undefined,
-      zxcvbn: undefined,
+    });
+
+    zxcvbnOptions.setOptions({
+      graphs: zxcvbnCommonPackage.adjacencyGraphs,
+      useLevenshteinDistance: true,
+      dictionary: {
+        ...zxcvbnCommonPackage.dictionary,
+        ...zxcvbnEnPackage.dictionary,
+      },
     });
 
     return {
@@ -134,16 +146,12 @@ export default defineComponent({
   created() {
     this.password = this.modelValue;
     if (this.check) {
-      import("zxcvbn").then((zxcvbn) => {
-        this.zxcvbn = zxcvbn.default;
-      });
-
-      this.debouncedCheck = debounce(200, true, this.scoreDeb);
+      this.debouncedCheck = debounce(200, this.scoreDeb, { atBegin: true });
     }
   },
   methods: {
     scoreDeb() {
-      this.score = this.zxcvbn(this.password.substring(0, 64)).score;
+      this.score = zxcvbn(this.password.substring(0, 64)).score;
     },
     togglePass() {
       this.show = !this.show;
@@ -159,36 +167,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.ps-1,
-.ps-2,
-.ps-3,
-.ps-4 {
-  @apply h-1.5 w-1.5 bg-gray-500;
-}
-.s1 {
-  .ps-1 {
-    @apply bg-red-600;
-  }
-}
-.s2 {
-  .ps-1,
-  .ps-2 {
-    @apply bg-yellow-400;
-  }
-}
-.s3 {
-  div {
-    @apply bg-orange-600;
-  }
-  .ps-4 {
-    @apply bg-gray-500;
-  }
-}
-.s4 {
-  div {
-    @apply bg-green-600;
-  }
-}
-</style>

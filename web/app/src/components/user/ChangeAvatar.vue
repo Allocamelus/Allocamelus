@@ -5,7 +5,7 @@
       <slot>
         <div class="group relative cursor-pointer">
           <div
-            class="absolute hidden h-full w-full items-center justify-center rounded-full bg-black bg-opacity-50 group-hover:flex"
+            class="bg-opacity-50 absolute hidden h-full w-full items-center justify-center rounded-full bg-black group-hover:flex"
           >
             <CameraIcon class="h-5 w-5 text-white opacity-80"></CameraIcon>
           </div>
@@ -38,7 +38,7 @@
               :check="true"
               :max-size="maxImageSize"
               :required="true"
-              @filesChange="avatarUpload"
+              @files-change="avatarUpload"
               @error="onErr"
             >
               Upload Image

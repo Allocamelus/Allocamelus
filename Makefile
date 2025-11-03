@@ -7,8 +7,8 @@ run:
 generate:
 	sqlc generate
 	go generate ./...
-build-yarn:
-	cd ./web/app; yarn run build;
+build-bun:
+	cd ./web/app; bun run build;
 
 build-go:
 	go build -ldflags="-s -w" -o ./cmd/allocamelus/allocamelus ./cmd/allocamelus

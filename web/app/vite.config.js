@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import svgLoader from "vite-svg-loader";
 import { visualizer } from "rollup-plugin-visualizer";
+import tailwindcss from "@tailwindcss/vite";
 
 import path from "path";
 
@@ -9,6 +10,7 @@ import path from "path";
 export default defineConfig({
   plugins: [
     vue(),
+    tailwindcss(),
     svgLoader({
       svgoConfig: {
         multipass: true,
@@ -18,15 +20,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  css: {
-    modules: {
-      generateScopedName: "[hash:base64:5]",
-    },
-    preprocessorOptions: {
-      sass: { charset: false },
-      scss: { charset: false },
     },
   },
   build: {

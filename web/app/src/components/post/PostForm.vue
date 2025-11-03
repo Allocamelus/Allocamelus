@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-grow flex-col">
+  <div class="flex grow flex-col">
     <div class="flex flex-col">
       <div class="flex flex-row">
-        <editor-content :editor="editor" class="flex-grow" />
+        <editor-content :editor="editor" class="grow" />
       </div>
       <div class="mt-1 flex flex-wrap overflow-hidden rounded-lg">
         <image-box
@@ -13,7 +13,7 @@
           :total-number="images.length"
         >
           <div
-            class="absolute hidden h-full w-full flex-col justify-between bg-black bg-opacity-50 p-2 text-white group-hover:flex"
+            class="bg-opacity-50 absolute hidden h-full w-full flex-col justify-between bg-black p-2 text-white group-hover:flex"
           >
             <circle-bg
               class="h-6 w-6 self-end hover:bg-white"
@@ -42,7 +42,7 @@
     <div class="sticky bottom-3 mt-2 overflow-hidden rounded">
       <div
         v-if="editor !== undefined"
-        class="flex w-full flex-col bg-warm-gray-200 p-1.5 dark:bg-black-lighter"
+        class="flex w-full flex-col bg-stone-200 p-1.5 dark:bg-black-lighter"
       >
         <div v-if="editor.isActive('link')" class="mb-1.5">
           <text-input
@@ -68,7 +68,7 @@
             <circle-bg
               class="hover:bg-rose-800"
               :class="{
-                'bg-secondary-700 text-warm-gray-200': editor.isActive('bold'),
+                'bg-secondary-700 text-stone-200': editor.isActive('bold'),
               }"
               @click="editor.commands.toggleBold()"
             >
@@ -77,8 +77,7 @@
             <circle-bg
               class="ml-1.5 hover:bg-rose-800"
               :class="{
-                'bg-secondary-700 text-warm-gray-200':
-                  editor.isActive('italic'),
+                'bg-secondary-700 text-stone-200': editor.isActive('italic'),
               }"
               @click="editor.commands.toggleItalic()"
             >
@@ -87,8 +86,7 @@
             <circle-bg
               class="ml-1.5 hover:bg-rose-800"
               :class="{
-                'bg-secondary-700 text-warm-gray-200':
-                  editor.isActive('underline'),
+                'bg-secondary-700 text-stone-200': editor.isActive('underline'),
               }"
               @click="editor.commands.toggleUnderline()"
             >
@@ -97,7 +95,7 @@
             <circle-bg
               class="ml-1.5 hover:bg-rose-800"
               :class="{
-                'bg-secondary-700 text-warm-gray-200': editor.isActive('link'),
+                'bg-secondary-700 text-stone-200': editor.isActive('link'),
               }"
               @click="editor.commands.toggleLink()"
             >
@@ -300,10 +298,3 @@ function onPostErr(e?: string | any) {
   }
 }
 </script>
-
-<style scoped lang="scss">
-:deep(.ProseMirror) p.placeholder-empty:first-child::before {
-  content: attr(data-placeholder);
-  @apply pointer-events-none float-left h-0 opacity-90;
-}
-</style>

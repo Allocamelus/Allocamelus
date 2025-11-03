@@ -15,7 +15,7 @@
     >
       <div class="mr-1.5 flex items-center">
         <basic-btn
-          class="mr-1.5 p-1 text-gray-700 dark:text-gray-300"
+          class="mr-1.5 p-1 text-neutral-700 dark:text-neutral-300"
           title="Close"
           @click="close()"
         >

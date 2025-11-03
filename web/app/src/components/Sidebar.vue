@@ -1,23 +1,15 @@
 <template>
-  <div class="ml-6 hidden w-64 flex-shrink-0 flex-col items-stretch md:flex">
+  <div class="ml-6 hidden w-64 shrink-0 flex-col items-stretch md:flex">
     <box v-if="loggedIn" class="rounded-xl px-4 py-3">
       <div class="mx-auto w-max">
-        <basic-btn
-          to="/post/new"
-          class="px-3.5 py-2"
-          :class="buttonStyle.secondary"
-        >
+        <basic-btn to="/post/new" class="btn-secondary px-3.5 py-2">
           New Post
         </basic-btn>
       </div>
     </box>
     <box v-else class="rounded-xl px-3 py-2">
       <div class="mx-auto flex w-max">
-        <basic-btn
-          to="/signup"
-          class="px-3.5 py-2"
-          :class="buttonStyle.secondary"
-        >
+        <basic-btn to="/signup" class="btn-secondary px-3.5 py-2">
           Sign Up
         </basic-btn>
         <basic-btn to="/login" class="link ml-1.5 px-3 py-2"> Login </basic-btn>
@@ -46,10 +38,3 @@ export default defineComponent({
   components: { Box, BasicBtn, BottomLinks },
 });
 </script>
-
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>

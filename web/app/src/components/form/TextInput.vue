@@ -1,5 +1,7 @@
 <template>
-  <div class="input-container my-1 p-0">
+  <div
+    class="my-1 box-border flex w-full items-center justify-between rounded-sm border border-solid border-stone-400 bg-neutral-300 p-0 text-black-lighter focus-within:border-secondary-600 xs:bg-neutral-200 dark:border-stone-500 dark:bg-neutral-800 dark:text-white dark:focus-within:border-secondary-600"
+  >
     <input
       ref="input"
       v-model.trim="text"
@@ -7,7 +9,7 @@
       :name="name"
       :minlength="minLenC"
       :maxlength="maxLenC + 1"
-      class="input"
+      class="placeholder-opacity-80 dark:placeholder-opacity-80 mr-2.5 box-content flex-1 rounded-l-sm border-none bg-transparent py-1.5 pl-2.5 placeholder-stone-800 shadow-none outline-none autofill:text-black-lighter autofill:shadow-[inset_0_0_0_100px] autofill:shadow-neutral-300 hover:autofill:bg-transparent focus:outline-none focus:autofill:bg-transparent active:autofill:bg-transparent xs:autofill:shadow-neutral-200 dark:placeholder-stone-400 dark:autofill:text-white dark:autofill:shadow-neutral-800"
       :required="requiredC"
       :placeholder="placeholder"
       :disabled="disabled"
@@ -142,37 +144,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.input-container {
-  @apply box-border w-full rounded-sm border border-solid;
-  @apply border-warm-gray-400 bg-gray-300 text-black-lighter focus-within:border-secondary-600 xs:bg-gray-200;
-  @apply flex items-center justify-between;
-  @apply dark:border-warm-gray-500 dark:bg-gray-800 dark:text-white dark:focus-within:border-secondary-600;
-}
-
-.input {
-  @apply box-content flex-1 border-none outline-none focus:outline-none;
-  @apply mr-2.5 rounded-l-sm bg-transparent py-1.5 pl-2.5 shadow-none;
-  @apply placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80;
-  &:-webkit-autofill {
-    -webkit-text-fill-color: theme("colors.black.lighter");
-    -webkit-box-shadow: 0 0 0 100px theme("colors.gray.300") inset;
-    @screen xs {
-      -webkit-box-shadow: 0 0 0 100px theme("colors.gray.200") inset;
-    }
-  }
-  &:hover,
-  &:focus,
-  &:active {
-    &:-webkit-autofill {
-      background-color: transparent !important;
-    }
-  }
-}
-
-.dark .input:-webkit-autofill {
-  -webkit-text-fill-color: theme("colors.white");
-  -webkit-box-shadow: 0 0 0 100px theme("colors.gray.800") inset;
-}
-</style>

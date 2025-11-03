@@ -3,15 +3,15 @@
     <snackbar
       v-model="err.show"
       :close-btn="true"
-      class="text-gray-800 dark:text-gray-200"
+      class="text-neutral-800 dark:text-neutral-200"
     >
       {{ err.msg }}
     </snackbar>
-    <article class="flex flex-shrink flex-grow flex-col">
-      <div class="flex flex-shrink flex-grow">
-        <div class="flex flex-grow flex-col">
+    <article class="flex shrink grow flex-col">
+      <div class="flex shrink grow">
+        <div class="flex grow flex-col">
           <div
-            class="flex items-center justify-between text-gray-700 dark:text-gray-300"
+            class="flex items-center justify-between text-neutral-700 dark:text-neutral-300"
           >
             <div class="flex items-center text-sm xs:text-base">
               <user-avatar
@@ -33,7 +33,7 @@
               >
                 <div title="Edited">
                   <PencilSquareIcon
-                    class="h-4 w-4 dark:text-gray-400"
+                    class="h-4 w-4 dark:text-neutral-400"
                   ></PencilSquareIcon>
                 </div>
               </div>
@@ -41,22 +41,22 @@
           </div>
           <div class="flex">
             <div
-              class="group mr-2 mt-1 flex flex-grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
+              class="group mt-1 mr-2 flex grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'
                   : 'w-2 justify-start xs:justify-center'
               "
-              @click="hidden = !hidden"
+              @click="hidden = hidden!"
             >
               <div
-                class="w-0 border border-gray-400 group-hover:border-gray-700 dark:border-gray-700 dark:group-hover:border-gray-400"
+                class="w-0 border border-neutral-400 group-hover:border-neutral-700 dark:border-neutral-700 dark:group-hover:border-neutral-400"
               ></div>
             </div>
-            <div v-if="hidden" class="flex flex-grow">
+            <div v-if="hidden" class="flex grow">
               <small-text class="pt-1.5">[[hidden]]</small-text>
             </div>
-            <div v-else class="flex flex-grow flex-col">
+            <div v-else class="flex grow flex-col">
               <div class="py-1.5">
                 <div v-if="!showEdit" class="leading-5">
                   {{ comment.content }}
@@ -71,7 +71,7 @@
                 </div>
               </div>
               <div
-                class="mt-2 flex flex-row-reverse items-center text-sm font-medium text-gray-600 dark:text-gray-400 xs:flex-row"
+                class="mt-2 flex flex-row-reverse items-center text-sm font-medium text-neutral-600 xs:flex-row dark:text-neutral-400"
               >
                 <small-btn
                   class="mr-1.5 flex items-center pr-0.5"

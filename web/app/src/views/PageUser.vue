@@ -7,7 +7,7 @@
             <component
               :is="canEdit ? 'change-avatar' : 'user-avatar'"
               :user="canEdit ? storeUser : user"
-              class="h-14 w-14 flex-shrink-0 xs:h-16 xs:w-16 md:h-20 md:w-20"
+              class="h-14 w-14 shrink-0 xs:h-16 xs:w-16 md:h-20 md:w-20"
             ></component>
             <user-name
               class="ml-3"
@@ -26,12 +26,9 @@
             {{ canEdit ? storeUser.bio : user.bio }}
           </div>
         </div>
-        <div
-          class="mt-3 flex flex-shrink-0 items-start justify-end xs:ml-3 xs:mt-0"
-        >
+        <div class="mt-3 flex shrink-0 items-start justify-end xs:mt-0 xs:ml-3">
           <basic-btn
-            class="whitespace-nowrap px-3 py-2"
-            :class="buttonStyle.secondaryBorderInvert"
+            class="btn-secondary-border-invert px-3 py-2 whitespace-nowrap"
             @click="clickFollowEdit"
           >
             {{ followEditBtnTxt }}
@@ -50,7 +47,7 @@
           @close="overlay = false"
         >
           <div>Sign Up or Login to Follow {{ user.name }}</div>
-          <div class="pl-1 font-normal text-gray-700 dark:text-gray-400">
+          <div class="pl-1 font-normal text-neutral-700 dark:text-neutral-400">
             @{{ user.userName }}
           </div>
         </sign-up-overlay>
@@ -205,8 +202,8 @@ export default defineComponent({
           ) {
             r = await userUnfollow(this.user.userName);
             if (r.success) {
-              this.user.selfFollow.requested = this.user.selfFollow.following =
-                false;
+              this.user.selfFollow.requested =
+                this.user.selfFollow.following = false;
             }
           } else {
             r = await userFollow(this.user.userName);
@@ -284,10 +281,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>

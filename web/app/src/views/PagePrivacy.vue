@@ -1,7 +1,7 @@
 <template>
   <div class="container flex flex-col py-5">
     <Box class="flex flex-col gap-6 rounded-xl p-5 text-base">
-      <h1 :class="textStyle.h2">Privacy Policy</h1>
+      <h1 class="h1">Privacy Policy</h1>
     </Box>
   </div>
 </template>
@@ -22,10 +22,3 @@ export default defineComponent({
   components: { Box },
 });
 </script>
-
-<style
-  src="@/scss/modules/text.modules.scss"
-  lang="scss"
-  module="textStyle"
-  scoped
-></style>

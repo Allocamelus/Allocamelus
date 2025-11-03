@@ -13,7 +13,7 @@
       class="absolute right-0 flex origin-top-right flex-col pt-0.5"
     >
       <div
-        class="fixed bottom-0 left-0 right-0 top-0 z-30"
+        class="fixed top-0 right-0 bottom-0 left-0 z-30"
         @click="toggleShow"
       ></div>
       <div

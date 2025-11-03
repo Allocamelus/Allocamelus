@@ -1,17 +1,17 @@
 <template>
   <article
-    class="flex flex-shrink flex-grow flex-col"
+    class="flex shrink grow flex-col"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <div class="flex flex-shrink flex-grow px-3.5 py-3" @click.self="toPost">
+    <div class="flex shrink grow px-3.5 py-3" @click.self="toPost">
       <user-avatar :user="user" :is-link="true" class="h-11 w-11"></user-avatar>
       <div
-        class="ml-3 flex flex-grow flex-col"
+        class="ml-3 flex grow flex-col"
         :class="post.content?.length == 0 ? 'justify-center' : ''"
         @click.self="toPost"
       >
         <div
-          class="flex items-center justify-between text-gray-700 dark:text-gray-300"
+          class="flex items-center justify-between text-neutral-700 dark:text-neutral-300"
           @click.self="toPost"
         >
           <div class="flex">
@@ -30,7 +30,7 @@
             </div>
             <div v-else class="dot-before flex items-center whitespace-nowrap">
               <div title="Not Published">
-                <radix-eye-none class="h-4 w-4 dark:text-gray-400" />
+                <radix-eye-none class="h-4 w-4 dark:text-neutral-400" />
               </div>
             </div>
             <div
@@ -39,7 +39,7 @@
             >
               <div title="Edited">
                 <PencilSquareIcon
-                  class="h-4 w-4 dark:text-gray-400"
+                  class="h-4 w-4 dark:text-neutral-400"
                 ></PencilSquareIcon>
               </div>
             </div>

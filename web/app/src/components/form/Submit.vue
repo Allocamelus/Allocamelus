@@ -1,8 +1,7 @@
 <template>
   <basic-btn
     type="submit"
-    class="flex-shrink-0 px-3.5 py-2.5 transition duration-75"
-    :class="buttonStyle.secondary"
+    class="btn-secondary shrink-0 px-3.5 py-2.5 transition duration-75"
     :title="title"
     @click="$emit('submit', true)"
   >
@@ -25,10 +24,3 @@ export default defineComponent({
   components: { BasicBtn },
 });
 </script>
-
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>

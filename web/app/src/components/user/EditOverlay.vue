@@ -7,16 +7,16 @@
         {{ err.snackbar.msg }}
       </snackbar>
       <div
-        class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
+        class="flex w-full shrink-0 items-end border-b border-secondary-600 p-3"
       >
         <div class="flex flex-1 justify-start">
           <basic-btn @click="visable = false">
-            <XMarkIcon class="h-5 w-5" :class="iconStyle.xIcon"></XMarkIcon>
+            <XMarkIcon class="xIcon h-5 w-5"></XMarkIcon>
           </basic-btn>
         </div>
         <div class="flex flex-1 justify-center">
           <div
-            class="text-base font-medium leading-4 text-gray-900 dark:text-gray-100"
+            class="text-base leading-4 font-medium text-neutral-900 dark:text-neutral-100"
           >
             Edit Profile
           </div>
@@ -25,8 +25,8 @@
           <basic-btn class="link" @click="submit">Save</basic-btn>
         </div>
       </div>
-      <div class="flex flex-grow flex-col overflow-y-auto">
-        <div class="flex flex-shrink-0 flex-grow flex-col px-6 py-6 xs:px-8">
+      <div class="flex grow flex-col overflow-y-auto">
+        <div class="flex shrink-0 grow flex-col px-6 py-6 xs:px-8">
           <div class="flex items-center">
             <user-avatar
               class="h-11 w-11"
@@ -256,10 +256,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style
-  src="@/scss/modules/icon.modules.scss"
-  lang="scss"
-  module="iconStyle"
-  scoped
-></style>

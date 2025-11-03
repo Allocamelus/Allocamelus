@@ -10,7 +10,7 @@
   >
     <div
       v-show="modelValue"
-      class="fixed bottom-0 left-0 right-0 z-auto w-full xs:bottom-4"
+      class="fixed right-0 bottom-0 left-0 z-auto w-full xs:bottom-4"
     >
       <div class="m-auto w-full xs:w-max">
         <box
@@ -78,5 +78,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style></style>

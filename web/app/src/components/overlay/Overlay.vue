@@ -1,13 +1,13 @@
 <template>
   <div
     v-show="show"
-    class="fixed bottom-0 left-0 right-0 top-0 z-30 h-full w-full"
+    class="fixed top-0 right-0 bottom-0 left-0 z-30 h-full w-full"
   >
     <div
       class="m-auto flex h-full w-full items-center justify-center xs:max-w-md"
     >
       <div
-        class="fixed bottom-0 left-0 right-0 top-0 bg-black opacity-75"
+        class="fixed top-0 right-0 bottom-0 left-0 bg-black opacity-75"
         @click="toggleShow"
       ></div>
       <div

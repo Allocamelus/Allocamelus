@@ -1,8 +1,8 @@
 <template>
-  <div class="relative flex-shrink-0">
+  <div class="relative shrink-0">
     <circle-bg class="hover:bg-rose-800" @click="show = !show">
       <EllipsisVerticalIcon
-        class="h-4.5 w-4.5 text-gray-800 group-hover:text-rose-700 dark:text-gray-200"
+        class="h-4.5 w-4.5 text-neutral-800 group-hover:text-rose-700 dark:text-neutral-200"
       ></EllipsisVerticalIcon>
     </circle-bg>
     <dropdown v-model="show" class="w-44">

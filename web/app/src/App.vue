@@ -2,7 +2,7 @@
   <div class="font-sans">
     <nav
       id="nav"
-      class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-gray-50 shadow"
+      class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-neutral-50 shadow"
     >
       <div class="container flex h-nav flex-row justify-between leading-nav">
         <div class="flex">
@@ -30,7 +30,7 @@
               </div>
               <dropdown v-model="alerts.menu" class="w-80 max-w-sm">
                 <div
-                  class="overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-800"
+                  class="overflow-x-hidden overflow-y-auto bg-neutral-100 dark:bg-neutral-800"
                 >
                   <bar-loader :show="alerts.loading" />
                   <div
@@ -41,23 +41,21 @@
                     </div>
                     <div v-else>
                       <text-small
-                        class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
+                        class="pb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300"
                       >
                         Follow/Friend Request:
                       </text-small>
                       <div
                         v-for="(userId, index) in alerts.requests.requests"
                         :key="index"
-                        class="flex flex-shrink flex-grow items-center pb-3"
+                        class="flex shrink grow items-center pb-3"
                       >
                         <user-avatar
                           :user="alerts.requests.user(userId)"
                           :is-link="true"
                           class="h-8 w-8"
                         ></user-avatar>
-                        <div
-                          class="flex flex-grow items-center justify-between"
-                        >
+                        <div class="flex grow items-center justify-between">
                           <div class="ml-2 flex">
                             <user-name
                               :user="alerts.requests.user(userId)"
@@ -65,14 +63,13 @@
                           </div>
                           <div class="ml-2 flex items-center">
                             <div
-                              class="cursor-pointer rounded px-2 py-1.5 text-sm font-semibold leading-4"
-                              :class="buttonStyle.secondary"
+                              class="btn-secondary cursor-pointer rounded px-2 py-1.5 text-sm leading-4 font-semibold"
                               @click="followRequest(userId, true)"
                             >
                               Accept
                             </div>
                             <div
-                              class="link ml-1.5 cursor-pointer rounded p-1 text-sm font-semibold leading-4"
+                              class="link ml-1.5 cursor-pointer rounded p-1 text-sm leading-4 font-semibold"
                               @click="followRequest(userId, false)"
                             >
                               Decline
@@ -137,18 +134,15 @@
                 :xs-full-height="true"
               >
                 <Box
-                  class="flex h-full w-full flex-grow flex-col justify-between xs:mx-2 xs:rounded-lg"
+                  class="flex h-full w-full grow flex-col justify-between xs:mx-2 xs:rounded-lg"
                 >
                   <div class="flex flex-col">
                     <div
-                      class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
+                      class="flex w-full shrink-0 items-end border-b border-secondary-600 p-3"
                     >
                       <div class="flex flex-1 justify-end">
                         <basic-btn @click="userMenu = false">
-                          <XMarkIcon
-                            class="h-5 w-5"
-                            :class="iconStyle.xIcon"
-                          ></XMarkIcon>
+                          <XMarkIcon class="xIcon h-5 w-5"></XMarkIcon>
                         </basic-btn>
                       </div>
                     </div>
@@ -160,9 +154,7 @@
                           :user="user"
                           class="h-11 w-11"
                         ></user-avatar>
-                        <div
-                          class="ml-3 flex flex-grow flex-col justify-evenly"
-                        >
+                        <div class="ml-3 flex grow flex-col justify-evenly">
                           <user-name :user="user" :is-link="false"></user-name>
                           <div class="link">View Profile</div>
                         </div>
@@ -261,9 +253,12 @@ export default defineComponent({
       session = useSessionStore();
     const theme = computed(() => state.theme);
     const data = reactive({
-      sesKeepAliveInterval: setInterval(() => {
-        return;
-      }, SecToMs(MinToSec(10))),
+      sesKeepAliveInterval: setInterval(
+        () => {
+          return;
+        },
+        SecToMs(MinToSec(10))
+      ),
       userMenu: false,
       footer: false,
       alerts: {
@@ -413,16 +408,4 @@ export default defineComponent({
 });
 </script>
 
-<style src="./scss/App.scss" lang="scss"></style>
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>
-<style
-  src="@/scss/modules/icon.modules.scss"
-  lang="scss"
-  module="iconStyle"
-  scoped
-></style>
+<style src="./main.css" lang="css"></style>
