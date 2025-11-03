@@ -87,8 +87,7 @@ body {
   content: "-";
 }
 .link {
-  @apply text-secondary-700 dark:hover:text-rose-600;
-  @apply hover:text-secondary-900 dark:text-rose-500;
+  @apply text-secondary-700 hover:text-secondary-900 dark:text-rose-500 dark:hover:text-rose-600;
   @apply cursor-pointer;
 }
 .xIcon {
