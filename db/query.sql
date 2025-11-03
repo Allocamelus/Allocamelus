@@ -38,7 +38,7 @@ WHERE userId = $1
 -- name: GetUserIDByUserName :one
 SELECT userId
 FROM Users
-WHERE userName = $1
+WHERE LOWER(userName) = LOWER($1)
 LIMIT 1;
 
 -- name: InsertUser :one
@@ -56,7 +56,7 @@ VALUES ($1, '', $2, '', $3, $4, $5) RETURNING userId;
 -- name: GetUserIDByEmail :one
 SELECT userId
 FROM Users
-WHERE email = $1
+WHERE LOWER(email) = LOWER($1)
 LIMIT 1;
 
 -- name: GetUserEmailByID :one
@@ -72,7 +72,7 @@ SELECT userName FROM Users WHERE userId = $1 LIMIT 1;
 SELECT EXISTS(
     SELECT *
     FROM Users
-    WHERE userName = $1
+    WHERE LOWER(userName) = LOWER($1)
   );
 
 -- name: UpdateUserType :exec

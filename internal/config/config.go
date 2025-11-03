@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -119,7 +120,7 @@ func ReadConfig(path string) (*Config, error) {
 	configration := new(Config)
 	file, err := os.Open(path)
 	if err != nil {
-		return &Config{}, errors.New("Error reading config @ " + path)
+		return &Config{}, fmt.Errorf("error reading config @ %s\nErr: %w", path, err)
 	}
 	defer file.Close()
 
