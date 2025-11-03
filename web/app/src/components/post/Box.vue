@@ -14,7 +14,7 @@
           class="flex items-center justify-between text-neutral-700 dark:text-neutral-300"
           @click.self="toPost"
         >
-          <div class="flex">
+          <div class="flex w-0 grow">
             <user-name :user="user"></user-name>
             <div
               v-if="published"

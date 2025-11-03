@@ -40,26 +40,37 @@
                       {{ alerts.err }}
                     </div>
                     <div v-else>
-                      <text-small
-                        class="pb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                      >
-                        Follow/Friend Request:
-                      </text-small>
                       <div
                         v-for="(userId, index) in alerts.requests.requests"
                         :key="index"
-                        class="flex shrink grow items-center pb-3"
+                        class="flex shrink grow pb-3"
                       >
-                        <user-avatar
-                          :user="alerts.requests.user(userId)"
-                          :is-link="true"
-                          class="h-8 w-8"
-                        ></user-avatar>
-                        <div class="flex grow items-center justify-between">
-                          <div class="ml-2 flex">
-                            <user-name
-                              :user="alerts.requests.user(userId)"
-                            ></user-name>
+                        <div class="flex h-10 items-center">
+                          <user-avatar
+                            :user="alerts.requests.user(userId)"
+                            :is-link="true"
+                            class="h-8 w-8"
+                          ></user-avatar>
+                        </div>
+                        <div class="flex grow flex-col justify-between">
+                          <div class="ml-2 flex flex-col pb-2">
+                            <div class="flex">
+                              <div class="flex w-0 grow text-base leading-5">
+                                <user-name
+                                  :user="alerts.requests.user(userId)"
+                                ></user-name>
+                              </div>
+                            </div>
+                            <text-small class="font-medium">
+                              Sent You a
+                              {{
+                                user.type === Private &&
+                                alerts.requests.user(userId).type === Private
+                                  ? "Friend"
+                                  : "Follow"
+                              }}
+                              Request!
+                            </text-small>
                           </div>
                           <div class="ml-2 flex items-center">
                             <div
@@ -238,6 +249,7 @@ import BottomFooter from "./components/BottomFooter.vue";
 import Overlay from "./components/overlay/Overlay.vue";
 import Box from "./components/box/Box.vue";
 import BottomLinks from "./components/BottomLinks.vue";
+import { Private } from "./models/user";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -293,6 +305,7 @@ export default defineComponent({
       theme,
       viewKey: computed(() => state.viewKey),
       toggleTheme: state.toggleTheme,
+      Private,
     };
   },
   watch: {
