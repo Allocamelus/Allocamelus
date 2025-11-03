@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex min-h-[calc(100vh-calc(var(--nav-height)*1.5))] w-full items-center justify-center xs:min-h-[calc(100vh-var(--nav-height))]"
-  >
+  <div class="flex w-full grow items-center justify-center">
     <Box
       class="mx-auto flex max-w-[400px] grow flex-col rounded-xl bg-transparent shadow-none xs:bg-neutral-50 xs:shadow dark:bg-transparent xs:dark:bg-neutral-900"
       :class="classes"

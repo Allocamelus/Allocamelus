@@ -1,5 +1,5 @@
 <template>
-  <div class="font-sans">
+  <div class="flex min-h-screen min-w-full grow flex-col font-sans">
     <nav
       id="nav"
       class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-neutral-50 shadow"
@@ -194,7 +194,7 @@
         </div>
       </div>
     </nav>
-    <div id="bodyContent" class="mt-nav">
+    <div class="mt-nav flex flex-1 grow flex-col">
       <router-view :key="viewKey" />
       <snackbar v-model="snackbar.show" :close-btn="true">
         {{ snackbar.msg }}

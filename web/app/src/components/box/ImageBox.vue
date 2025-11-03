@@ -43,8 +43,8 @@ export default defineComponent({
       default: 1,
     }, // How many other images are there
     loading: {
-      type: String,
-      default: "auto",
+      type: String as () => "lazy" | "eager",
+      default: "lazy",
     },
     alt: {
       type: String,
