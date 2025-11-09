@@ -42,19 +42,19 @@ export default defineComponent({
             let url = new URL(this.to, window.location.origin);
             if (url.host === window.location.host) {
               return {
-                ["to"]: url.pathname,
+                "to": url.pathname,
               };
             }
           } catch (_) {}
         }
         return {
-          ["to"]: this.to,
+          "to": this.to,
         };
       }
       return {
-        ["href"]: this.to,
-        ["rel"]: "noopener noreferrer",
-        ["target"]: "_blank",
+        "href": this.to,
+        "rel": "noopener noreferrer",
+        "target": "_blank",
       };
     },
   },
