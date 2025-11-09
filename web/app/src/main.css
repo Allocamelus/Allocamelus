@@ -46,9 +46,15 @@
   --spacing-4-5: 1.125rem;
   --spacing-5-5: 1.375rem;
 
-  --transition-delay-25: 25ms;
-
   --animate-slide: slide 1.7s cubic-bezier(0, 0, 0.26, 0.74) infinite;
+  @keyframes slide {
+    0% {
+      margin-left: -25%;
+    }
+    100% {
+      margin-left: 125%;
+    }
+  }
 }
 body,
 .scrollbar {
