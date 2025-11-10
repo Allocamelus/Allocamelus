@@ -13,8 +13,7 @@
     "prefix": "allocamelus_"
   },
   "db": {
-    "net": "tcp",
-    "server": "172.20.30.3:3306",
+    "server": "db:5432",
     "name": "allocamelus",
     "username": "allocamelus",
     "password": "password (Don\"t use this one)"
@@ -54,9 +53,9 @@
     }
   },
   "redis": {
-    "host": "172.20.30.5:6379",
-    "user": "allocamelus",
-    "password": "password"
+    "host": "redis:6379",
+    "user": "default",
+    "password": "redispw"
   },
   "session": {
     "maxLife": 86400,

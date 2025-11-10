@@ -1,82 +1,56 @@
 package post
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
+	"errors"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user/session"
+	"github.com/jackc/pgx/v5"
 )
-
-var (
-	//go:embed sql/get/publicPosts/ByUser/Total.sql
-	qGetPubPostsByUserTotal string
-	//go:embed sql/get/publicPosts/ByUser/Latest.sql
-	qGetPubPostsByUserLatest string
-	//go:embed sql/get/publicPosts/ForUser/Total.sql
-	qGetPubPostsForUserTotal string
-	//go:embed sql/get/publicPosts/ForUser/Latest.sql
-	qGetPubPostsForUserLatest string
-
-	preGetPosts struct {
-		ByUser struct {
-			Total  *sql.Stmt
-			Latest *sql.Stmt
-		}
-		ForUser struct {
-			Total  *sql.Stmt
-			Latest *sql.Stmt
-		}
-	}
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPosts.ByUser.Total, qGetPubPostsByUserTotal)
-	data.PrepareQueuer.Add(&preGetPosts.ByUser.Latest, qGetPubPostsByUserLatest)
-	data.PrepareQueuer.Add(&preGetPosts.ForUser.Total, qGetPubPostsForUserTotal)
-	data.PrepareQueuer.Add(&preGetPosts.ForUser.Latest, qGetPubPostsForUserLatest)
-}
 
 // GetPostsTotal
 // TODO: Cache!!!
 func GetPostsTotal(u *session.Session) (total int64, err error) {
-	err = preGetPosts.ForUser.Total.QueryRow(u.UserID, u.UserID).Scan(&total)
-	return
+	return g.Data.Queries.CountPublicPostsForUser(context.Background(), u.UserID)
 }
 
 // GetPublicPosts
 // TODO: Cache
 func GetPosts(startNum, perPage int64, u *session.Session) (*List, error) {
-	rows, err := preGetPosts.ForUser.Latest.Query(u.UserID, u.UserID, startNum, perPage)
+	rows, err := g.Data.Queries.GetLatestPublicPostsForUser(context.Background(), db.GetLatestPublicPostsForUserParams{
+		Userid: u.UserID,
+		Offset: int32(startNum),
+		Limit:  int32(perPage),
+	})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	posts := NewList()
 
-	var index int64
-	for rows.Next() {
+	for i, r := range rows {
 		p := new(Post)
-
-		err := rows.Scan(&p.ID, &p.UserID, &p.Published, &p.Updated, &p.Content)
-		if err != nil {
-			return nil, err
-		}
+		p.ID = r.Postid
+		p.Content = r.Content
+		p.UserID = r.Userid
+		p.Published = r.Published
+		p.Updated = r.Updated
 
 		// Get Media
 		p.MediaList, err = media.Get(p.ID)
 		if err != nil {
-			if err != sql.ErrNoRows {
+			if !errors.Is(err, pgx.ErrNoRows) {
 				return nil, err
 			}
 		}
 		p.Media = len(p.MediaList) > 0
 
 		posts.Posts[p.ID] = p
-		posts.Order[index] = p.ID
-		index++
+		posts.Order[int64(i)] = p.ID
 	}
 
 	return posts, nil
@@ -84,42 +58,37 @@ func GetPosts(startNum, perPage int64, u *session.Session) (*List, error) {
 
 // GetUserPostsTotal
 // TODO: Cache!!!
-func GetUserPostsTotal(userID int64) (total int64, err error) {
-	err = preGetPosts.ByUser.Total.QueryRow(userID).Scan(&total)
-	return
+func GetUserPostsTotal(userID int64) (int64, error) {
+	return g.Data.Queries.CountPublicPostsByUser(context.Background(), userID)
 }
 
 func GetUserPosts(userID, startNum, perPage int64) (*List, error) {
-	posts := NewList()
-
-	rows, err := preGetPosts.ByUser.Latest.Query(userID, startNum, perPage)
+	rows, err := g.Data.Queries.GetLatestPublicPostsByUser(context.Background(), db.GetLatestPublicPostsByUserParams{Userid: userID, Offset: int32(startNum), Limit: int32(perPage)})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var index int64
-	for rows.Next() {
+	posts := NewList()
+
+	for i, r := range rows {
 		p := new(Post)
-
-		err := rows.Scan(&p.ID, &p.Published, &p.Updated, &p.Content)
-		if err != nil {
-			return nil, err
-		}
+		p.ID = r.Postid
+		p.Content = r.Content
 		p.UserID = userID
+		p.Published = r.Published
+		p.Updated = r.Updated
 
 		// Get Media
 		p.MediaList, err = media.Get(p.ID)
 		if err != nil {
-			if err != sql.ErrNoRows {
+			if !errors.Is(err, pgx.ErrNoRows) {
 				return nil, err
 			}
 		}
 		p.Media = len(p.MediaList) > 0
 
 		posts.Posts[p.ID] = p
-		posts.Order[index] = p.ID
-		index++
+		posts.Order[int64(i)] = p.ID
 	}
 
 	return posts, nil

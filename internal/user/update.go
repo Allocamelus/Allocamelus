@@ -1,32 +1,17 @@
 package user
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 )
-
-var (
-	//go:embed sql/update/name.sql
-	qUpdateName   string
-	preUpdateName *sql.Stmt
-	//go:embed sql/update/bio.sql
-	qUpdateBio   string
-	preUpdateBio *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preUpdateName, qUpdateName)
-	data.PrepareQueuer.Add(&preUpdateBio, qUpdateBio)
-}
 
 func UpdateName(userId int64, name string) error {
-	_, err := preUpdateName.Exec(name, userId)
-	return err
+	return g.Data.Queries.UpdateUserName(context.Background(), db.UpdateUserNameParams{Name: name, Userid: userId})
 }
 
 func UpdateBio(userId int64, bio string) error {
-	_, err := preUpdateBio.Exec(bio, userId)
-	return err
+	return g.Data.Queries.UpdateUserBio(context.Background(), db.UpdateUserBioParams{Bio: bio, Userid: userId})
 }

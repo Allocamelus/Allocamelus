@@ -5,7 +5,7 @@
       <slot>
         <div class="group relative cursor-pointer">
           <div
-            class="absolute hidden h-full w-full items-center justify-center rounded-full bg-black bg-opacity-50 group-hover:flex"
+            class="bg-opacity-50 absolute hidden h-full w-full items-center justify-center rounded-full bg-black group-hover:flex"
           >
             <CameraIcon class="h-5 w-5 text-white opacity-80"></CameraIcon>
           </div>
@@ -15,14 +15,14 @@
     </div>
     <overlay
       v-model="show"
-      :blockScroll="blockScroll"
-      :xsFullHeight="false"
-      :xsSelfEnd="true"
+      :block-scroll="blockScroll"
+      :xs-full-height="false"
+      :xs-self-end="true"
     >
       <box
         class="w-full self-end rounded-t-lg text-center xs:m-3 xs:self-center xs:rounded-md"
       >
-        <snackbar v-model="err.show" :closeBtn="true">{{ err.msg }}</snackbar>
+        <snackbar v-model="err.show" :close-btn="true">{{ err.msg }}</snackbar>
         <div
           class="w-full border-b border-secondary-300 p-4 text-2xl font-medium text-black-lighter dark:border-secondary-700 dark:text-white"
         >
@@ -36,17 +36,17 @@
               class="w-full"
               accept="image/png,image/jpeg,image/gif,image/webp"
               :check="true"
-              :maxSize="maxImageSize"
+              :max-size="maxImageSize"
               :required="true"
-              @filesChange="avatarUpload"
+              @files-change="avatarUpload"
               @error="onErr"
             >
               Upload Image
             </file-input>
           </div>
           <div
-            class="cursor-pointer border-b border-secondary-300 p-3 text-red-500 dark:border-secondary-700"
             v-if="user.avatar"
+            class="cursor-pointer border-b border-secondary-300 p-3 text-red-500 dark:border-secondary-700"
             @click="avatarRemove"
           >
             Remove Image
@@ -73,7 +73,7 @@ import { SomethingWentWrong } from "../form/errors";
 
 import { avatar as UploadAvatar, removeAvatar } from "@/api/user/update/avatar";
 
-import CameraIcon from "@heroicons/vue/solid/CameraIcon";
+import { CameraIcon } from "@heroicons/vue/20/solid";
 
 import Box from "../box/Box.vue";
 import Overlay from "../overlay/Overlay.vue";

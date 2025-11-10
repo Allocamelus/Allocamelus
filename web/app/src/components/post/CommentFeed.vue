@@ -3,8 +3,8 @@
     <box class="mt-5 mb-3 rounded-xl px-4 py-3">
       <div v-if="loggedIn">
         <comment-input
-          :postId="postId"
-          :replyTo="0"
+          :post-id="postId"
+          :reply-to="0"
           @commented="newComment($event)"
         ></comment-input>
       </div>
@@ -21,7 +21,7 @@
     </box>
     <feed class="flex-col-reverse">
       <div v-for="(commentId, index) in list.order" :key="index" class="py-2">
-        <comment-tree :commentId="commentId" :postId="postId"></comment-tree>
+        <comment-tree :comment-id="commentId" :post-id="postId"></comment-tree>
       </div>
     </feed>
   </div>
@@ -43,7 +43,7 @@ import Box from "../box/Box.vue";
 import TextInput from "../form/TextInput.vue";
 
 export default defineComponent({
-  name: "comment-feed",
+  name: "CommentFeed",
   props: {
     list: {
       type: API_Comments,
@@ -72,13 +72,13 @@ export default defineComponent({
       },
     };
   },
-  beforeUnmount() {
-    this.disposeComment();
-  },
   watch: {
     list(newValue) {
       this.populate(newValue);
     },
+  },
+  beforeUnmount() {
+    this.disposeComment();
   },
   methods: {
     newComment(c: API_Comment) {

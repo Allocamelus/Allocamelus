@@ -4,25 +4,24 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/app"
+	"github.com/allocamelus/allocamelus/internal/version"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 )
 
 var configPath string
 
 func init() {
-	const (
-		defaultConfig = "./config.json"
-		configUsage   = "Path to config.json"
-	)
+	if configPath = getEnvTrim("CONFIG_PATH"); configPath == "" {
+		configPath = "./config.json"
+	}
 
-	flag.StringVar(&configPath, "config", defaultConfig, configUsage)
-	flag.StringVar(&configPath, "c", defaultConfig, configUsage+" (shorthand)")
 	v := flag.Bool("version", false, "Returns version")
 	flag.Parse()
 	if *v {
-		fmt.Println(app.Version)
+		fmt.Println(version.Version)
 		os.Exit(0)
 	}
 }
@@ -36,4 +35,8 @@ func main() {
 	// Log error if any
 	logger.Error(a.InitListener())
 	<-serverClosed
+}
+
+func getEnvTrim(key string) string {
+	return strings.TrimSpace(os.Getenv(key))
 }

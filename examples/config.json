@@ -13,8 +13,7 @@
     "prefix": "allocamelus_"
   },
   "db": {
-    "Net": "tcp",
-    "server": "172.20.30.3:3306",
+    "server": "db:3306",
     "name": "allocamelus",
     "username": "user",
     "password": "password (Don\"t use this one)"

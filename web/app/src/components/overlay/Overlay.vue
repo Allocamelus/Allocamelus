@@ -1,13 +1,13 @@
 <template>
   <div
     v-show="show"
-    class="fixed top-0 bottom-0 right-0 left-0 z-30 h-full w-full"
+    class="fixed top-0 right-0 bottom-0 left-0 z-30 h-full w-full"
   >
     <div
       class="m-auto flex h-full w-full items-center justify-center xs:max-w-md"
     >
       <div
-        class="fixed top-0 bottom-0 right-0 left-0 bg-black opacity-75"
+        class="fixed top-0 right-0 bottom-0 left-0 bg-black opacity-75"
         @click="toggleShow"
       ></div>
       <div
@@ -53,7 +53,7 @@ function unblock() {
 }
 
 export default defineComponent({
-  name: "overlay",
+  name: "Overlay",
   props: {
     modelValue: Boolean,
     blockScroll: {
@@ -79,9 +79,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  beforeUnmount() {
-    unblock();
-  },
   watch: {
     modelValue(newValue) {
       this.show = newValue;
@@ -93,6 +90,9 @@ export default defineComponent({
         }
       }
     },
+  },
+  beforeUnmount() {
+    unblock();
   },
   methods: {
     toggleShow() {

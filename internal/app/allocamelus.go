@@ -12,6 +12,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/router/middleware"
 	"github.com/allocamelus/allocamelus/internal/router/routes"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/helmet/v2"
@@ -25,8 +26,6 @@ type Allocamelus struct {
 }
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
-const Version = "0.0.0-alpha"
 
 // New Allocamelus server
 func New(configPath string) *Allocamelus {
@@ -53,6 +52,8 @@ func New(configPath string) *Allocamelus {
 
 	routes.Register(app)
 
+	vips.Startup(nil)
+
 	return &Allocamelus{
 		Fiber: app,
 	}
@@ -66,6 +67,10 @@ func (c *Allocamelus) AwaitAndClose(serverClosed chan struct{}) {
 
 	log.Println("Shutting down Fiber")
 	logger.Error(c.Fiber.Shutdown())
+	log.Println("Closing datastores")
+	g.Data.Close()
+	log.Println("Shutting down vips")
+	vips.Shutdown()
 	log.Println("Flushing klog")
 	klog.Flush()
 
@@ -85,7 +90,7 @@ func (c *Allocamelus) InitListener() error {
 		tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
 
 		// Create custom listener
-		ln, err := tls.Listen("tcp", "127.0.0.1:"+strconv.Itoa(int(g.Data.Config.Ssl.Port)), tlsConfig)
+		ln, err := tls.Listen("tcp", ":"+strconv.Itoa(int(g.Data.Config.Ssl.Port)), tlsConfig)
 		if err != nil {
 			return err
 		}

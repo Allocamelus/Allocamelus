@@ -1,11 +1,3 @@
-import {
-  Html404Func,
-  Html403Func,
-  Html422,
-  Html429,
-  HtmlSomethingWentWrong,
-} from "../components/htmlErrors";
-
 function invalidLenErrMaker(min: number, max: number) {
   return `invalid-length-min${min}-max${max}`;
 }
@@ -162,13 +154,13 @@ export function notNull(err: string | undefined | null): boolean {
 export function RespToHtml(resp: string): string {
   switch (resp) {
     case Shared.NotFound:
-      return Html404Func();
+      return "404";
     case Shared.Unauthorized403:
-      return Html403Func();
+      return "403";
     case Shared.UnprocessableEntity:
-      return Html422;
+      return "422";
     case Shared.TooManyRequests:
-      return Html429;
+      return "429";
   }
-  return HtmlSomethingWentWrong;
+  return "SomethingWentWrong";
 }

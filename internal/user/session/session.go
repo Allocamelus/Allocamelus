@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"crypto/sha512"
 	"crypto/subtle"
-	"database/sql"
 	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -15,6 +14,7 @@ import (
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"k8s.io/klog/v2"
 )
 
@@ -97,12 +97,13 @@ func Get(c *fiber.Ctx) *Session {
 		var err error
 		session, err = authTokenLogin(c)
 		if err != nil {
-			if err != sql.ErrNoRows &&
+			if !errors.Is(err, pgx.ErrNoRows) &&
 				err != token.ErrAuthCookie &&
+				err != token.ErrEmptyCookie &&
 				err != token.ErrInvalid {
 				logger.Error(err)
 			} else if klog.V(5).Enabled() {
-				logger.Error(err)
+				logger.Info(err)
 			}
 			// empty session
 			session = new(Session)
@@ -148,7 +149,7 @@ func (s *Session) checkToken(c *fiber.Ctx) error {
 
 	pkSalt, err := key.GetSalt(s.UserID)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 		}
 		return errToken

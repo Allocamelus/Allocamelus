@@ -1,6 +1,8 @@
 package user
 
-import "github.com/allocamelus/allocamelus/internal/user/session"
+import (
+	"github.com/allocamelus/allocamelus/internal/user/session"
+)
 
 type ListUsers map[int64]*User
 

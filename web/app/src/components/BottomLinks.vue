@@ -1,9 +1,9 @@
 <template>
   <div class="mt-3">
     <div
-      class="flex justify-center px-4 text-sm text-gray-800 dark:text-gray-500"
+      class="flex justify-center px-4 text-sm text-neutral-800 dark:text-neutral-500"
     >
-      <div class="self-center text-gray-700 dark:text-gray-400">
+      <div class="self-center text-neutral-700 dark:text-neutral-400">
         &copy; {{ new Date().getFullYear() }}
       </div>
       <div class="dash-before">

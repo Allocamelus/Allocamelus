@@ -74,12 +74,12 @@ type Body struct {
 }
 
 // SendChan channel send email
-func (e *Email) SendChan(err chan error, config Config) {
+func (e *Email) SendChan(err chan error, config *Config) {
 	err <- e.Send(config)
 }
 
 // Send email
-func (e *Email) Send(config Config) error {
+func (e *Email) Send(config *Config) error {
 	if !config.Enabled {
 		return ErrEmailDisabled
 	}

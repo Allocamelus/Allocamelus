@@ -1,7 +1,7 @@
 <template>
   <component
     :is="isLink ? 'to-link' : 'div'"
-    class="flex truncate text-gray-800 dark:text-gray-200"
+    class="flex truncate text-neutral-800 dark:text-neutral-200"
     :class="[
       isLink ? 'group no-underline' : '',
       twoLine ? 'flex-col' : 'items-center',
@@ -10,7 +10,7 @@
   >
     <div
       v-if="!noName"
-      class="flex-shrink truncate font-semibold"
+      class="shrink truncate font-semibold"
       :class="[
         isLink ? 'group-hover:underline' : '',
         twoLine ? 'mb-0.5 text-xl' : '',

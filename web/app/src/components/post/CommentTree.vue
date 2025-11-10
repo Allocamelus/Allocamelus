@@ -2,21 +2,21 @@
   <div class="">
     <snackbar
       v-model="err.show"
-      :closeBtn="true"
-      class="text-gray-800 dark:text-gray-200"
+      :close-btn="true"
+      class="text-neutral-800 dark:text-neutral-200"
     >
       {{ err.msg }}
     </snackbar>
-    <article class="flex flex-shrink flex-grow flex-col">
-      <div class="flex flex-shrink flex-grow">
-        <div class="flex flex-grow flex-col">
+    <article class="flex shrink grow flex-col">
+      <div class="flex shrink grow">
+        <div class="flex grow flex-col">
           <div
-            class="flex items-center justify-between text-gray-700 dark:text-gray-300"
+            class="flex items-center justify-between text-neutral-700 dark:text-neutral-300"
           >
             <div class="flex items-center text-sm xs:text-base">
               <user-avatar
                 :user="user"
-                :isLink="true"
+                :is-link="true"
                 class="mr-2 h-6 w-6 xs:h-[30px] xs:w-[30px]"
               ></user-avatar>
               <user-name :user="user"></user-name>
@@ -32,58 +32,58 @@
                 class="dot-before flex items-center whitespace-nowrap"
               >
                 <div title="Edited">
-                  <PencilAltIcon
-                    class="h-4 w-4 dark:text-gray-400"
-                  ></PencilAltIcon>
+                  <PencilSquareIcon
+                    class="h-4 w-4 dark:text-neutral-400"
+                  ></PencilSquareIcon>
                 </div>
               </div>
             </div>
           </div>
           <div class="flex">
             <div
-              class="group mt-1 mr-2 flex flex-grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
+              class="group mt-1 mr-2 flex grow-0 cursor-pointer pt-1.5 xs:w-[30px]"
               :class="
                 comment.depth == 0
                   ? 'w-6 justify-center'
                   : 'w-2 justify-start xs:justify-center'
               "
-              @click="hidden = !hidden"
+              @click="hidden = hidden!"
             >
               <div
-                class="w-0 border border-gray-400 group-hover:border-gray-700 dark:border-gray-700 dark:group-hover:border-gray-400"
+                class="w-0 border border-neutral-400 group-hover:border-neutral-700 dark:border-neutral-700 dark:group-hover:border-neutral-400"
               ></div>
             </div>
-            <div v-if="hidden" class="flex flex-grow">
+            <div v-if="hidden" class="flex grow">
               <small-text class="pt-1.5">[[hidden]]</small-text>
             </div>
-            <div v-else class="flex flex-grow flex-col">
+            <div v-else class="flex grow flex-col">
               <div class="py-1.5">
                 <div v-if="!showEdit" class="leading-5">
                   {{ comment.content }}
                 </div>
                 <div v-else>
                   <comment-edit
-                    :postId="comment.postId"
-                    :commentId="comment.id"
+                    :post-id="comment.postId"
+                    :comment-id="comment.id"
                     @edited="updated($event)"
                     @close="showEdit = false"
                   ></comment-edit>
                 </div>
               </div>
               <div
-                class="mt-2 flex flex-row-reverse items-center text-sm font-medium text-gray-600 dark:text-gray-400 xs:flex-row"
+                class="mt-2 flex flex-row-reverse items-center text-sm font-medium text-neutral-600 xs:flex-row dark:text-neutral-400"
               >
                 <small-btn
                   class="mr-1.5 flex items-center pr-0.5"
                   @click="showReplyForm = !showReplyForm"
                 >
                   <component
-                    class="h-4 w-4"
                     :is="
                       showReplyForm
                         ? 'OutlineAnnotationIcon'
                         : 'SolidAnnotationIcon'
                     "
+                    class="h-4 w-4"
                   ></component>
                   <div class="pl-1">Reply</div>
                 </small-btn>
@@ -108,8 +108,8 @@
                   </small-btn>
                   <comment-delete
                     :show="showDelete"
-                    :postId="comment.postId"
-                    :commentId="comment.id"
+                    :post-id="comment.postId"
+                    :comment-id="comment.id"
                     @close="showDelete = false"
                     @deleted="deleted()"
                   ></comment-delete>
@@ -121,8 +121,8 @@
               <div v-if="loggedIn" class="pt-3">
                 <comment-input
                   v-if="showReplyForm"
-                  :postId="String(comment.postId)"
-                  :replyTo="comment.id"
+                  :post-id="String(comment.postId)"
+                  :reply-to="comment.id"
                   @commented="newReply($event)"
                 ></comment-input>
               </div>
@@ -141,12 +141,12 @@
                   class="pt-3"
                 >
                   <comment-tree
-                    :commentId="child.id"
-                    :postId="postId"
+                    :comment-id="child.id"
+                    :post-id="postId"
                   ></comment-tree>
                 </div>
               </feed>
-              <div class="mt-2" v-if="missingReplies > 0">
+              <div v-if="missingReplies > 0" class="mt-2">
                 <div class="link text-sm font-semibold" @click="getReplies()">
                   {{ missingReplies }}
                   {{ missingReplies > 1 ? "Replies" : "Reply" }}
@@ -172,9 +172,9 @@ import { User } from "@/models/user";
 import { RespToError } from "@/models/responses";
 import { SomethingWentWrong } from "../form/errors";
 
-import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
-import SolidAnnotationIcon from "@heroicons/vue/solid/AnnotationIcon";
-import OutlineAnnotationIcon from "@heroicons/vue/outline/AnnotationIcon";
+import { PencilSquareIcon } from "@heroicons/vue/20/solid";
+import { ChatBubbleBottomCenterIcon as SolidAnnotationIcon } from "@heroicons/vue/24/solid";
+import { ChatBubbleBottomCenterIcon as OutlineAnnotationIcon } from "@heroicons/vue/24/outline";
 
 import UserName from "../user/Name.vue";
 import FmtTime, { Fmt_Short_Time } from "../FmtTime.vue";
@@ -189,7 +189,7 @@ import SignUpOverlay from "../overlay/SignUpOverlay.vue";
 import Snackbar from "../box/Snackbar.vue";
 
 export default defineComponent({
-  name: "comment-tree",
+  name: "CommentTree",
   props: {
     commentId: {
       type: Number,
@@ -292,7 +292,7 @@ export default defineComponent({
     FmtTime,
     UserName,
     UserAvatar,
-    PencilAltIcon,
+    PencilSquareIcon,
     SolidAnnotationIcon,
     OutlineAnnotationIcon,
     SmallBtn,

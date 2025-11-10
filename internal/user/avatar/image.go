@@ -27,7 +27,10 @@ func TransformAndSave(userId int64, imageMPH *multipart.FileHeader) (newUrl stri
 
 	// Check for image for deduplication
 	if !fileutil.Exist(fileImagePath) {
-		img.Crop(MaxHightWidth, MaxHightWidth)
+		err = img.Thumbnail(MaxHightWidth, MaxHightWidth)
+		if err != nil {
+			return
+		}
 
 		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, false))))
 

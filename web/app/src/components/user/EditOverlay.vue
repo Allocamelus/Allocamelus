@@ -3,40 +3,40 @@
     <box
       class="flex h-full max-h-screen w-full flex-col rounded-none bg-secondary-800 shadow-lg focus:outline-none xs:m-3 xs:h-fit xs:rounded-md"
     >
-      <snackbar v-model="err.snackbar.show" :closeBtn="true">
+      <snackbar v-model="err.snackbar.show" :close-btn="true">
         {{ err.snackbar.msg }}
       </snackbar>
       <div
-        class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
+        class="flex w-full shrink-0 items-end border-b border-secondary-600 p-3"
       >
         <div class="flex flex-1 justify-start">
           <basic-btn @click="visable = false">
-            <XIcon class="h-5 w-5" :class="iconStyle.xIcon"></XIcon>
+            <XMarkIcon class="xIcon h-5 w-5"></XMarkIcon>
           </basic-btn>
         </div>
         <div class="flex flex-1 justify-center">
           <div
-            class="text-base font-medium leading-4 text-gray-900 dark:text-gray-100"
+            class="text-base leading-4 font-medium text-neutral-900 dark:text-neutral-100"
           >
             Edit Profile
           </div>
         </div>
         <div class="flex flex-1 justify-end">
-          <basic-btn @click="submit" class="link">Save</basic-btn>
+          <basic-btn class="link" @click="submit">Save</basic-btn>
         </div>
       </div>
-      <div class="flex flex-grow flex-col overflow-y-auto">
-        <div class="flex flex-shrink-0 flex-grow flex-col px-6 py-6 xs:px-8">
+      <div class="flex grow flex-col overflow-y-auto">
+        <div class="flex shrink-0 grow flex-col px-6 py-6 xs:px-8">
           <div class="flex items-center">
             <user-avatar
               class="h-11 w-11"
               :user="user"
-              :isLink="false"
+              :is-link="false"
             ></user-avatar>
             <change-avatar
               class="ml-2 w-full"
               :user="user"
-              :blockScroll="false"
+              :block-scroll="false"
             >
               <basic-btn class="link">Change Avatar</basic-btn>
             </change-avatar>
@@ -52,11 +52,11 @@
               v-model="name"
               name="name"
               :check="true"
-              :minLen="0"
-              :maxLen="128"
+              :min-len="0"
+              :max-len="128"
               placeholder="Mary Smith"
               :regex="/^[^<>\[\]]*$/"
-              :regexMsg="InvalidCharacters"
+              :regex-msg="InvalidCharacters"
               @error="err.name = $event"
             ></text-input>
           </div>
@@ -66,11 +66,11 @@
               v-model="bio"
               name="bio"
               :check="true"
-              :minLen="0"
-              :maxLen="255"
+              :min-len="0"
+              :max-len="255"
               placeholder="Say Something?"
               :regex="/^[^<>\[\]]*$/"
-              :regexMsg="InvalidCharacters"
+              :regex-msg="InvalidCharacters"
               @error="err.bio = $event"
             ></text-area>
           </div>
@@ -96,7 +96,7 @@ import {
   TYPE_PUBLIC,
 } from "@/api/user/update/type";
 
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 import Box from "../box/Box.vue";
 import BasicBtn from "../button/BasicBtn.vue";
@@ -242,7 +242,7 @@ export default defineComponent({
     },
   },
   components: {
-    XIcon,
+    XMarkIcon,
     Box,
     BasicBtn,
     InputLabel,
@@ -256,10 +256,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style
-  src="@/scss/modules/icon.modules.scss"
-  lang="scss"
-  module="iconStyle"
-  scoped
-></style>

@@ -2,7 +2,7 @@
   <component
     :is="to.length > 0 ? 'to-link' : 'button'"
     :to="to"
-    class="cursor-pointer rounded text-sm font-medium leading-[14px] disabled:opacity-50"
+    class="cursor-pointer rounded text-sm leading-[14px] font-medium disabled:opacity-50"
   >
     <slot></slot>
   </component>
@@ -12,13 +12,13 @@
 import { defineComponent } from "vue";
 import ToLink from "../ToLink.vue";
 export default defineComponent({
-  components: { ToLink },
-  name: "small-button",
+  name: "SmallButton",
   props: {
     to: {
       type: String,
       default: "",
     },
   },
+  components: { ToLink },
 });
 </script>

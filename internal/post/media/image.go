@@ -1,17 +1,22 @@
 package media
 
 import (
+	"context"
+	_ "embed"
+	"errors"
 	"mime/multipart"
+	"os"
 
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/dirutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
 	"github.com/allocamelus/allocamelus/internal/pkg/imagedit"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/jackc/pgx/v5"
 )
 
 const (
-	MaxHightWidth int = 8192
-	SubPath           = "posts/images"
+	SubPath = "posts/images"
 )
 
 func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) error {
@@ -21,47 +26,93 @@ func TransformAndSave(postID int64, imageMPH *multipart.FileHeader, alt string) 
 	}
 	defer img.Close()
 
-	imgType := img.GetFormat()
-	if !imgType.IsImage() {
-		return fileutil.ErrContentType
-	}
-
-	fileImagePath := fileutil.FilePath(selectorPath(b58hash, true))
-
-	// Check for image for deduplication
-	if !fileutil.Exist(fileImagePath) {
-		width, height := img.WH()
-		if err != nil {
-			return err
-		}
-		var newWidth, newHeight int
-		if width > MaxHightWidth || height > MaxHightWidth {
-			newWidth, newHeight = img.ARMaxSize(imagedit.AR_Image, MaxHightWidth)
-			if err != nil {
-				return err
-			}
-		} else {
-			newWidth = width
-			newHeight = height
-		}
-		img.Resize(newWidth, newHeight)
-
-		logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(b58hash, false))))
-
-		err = img.WriteToPath(fileImagePath)
-		if err != nil {
-			return err
-		}
-	} else {
-		logger.Error(err)
-	}
-
-	width, height := img.WH()
-
-	err = Insert(postID, Media{FileType: imgType, Meta: Meta{Alt: alt, Width: int64(width), Height: int64(height)}}, b58hash)
+	fileId, err := checkCreateGetFile(img, b58hash)
 	if err != nil {
 		return err
 	}
 
-	return err
+	err = Insert(postID, alt, fileId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func checkCreateGetFile(img *imagedit.Image, imgHash string) (fileId int64, err error) {
+	imgType := img.GetFormat()
+	if !imgType.IsImage() {
+		err = fileutil.ErrContentType
+		return
+	}
+	ctx := context.Background()
+
+	fileImagePath := fileutil.FilePath(selectorPath(imgHash, true))
+	if fileutil.Exist(fileImagePath) {
+		fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, imgHash)
+		// Not missing file in db
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return
+		}
+	}
+
+	// Check for reupload
+	var dbHash string
+	// Check for imgHash in db
+	dbHash, err = g.Data.Queries.PostMediaHashCheck(ctx, imgHash)
+	if err != nil {
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return
+		}
+		dbHash = ""
+	}
+
+	// Missing file OR imgHash is newHash
+	if dbHash != "" {
+		// imgHash is newHash
+		if imgHash != dbHash {
+			if fileutil.Exist(fileutil.FilePath(selectorPath(dbHash, true))) {
+				fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
+				// Not missing file in db
+				if !errors.Is(err, pgx.ErrNoRows) {
+					return
+				}
+			}
+			// Missing dbHash file
+			imgHash = dbHash
+			fileImagePath = fileutil.FilePath(selectorPath(imgHash, true))
+		}
+	}
+
+	// Make folders for image
+	logger.Error(dirutil.MakeDir(fileutil.FilePath(selectorPath(imgHash, false))))
+
+	imgOut, err := img.Export()
+	if err != nil {
+		return
+	}
+
+	err = os.WriteFile(fileImagePath, imgOut, 0644)
+	if err != nil {
+		return
+	}
+
+	if dbHash != "" {
+		fileId, err = g.Data.Queries.GetPostMediaFileIDByHash(ctx, dbHash)
+		return
+	}
+
+	newHash := imagedit.HashEncode(imgOut)
+	width, height := img.WH()
+	fileId, err = InsertFile(
+		&Media{
+			FileType: imgType,
+			Meta: &Meta{
+				Width:  int64(width),
+				Height: int64(height),
+			}},
+		imgHash,
+		newHash,
+	)
+	return
 }

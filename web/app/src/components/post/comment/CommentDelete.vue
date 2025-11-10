@@ -1,29 +1,31 @@
 <template>
-  <overlay v-model="visible" :xsFullHeight="false" :xsSelfEnd="true">
+  <overlay v-model="visible" :xs-full-height="false" :xs-self-end="true">
     <snackbar
       v-model="err.show"
-      :closeBtn="true"
-      class="text-gray-800 dark:text-gray-200"
+      :close-btn="true"
+      class="text-neutral-800 dark:text-neutral-200"
     >
       {{ err.msg }}
     </snackbar>
     <box
       class="flex w-full flex-col self-end overflow-hidden rounded-t-lg shadow-lg focus:outline-none xs:m-3 xs:rounded-md"
     >
-      <div class="py-4 px-5 text-gray-800 dark:text-gray-200">
+      <div class="px-5 py-4 text-neutral-800 dark:text-neutral-200">
         <h3 class="text-xl">Delete Comment</h3>
         <h4 class="text-base text-rose-800 dark:text-red-600">
           This action is irreversible
         </h4>
       </div>
-      <div class="flex justify-end bg-gray-200 py-2 px-3 dark:bg-gray-800">
-        <basic-btn class="mr-1.5 py-2 px-1.5" @click="visible = false">
+      <div
+        class="flex justify-end bg-neutral-200 px-3 py-2 dark:bg-neutral-800"
+      >
+        <basic-btn class="mr-1.5 px-1.5 py-2" @click="visible = false">
           Cancel
         </basic-btn>
         <basic-btn
-          class="py-2 px-1.5 text-rose-800 dark:text-red-600"
-          @click="deleteComment"
+          class="px-1.5 py-2 text-rose-800 dark:text-red-600"
           :disabled="submitted"
+          @click="deleteComment"
         >
           Delete
         </basic-btn>

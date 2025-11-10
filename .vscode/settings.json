@@ -2,5 +2,20 @@
   "editor.tabSize": 2,
   "cSpell.language": "en,en-US",
   "tailwindCSS.lint.invalidApply": "warning",
-  "cSpell.words": ["openpgp"]
+  "cSpell.words": ["openpgp"],
+  "eslint.packageManager": "yarn",
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown"
+  ],
+  "volar.vueserver.useSecondServer": true,
+  "volar.takeOverMode.enabled": "auto",
+  "volar.icon.preview": false,
+  "volar.completion.preferredTagNameCase": "kebab",
+  "volar.completion.preferredAttrNameCase": "kebab"
 }

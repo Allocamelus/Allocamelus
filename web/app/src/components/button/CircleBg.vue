@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group flex-shrink-0 cursor-pointer rounded-full p-1 hover:bg-opacity-30"
+    class="group hover:bg-opacity-30 shrink-0 cursor-pointer rounded-full p-1"
   >
     <slot></slot>
   </div>
@@ -9,6 +9,6 @@
 <script>
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "circle-bg",
+  name: "CircleBg",
 });
 </script>

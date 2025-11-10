@@ -1,13 +1,19 @@
 <template>
   <div
-    class="flex min-w-max cursor-pointer select-none items-center pr-1"
+    class="flex min-w-max cursor-pointer items-center pr-1 select-none"
     @click="toggleCheck()"
   >
     <component
       :is="checked ? 'radix-checkbox' : 'radix-box'"
       class="h-4 w-4"
     ></component>
-    <input type="checkbox" v-model="checked" :name="name" @click.capture.stop />
+    <input
+      v-model="checked"
+      class="mr-1 cursor-pointer appearance-none font-normal select-none checked:appearance-none focus:outline-none dark:text-stone-50"
+      type="checkbox"
+      :name="name"
+      @click.capture.stop
+    />
     <slot>Checkbox</slot>
   </div>
 </template>
@@ -44,25 +50,3 @@ export default defineComponent({
   components: { RadixBox, RadixCheckbox },
 });
 </script>
-
-<style lang="scss" scoped>
-@tailwind components;
-
-@mixin before($content) {
-  &::before {
-    content: $content;
-  }
-}
-input,
-:slotted(label),
-:slotted(div) {
-  @apply cursor-pointer select-none;
-}
-input[type="checkbox"] {
-  @apply mr-1 appearance-none font-normal;
-  @apply focus:outline-none dark:text-warm-gray-50;
-  &:checked {
-    @apply appearance-none;
-  }
-}
-</style>

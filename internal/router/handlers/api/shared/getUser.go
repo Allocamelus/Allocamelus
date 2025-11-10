@@ -1,12 +1,13 @@
 package shared
 
 import (
-	"database/sql"
+	"errors"
 
 	"github.com/allocamelus/allocamelus/internal/router/handlers/api/apierr"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 // GetUserNameAndID from :userName
@@ -18,7 +19,7 @@ func GetUserNameAndID(c *fiber.Ctx) (userName string, userID int64, errApi apier
 	}
 	userID, err := user.GetIDByUserName(userName)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			errApi = apierr.SomethingWentWrong
 			return

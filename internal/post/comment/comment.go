@@ -5,12 +5,13 @@
 package comment
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/internal/post"
@@ -42,6 +43,18 @@ type ListComments struct {
 type List struct {
 	ListComments
 	Order map[int64]int64 `msg:"order" json:"order"`
+}
+
+func DBCommentToComment(dbC *db.Postcomment) *Comment {
+	return &Comment{
+		ID:       dbC.Postcommentid,
+		UserID:   dbC.Userid,
+		PostID:   dbC.Postid,
+		ParentID: dbC.Parent,
+		Created:  dbC.Created,
+		Updated:  dbC.Updated,
+		Content:  dbC.Content,
+	}
 }
 
 func New(userID, postID, ParentID int64, content string) *Comment {
@@ -84,7 +97,7 @@ func CanView(commentID int64, u *session.Session, commentCache ...*Comment) erro
 		return err
 	}
 	// Is user the commenter
-	if compare.EqualInt64(c.UserID, u.UserID) {
+	if compare.EqualInt(c.UserID, u.UserID) {
 		return nil
 	}
 
@@ -105,54 +118,31 @@ func CanReplyTo(commentID, postID int64, u *session.Session, commentCache ...*Co
 		return err
 	}
 
-	if !compare.EqualInt64(postID, c.PostID) {
+	if !compare.EqualInt(postID, c.PostID) {
 		return ErrNoComment
 	}
 
 	return CanView(commentID, u, c)
 }
 
-var (
-	//go:embed sql/insert/insert.sql
-	qInsert   string
-	preInsert *sql.Stmt
-	//go:embed sql/insert/closureSelf.sql
-	qInsertClosureSelf string
-	// Insert (Self,Self,0) into closure table
-	// (?,?) = (postCommentId, postCommentId)
-	preInsertSelfClosure *sql.Stmt
-	//go:embed sql/insert/closureDeep.sql
-	qInsertClosureDeep string
-	// Insert parent-child relationships for comment
-	// (?,?) = (parent, postCommentId)
-	preInsertClosureDeep *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preInsert, qInsert)
-	data.PrepareQueuer.Add(&preInsertSelfClosure, qInsertClosureSelf)
-	data.PrepareQueuer.Add(&preInsertClosureDeep, qInsertClosureDeep)
-}
-
 func (c *Comment) Insert() (err error) {
-	r, err := preInsert.Exec(
-		c.PostID, c.UserID,
-		c.ParentID, c.Created,
-		c.Content,
-	)
+	c.ID, err = g.Data.Queries.InsertPostComment(context.Background(), db.InsertPostCommentParams{
+		Postid:  c.PostID,
+		Userid:  c.UserID,
+		Parent:  c.ParentID,
+		Created: c.Created,
+		Content: c.Content,
+	})
 	if err != nil {
-		return
+		return err
 	}
 
-	c.ID, err = r.LastInsertId()
+	err = g.Data.Queries.InsertPostCommentClosureSelf(context.Background(), db.InsertPostCommentClosureSelfParams{Parent: c.ID, Child: c.ID})
 	if err != nil {
-		return
+		return err
 	}
-
-	_, err = preInsertSelfClosure.Exec(c.ID, c.ID)
-
 	if c.ParentID != 0 {
-		_, err = preInsertClosureDeep.Exec(c.ParentID, c.ID)
+		err = g.Data.Queries.InsertPostCommentClosureDeep(context.Background(), db.InsertPostCommentClosureDeepParams{Parent: c.ParentID, Child: c.ID})
 	}
 	return
 }

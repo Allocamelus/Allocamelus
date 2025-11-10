@@ -1,20 +1,20 @@
 <template>
   <article
-    class="flex flex-shrink flex-grow flex-col"
+    class="flex shrink grow flex-col"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <div class="flex flex-shrink flex-grow py-3 px-3.5" @click.self="toPost">
-      <user-avatar :user="user" :isLink="true" class="h-11 w-11"></user-avatar>
+    <div class="flex shrink grow px-3.5 py-3" @click.self="toPost">
+      <user-avatar :user="user" :is-link="true" class="h-11 w-11"></user-avatar>
       <div
-        class="ml-3 flex flex-grow flex-col"
+        class="ml-3 flex grow flex-col"
         :class="post.content?.length == 0 ? 'justify-center' : ''"
         @click.self="toPost"
       >
         <div
-          class="flex items-center justify-between text-gray-700 dark:text-gray-300"
+          class="flex items-center justify-between text-neutral-700 dark:text-neutral-300"
           @click.self="toPost"
         >
-          <div class="flex">
+          <div class="flex w-0 grow">
             <user-name :user="user"></user-name>
             <div
               v-if="published"
@@ -30,7 +30,7 @@
             </div>
             <div v-else class="dot-before flex items-center whitespace-nowrap">
               <div title="Not Published">
-                <radix-eye-none class="h-4 w-4 dark:text-gray-400" />
+                <radix-eye-none class="h-4 w-4 dark:text-neutral-400" />
               </div>
             </div>
             <div
@@ -38,9 +38,9 @@
               class="dot-before flex items-center whitespace-nowrap"
             >
               <div title="Edited">
-                <PencilAltIcon
-                  class="h-4 w-4 dark:text-gray-400"
-                ></PencilAltIcon>
+                <PencilSquareIcon
+                  class="h-4 w-4 dark:text-neutral-400"
+                ></PencilSquareIcon>
               </div>
             </div>
           </div>
@@ -50,17 +50,17 @@
           </dots-dropdown>
         </div>
         <div
-          @click="toPost"
           :class="[
             isLink ? 'cursor-pointer' : '',
             dynamicContent ? ['text-lg', 'sm:text-xl'] : '',
           ]"
+          @click="toPost"
           v-html="purifiedContent /* skipcq: JS-0693 */"
         ></div>
         <div
           v-if="post.media"
-          @click="toPost"
           class="mt-2 flex flex-wrap overflow-hidden rounded-lg"
+          @click="toPost"
         >
           <image-box
             v-for="(media, key) in post.mediaList"
@@ -70,7 +70,7 @@
             :alt="media.meta.alt"
             :width="media.meta.width"
             :height="media.meta.height"
-            :totalNumber="post.mediaList.length"
+            :total-number="post.mediaList.length"
             :rounded="false"
             loading="lazy"
           >
@@ -81,11 +81,13 @@
   </article>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
-import DOMPurify from "dompurify";
+import { sanitize } from "@/pkg/sanitize";
 
-import PencilAltIcon from "@heroicons/vue/solid/PencilAltIcon";
+import { local } from "@/pkg/url";
+
+import { PencilSquareIcon } from "@heroicons/vue/20/solid";
 import RadixEyeNone from "../icons/RadixEyeNone.vue";
 
 import UserName from "../user/Name.vue";
@@ -95,11 +97,11 @@ import ToLink from "../ToLink.vue";
 import ImageBox from "../box/ImageBox.vue";
 import DotsDropdown from "../menu/DotsDropdown.vue";
 
-import { User } from "../../models/user";
-import { Post } from "../../models/post";
+import { User } from "@/models/user";
+import { Post } from "@/models/post";
 
 export default defineComponent({
-  name: "post-box",
+  name: "PostBox",
   props: {
     post: {
       type: Post,
@@ -142,16 +144,22 @@ export default defineComponent({
       return false;
     },
     purifiedContent() {
-      return DOMPurify.sanitize(this.post.content);
+      return sanitize(this.post.content);
     },
   },
   methods: {
-    toPost(e) {
-      if (e.srcElement.tagName == "A") {
-        if (e.srcElement.href.length > 0) {
-          window.open(e.srcElement.href, "_blank");
-          e.preventDefault();
-          return;
+    toPost(e: PointerEvent) {
+      // Open L
+      if (e.target !== null) {
+        let el = e.target as HTMLElement;
+        if (el instanceof HTMLAnchorElement) {
+          if (el.href.length > 0) {
+            if (!local(el.href)) {
+              window.open(el.href, "_blank");
+              e.preventDefault();
+              return;
+            }
+          }
         }
       }
       if (this.isLink) {
@@ -163,7 +171,7 @@ export default defineComponent({
     FmtTime,
     UserName,
     UserAvatar,
-    PencilAltIcon,
+    PencilSquareIcon,
     RadixEyeNone,
     ToLink,
     ImageBox,

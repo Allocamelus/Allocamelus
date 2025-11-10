@@ -11,15 +11,10 @@ import { Buffer } from "buffer";
  * @param key - Optional key (string, Buffer or TypedArray). Maximum length is 64 bytes.
  * @returns - Computed hash as a base64 string
  */
-export function blake2bB64(
+export async function blake2bB64(
   data: IDataType,
   bits?: number,
   key?: IDataType
 ): Promise<string> {
-  return new Promise(async (resolve) => {
-    resolve(
-      Buffer.from(await blake2b(data, bits, key), "hex").toString("base64")
-    );
-    return;
-  });
+  return Buffer.from(await blake2b(data, bits, key), "hex").toString("base64");
 }

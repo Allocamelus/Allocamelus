@@ -1,6 +1,9 @@
 <template>
-  <div class="form-box-wrapper">
-    <Box class="form-box rounded-xl" :class="classes">
+  <div class="flex w-full grow items-center justify-center">
+    <Box
+      class="mx-auto flex max-w-[400px] grow flex-col rounded-xl bg-transparent shadow-none xs:bg-neutral-50 xs:shadow dark:bg-transparent xs:dark:bg-neutral-900"
+      :class="classes"
+    >
       <slot></slot>
     </Box>
   </div>
@@ -11,7 +14,7 @@ import { defineComponent, toRefs, reactive } from "vue";
 import Box from "../box/Box.vue";
 
 export default defineComponent({
-  name: "center-form-box",
+  name: "CenterFormBox",
   props: {
     classes: {
       type: String,
@@ -29,20 +32,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.form-box {
-  @apply mx-auto flex flex-grow flex-col;
-  @apply bg-transparent shadow-none dark:bg-transparent;
-  @apply xs:bg-gray-50 xs:shadow xs:dark:bg-gray-900;
-  // TODO
-  max-width: 400px;
-}
-.form-box-wrapper {
-  @apply flex w-full items-center justify-center;
-  min-height: calc(100vh - calc(var(--nav-height) * 1.5));
-  @screen xs {
-    min-height: calc(100vh - var(--nav-height));
-  }
-}
-</style>

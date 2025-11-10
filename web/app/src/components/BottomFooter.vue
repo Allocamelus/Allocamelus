@@ -1,7 +1,9 @@
 <template>
   <footer id="footer" class="bg-footer text-white xs:h-footer">
-    <div class="container" :class="$style.footer">
-      <div class="flex">
+    <div
+      class="footer container flex items-center justify-between py-3 text-sm text-white"
+    >
+      <div class="flex items-center">
         <div class="self-center font-semibold">
           &copy; {{ new Date().getFullYear() }}
         </div>
@@ -9,7 +11,7 @@
           <to-link to="/about">About</to-link>
         </div>
       </div>
-      <div class="hidden xs:flex">
+      <div class="hidden items-center xs:flex">
         <to-link to="https://github.com/Allocamelus/Allocamelus">
           <radix-github class="h-5 w-5" />
         </to-link>
@@ -17,7 +19,7 @@
           <allocamelus class="h-5 w-5" />
         </to-link>
       </div>
-      <div class="flex">
+      <div class="flex items-center">
         <!-- TODO -->
         <to-link to="/terms">Terms</to-link>
         <div class="dash-before">
@@ -40,19 +42,3 @@ export default defineComponent({
   components: { ToLink, RadixGithub, Allocamelus },
 });
 </script>
-
-<style lang="scss" module>
-.footer {
-  @apply flex items-center justify-between py-3;
-  > div {
-    @apply items-center;
-  }
-  &,
-  a {
-    @apply text-sm text-white;
-  }
-  a {
-    @apply cursor-pointer font-semibold no-underline;
-  }
-}
-</style>

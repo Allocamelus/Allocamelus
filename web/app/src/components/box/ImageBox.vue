@@ -1,11 +1,15 @@
 <template>
   <div
-    class="group relative flex"
+    class="group relative mx-auto flex"
     :class="[
-      totalNumber == 1 ? 'w-full' : '',
-      totalNumber == 2 ? (index == 0 || index == 1 ? 'w-1/2' : '') : '',
-      totalNumber == 3 ? (index == 0 ? 'w-full' : 'w-1/2') : '',
-      totalNumber == 4 ? 'w-1/2' : '',
+      totalNumber == 1 ? 'w-fit' : '',
+      totalNumber == 2
+        ? index == 0 || index == 1
+          ? 'w-1/2 max-w-fit'
+          : ''
+        : '',
+      totalNumber == 3 ? (index == 0 ? 'w-fit' : 'w-1/2 max-w-fit') : '',
+      totalNumber == 4 ? 'w-1/2 max-w-fit' : '',
     ]"
   >
     <slot></slot>
@@ -22,7 +26,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FullURL from "../../pkg/fullUrl";
+import { FullURL } from "@/pkg/url";
 
 export default defineComponent({
   props: {
@@ -39,8 +43,8 @@ export default defineComponent({
       default: 1,
     }, // How many other images are there
     loading: {
-      type: String,
-      default: "auto",
+      type: String as () => "lazy" | "eager",
+      default: "lazy",
     },
     alt: {
       type: String,

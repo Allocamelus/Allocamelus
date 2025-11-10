@@ -1,23 +1,23 @@
 <template>
   <textarea
+    ref="input"
     v-model.trim="text"
-    @input="emiter"
     :type="type"
     :name="name"
     :minlength="minLenC"
     :maxlength="maxLenC + 1"
     class="box-border w-full rounded-sm border border-solid"
     :class="[
-      'my-1 py-1.5 px-2.5',
-      'border-warm-gray-400 bg-gray-300 text-black-lighter focus:border-secondary-600 xs:bg-gray-200',
-      'dark:border-warm-gray-500 dark:bg-gray-800 dark:text-white dark:focus:border-secondary-600',
-      'placeholder-warm-gray-800 placeholder-opacity-80 dark:placeholder-warm-gray-400 dark:placeholder-opacity-80',
+      'my-1 px-2.5 py-1.5',
+      'border-stone-400 bg-neutral-300 text-black-lighter focus:border-secondary-600 xs:bg-neutral-200',
+      'dark:border-stone-500 dark:bg-neutral-800 dark:text-white dark:focus:border-secondary-600',
+      'placeholder-opacity-80 dark:placeholder-opacity-80 placeholder-stone-800 dark:placeholder-stone-400',
     ]"
     :required="requiredC"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
-    ref="input"
+    @input="emitter"
   />
 </template>
 
@@ -86,13 +86,6 @@ export default defineComponent({
       ...toRefs(data),
     };
   },
-  watch: {
-    modelValue(newValue) {
-      if (this.watchModel) {
-        this.text = newValue;
-      }
-    },
-  },
   computed: {
     minLenC() {
       if (this.check) {
@@ -111,6 +104,13 @@ export default defineComponent({
         return this.required;
       }
       return false;
+    },
+  },
+  watch: {
+    modelValue(newValue) {
+      if (this.watchModel) {
+        this.text = newValue;
+      }
     },
   },
   methods: {
@@ -136,7 +136,7 @@ export default defineComponent({
       }
       return "";
     },
-    emiter() {
+    emitter() {
       this.$emit("update:modelValue", this.text);
       if (this.check) {
         this.$emit("error", this.validate());

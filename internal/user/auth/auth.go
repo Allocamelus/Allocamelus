@@ -1,15 +1,14 @@
 package auth
 
 import (
+	"context"
 	"crypto/subtle"
-	"database/sql"
 	_ "embed"
 	"encoding/base64"
 	"errors"
 	"strings"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 	"github.com/allocamelus/allocamelus/internal/user"
@@ -19,22 +18,12 @@ import (
 	"github.com/allocamelus/allocamelus/internal/user/token"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 	"k8s.io/klog/v2"
 )
 
-func init() {
-	data.PrepareQueuer.Add(&preGetHash, qGetHash)
-}
-
-var (
-	//go:embed sql/getHash.sql
-	qGetHash   string
-	preGetHash *sql.Stmt
-)
-
-func getHash(userID int64) (hash string, err error) {
-	err = preGetHash.QueryRow(userID).Scan(&hash)
-	return
+func getHash(userID int64) (string, error) {
+	return g.Data.Queries.GetUserAuthKeyHash(context.Background(), userID)
 }
 
 var (
@@ -54,7 +43,7 @@ func CanLogin(username string) (userID int64, err error) {
 	// Check if user exists
 	userID, err = user.GetIDByUserName(username)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return 0, err
 		}
 		return 0, ErrInvalidUsername
@@ -125,7 +114,7 @@ func Logout(c *fiber.Ctx) {
 	session := g.Session.Get(c)
 	session.Delete()
 	err := token.DeleteAuth(c)
-	if err != sql.ErrNoRows && err != token.ErrAuthCookie {
+	if !errors.Is(err, pgx.ErrNoRows) && err != token.ErrAuthCookie {
 		logger.Error(err)
 	}
 }

@@ -1,5 +1,16 @@
 import v1 from "../v1";
 
+class errors {
+  userName: string;
+  email: string;
+
+  constructor(source: Partial<errors> = {}) {
+    if ("string" === typeof source) source = JSON.parse(source);
+    this.userName = source["userName"] || "";
+    this.email = source["email"] || "";
+  }
+}
+
 export class CreateResp {
   success: boolean;
   errors?: errors | Array<string>;
@@ -12,17 +23,6 @@ export class CreateResp {
         ? source["errors"]
         : new errors(source["errors"]);
     }
-  }
-}
-
-class errors {
-  userName: string;
-  email: string;
-
-  constructor(source: Partial<errors> = {}) {
-    if ("string" === typeof source) source = JSON.parse(source);
-    this.userName = source["userName"] || "";
-    this.email = source["email"] || "";
   }
 }
 

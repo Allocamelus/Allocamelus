@@ -12,11 +12,12 @@
 import { defineComponent, PropType } from "vue";
 import { RouteLocationRaw } from "vue-router";
 import { useStateStore } from "@/store";
+import { local } from "@/pkg/url";
 
 export default defineComponent({
   props: {
     to: {
-      type: [Object, String] as PropType<RouteLocationRaw | String>,
+      type: [Object, String] as PropType<RouteLocationRaw | string>,
       default: "",
     },
   },
@@ -26,6 +27,36 @@ export default defineComponent({
     return {
       updateViewKey: () => state.updateViewKey(),
     };
+  },
+  computed: {
+    local() {
+      if (typeof this.to !== "string") {
+        return true;
+      }
+      return local(this.to);
+    },
+    attributes() {
+      if (this.local) {
+        if (typeof this.to === "string") {
+          try {
+            let url = new URL(this.to, window.location.origin);
+            if (url.host === window.location.host) {
+              return {
+                to: url.pathname,
+              };
+            }
+          } catch (_) {}
+        }
+        return {
+          to: this.to,
+        };
+      }
+      return {
+        href: this.to,
+        rel: "noopener noreferrer",
+        target: "_blank",
+      };
+    },
   },
   methods: {
     userEvent() {
@@ -37,44 +68,6 @@ export default defineComponent({
       ) {
         this.updateViewKey();
       }
-    },
-  },
-  computed: {
-    local() {
-      if (typeof this.to !== "string") {
-        return true;
-      }
-      try {
-        let url = new URL(this.to, window.location.origin);
-        if (url.host === window.location.host) {
-          return true;
-        }
-      } catch (_) {
-        return true;
-      }
-      return false;
-    },
-    attributes() {
-      if (this.local) {
-        if (typeof this.to === "string") {
-          try {
-            let url = new URL(this.to, window.location.origin);
-            if (url.host === window.location.host) {
-              return {
-                ["to"]: url.pathname,
-              };
-            }
-          } catch (_) {}
-        }
-        return {
-          ["to"]: this.to,
-        };
-      }
-      return {
-        ["href"]: this.to,
-        ["rel"]: "noopener noreferrer",
-        ["target"]: "_blank",
-      };
     },
   },
 });

@@ -5,6 +5,7 @@ import { Buffer } from "buffer";
 import { argon2idCost, argon2idEncoded } from "./argon2id";
 import { IDataType } from "hash-wasm/dist/lib/util";
 import { Argon2idWorker } from "./worker";
+import { NullError } from "@/models/Error";
 
 const argon2id = wrap<Argon2idWorker>(new argon2idWorker());
 
@@ -16,10 +17,10 @@ const argon2id = wrap<Argon2idWorker>(new argon2idWorker());
  * @param encodedHash Key is optional
  */
 export function parse(encodedHash: string): argon2idEncoded {
-  let slice = encodedHash.split("$");
-  let costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
+  const slice = encodedHash.split("$");
+  const costSlice = slice[3].replace(/[mtp=\s]/g, "").split(",");
 
-  let encoded: argon2idEncoded = {
+  const encoded = new argon2idEncoded({
     cost: new argon2idCost({
       memory: parseInt(costSlice[0]),
       time: parseInt(costSlice[1]),
@@ -30,7 +31,7 @@ export function parse(encodedHash: string): argon2idEncoded {
     salt: slice[4],
     version: parseInt(slice[2].replace(/[v=\s]/g, "")),
     key: "",
-  };
+  });
 
   if (slice.length > 5) {
     encoded.key = slice[5];
@@ -39,6 +40,10 @@ export function parse(encodedHash: string): argon2idEncoded {
   }
   encoded.encoded = slice.join("$");
   return encoded;
+}
+interface hashReturn {
+  hash: argon2idEncoded;
+  err: NullError<any>;
 }
 
 /**
@@ -49,30 +54,28 @@ export function parse(encodedHash: string): argon2idEncoded {
  * @param salt
  * @param cost
  */
-export function hashSalt(
+export async function hashSalt(
   password: IDataType,
   salt: IDataType,
   cost: argon2idCost
-): Promise<argon2idEncoded> {
-  return new Promise(async (resolve, reject) => {
-    // Set defaults for empty cost values
-    cost = new argon2idCost(cost);
-    cost.FillEmpty();
+): Promise<hashReturn> {
+  // Set defaults for empty cost values
+  cost = new argon2idCost(cost);
+  cost.FillEmpty();
 
-    // Normalize password
-    if (typeof password === "string") {
-      password = password.normalize();
-    }
+  // Normalize password
+  if (typeof password === "string") {
+    password = password.normalize();
+  }
 
-    let { encodedHash, err } = await argon2id.hash(password, salt, cost);
-    if (err !== null) {
-      reject(err);
-      return;
-    }
-
-    resolve(parse(encodedHash));
-    return;
-  });
+  const { encodedHash, err } = await argon2id.hash(password, salt, cost);
+  if (err !== null) {
+    return {
+      hash: new argon2idEncoded(),
+      err,
+    };
+  }
+  return { hash: parse(encodedHash), err };
 }
 
 /**
@@ -84,7 +87,7 @@ export function hashSalt(
 export function hash(
   password: IDataType,
   cost: argon2idCost
-): Promise<argon2idEncoded> {
+): Promise<hashReturn> {
   // Set defaults for empty cost values
   cost = new argon2idCost(cost);
   cost.FillEmpty();

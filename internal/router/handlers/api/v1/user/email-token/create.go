@@ -1,7 +1,7 @@
 package emailtoken
 
 import (
-	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/allocamelus/allocamelus/internal/g"
@@ -14,6 +14,7 @@ import (
 	"github.com/allocamelus/allocamelus/pkg/hcaptcha"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -57,7 +58,7 @@ func Create(c *fiber.Ctx) error {
 	// Get UserId from database
 	userID, err := user.GetIDByEmail(request.Email)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 			return apierr.ErrSomethingWentWrong(c)
 		}

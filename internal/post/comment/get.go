@@ -1,34 +1,26 @@
 package comment
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"errors"
 	"strconv"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/user/session"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/jackc/pgx/v5"
 )
-
-var (
-	//go:embed sql/get/get.sql
-	qGet   string
-	preGet *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGet, qGet)
-}
 
 // Get
 func Get(commentId int64) (*Comment, error) {
-	c := newComment()
-	c.ID = commentId
-	err := preGet.QueryRow(commentId).Scan(&c.PostID, &c.UserID, &c.ParentID, &c.Created, &c.Updated, &c.Content, &c.Depth)
+	dbc, err := g.Data.Queries.GetPostComment(context.Background(), commentId)
 	if err != nil {
 		return nil, err
 	}
+	c := DBCommentToComment(&dbc.Postcomment)
+	c.Depth = dbc.Depth
 
 	// Get reply count if any
 	if err := c.CountReplies(); err != nil {
@@ -42,7 +34,7 @@ func Get(commentId int64) (*Comment, error) {
 func GetForUser(commentId int64, u *session.Session) (*Comment, error) {
 	c, err := Get(commentId)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return c, err
 		}
 		return nil, ErrNoComment
@@ -55,38 +47,15 @@ func GetForUser(commentId int64, u *session.Session) (*Comment, error) {
 	return c, nil
 }
 
-var (
-	//go:embed sql/get/userID.sql
-	qGetUserID   string
-	preGetUserID *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetUserID, qGetUserID)
-}
-
 func GetUserId(commentID int64) (int64, error) {
-	var userId int64
-	err := preGetUserID.QueryRow(commentID).Scan(&userId)
-	return userId, err
-}
-
-var (
-	//go:embed sql/get/postID.sql
-	qGetPostID   string
-	preGetPostID *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPostID, qGetPostID)
+	return g.Data.Queries.GetPostCommentUserID(context.Background(), commentID)
 }
 
 func GetPostID(commentID int64) (int64, error) {
 	// Get comment from store
-	var postID int64
-	err := preGetPostID.QueryRow(commentID).Scan(&postID)
+	postID, err := g.Data.Queries.GetPostCommentPostID(context.Background(), commentID)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return 0, err
 		}
 		return 0, ErrNoComment
@@ -94,163 +63,81 @@ func GetPostID(commentID int64) (int64, error) {
 	return postID, nil
 }
 
-var (
-	//go:embed sql/get/postUserID.sql
-	qGetPostUserID   string
-	preGetPostUserID *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPostUserID, qGetPostUserID)
-}
-
 func GetPostUserID(commentID int64) (*Comment, error) {
 	// Get comment from store
 	c := newComment()
 	c.PostID = commentID
-	err := preGetPostUserID.QueryRow(commentID).Scan(&c.PostID, &c.UserID)
+	dbc, err := g.Data.Queries.GetPostCommentPostUserID(context.Background(), commentID)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return nil, err
 		}
 		return nil, ErrNoComment
 	}
+	c.PostID = dbc.Postid
+	c.UserID = dbc.Userid
 	return c, nil
-}
-
-var (
-	//go:embed sql/get/postTotal.sql
-	qGetPostTotal   string
-	preGetPostTotal *sql.Stmt
-	//go:embed sql/get/postTotalDepth.sql
-	qGetPostTotalDepth   string
-	preGetPostTotalDepth *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPostTotal, qGetPostTotal)
-	data.PrepareQueuer.Add(&preGetPostTotalDepth, qGetPostTotalDepth)
 }
 
 // GetTotal comments for post
 func GetPostTotal(postID int64, depth ...int64) (total int64, err error) {
 	if len(depth) > 0 {
-		err = preGetPostTotalDepth.QueryRow(postID, depth[0]).Scan(&total)
+		total, err = g.Data.Queries.CountPostCommentsTotalDepth(context.Background(), db.CountPostCommentsTotalDepthParams{
+			Postid: postID,
+			Depth:  depth[0],
+		})
 		return
 	}
 
-	err = preGetPostTotal.QueryRow(postID).Scan(&total)
+	total, err = g.Data.Queries.CountPostCommentsTotal(context.Background(), postID)
 	return
-}
-
-var (
-	//go:embed sql/get/postTopLevel.sql
-	qGetPostTopLevel   string
-	preGetPostTopLevel *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPostTopLevel, qGetPostTopLevel)
 }
 
 // GetPostTopLevel Get total top level (not a reply) comments for a post
 func GetPostTopLevel(postID int64) (total int64, err error) {
-	err = preGetPostTopLevel.QueryRow(postID).Scan(&total)
-	return
-}
-
-// Get Post comment queries
-var (
-	//go:embed sql/get/postComments.sql
-	qGetPostComments   string
-	preGetPostComments *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPostComments, qGetPostComments)
+	return g.Data.Queries.CountPostCommentsTopLevel(context.Background(), postID)
 }
 
 // GetPostComments
 //
 // topPerPage maximum num of top level comments per page
 func GetPostComments(startNum, topPerPage, maxPerPage, postID int64, depth int64) (*List, error) {
-	rows, err := preGetPostComments.Query(postID, startNum, topPerPage, depth, maxPerPage)
+	//rows, err := preGetPostComments.Query(postID, startNum, topPerPage, depth, maxPerPage)
+	rows, err := g.Data.Queries.GetPostComments(context.Background(), db.GetPostCommentsParams{Postid: postID, Offset: int32(startNum), Limit: int32(topPerPage), Depth: depth, Limit_2: int32(maxPerPage)})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	return iterRowToList(rows, false)
 }
 
-var (
-	//go:embed sql/get/repliesTotal.sql
-	qGetRepliesTotal   string
-	preGetRepliesTotal *sql.Stmt
-	//go:embed sql/get/repliesTotalDepth.sql
-	qGetRepliesTotalDepth   string
-	preGetRepliesTotalDepth *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGetRepliesTotal, qGetRepliesTotal)
-	data.PrepareQueuer.Add(&preGetRepliesTotalDepth, qGetRepliesTotalDepth)
-}
-
 // GetRepliesTotal
 func GetRepliesTotal(commentID int64, depth ...int64) (total int64, err error) {
-	var row *sql.Row
-
 	if len(depth) > 0 {
-		row = preGetRepliesTotalDepth.QueryRow(commentID, depth[0])
-	} else {
-		row = preGetRepliesTotal.QueryRow(commentID)
+		total, err = g.Data.Queries.CountPostCommentRepliesTotalDepth(context.Background(), db.CountPostCommentRepliesTotalDepthParams{Parent: commentID, Depth: depth[0]})
+		return
 	}
 
-	err = row.Scan(&total)
+	total, err = g.Data.Queries.CountPostCommentReplies(context.Background(), commentID)
 	return
 }
 
-var (
-	//go:embed sql/get/replies.sql
-	qGetReplies   string
-	preGetReplies *sql.Stmt
-)
+func GetReplies(startNum, perPage, commentID, depth int64) (*List, error) {
+	rows, err := g.Data.Queries.GetPostCommentReplies(context.Background(), db.GetPostCommentRepliesParams{Parent: commentID, Depth: depth, Offset: int32(startNum), Limit: int32(perPage)})
 
-func init() {
-	data.PrepareQueuer.Add(&preGetReplies, qGetReplies)
-}
-
-func GetReplies(startNum, perPage, commentID int64, depth int64) (*List, error) {
-	rows, err := preGetReplies.Query(commentID, depth, startNum, perPage)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
 	return iterRowToList(rows, true)
 }
 
-func iterRowToList(rows *sql.Rows, noParents bool) (*List, error) { // skipcq: RVV-A0005
+func iterRowToList[R []db.GetPostCommentRepliesRow | []db.GetPostCommentsRow](rows R, noParents bool) (*List, error) { // skipcq: RVV-A0005
 	l := NewList()
-	var (
-		i   int64
-		err error
-	)
+	var i int64
 
 	locationMap := CommentList{}
 
-	for rows.Next() {
-		c := newComment()
-		err = rows.Scan(&c.ID, &c.PostID, &c.UserID, &c.ParentID, &c.Created, &c.Updated, &c.Content, &c.Depth)
-		if err != nil {
-			return nil, err
-		}
-
-		if err = c.CountReplies(); err != nil {
-			return nil, err
-		}
-
+	processComment := func(c *Comment) error {
 		// Map with pointers to all comments
 		locationMap[c.ID] = c
 
@@ -271,6 +158,30 @@ func iterRowToList(rows *sql.Rows, noParents bool) (*List, error) { // skipcq: R
 			l.Order[i] = c.ID
 			i++
 		}
+		return nil
+	}
+
+	switch v := any(rows).(type) {
+	case []db.GetPostCommentRepliesRow:
+		for _, r := range v {
+			c := DBCommentToComment(&r.Postcomment)
+			c.Depth = r.Depth
+
+			if err := processComment(c); err != nil {
+				return nil, err
+			}
+		}
+	case []db.GetPostCommentsRow:
+		for _, r := range v {
+			c := DBCommentToComment(&r.Postcomment)
+			c.Depth = r.Depth
+
+			if err := processComment(c); err != nil {
+				return nil, err
+			}
+		}
+	default:
+		return nil, errors.New("unknown row type in iterRowToList")
 	}
 
 	return l, nil

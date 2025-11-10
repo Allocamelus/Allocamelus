@@ -25,20 +25,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/about",
     name: "About",
-    component: () => import("./views/About.vue"),
+    component: () => import("./views/PageAbout.vue"),
     meta: { footer: true },
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import("./views/Login.vue"),
+    component: () => import("./views/PageLogin.vue"),
     props: (route) => ({ redirect: route.query.r }),
     meta: { footer: true },
   },
   {
     path: "/signup",
     name: "Signup",
-    component: () => import("./views/SignUp.vue"),
+    component: () => import("./views/PageSignUp.vue"),
     props: (route) => ({ redirect: route.query.r }),
     meta: { footer: true },
   },
@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/account/verify-email",
     name: "Account Verify Email",
-    component: () => import("./views/account/VerifyEmail.vue"),
+    component: () => import("./views/account/AccountVerifyEmail.vue"),
     props: (route) => ({
       selector: route.query.selector,
       token: route.query.token,
@@ -62,49 +62,49 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/post/:id(\\d+)",
-    component: () => import("./views/Post.vue"),
+    component: () => import("./views/PagePost.vue"),
     props: true,
     meta: { footer: true },
   },
   {
     path: "/post/new",
     name: "New Post",
-    component: () => import("./views/post/New.vue"),
+    component: () => import("./views/post/PostNew.vue"),
     meta: { footer: true },
   },
   {
     path: "/",
     name: "Landing",
-    component: () => import("./views/Landing.vue"),
+    component: () => import("./views/PageLanding.vue"),
     meta: { footer: true },
   },
   {
     path: "/home",
     name: "Home",
-    component: () => import("./views/Home.vue"),
+    component: () => import("./views/PageHome.vue"),
   },
   {
     path: "/terms",
     name: "Terms",
-    component: () => import("./views/Terms.vue"),
+    component: () => import("./views/PageTerms.vue"),
     meta: { footer: true },
   },
   {
     path: "/privacy",
     name: "Privacy",
-    component: () => import("./views/Privacy.vue"),
+    component: () => import("./views/PagePrivacy.vue"),
     meta: { footer: true },
   },
   {
     path: "/u/:userName(.*)",
     name: "User",
-    component: () => import("./views/User.vue"),
+    component: () => import("./views/PageUser.vue"),
     props: true,
   },
   {
     path: "/:pathMatch(.*)*",
     name: "Error 404",
-    component: () => import("./views/errors/404.vue"),
+    component: () => import("./views/errors/ErrorPage404.vue"),
     meta: { footer: true },
   },
 ];
@@ -127,12 +127,13 @@ router.beforeResolve((to) => {
     switch (to.name) {
       case "Login":
       case "Signup":
-      case "Account Verify Email":
-        let rdr = redirectUrl(to.query.r);
+      case "Account Verify Email": {
+        const rdr = redirectUrl(to.query.r);
         if (rdr === "/") {
           return "/home";
         }
         return rdr;
+      }
       case "Landing":
         return "/home";
       default:

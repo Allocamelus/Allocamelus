@@ -1,14 +1,16 @@
 package token
 
 import (
+	"context"
 	"crypto/subtle"
-	"database/sql"
 	_ "embed"
 	"errors"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/g"
+	"github.com/allocamelus/allocamelus/internal/pkg/compare"
 	"github.com/allocamelus/allocamelus/pkg/logger"
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -20,22 +22,7 @@ var (
 	ErrExpiredToken = errors.New("token/check: Error Expired Token")
 	// ErrInvalid Error Invalid
 	ErrInvalid = errors.New("token/check: Error Invalid")
-	//go:embed sql/get.sql
-	qGet   string
-	preGet *sql.Stmt
-	//go:embed sql/delete.sql
-	qDelete   string
-	preDelete *sql.Stmt
-	//go:embed sql/delByUIDAndType.sql
-	qDelByUIDAndType   string
-	preDelByUIDAndType *sql.Stmt
 )
-
-func init() {
-	data.PrepareQueuer.Add(&preGet, qGet)
-	data.PrepareQueuer.Add(&preDelete, qDelete)
-	data.PrepareQueuer.Add(&preDelByUIDAndType, qDelByUIDAndType)
-}
 
 // Check Selector Token and Type
 func Check(selector, token string, t Types) (*Token, error) {
@@ -75,13 +62,19 @@ func Get(selector string) (*Token, error) {
 		return nil, ErrInvalidSelector
 	}
 	token := new(Token)
-	err := preGet.QueryRow(selector).Scan(&token.ID, &token.UserID, &token.Type, &token.TokenHash, &token.Expiration)
+	t, err := g.Data.Queries.GetUserToken(context.Background(), selector)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			logger.Error(err)
 		}
 		return nil, ErrInvalidSelector
 	}
+
+	token.ID = t.Usertokenid
+	token.UserID = t.Userid
+	token.Type = Types(t.Tokentype)
+	token.TokenHash = t.Token
+	token.Expiration = t.Expiration
 
 	return token, nil
 }
@@ -90,8 +83,7 @@ func Get(selector string) (*Token, error) {
 //
 // Token SHOULD NOT be used after successful delete
 func (t *Token) Delete() error {
-	_, err := preDelete.Exec(t.ID)
-	if err != nil {
+	if err := g.Data.Queries.DeleteUserToken(context.Background(), t.ID); err != nil {
 		return err
 	}
 	// unset Token
@@ -110,9 +102,8 @@ func (t *Token) Check(token string, userID int64, ty Types) error {
 		return ErrInvalidToken
 	}
 
-	if subtle.ConstantTimeEq(int32(t.Type), int32(ty)) == 0 ||
-		subtle.ConstantTimeEq(int32(t.UserID), int32(userID)) == 0 ||
-		subtle.ConstantTimeEq(int32(t.UserID>>32), int32(userID>>32)) == 0 ||
+	if compare.EqualInt(int8(t.Type), int8(ty)) ||
+		compare.EqualInt(t.UserID, userID) ||
 		subtle.ConstantTimeCompare([]byte(t.TokenHash), []byte(hashToken(token))) == 0 {
 		return ErrInvalidToken
 	}

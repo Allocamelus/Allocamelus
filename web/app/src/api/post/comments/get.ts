@@ -40,7 +40,7 @@ export class API_Comments extends ordered_list {
       delete this.comments[id];
       // Remove comment id from order
       let removed = false;
-      for (let k in this.order) {
+      for (const k in this.order) {
         if (this.order[k] == id) {
           delete this.order[k];
           removed = true;
@@ -56,12 +56,10 @@ export class API_Comments extends ordered_list {
 export async function get(
   postId: number | string,
   pageNum = 0
-): Promise<API_Comments> {
-  return v1.get(`post/${postId}/comments?p=${pageNum}`).then((r) => {
-    if (r.data.error == undefined) {
-      return API_Comments.createFrom(r.data);
-    } else {
-      throw new API_Error(r.data);
-    }
-  });
+): Promise<[API_Comments, API_Error | null]> {
+  const r = await v1.get(`post/${postId}/comments?p=${pageNum}`);
+  if (r.data.error != undefined) {
+    return [API_Comments.createFrom(), new API_Error(r.data)];
+  }
+  return [API_Comments.createFrom(r.data), null];
 }

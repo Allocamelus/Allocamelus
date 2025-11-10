@@ -2,7 +2,7 @@
   <component
     :is="isLink ? 'to-link' : 'div'"
     :to="'/u/' + user.userName"
-    class="block flex-shrink-0"
+    class="block shrink-0"
   >
     <img
       :src="hasAvatar ? fullAvatarURL : gray5x5Url"
@@ -13,8 +13,8 @@
       class="mr-2 max-w-full rounded-full border-none object-cover"
       :class="
         hasAvatar
-          ? 'bg-gray-50 dark:bg-gray-900'
-          : 'bg-gray-200 dark:bg-gray-800'
+          ? 'bg-neutral-50 dark:bg-neutral-900'
+          : 'bg-neutral-200 dark:bg-neutral-800'
       "
     />
   </component>
@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 import { User } from "../../models/user";
 import gray5x5Url from "../../assets/gray5x5.jpg";
-import FullURL from "../../pkg/fullUrl";
+import { FullURL } from "@/pkg/url";
 
 import ToLink from "../ToLink.vue";
 

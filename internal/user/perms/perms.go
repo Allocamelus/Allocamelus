@@ -3,10 +3,11 @@
 package perms
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 )
 
 // Perms permissions
@@ -24,30 +25,18 @@ const (
 // Default default permissions
 var Default = Post | UploadMedia
 
-var (
-	//go:embed sql/get.sql
-	qGet   string
-	preGet *sql.Stmt
-	//go:embed sql/update.sql
-	qUpdate   string
-	preUpdate *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preGet, qGet)
-	data.PrepareQueuer.Add(&preUpdate, qUpdate)
-}
-
 // Get get user's permissions
-func Get(userID int64) (perms Perms, err error) {
-	err = preGet.QueryRow(userID).Scan(&perms)
-	return
+func Get(userID int64) (Perms, error) {
+	p, err := g.Data.Queries.GetUserPermissions(context.Background(), userID)
+	if err != nil {
+		return 0, err
+	}
+	return Perms(p), nil
 }
 
 // Update update user's permissions
 func Update(userID int64, perms Perms) error {
-	_, err := preUpdate.Exec(perms, userID)
-	return err
+	return g.Data.Queries.UpdateUserPermissions(context.Background(), db.UpdateUserPermissionsParams{Permissions: int64(perms), Userid: userID})
 }
 
 // NotZero is perms != 0

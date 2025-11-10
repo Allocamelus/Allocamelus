@@ -1,8 +1,8 @@
 <template>
-  <div class="font-sans">
+  <div class="flex min-h-screen min-w-full grow flex-col font-sans">
     <nav
       id="nav"
-      class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-gray-50 shadow"
+      class="fixed top-0 z-30 m-0 h-nav w-full bg-primary p-0 leading-nav text-neutral-50 shadow"
     >
       <div class="container flex h-nav flex-row justify-between leading-nav">
         <div class="flex">
@@ -30,7 +30,7 @@
               </div>
               <dropdown v-model="alerts.menu" class="w-80 max-w-sm">
                 <div
-                  class="overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-gray-800"
+                  class="overflow-x-hidden overflow-y-auto bg-neutral-100 dark:bg-neutral-800"
                 >
                   <bar-loader :show="alerts.loading" />
                   <div
@@ -40,39 +40,47 @@
                       {{ alerts.err }}
                     </div>
                     <div v-else>
-                      <text-small
-                        class="pb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >
-                        Follow/Friend Request:
-                      </text-small>
                       <div
                         v-for="(userId, index) in alerts.requests.requests"
                         :key="index"
-                        class="flex flex-shrink flex-grow items-center pb-3"
+                        class="flex shrink grow pb-3"
                       >
-                        <user-avatar
-                          :user="alerts.requests.user(userId)"
-                          :isLink="true"
-                          class="h-8 w-8"
-                        ></user-avatar>
-                        <div
-                          class="flex flex-grow items-center justify-between"
-                        >
-                          <div class="ml-2 flex">
-                            <user-name
-                              :user="alerts.requests.user(userId)"
-                            ></user-name>
+                        <div class="flex h-10 items-center">
+                          <user-avatar
+                            :user="alerts.requests.user(userId)"
+                            :is-link="true"
+                            class="h-8 w-8"
+                          ></user-avatar>
+                        </div>
+                        <div class="flex grow flex-col justify-between">
+                          <div class="ml-2 flex flex-col pb-2">
+                            <div class="flex">
+                              <div class="flex w-0 grow text-base leading-5">
+                                <user-name
+                                  :user="alerts.requests.user(userId)"
+                                ></user-name>
+                              </div>
+                            </div>
+                            <text-small class="font-medium">
+                              Sent You a
+                              {{
+                                user.type === Private &&
+                                alerts.requests.user(userId).type === Private
+                                  ? "Friend"
+                                  : "Follow"
+                              }}
+                              Request!
+                            </text-small>
                           </div>
                           <div class="ml-2 flex items-center">
                             <div
-                              class="cursor-pointer rounded px-2 py-1.5 text-sm font-semibold leading-4"
-                              :class="buttonStyle.secondary"
+                              class="btn-secondary cursor-pointer rounded px-2 py-1.5 text-sm leading-4 font-semibold"
                               @click="followRequest(userId, true)"
                             >
                               Accept
                             </div>
                             <div
-                              class="link ml-1.5 cursor-pointer rounded p-1 text-sm font-semibold leading-4"
+                              class="link ml-1.5 cursor-pointer rounded p-1 text-sm leading-4 font-semibold"
                               @click="followRequest(userId, false)"
                             >
                               Decline
@@ -102,8 +110,8 @@
                 <span class="sr-only">Open user menu</span>
                 <user-avatar :user="user" class="h-6 w-6"></user-avatar>
                 <component
-                  v-if="!user.avatar"
                   :is="userMenu ? 'ChevronUpIcon' : 'ChevronDownIcon'"
+                  v-if="!user.avatar"
                   class="hidden h-4 w-4 md:block"
                 ></component>
               </div>
@@ -133,22 +141,19 @@
               <Overlay
                 v-else
                 v-model="userMenu"
-                :blockScroll="true"
-                :xsFullHeight="true"
+                :block-scroll="true"
+                :xs-full-height="true"
               >
                 <Box
-                  class="flex h-full w-full flex-grow flex-col justify-between xs:mx-2 xs:rounded-lg"
+                  class="flex h-full w-full grow flex-col justify-between xs:mx-2 xs:rounded-lg"
                 >
                   <div class="flex flex-col">
                     <div
-                      class="flex w-full flex-shrink-0 items-end border-b border-secondary-600 p-3"
+                      class="flex w-full shrink-0 items-end border-b border-secondary-600 p-3"
                     >
                       <div class="flex flex-1 justify-end">
                         <basic-btn @click="userMenu = false">
-                          <XIcon
-                            class="h-5 w-5"
-                            :class="iconStyle.xIcon"
-                          ></XIcon>
+                          <XMarkIcon class="xIcon h-5 w-5"></XMarkIcon>
                         </basic-btn>
                       </div>
                     </div>
@@ -160,10 +165,8 @@
                           :user="user"
                           class="h-11 w-11"
                         ></user-avatar>
-                        <div
-                          class="ml-3 flex flex-grow flex-col justify-evenly"
-                        >
-                          <user-name :user="user" :isLink="false"></user-name>
+                        <div class="ml-3 flex grow flex-col justify-evenly">
+                          <user-name :user="user" :is-link="false"></user-name>
                           <div class="link">View Profile</div>
                         </div>
                       </dropdown-item>
@@ -191,9 +194,9 @@
         </div>
       </div>
     </nav>
-    <div id="bodyContent" class="mt-nav">
+    <div class="mt-nav flex flex-1 grow flex-col">
       <router-view :key="viewKey" />
-      <snackbar v-model="snackbar.show" :closeBtn="true">
+      <snackbar v-model="snackbar.show" :close-btn="true">
         {{ snackbar.msg }}
       </snackbar>
     </div>
@@ -217,16 +220,21 @@ import {
 } from "./api/user/follow";
 import { SomethingWentWrong } from "./components/form/errors";
 
-import SunIcon from "@heroicons/vue/solid/SunIcon";
-import MoonIcon from "@heroicons/vue/solid/MoonIcon";
-import ChevronDownIcon from "@heroicons/vue/solid/ChevronDownIcon";
-import ChevronUpIcon from "@heroicons/vue/solid/ChevronUpIcon";
-import BellIcon from "@heroicons/vue/outline/BellIcon";
-import XIcon from "@heroicons/vue/solid/XIcon";
-import UserCircleIcon from "@heroicons/vue/outline/UserCircleIcon";
-import CogIcon from "@heroicons/vue/outline/CogIcon";
-import LogoutIcon from "@heroicons/vue/outline/LogoutIcon";
-import PlusIcon from "@heroicons/vue/outline/PlusIcon";
+import {
+  SunIcon,
+  MoonIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+  ArrowRightStartOnRectangleIcon as LogoutIcon,
+} from "@heroicons/vue/20/solid";
+
+import {
+  BellIcon,
+  UserCircleIcon,
+  CogIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/outline";
 
 import Dropdown from "./components/menu/Dropdown.vue";
 import DropdownItem from "./components/menu/DropdownItem.vue";
@@ -241,6 +249,7 @@ import BottomFooter from "./components/BottomFooter.vue";
 import Overlay from "./components/overlay/Overlay.vue";
 import Box from "./components/box/Box.vue";
 import BottomLinks from "./components/BottomLinks.vue";
+import { Private } from "./models/user";
 
 function setTheme(theme = "dark") {
   if (theme == "dark") {
@@ -256,7 +265,12 @@ export default defineComponent({
       session = useSessionStore();
     const theme = computed(() => state.theme);
     const data = reactive({
-      sesKeepAliveInterval: setInterval(() => {}, SecToMs(MinToSec(10))),
+      sesKeepAliveInterval: setInterval(
+        () => {
+          return;
+        },
+        SecToMs(MinToSec(10))
+      ),
       userMenu: false,
       footer: false,
       alerts: {
@@ -291,6 +305,7 @@ export default defineComponent({
       theme,
       viewKey: computed(() => state.viewKey),
       toggleTheme: state.toggleTheme,
+      Private,
     };
   },
   watch: {
@@ -386,7 +401,7 @@ export default defineComponent({
     BellIcon,
     ChevronDownIcon,
     ChevronUpIcon,
-    XIcon,
+    XMarkIcon,
     UserCircleIcon,
     CogIcon,
     LogoutIcon,
@@ -406,16 +421,4 @@ export default defineComponent({
 });
 </script>
 
-<style src="./scss/App.scss" lang="scss"></style>
-<style
-  src="@/scss/modules/button.modules.scss"
-  lang="scss"
-  module="buttonStyle"
-  scoped
-></style>
-<style
-  src="@/scss/modules/icon.modules.scss"
-  lang="scss"
-  module="iconStyle"
-  scoped
-></style>
+<style src="./main.css" lang="css"></style>

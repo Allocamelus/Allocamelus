@@ -3,11 +3,12 @@
 package key
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/pgp"
 )
 
@@ -34,41 +35,21 @@ func NewPrivate() *Private {
 	return k
 }
 
-func init() {
-	data.PrepareQueuer.Add(&preInsertKey, qInsertKey)
-}
-
-var (
-	//go:embed sql/insertKey.sql
-	qInsertKey   string
-	preInsertKey *sql.Stmt
-)
-
 func (k *Private) Insert() error {
-	_, err := preInsertKey.Exec(
-		k.UserID,
-		k.Created,
-		k.AuthKeyHash,
-		k.AuthKeySalt,
-		k.PublicArmored,
-		k.PrivateArmored,
-		k.RecoveryKeyHash,
-		k.RecoveryArmored,
-	)
-	return err
+	return g.Data.Queries.InsertUserKey(context.Background(), db.InsertUserKeyParams{
+		Userid:          k.UserID,
+		Created:         k.Created,
+		Authkeyhash:     k.AuthKeyHash,
+		Authkeysalt:     k.AuthKeySalt,
+		Publicarmored:   k.PublicArmored.ToString(),
+		Privatearmored:  k.PrivateArmored.ToString(),
+		Recoverykeyhash: k.RecoveryKeyHash,
+		Recoveryarmored: k.RecoveryArmored.ToString(),
+	})
 }
-
-func init() {
-	data.PrepareQueuer.Add(&preGetPrivateArmored, qGetPrivateArmored)
-}
-
-var (
-	//go:embed sql/getPrivateArmored.sql
-	qGetPrivateArmored   string
-	preGetPrivateArmored *sql.Stmt
-)
 
 func GetPrivateArmored(userID int64) (privateArmored pgp.PrivateKey, err error) {
-	err = preGetPrivateArmored.QueryRow(userID).Scan(&privateArmored)
+	p, err := g.Data.Queries.GetUserPrivateArmoredKey(context.Background(), userID)
+	privateArmored = pgp.PrivateKey(p)
 	return
 }

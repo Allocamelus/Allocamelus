@@ -1,22 +1,13 @@
 package post
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"time"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/db"
+	"github.com/allocamelus/allocamelus/internal/g"
 )
-
-var (
-	//go:embed sql/updateContent.sql
-	qUpdateContent   string
-	preUpdateContent *sql.Stmt
-)
-
-func init() {
-	data.PrepareQueuer.Add(&preUpdateContent, qUpdateContent)
-}
 
 func UpdateContent(postID int64, content string) error {
 	published, err := Published(postID)
@@ -28,6 +19,10 @@ func UpdateContent(postID int64, content string) error {
 	if published {
 		updated = time.Now().Unix()
 	}
-	_, err = preUpdateContent.Exec(updated, content, postID)
-	return err
+
+	return g.Data.Queries.UpdatePostContent(context.Background(), db.UpdatePostContentParams{
+		Updated: updated,
+		Content: content,
+		Postid:  postID,
+	})
 }

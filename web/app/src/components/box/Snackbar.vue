@@ -10,16 +10,16 @@
   >
     <div
       v-show="modelValue"
-      class="fixed right-0 left-0 bottom-0 z-auto w-full xs:bottom-4"
+      class="fixed right-0 bottom-0 left-0 z-auto w-full xs:bottom-4"
     >
       <div class="m-auto w-full xs:w-max">
         <box
           class="flex items-center justify-between rounded-t-lg xs:rounded-md"
-          :class="closeBtn ? 'px-3 py-2' : 'px2.5 py-1.5 xs:py-3 xs:px-4'"
+          :class="closeBtn ? 'px-3 py-2' : 'px2.5 py-1.5 xs:px-4 xs:py-3'"
         >
           <slot></slot>
-          <basic-btn class="ml-1.5" v-if="closeBtn" @click="close">
-            <XIcon class="h-5 w-5"></XIcon>
+          <basic-btn v-if="closeBtn" class="ml-1.5" @click="close">
+            <XMarkIcon class="h-5 w-5"></XMarkIcon>
           </basic-btn>
         </box>
       </div>
@@ -29,7 +29,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import XIcon from "@heroicons/vue/solid/XIcon";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 import Box from "./Box.vue";
 import BasicBtn from "../button/BasicBtn.vue";
 
@@ -73,10 +73,8 @@ export default defineComponent({
   },
   components: {
     Box,
-    XIcon,
+    XMarkIcon,
     BasicBtn,
   },
 });
 </script>
-
-<style></style>

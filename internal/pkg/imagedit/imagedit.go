@@ -4,24 +4,22 @@ import (
 	"errors"
 	"io/ioutil"
 
-	"github.com/discord/lilliput"
+	"github.com/allocamelus/allocamelus/internal/pkg/fileutil"
+	"github.com/davidbyttow/govips/v2/vips"
 )
 
 type Image struct {
-	Img     lilliput.Decoder
-	options *lilliput.ImageOptions
+	img     *vips.ImageRef
+	options *ImageOptions
 }
 
-// EncodeOptions default encoding options
-var EncodeOptions = map[string]map[int]int{
-	".jpg":  {lilliput.JpegQuality: 90},
-	".jpeg": {lilliput.JpegQuality: 90},
-	".png":  {lilliput.PngCompression: 9},
-	".webp": {lilliput.WebpQuality: 90},
+type ImageOptions struct {
+	FileType fileutil.Format
 }
 
 var (
-	ErrBadType = errors.New("imagedit: Error bad file type")
+	ErrBadType   = errors.New("imagedit: Error bad file type")
+	ErrNilOutput = errors.New("imagedit: Error nil output")
 )
 
 func NewFromPath(imagePath string) (*Image, error) {
@@ -39,57 +37,96 @@ func NewFromBlob(blob []byte) (*Image, error) {
 
 // Decodes blob &
 func (img *Image) BlobToImg(blob []byte) (err error) {
-	img.Img, err = lilliput.NewDecoder(blob)
+	importParams := vips.NewImportParams()
+	// Set to support animation
+	importParams.NumPages.Set(-1)
+
+	img.img, err = vips.LoadImageFromBuffer(blob, importParams)
 	if err != nil {
 		return
+	}
+
+	// SetPages to one if not animation
+	if img.Pages() == 1 {
+		img.img.SetPages(1)
 	}
 
 	// Get image format
-	imgFmt := strToFmt(img.Img.Description())
+	imgFmt := fileutil.ExtensionToFormat(img.img.Format().FileExt())
 	if !imgFmt.IsImage() {
 		return ErrBadType
 	}
-	// Get image header
-	header, err := img.Img.Header()
-	if err != nil {
-		return
-	}
 
-	img.options = &lilliput.ImageOptions{
-		FileType:             imgFmt.FileExt(),
-		Width:                header.Width(),
-		Height:               header.Height(),
-		ResizeMethod:         lilliput.ImageOpsNoResize,
-		NormalizeOrientation: true,
-		EncodeOptions:        EncodeOptions[imgFmt.FileExt()],
+	img.options = &ImageOptions{
+		FileType: imgFmt,
 	}
 	return
 }
 
-func (img *Image) WriteToPath(imagePath string) (err error) {
-	// get ready to resize image,
-	// using 8192x8192 maximum resize buffer size
-	ops := lilliput.NewImageOps(8192)
-	defer ops.Close()
+func (img *Image) Export() ([]byte, error) {
+	var err error
+	var outputImg []byte
 
-	// create a buffer to store the output image, 50MB in this case
-	outputImg := make([]byte, 50*1024*1024)
-	// resize and transcode image
-	outputImg, err = ops.Transform(img.Img, img.options, outputImg)
+	img.Fix()
+
+	switch img.options.FileType {
+	case fileutil.GIF:
+		ep := vips.NewGifExportParams()
+		ep.Quality = 90
+		ep.StripMetadata = true
+		outputImg, _, err = img.img.ExportGIF(ep)
+	case fileutil.JPG:
+		ep := vips.NewJpegExportParams()
+		ep.Quality = 90
+		ep.StripMetadata = true
+		outputImg, _, err = img.img.ExportJpeg(ep)
+	case fileutil.PNG:
+		ep := vips.NewPngExportParams()
+		ep.Compression = 9
+		ep.StripMetadata = true
+		outputImg, _, err = img.img.ExportPng(ep)
+	case fileutil.WEBP:
+		ep := vips.NewWebpExportParams()
+		ep.Quality = 90
+		ep.StripMetadata = true
+		outputImg, _, err = img.img.ExportWebp(ep)
+	}
 	if err != nil {
-		return
+		return nil, err
+	}
+	if outputImg == nil {
+		return nil, ErrNilOutput
 	}
 
-	err = ioutil.WriteFile(imagePath, outputImg, 0644)
-	return
+	return outputImg, nil
+}
+
+func (img *Image) WriteToPath(imagePath string) error {
+	outputImg, err := img.Export()
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(imagePath, outputImg, 0644)
 }
 
 func (img *Image) Close() {
-	img.Img.Close()
+	img.img.Close()
 }
 
 // WH returns image width & height
-//  return width, height int, err error
+//
+//	return width, height int, err error
 func (img *Image) WH() (width, height int) {
-	return img.options.Width, img.options.Height
+	width = img.img.Width()
+	if img.Pages() == 1 {
+		height = img.img.Height()
+	} else {
+		height = img.img.PageHeight()
+	}
+	return
+}
+
+// Pages returns number of pages
+func (img *Image) Pages() (pages int) {
+	return img.img.Pages()
 }

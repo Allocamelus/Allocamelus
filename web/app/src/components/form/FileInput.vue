@@ -1,18 +1,18 @@
 <template>
   <div class="">
     <input
-      @input="emiter"
+      ref="input"
       type="file"
       :name="name"
       :accept="accept"
       :required="required"
       :disabled="disabled"
       :readonly="readonly"
-      ref="input"
       class="hidden"
-      @change="emiter"
       :multiple="multiple"
       hidden
+      @input="emitter"
+      @change="emitter"
     />
     <div @click="onClick">
       <slot></slot>
@@ -128,7 +128,7 @@ export default defineComponent({
       }
       return "";
     },
-    emiter(event) {
+    emitter(event) {
       var filesInput;
       if (this.multiple) {
         filesInput = [];

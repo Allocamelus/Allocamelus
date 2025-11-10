@@ -1,5 +1,5 @@
 <template>
-  <div class="text-sm text-gray-700 dark:text-gray-400">
+  <div class="text-sm text-neutral-700 dark:text-neutral-400">
     <slot></slot>
   </div>
 </template>
@@ -8,6 +8,6 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "text-small",
+  name: "TextSmall",
 });
 </script>

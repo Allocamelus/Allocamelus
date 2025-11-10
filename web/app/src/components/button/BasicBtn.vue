@@ -2,7 +2,7 @@
   <component
     :is="notNull(to) ? 'to-link' : 'button'"
     :to="to"
-    class="cursor-pointer rounded text-base font-medium leading-4 disabled:cursor-auto disabled:opacity-50"
+    class="cursor-pointer rounded text-base leading-4 font-medium disabled:cursor-auto disabled:opacity-50"
   >
     <slot></slot>
   </component>
@@ -16,13 +16,13 @@ import { notNull } from "../../models/responses";
 import ToLink from "../ToLink.vue";
 
 export default defineComponent({
-  components: { ToLink },
-  name: "basic-button",
+  name: "BasicButton",
   props: ["to"],
   setup() {
     return {
       notNull,
     };
   },
+  components: { ToLink },
 });
 </script>

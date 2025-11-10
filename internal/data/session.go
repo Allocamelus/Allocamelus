@@ -8,7 +8,7 @@ import (
 
 // NewSessionStore initializes the Session handler
 func (d *Data) NewSessionStore() *session.Store {
-	return session.New(session.Store{
+	return session.New(&session.Store{
 		MaxLife:    d.Config.Session.Duration.MaxLife,
 		Expiration: d.Config.Session.Duration.Expiration,
 		Cookie: session.Cookie{
@@ -19,7 +19,7 @@ func (d *Data) NewSessionStore() *session.Store {
 			HTTPOnly: true,
 			SameSite: "Lax",
 		},
-		Data: stores.NewRedis(d.redis),
+		Data: stores.NewDBStore(d.Queries),
 		Key: session.Key{
 			Length:    32,
 			Generator: random.StringBase64,

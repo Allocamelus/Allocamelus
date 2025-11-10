@@ -1,10 +1,12 @@
 package token
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"time"
 
+	"github.com/allocamelus/allocamelus/internal/db"
 	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,6 +18,7 @@ const (
 
 // ErrAuthCookie Invalid Auth Cookie
 var ErrAuthCookie = errors.New("token/auth: Error Invalid Auth Cookie Value")
+var ErrEmptyCookie = errors.New("token/auth: Error Empty Auth Cookie Value")
 
 // SetAuth create, insert and add to cookies auth token
 func SetAuth(c *fiber.Ctx, userID int64) error {
@@ -36,9 +39,13 @@ func SetAuth(c *fiber.Ctx, userID int64) error {
 }
 
 // GetAuth get and check auth token
+//
 //	return *Token || error
 func GetAuth(c *fiber.Ctx) (*Token, error) {
 	cookie := c.Cookies(g.Config.Cookie.PreFix+authNamePostfix, "")
+	if cookie != "" {
+		return nil, ErrEmptyCookie
+	}
 	// check if cookie len(value) is at least
 	// selectorMinLen + authValueSepLen + tokenMinLen
 	if len(cookie) < selectorBytes+len(authValueSep)+tokenBytes {
@@ -73,8 +80,7 @@ func DeleteAuth(c *fiber.Ctx) error {
 
 // DeleteAuthByID user's Auth tokens from database
 func DeleteAuthByID(userID int64) error {
-	_, err := preDelByUIDAndType.Exec(userID, Auth)
-	return err
+	return g.Data.Queries.DeleteUserTokenByUIDAndType(context.Background(), db.DeleteUserTokenByUIDAndTypeParams{Userid: userID, Tokentype: int16(Auth)})
 }
 
 func unsetAuthCookie(c *fiber.Ctx) {

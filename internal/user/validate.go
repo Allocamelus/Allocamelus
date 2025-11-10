@@ -1,23 +1,19 @@
 package user
 
 import (
-	"database/sql"
+	"context"
 	_ "embed"
 	"errors"
 	"regexp"
 
-	"github.com/allocamelus/allocamelus/internal/data"
+	"github.com/allocamelus/allocamelus/internal/g"
 	"github.com/allocamelus/allocamelus/internal/pkg/errtools"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
+	"github.com/jackc/pgx/v5"
 	"github.com/nbutton23/zxcvbn-go"
 )
-
-func init() {
-	data.PrepareQueuer.Add(&preCheckUserName, qCheckUserName)
-	data.PrepareQueuer.Add(&preCheckEmail, qCheckEmail)
-}
 
 const (
 	invalidLength = "invalid-length"
@@ -90,9 +86,6 @@ var (
 	// ErrUserNameTaken characters
 	ErrUserNameTaken = errors.New(taken)
 	regexUserName    = regexp.MustCompile(`^[a-zA-Z0-9_-]*$`)
-	//go:embed sql/validate/userName.sql
-	qCheckUserName   string
-	preCheckUserName *sql.Stmt
 )
 
 // ValidUserName Validate
@@ -109,9 +102,8 @@ func (u *User) ValidUserName() error {
 		return errtools.ErrInvalidChars
 	}
 	// Check Database for userName
-	var isTaken bool
-	err := preCheckUserName.QueryRow(u.UserName).Scan(&isTaken)
-	if err != nil && err != sql.ErrNoRows {
+	isTaken, err := g.Data.Queries.ValidateUserName(context.Background(), u.UserName)
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		logger.Error(err)
 	}
 	if isTaken {
@@ -151,9 +143,6 @@ var (
 	ErrEmailInvalid = errors.New("invalid-email")
 	// ErrEmailTaken characters
 	ErrEmailTaken = errors.New(taken)
-	//go:embed sql/validate/email.sql
-	qCheckEmail   string
-	preCheckEmail *sql.Stmt
 )
 
 // ValidEmail Validate
@@ -180,8 +169,8 @@ func (u *User) IsEmailUnique() error {
 	}
 	// Check Database for userName
 	var isTaken bool
-	err := preCheckEmail.QueryRow(u.Email).Scan(&isTaken)
-	if err != nil && err != sql.ErrNoRows {
+	isTaken, err := g.Data.Queries.ValidateUserEmail(context.Background(), u.Email)
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		logger.Error(err)
 	}
 	if isTaken {
