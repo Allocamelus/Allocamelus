@@ -170,6 +170,12 @@ import RadixLink2 from "../icons/RadixLink2.vue";
 import router from "@/router";
 
 const turndownService = new Turndown().keep("u");
+turndownService.addRule("pNewLine", {
+  filter: "p",
+  replacement: function (content) {
+    return "\n\n" + content + "\n\n";
+  },
+});
 const altRegex = /^[^<>[\]"&]*$/u;
 const richText = ref("");
 const link = ref("");

@@ -14,9 +14,11 @@ import (
 	"github.com/allocamelus/allocamelus/internal/post/media"
 	"github.com/allocamelus/allocamelus/internal/user"
 	"github.com/allocamelus/allocamelus/internal/user/session"
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/html"
+	"github.com/gomarkdown/markdown/parser"
 	"github.com/jackc/pgx/v5"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday/v2"
 )
 
 // Post struct
@@ -175,8 +177,16 @@ func (p *Post) Publish() error {
 
 // MDtoHTMLContent convert markdown to html and sanitize
 func (p *Post) MDtoHTMLContent() {
+	// create markdown parser with extensions
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
+	doc := parser.NewWithExtensions(extensions).Parse([]byte(p.Content))
+
+	// create HTML renderer with extensions
+	htmlFlags := html.CommonFlags | html.HrefTargetBlank
+	renderer := html.NewRenderer(html.RendererOptions{Flags: htmlFlags})
+
 	p.Content = bluemonday.UGCPolicy().Sanitize(
-		string(blackfriday.Run([]byte(p.Content))),
+		string(markdown.Render(doc, renderer)),
 	)
 }
 
