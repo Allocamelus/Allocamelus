@@ -61,18 +61,21 @@
         following ways:
         <ul class="flex list-outside list-disc flex-col gap-1 pl-5">
           <li>
-            To personalize your experience &mdash; your information helps us to
-            better respond to your individual needs.
+            To provide and operate the Service, including displaying your public
+            profile, posts, and social interactions.
+          </li>
+          <li>
+            To secure your account and prevent fraud by using your login IP
+            address.
+          </li>
+          <li>
+            To communicate with you about service updates, policy changes, and
+            to respond to your inquiries.
           </li>
           <li>
             To improve our site &mdash; we continually strive to improve our
             site offerings based on the information and feedback we receive from
             you.
-          </li>
-          <li>
-            To improve customer service &mdash; your information helps us to
-            more effectively respond to your customer service requests and
-            support needs.
           </li>
           <li>
             To send periodic emails &mdash; The email address you provide may be
@@ -84,22 +87,56 @@
       </div>
 
       <div>
-        <h2 id="protect" class="h3 mb-3">
-          <a href="#protect">How do we protect your information?</a>
-        </h2>
-        We implement a variety of security measures to maintain the safety of
-        your personal information when you enter, submit, or access your
-        personal information.
-      </div>
-
-      <div>
         <h2 id="data-retention" class="h3 mb-3">
           <a href="#data-retention">What is your data retention policy?</a>
         </h2>
-        We will make a good faith effort to: * Retain server logs containing the
-        IP address of all requests to this server no more than 90 days. * Retain
-        the IP addresses associated with registered users and their posts no
-        more than 5 years.
+        <ul class="flex list-outside list-disc flex-col gap-1 pl-5">
+          <li>
+            Server logs containing the IP address of all requests to this server
+            are retained for no more than 90 days.
+          </li>
+          <li>
+            IP addresses associated with registered users are retained for a
+            period of 12 months to ensure account security and investigate
+            potential misuse of the platform.
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 id="rights" class="h3 mb-3">
+          <a href="#rights">Your Data Rights and Choices</a>
+        </h2>
+        <div class="flex flex-col gap-2">
+          <div>
+            You have the right to access, correct, or delete your personal data.
+            You can exercise these rights through your account settings or by
+            contacting us at {{ contactEmail }}.
+          </div>
+          <ul class="flex list-outside list-disc flex-col gap-1 pl-5">
+            <li>
+              <b>Right to Access:</b> You can request a copy of your personal
+              data.
+            </li>
+            <li>
+              <b>Right to Correction:</b> You can modify your account
+              information at any time through your account settings.
+            </li>
+            <li>
+              <b>Right to Deletion:</b> You can delete your account, which will
+              remove your personal data from our systems.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h2 id="protect" class="h3 mb-3">
+          <a href="#protect">How do we protect your information?</a>
+        </h2>
+        We use a variety of security measures to protect your information,
+        including encryption of data in transit (HTTPS), password hashing, and
+        regular security reviews of our infrastructure.
       </div>
 
       <div>
@@ -113,10 +150,7 @@
         account. We use cookies to understand and save your preferences for
         future visits and compile aggregate data about site traffic and site
         interaction so that we can offer better site experiences and tools in
-        the future. We may contract with third-party service providers to assist
-        us in better understanding our site visitors. These service providers
-        are not permitted to use the information collected on our behalf except
-        to help us conduct and improve our business.
+        the future.
       </div>
 
       <div>
@@ -137,24 +171,16 @@
             property, or safety.
           </div>
           <div>
-            If this server is in the USA: Our site, products and services are
-            all directed to people who are at least 13 years old. If you are
-            under the age of 13, per the requirements of COPPA (<to-link
-              to="https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act"
-              class="link"
-              >Children's Online Privacy Protection Act</to-link
-            >) do not use this site.
+            For sending emails, we use
+            <to-link to="https://www.mailgun.com/" class="link">Mailgun</to-link
+            >. You can review their privacy policy for more information on how
+            they handle data.
+          </div>
+          <div>
+            However, non-personally identifiable visitor information may be
+            provided to other parties for marketing, advertising, or other uses.
           </div>
         </div>
-        We do not sell, trade, or otherwise transfer to outside parties your
-        personally identifiable information. This does not include trusted third
-        parties who assist us in operating our site, conducting our business, or
-        servicing you, so long as those parties agree to keep this information
-        confidential. We may also release your information when we believe
-        release is appropriate to comply with the law, enforce our site
-        policies, or protect ours or others rights, property, or safety.
-        However, non-personally identifiable visitor information may be provided
-        to other parties for marketing, advertising, or other uses.
       </div>
 
       <div>
@@ -175,23 +201,11 @@
         </h2>
         <div class="flex flex-col gap-2">
           <div>
-            If this server is in the EU or the EEA: Our site, products and
-            services are all directed to people who are at least 16 years old.
-            If you are under the age of 16, per the requirements of the GDPR
-            (<to-link
-              to="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation"
-              class="link"
-              >General Data Protection Regulation</to-link
-            >) do not use this site.
-          </div>
-          <div>
-            If this server is in the USA: Our site, products and services are
-            all directed to people who are at least 13 years old. If you are
-            under the age of 13, per the requirements of COPPA (<to-link
-              to="https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act"
-              class="link"
-              >Children's Online Privacy Protection Act</to-link
-            >) do not use this site.
+            Our service is not directed to individuals under the age of 16 in
+            the EU/EEA or 13 in the USA. We do not knowingly collect personal
+            information from children. If you are a parent or guardian and
+            believe your child has provided us with personal information, please
+            contact us at {{ contactEmail }} so we can take appropriate action.
           </div>
           <div>
             Law requirements can be different if this server is in another
@@ -216,6 +230,14 @@
       </div>
 
       <div>
+        <h2 id="contact" class="h3 mb-3">
+          <a href="#contact">Contacting Us</a>
+        </h2>
+        If there are any questions regarding this privacy policy you may contact
+        us at {{ contactEmail }}.
+      </div>
+
+      <div>
         <h2 id="changes" class="h3 mb-3">
           <a href="#changes">Changes to our Privacy Policy</a>
         </h2>
@@ -224,21 +246,8 @@
             If we decide to change our privacy policy, we will post those
             changes on this page.
           </div>
-          <div>
-            This document is CC-BY-SA. It was last updated Apr 16, 2022.
-          </div>
-          <div>
-            Originally adapted from the
-            <to-link to="https://github.com/mastodon/mastodon" class="link">
-              Mastodon privacy policy</to-link
-            >, adapted from the
-            <to-link to="https://github.com/discourse/discourse" class="link">
-              Discourse privacy policy</to-link
-            >.
-          </div>
         </div>
       </div>
-      <h1 class="h1">Privacy Policy</h1>
     </Box>
   </div>
 </template>
@@ -255,6 +264,7 @@ export default defineComponent({
     return {
       ...toRefs(data),
       siteName: import.meta.env.VITE_SITE_NAME,
+      contactEmail: import.meta.env.VITE_CONTACT_EMAIL,
     };
   },
   components: { Box },
