@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     volumes:
-      - "./data/mariadb:/var/lib/mysql:delegated"
+      - "./data/postgres:/var/lib/postgresql/18/docker:delegated"
       - "./allocamelus.sql:/docker-entrypoint-initdb.d/allocamelus.sql:ro"
     expose:
       - 5432
