@@ -9,7 +9,7 @@ import (
 var SomethingWentWrong = New("something-went-wrong")
 
 // Err500 middleware
-func Err500(c *fiber.Ctx, data interface{}) error {
+func Err500(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 500, data)
 }
 

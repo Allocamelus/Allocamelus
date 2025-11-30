@@ -41,7 +41,7 @@ type Session struct {
 	// Key session identifier
 	Key string `msg:"key"`
 	// Data of session
-	Data map[string]interface{} `msg:"data"`
+	Data map[string]any `msg:"data"`
 	// mu RWMutex
 	mu sync.RWMutex
 	// store pointer to store
@@ -61,7 +61,7 @@ func (s *Session) Create(key string) {
 	s.Key = key
 	s.Created = time.Now()
 	s.Status = Created
-	s.Data = make(map[string]interface{})
+	s.Data = make(map[string]any)
 	s.mu.Unlock()
 	s.Updated()
 }
@@ -73,7 +73,7 @@ func (s *Session) Regenerate() {
 }
 
 // Set session value
-func (s *Session) Set(key string, value interface{}) error {
+func (s *Session) Set(key string, value any) error {
 	if key == "" {
 		return ErrNilKey
 	}
@@ -98,7 +98,7 @@ func (s *Session) Updated() {
 }
 
 // Get session value
-func (s *Session) Get(key string) (interface{}, error) {
+func (s *Session) Get(key string) (any, error) {
 	if key == "" {
 		return nil, ErrNilKey
 	}

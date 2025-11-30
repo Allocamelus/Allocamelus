@@ -19,7 +19,7 @@ var (
 )
 
 // Err400 400 Bad Request
-func Err400(c *fiber.Ctx, data interface{}) error {
+func Err400(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 400, data)
 }
 
@@ -29,13 +29,13 @@ func ErrInvalidRequestParams(c *fiber.Ctx) error {
 }
 
 // Err401 401 Unauthorized
-func Err401(c *fiber.Ctx, wwwAuth string, data interface{}) error {
+func Err401(c *fiber.Ctx, wwwAuth string, data any) error {
 	c.Append("WWW-Authenticate", wwwAuth)
 	return fiberutil.JSON(c, 401, data)
 }
 
 // Err403 403 Forbidden
-func Err403(c *fiber.Ctx, data interface{}) error {
+func Err403(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 403, data)
 }
 
@@ -45,7 +45,7 @@ func ErrUnauthorized403(c *fiber.Ctx) error {
 }
 
 // Err404 404 Not Found
-func Err404(c *fiber.Ctx, data interface{}) error {
+func Err404(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 404, data)
 }
 
@@ -55,7 +55,7 @@ func ErrNotFound(c *fiber.Ctx) error {
 }
 
 // Err422 Unprocessable Entity
-func Err422(c *fiber.Ctx, data interface{}) error {
+func Err422(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 422, data)
 }
 
@@ -65,7 +65,7 @@ func ErrUnprocessableEntity(c *fiber.Ctx) error {
 }
 
 // Err429 Too Many Requests
-func Err429(c *fiber.Ctx, data interface{}) error {
+func Err429(c *fiber.Ctx, data any) error {
 	return fiberutil.JSON(c, 429, data)
 }
 

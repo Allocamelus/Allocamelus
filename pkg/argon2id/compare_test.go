@@ -24,12 +24,12 @@ func TestCompare(t *testing.T) {
 }
 
 func BenchmarkCompare(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		testPass.Compare(testPassword)
 	}
 }
 func BenchmarkCompareF(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		testPass.Compare("notPassword")
 	}
 }

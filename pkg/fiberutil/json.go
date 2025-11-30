@@ -6,7 +6,7 @@ import (
 )
 
 // JSON is a helper function for writing json
-func JSON(c *fiber.Ctx, status int, data interface{}) error {
+func JSON(c *fiber.Ctx, status int, data any) error {
 	if err := c.JSON(data); logger.Error(err) {
 		c.Status(500)
 		return err

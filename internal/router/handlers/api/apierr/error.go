@@ -11,11 +11,11 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // APIErr struct with error
 type APIErr struct {
-	Err interface{} `json:"error"`
+	Err any `json:"error"`
 }
 
 // New Create An json compatable response error
-func New(data interface{}) APIErr {
+func New(data any) APIErr {
 	return APIErr{Err: data}
 }
 

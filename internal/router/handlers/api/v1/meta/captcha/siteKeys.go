@@ -7,8 +7,8 @@ import (
 )
 
 type siteKeysResp struct {
-	SiteKeys     siteKeys               `json:"site-keys"`
-	Difficulties map[string]interface{} `json:"difficulties"`
+	SiteKeys     siteKeys       `json:"site-keys"`
+	Difficulties map[string]any `json:"difficulties"`
 }
 
 type siteKeys struct {
@@ -27,7 +27,7 @@ func SiteKeys(c *fiber.Ctx) error {
 			Hard:     g.Config.HCaptcha.Hard,
 			All:      g.Config.HCaptcha.All,
 		},
-		Difficulties: map[string]interface{}{
+		Difficulties: map[string]any{
 			"user": map[string]string{
 				"create":     "moderate",
 				"emailToken": "moderate",

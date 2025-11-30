@@ -16,7 +16,7 @@ func TestBytes(t *testing.T) {
 }
 
 func BenchmarkBytes(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.Bytes(n)
 	}
 }
@@ -29,7 +29,7 @@ func TestFastBytes(t *testing.T) {
 }
 
 func BenchmarkFastBytes(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.FastBytes(n)
 	}
 }
@@ -39,7 +39,7 @@ func TestInt(_ *testing.T) {
 }
 
 func BenchmarkInt(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.Int(n)
 	}
 }
@@ -49,7 +49,7 @@ func TestFastInt(_ *testing.T) {
 }
 
 func BenchmarkFastInt(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.FastInt(n)
 	}
 }
@@ -62,7 +62,7 @@ func TestString(t *testing.T) {
 }
 
 func BenchmarkString(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.String(n)
 	}
 }
@@ -75,7 +75,7 @@ func TestStringBase64(t *testing.T) {
 }
 
 func BenchmarkStringBase64(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.StringBase64(n)
 	}
 }
@@ -88,7 +88,7 @@ func TestStringBase58(t *testing.T) {
 
 }
 func BenchmarkStringBase58(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.StringBase58(n)
 	}
 }
@@ -101,7 +101,7 @@ func TestFastString(t *testing.T) {
 }
 
 func BenchmarkFastString(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		random.FastString(n)
 	}
 }
