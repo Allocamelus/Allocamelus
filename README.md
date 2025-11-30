@@ -44,7 +44,6 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
 - [x] User
   <details>
   <summary>Click to expand</summary>
-
   - [x] Profile
     - [x] Bio
     - [x] Avatar
@@ -57,11 +56,9 @@ See [Basic.md](./examples/Basic.md) or [DockerCompose.md](./examples/DockerCompo
   </details>
 
 - [ ] Post
-
   - [x] Create
     <details>
     <summary>Click to expand</summary>
-
     - [x] Content
     - [x] Images
       - [x] Alts

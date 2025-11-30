@@ -3,10 +3,8 @@ module.exports = {
   // **optional** default: `{}`
   settings: {
     "vetur.useWorkspaceDependencies": true,
-    "vetur.experimental.templateInterpolationService": true
+    "vetur.experimental.templateInterpolationService": true,
   },
   // **optional** default: `[{ root: './' }]`
-  projects: [
-    './web/app', 
-  ]
-}
+  projects: ["./web/app"],
+};
